@@ -67,7 +67,7 @@ const Cr = (props: Props) => {
     setTimeout(() => {
       setnote(false)
 
-    }, 6000);
+    }, 7000);
 
 
   }

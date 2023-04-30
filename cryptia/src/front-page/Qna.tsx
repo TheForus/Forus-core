@@ -13,6 +13,8 @@ const Qna = (props: Props) => {
 
   return (
     <div>
+
+      <h1>FAQ</h1>
       <h4 onClick={() => toggleAnswer(0)}>1: How does Cryptia ensure the privacy and confidentiality of financial transactions?</h4>
       {showAnswers[0] && <p>Cryptia employs secure secret addresses and a one-time public key mechanism, making it virtually impossible to trace or monitor transactions by anyone else. This ensures enhanced privacy and confidentiality.</p>}
 
