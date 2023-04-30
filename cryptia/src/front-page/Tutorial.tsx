@@ -9,7 +9,7 @@ const Tutorial = (props: Props) => {
     <>
     <div className='flex flex-col py-10 items-center justify-center'>
       <h1 className='montserrat-heading py-4 font-semibold text-3xl
-       text-[#09ec7a] border-b border-gray-400'>See how it works</h1>
+       text-[#435864] border-b border-gray-400'>See how it works</h1>
        <div className='py-5'>
        <ReactPlayer
           width='500px'

@@ -45,7 +45,7 @@ const Cryptia = (props: Props) => {
 
             })
         }
-        ethereum.on('chainChanged', (chId: any) => {
+        ethereum.on('chainChanged' || 'accountsChanged', (chId: any) => {
             console.log(chId)
             if (chId !== '0x1e15') {
                 console.log('plz connect to canto testnet')
@@ -102,14 +102,15 @@ const Cryptia = (props: Props) => {
 
     return (
         <AppContext.Provider value={ContextValue}>
-            <Navmain />
-            <Cr />
+            <div >
+                <Navmain />
+                <Cr />
 
-            <div>
-                <Instruction />
-                <Trx />
+                <div>
+                    <Instruction />
+                    <Trx />
+                </div>
             </div>
-
         </AppContext.Provider>
     )
 }

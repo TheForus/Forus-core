@@ -11,6 +11,7 @@ const Wrapper = (props: Props) => {
     return (
         <div className='bg-[#ECFFFA]'>
             <Nav />
+            <div className=' mt-[1.2px]  '></div>
             <Header />
             <Features />
             <Tutorial /> 

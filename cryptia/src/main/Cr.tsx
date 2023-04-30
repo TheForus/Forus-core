@@ -7,9 +7,10 @@ const ec = new EllipticCurve.ec('secp256k1');
 
 type Props = {}
 
+
 const Cr = (props: Props) => {
 
-  const [cryptiaencess, setcryptiaencess] = useState<string | any>('')
+  const [cryptiaaddress, setcryptiaaddress] = useState<string | any>('')
   const [, setstoredsecretkey] = useState<string | any>('')
   const [note, setnote] = useState<boolean>(false)
 
@@ -35,7 +36,7 @@ const Cr = (props: Props) => {
       enc.set(crc, pub.length);
       const C: string = 'C' + base58.encode(enc);
       localStorage.setItem('Cr', C);
-      setcryptiaencess(C);
+      setcryptiaaddress(C);
     }
 
     catch (e) {
@@ -74,7 +75,7 @@ const Cr = (props: Props) => {
   
 
   const copy = () => {
-    navigator.clipboard.writeText(cryptiaencess)
+    navigator.clipboard.writeText(cryptiaaddress)
     downloadTxt(localStorage.getItem('secretKey'))
     reveal()
 
@@ -92,7 +93,7 @@ const Cr = (props: Props) => {
 
 
         <div>
-          <p>{cryptiaencess}</p>
+          <p>#Cryptia-{cryptiaaddress}</p>
           <AiOutlineCopy onClick={copy} />
         </div>
 
