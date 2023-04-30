@@ -7,7 +7,7 @@ type Props = {}
 
 const Nav = (props: Props) => {
     return (
-        <div className='bg-[#A8D4D1] sm:px-20 px-12 p-5 flex 
+        <div className='bg-[#10F1B4] sm:px-20 px-12 p-5 flex 
         justify-between items-center border-b border-gray-300 '>
             {/* logo left */}
             <div className='flex space-x-1 items-center'>
@@ -20,7 +20,7 @@ const Nav = (props: Props) => {
             </div>
 
             {/* right side */}
-            <p className='text-white p-1 px-4 rounded-lg bg-[#A8D4D1] 
+            <p className='text-white p-1 px-4 rounded-lg bg-[#10F1B4] 
             montserrat-subtitle cursor-pointer hover:text-gray-800 sm:text-[1.2rem] font-semibold'>FAQ?</p>
 
         </div>

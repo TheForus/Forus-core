@@ -13,7 +13,7 @@ const Qna = (props: Props) => {
   };
 
   return (
-    <div className='p-5 py-10 flex flex-col items-center justify-center bg-[#A8D4D1]'>
+    <div className='p-5 py-10 flex flex-col items-center justify-center bg-[#10F1B4]'>
       <h1 className='montserrat-subheading text-2xl mb-6 text-white border-b pb-2 border-gray-200'>FAQ</h1>
       <div className='xl:p-14 xl:px-s20 bg-[#ECFFFA] lg:w-[900px] p-5 rounded-md shadow-lg flex flex-col
        items-start justify-center'>
@@ -24,7 +24,7 @@ const Qna = (props: Props) => {
         >1: How does Cryptia ensure the
          privacy and confidentiality of financial transactions?
          <span>
-          <IoAddSharp color='#A8D4D1' className='lg:text-4xl text-3xl'/>
+          <IoAddSharp color='#10F1B4' className='lg:text-4xl text-3xl'/>
           </span></h4>
         {showAnswers[0] && <p 
         className='w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left'
@@ -39,7 +39,7 @@ const Qna = (props: Props) => {
         >2: What is a "stealth address" in
          Cryptia, and how does it enhance privacy?
          <span>
-          <IoAddSharp color='#A8D4D1' className='lg:text-4xl text-3xl'/>
+          <IoAddSharp color='#10F1B4' className='lg:text-4xl text-3xl'/>
           </span></h4>
         {showAnswers[1] && <p
         className='w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left'
@@ -55,7 +55,7 @@ const Qna = (props: Props) => {
           >3: How do I generate a unique Cr 
         address?
         <span>
-          <IoAddSharp color='#A8D4D1' className='lg:text-4xl text-3xl'/>
+          <IoAddSharp color='#10F1B4' className='lg:text-4xl text-3xl'/>
           </span>        
         </h4>
         {showAnswers[2] && <p
@@ -70,7 +70,7 @@ const Qna = (props: Props) => {
           montserrat-subheading py-4 text-[#49606d] gap-16'        
         >4: Can I retrieve my private key after funds have been sent to my Cryptia address?
          <span>
-          <IoAddSharp color='#A8D4D1' className='lg:text-4xl text-3xl'/>
+          <IoAddSharp color='#10F1B4' className='lg:text-4xl text-3xl'/>
           </span>        
         </h4>
         {showAnswers[3] && <p
@@ -87,7 +87,7 @@ const Qna = (props: Props) => {
         >5: Is Cryptia suitable for users 
         with varying levels of technical expertise?
         <span>
-          <IoAddSharp color='#A8D4D1' className='lg:text-4xl text-3xl'/>
+          <IoAddSharp color='#10F1B4' className='lg:text-4xl text-3xl'/>
           </span>        
         </h4>
         {showAnswers[4] && <p

@@ -12,8 +12,8 @@ const Tutorial = (props: Props) => {
        text-[#435864] border-b border-gray-400'>See how it works</h1>
        <div className='py-5'>
        <ReactPlayer
-          width='500px'
-          height='360px'
+          width='900px'
+          height='460px'
           url='https://www.youtube.com/watch?v=JhqLO40y60A&t=66s'
           />
        </div>

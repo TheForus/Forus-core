@@ -72,7 +72,7 @@ const Cr = (props: Props) => {
 
 
   }
-  
+
 
   const copy = () => {
     navigator.clipboard.writeText(cryptiaaddress)
@@ -88,12 +88,12 @@ const Cr = (props: Props) => {
       <div>
 
         <h1> Unlock the power of secrecy with Cryptia,</h1>
-        {note === true && 
-        <p>Guard the key, unleash the cr. Never reveal the 'secret key' , only share your secure 'Cr encess' for confidential transactions. </p>}
+        {note === true &&
+          <p>Guard the key, unleash the cr. Never reveal the 'secret key' , only share your secure 'Cr encess' for confidential transactions. </p>}
 
 
         <div>
-          <p>#Cryptia-{cryptiaaddress}</p>
+          <p>#Cryptia#{cryptiaaddress}</p>
           <AiOutlineCopy onClick={copy} />
         </div>
 

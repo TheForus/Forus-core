@@ -11,7 +11,7 @@ const Header = () => {
     <>
 
 
-      <div className='bg-[#A8D4D1] sm:px-20 px-12 p-10   flex justify-between ' >
+      <div className='bg-[#10F1B4] sm:px-20 px-12 p-10   flex justify-between ' >
 
         {/* left side */}
         <div className='flex flex-col items-start space-y-6 mt-12'>
@@ -20,7 +20,7 @@ const Header = () => {
             Safeguard Your Financial Interactions with Cutting-edge Cryptography.!</p>
           <button
             className='border-1 hover:text-white hover:bg-[black] 
-        hover:shadow-xl p-1 px-9 rounded-lg bg-[#E8FDF4] text-[#A8D4D1] 
+        hover:shadow-xl p-1 px-9 rounded-lg bg-[#E8FDF4] text-[#10F1B4] 
         font-semibold hover:border-white border text-xl'
             onClick={() => navigate('/Cryptia')}
           >Launch</button>
