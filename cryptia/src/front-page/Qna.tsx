@@ -27,7 +27,7 @@ const Qna = (props: Props) => {
           <IoAddSharp color='#00975b' className='lg:text-4xl text-3xl'/>
           </span></h4>
         {showAnswers[0] && <p 
-        className='w-[90%] px-4  pb-5 montserrat-medium text-green-800 text-left'
+        className='w-[90%] px-4  pb-5  montserrat-subheading text-green-800 text-left'
         >Cryptia employs secure secret addresses and a
           one-time public key mechanism, making it virtually impossible to
           trace or monitor transactions by anyone else. This ensures enhanced
@@ -42,7 +42,7 @@ const Qna = (props: Props) => {
           <IoAddSharp color='#00975b' className='lg:text-4xl text-3xl'/>
           </span></h4>
         {showAnswers[1] && <p
-        className='w-[90%] px-4  pb-5 montserrat-medium text-green-800 text-left'
+        className='w-[90%] px-4  pb-5  montserrat-subheading text-green-800 text-left'
         >A "stealth address" is a unique and anonymous
           address exclusively linked to the intended recipient.
           It guarantees utmost privacy by making it difficult for
@@ -59,7 +59,7 @@ const Qna = (props: Props) => {
           </span>        
         </h4>
         {showAnswers[2] && <p
-        className='w-[90%] px-4  pb-5 montserrat-medium text-green-800 text-left'
+        className='w-[90%] px-4  pb-5  montserrat-subheading text-green-800 text-left'
         >Simply click the "generate" button on our app,
           and a unique Cr address will be generated for you. Make
           sure to save the accompanying secret key in a secure location for
@@ -74,7 +74,7 @@ const Qna = (props: Props) => {
           </span>        
         </h4>
         {showAnswers[3] && <p
-        className='w-[90%] px-4  pb-5 montserrat-medium text-green-800 text-left'
+        className='w-[90%] px-4  pb-5  montserrat-subheading text-green-800 text-left'
         >Yes, you can retrieve your private key by clicking 
           on the "match" button or by pasting your
           secret key (optional) into our app. This will allow you
@@ -91,7 +91,7 @@ const Qna = (props: Props) => {
           </span>        
         </h4>
         {showAnswers[4] && <p
-        className='w-[90%] px-4  pb-5 montserrat-medium text-green-800 text-left'
+        className='w-[90%] px-4  pb-5  montserrat-subheading text-green-800 text-left'
         >Absolutely! Cryptia has been designed with
           a user-friendly interface, making it accessible and
           easy to use for individuals with different levels of

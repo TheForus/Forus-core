@@ -32,6 +32,7 @@ const Cryptia = (props: Props) => {
     if (ethereum) {
         ethereum.on('accountsChanged', (accounts: any) => {
             sessionStorage.setItem('address', accounts[0]);
+            console.log('hello')
 
         })
 
@@ -77,19 +78,7 @@ const Cryptia = (props: Props) => {
         }
     };
 
-    //    if(ethereum){
-    //         // if (ethereum && wallet === true) {
-    //             ethereum.on('accountsChanged', (accounts: any) => {
-    //                 sessionStorage.setItem('address', accounts[0]);
-
-
-    //             })
-    //             // if (chainId !== '0x1e15') {
-    //             //     alert('plz connect to canto testnet')
-    //             //     console.log(chainId)
-    //             // }
-    //         }
-
+  
 
 
 

@@ -9,7 +9,7 @@ type Props = {}
 
 const Wrapper = (props: Props) => {
     return (
-        <div>
+        <div className='bg-[#ECFFFA]'>
             <Nav />
             <Header />
             <Features />

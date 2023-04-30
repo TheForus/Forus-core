@@ -17,7 +17,7 @@ const FeatureBlock = (props: Props) => {
             text-black md:text-xl text-lg font-extrabold mb-2'>{props.heading}</h4>
             </div>
             {/* <i>privacy</i> */}
-            <p className='text-gray-800 w-[80%] md:text-lg text-base 
+            <p className='text-gray-800 w-[75%] md:text-md text-base 
             font-semibold montserrat-small'>{props.subheading}</p>
         </div>
     </>
