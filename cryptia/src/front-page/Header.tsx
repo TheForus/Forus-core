@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import workflow from '../Logos/work.png'
+import workflow from '../Logos/workflow.png'
 
 
 const Header = () => {

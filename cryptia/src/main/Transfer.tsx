@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { base58, keccak256 } from 'ethers/lib/utils.js';
+import { base58, keccak256, getAddress } from 'ethers/lib/utils.js';
 import EllipticCurve from 'elliptic';
 import { ec as EC } from 'elliptic';
 import { useContext } from 'react';
@@ -28,7 +28,7 @@ const Transfer = () => {
   const { ethereum }: any = window;
 
   const [token, settoken] = useState('')
-  const [CrMetaAddress, setCrMetaAddress] = useState('')
+  const [CrMetaAddress, setCrMetaAddress] = useState('CNQ3HKdeSDpxpZCDGTESp4Ecy8s9BVLNoPg8QvymjftEQN3b')
   const [error, seterror] = useState('')
   const [amount, setamount] = useState('')
   const [show, setshow] = useState(false)
@@ -43,32 +43,36 @@ const Transfer = () => {
 
     let meta: EC.KeyPair | any;
     let ephPublic: EC.KeyPair | any;
+    let receipent: string | null;
 
     const ephKey = ec.genKeyPair();
     ephPublic = ephKey.getPublic();
 
+
     try {
       if (CrMetaAddress.startsWith('C')) {
         const _CrMetaAddress = CrMetaAddress.slice(1);
-        const decodedID = base58.decode(_CrMetaAddress);
-        const metaAddress = decodedID.subarray(0, 33);
-        meta = ec.keyFromPublic(metaAddress, 'hex');
+        const decoded = base58.decode(_CrMetaAddress);
+        const decodedId = decoded.subarray(0, 33);
+        meta = ec.keyFromPublic(decodedId, 'hex');
+        // console.log(meta)
       } else {
         seterror('Plz paste the valid address');
+        console.log('error')
       }
     } catch (e: any) {
       seterror(e.message);
     }
-
+    // 
     try {
-      const sharedsecret = ephKey.derive(meta?.getPublic() || Buffer.alloc(0));
+      const sharedsecret = ephKey.derive(meta.getPublic());
       const hashed = ec.keyFromPrivate(keccak256(sharedsecret.toArray()));
-
       a = '0x' + sharedsecret.toArray()[0].toString(16).padStart(2, '0');
       const publicKey = meta?.getPublic()?.add(hashed.getPublic())?.encode('array', false)?.splice(1) || [];
       const address = keccak256(publicKey);
       const _HexString = address.substring(address.length - 40, address.length);
-      console.log('0x'+_HexString)
+      receipent = getAddress('0x' + _HexString)
+      console.log(receipent)
 
 
       r = '0x' + ephPublic?.getX().toString(16, 64) || '';
@@ -173,9 +177,11 @@ const Transfer = () => {
   };
 
 
-
   return (
-    <div>Transfer</div>
+    <div>Transfer
+
+      <button onClick={setUp}>Initalize</button>
+    </div>
   )
 }
 

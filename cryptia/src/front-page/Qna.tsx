@@ -15,7 +15,7 @@ const Qna = (props: Props) => {
   return (
     <div className='p-5 py-10 flex flex-col items-center justify-center bg-[#02E48A]'>
       <h1 className='montserrat-subheading text-2xl mb-6 text-white border-b pb-2 border-gray-200'>FAQ</h1>
-      <div className='xl:p-14 xl:px-s20 bg-white lg:w-[900px] p-5 rounded-md shadow-lg flex flex-col
+      <div className='xl:p-14 xl:px-s20 bg-[#ECFFFA] lg:w-[900px] p-5 rounded-md shadow-lg flex flex-col
        items-start justify-center'>
         <h4 onClick={() => toggleAnswer(0)}
         className='text-left justify-between w-full hover:text-gray-800

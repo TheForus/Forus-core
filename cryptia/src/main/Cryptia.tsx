@@ -2,7 +2,7 @@ import Navmain from './Navmain'
 import Cr from './Cr'
 import Instruction from './Instruction'
 import Trx from './Trx'
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useMemo, useState } from 'react';
 
 
 
@@ -22,31 +22,41 @@ export const AppContext = createContext<ContextValue | any>(null)
 const Cryptia = (props: Props) => {
 
     const [show, setShow] = useState<boolean>(true);
-    const [wallet, setwallet] = useState<boolean>(false);
+    const [, setwallet] = useState<boolean>(false);
     const [chainid, setchainid] = useState<string | null>('');
 
     let chainId: string;
 
     const { ethereum }: any = window;
 
-    if (ethereum) {
-        ethereum.on('accountsChanged', (accounts: any) => {
-            sessionStorage.setItem('address', accounts[0]);
-            console.log('hello')
+    const accountChecker = async () => {
+        const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+        const address = accounts[0];
+        sessionStorage.setItem('address', address);
 
-        })
 
-        ethereum.on('chainChanged', async (chId: any) => {
+    };
 
+    useMemo(() => {
+        if (ethereum) {
+            ethereum.on('accountsChanged', () => {
+                accountChecker();
+                window.location.reload()
+
+            })
+        }
+        ethereum.on('chainChanged', (chId: any) => {
+            console.log(chId)
             if (chId !== '0x1e15') {
-                alert('plz connect to canto testnet')
+                console.log('plz connect to canto testnet')
                 return
             }
-            setchainid(chId)
+            window.location.reload()
 
         })
 
-    }
+    }, [])
+
 
 
 
@@ -78,7 +88,7 @@ const Cryptia = (props: Props) => {
         }
     };
 
-  
+
 
 
 
