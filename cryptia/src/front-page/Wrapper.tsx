@@ -10,14 +10,12 @@ type Props = {}
 const Wrapper = (props: Props) => {
     return (
         <div>
-
-
             <Nav />
             <Header />
-            <Tutorial />
             <Features />
+            <Tutorial /> 
             <Qna />
-            <Footer />
+            <Footer /> 
         </div>
     )
 }
