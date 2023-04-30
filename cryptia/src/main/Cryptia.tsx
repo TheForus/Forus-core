@@ -12,7 +12,8 @@ type Props = {}
 interface ContextValue {
     show: boolean;
     setShow: React.Dispatch<React.SetStateAction<boolean | any>>;
-    connectWallet(): void
+    connectWallet(): void;
+    chainid: string | null
 };
 
 
@@ -22,11 +23,29 @@ const Cryptia = (props: Props) => {
 
     const [show, setShow] = useState<boolean>(true);
     const [wallet, setwallet] = useState<boolean>(false);
+    const [chainid, setchainid] = useState<string | null>('');
 
     let chainId: string;
 
     const { ethereum }: any = window;
 
+    if (ethereum) {
+        ethereum.on('accountsChanged', (accounts: any) => {
+            sessionStorage.setItem('address', accounts[0]);
+
+        })
+
+        ethereum.on('chainChanged', async (chId: any) => {
+
+            if (chId !== '0x1e15') {
+                alert('plz connect to canto testnet')
+                return
+            }
+            setchainid(chId)
+
+        })
+
+    }
 
 
 
@@ -42,6 +61,7 @@ const Cryptia = (props: Props) => {
                 sessionStorage.setItem('address', accounts[0]);
 
                 chainId = await ethereum.request({ method: "eth_chainId" })
+                setchainid(chainId)
                 console.log(chainId)
 
 
@@ -57,20 +77,19 @@ const Cryptia = (props: Props) => {
         }
     };
 
-    useEffect(() => {
-        if (ethereum && wallet === true) {
-            ethereum.on('accountsChanged', connectWallet)
-            if (chainId !== '0x1e15') {
-                alert('plz connect to canto testnet')
-                console.log(chainId)
-            }
-        }
+    //    if(ethereum){
+    //         // if (ethereum && wallet === true) {
+    //             ethereum.on('accountsChanged', (accounts: any) => {
+    //                 sessionStorage.setItem('address', accounts[0]);
 
 
+    //             })
+    //             // if (chainId !== '0x1e15') {
+    //             //     alert('plz connect to canto testnet')
+    //             //     console.log(chainId)
+    //             // }
+    //         }
 
-
-
-    }, [])
 
 
 
@@ -78,7 +97,8 @@ const Cryptia = (props: Props) => {
     const ContextValue: ContextValue = {
         show,
         setShow,
-        connectWallet
+        connectWallet,
+        chainid
     };
 
     return (
