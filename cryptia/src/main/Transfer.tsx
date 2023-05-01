@@ -18,21 +18,21 @@ const Transfer = () => {
 
 
 
-  let r: string | any;
-  let s: string | any;
-  let a: string | any;
+  let r: string | null;
+  let s: string | null;
+  let a: string | null;
 
-  let receipent: string | any;
+  let receipent: string | '';
 
   let ethers: any;
 
   // const contractAddress = '0x6340e1ed7DCe39ccA016C1805286Aa11536b4F3a'
   const { ethereum }: any = window;
 
-  const [token, settoken] = useState<string>('');
-  const [CrMetaAddress, setCrMetaAddress] = useState<string>('CNQ3HKdeSDpxpZCDGTESp4Ecy8s9BVLNoPg8QvymjftEQN3b');
+  const [token, settoken] = useState<string | ''>('');
+  const [CrMetaAddress, setCrMetaAddress] = useState<string | ''>('CNQ3HKdeSDpxpZCDGTESp4Ecy8s9BVLNoPg8QvymjftEQN3b');
   const [error, seterror] = useState<string | ''>('');
-  const [amount, setamount] = useState<string>('');
+  const [amount, setamount] = useState<string | ''>('');
   const [show, setshow] = useState<boolean>(false);
   const [byDefault, setbyDefault] = useState<string>('CANTO');
   const [trxid, settrxid] = useState<string>('');
@@ -71,8 +71,7 @@ const Transfer = () => {
         meta = ec.keyFromPublic(decodedId, 'hex');
         // console.log(meta)
       } else {
-        seterror('Plz paste the valid address');
-        console.log('error')
+        seterror('Plz enter the valid  cr address');
       }
     } catch (e: any) {
       seterror(e.message);
@@ -81,7 +80,6 @@ const Transfer = () => {
     try {
       const sharedsecret = ephKey.derive(meta.getPublic());
       const hashed = ec.keyFromPrivate(keccak256(sharedsecret.toArray()));
-      a = '0x' + sharedsecret.toArray()[0].toString(16).padStart(2, '0');
       const publicKey = meta?.getPublic()?.add(hashed.getPublic())?.encode('array', false)?.splice(1) || [];
       const address = keccak256(publicKey);
       const _HexString = address.substring(address.length - 40, address.length);
@@ -91,6 +89,7 @@ const Transfer = () => {
 
       r = '0x' + ephPublic?.getX().toString(16, 64) || '';
       s = '0x' + ephPublic?.getY().toString(16, 64) || '';
+      a = '0x' + sharedsecret.toArray()[0].toString(16).padStart(2, '0');
 
     } catch (e) {
       console.log('error', e);
@@ -114,7 +113,7 @@ const Transfer = () => {
     }
 
     if (CrMetaAddress === '' || amount === '') {
-      seterror('Please enter the address');
+      seterror('Please enter the cr address');
       setTimeout(() => {
         seterror('');
       }, 4000);
@@ -129,9 +128,9 @@ const Transfer = () => {
     const contract = new ethers.Contract(connect.contractAddress, abi, signer);
 
     try {
-      const contractMethod = contract.connect(signer).trasnferCoin(r, s, a, receipent); // Replace methodName with the desired method
+      const transferCoin= contract.connect(signer).TransferCoin(r, s, a, receipent); // Replace methodName with the desired method
       const value = ethers.utils.parseEther(amount); // Replace '0.1' with the desired amount of ether to send
-      const trx = await contractMethod({ value: value }); // Pass the value property in the transaction object
+      const trx = await transferCoin({ value: value }); // Pass the value property in the transaction object
       const txId = await trx.wait();
       settrxid('https://testnet.tuber.build/' + txId.transactionHash);
 

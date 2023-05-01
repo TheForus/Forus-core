@@ -16,14 +16,17 @@ const ec = new EllipticCurve.ec('secp256k1');
 const Accept = () => {
   const connect = useContext(AppContext)
 
-  const [rootsecretkey, setrootsecretkey] = useState('')
-  const [privatekey, setprivatekey] = useState('')
-  const [hide, sethide] = useState(true)
-  const [matching, setmatchingkey] = useState(false)
-  const [err, seterr] = useState(false)
-  const [reveal, setreveal] = useState(false)
-  const [founded, setfounded] = useState('founded')
-  const [iscopied, setiscopied] = useState('Copy PrivateKey')
+
+
+  const [rootsecretkey, setrootsecretkey] = useState<string>('');
+  const [privatekey, setprivatekey] = useState<string>('');
+  const [hide, sethide] = useState<boolean>(true);
+  const [matching, setmatchingkey] = useState<boolean>(false);
+  const [err, seterr] = useState<boolean>(false);
+  const [reveal, setreveal] = useState<boolean>(false);
+  const [founded, setfounded] = useState<string>('founded');
+  const [iscopied, setiscopied] = useState<string>('Copy PrivateKey');
+
 
   let zkeys: any[] = []
   let ethers: any;
@@ -65,12 +68,13 @@ const Accept = () => {
 
     const { ethereum }: any = window
     if (!ethereum) {
+      alert('plz initialize metamask')
       return
     }
     setmatchingkey(true)
 
     var secretkey: EC.KeyPair | any;
-    let skey: any = localStorage.getItem('secretKey')
+    let skey: string | any = localStorage.getItem('secretKey')
     if (rootsecretkey === '') {
       secretkey = ec.keyFromPrivate(skey, 'hex');
 
@@ -80,19 +84,19 @@ const Accept = () => {
       secretkey = ec.keyFromPrivate(rootsecretkey, 'hex');
     }
 
-    var ephPublicKey;
+    var ephPubKey : EC.KeyPair | any;
     var RSharedsecret;
     var RHashedsecret;
-    var _sharedSecret;
+    var _sharedSecret : string | any;
 
-    const ephLogs : string[] | any= localStorage.getItem('ephLogs');
-    const data = JSON.parse(ephLogs);
+    const ephLogs: string[] | any = localStorage.getItem('ephLogs');
+    const data : string[] | null[] = JSON.parse(ephLogs);
     console.log(data)
 
     data.forEach((z: any) => {
 
-      ephPublicKey = ec.keyFromPublic(z.slice(3), 'hex');
-      RSharedsecret = secretkey.derive(ephPublicKey.getPublic()); // 
+      ephPubKey = ec.keyFromPublic(z.slice(3), 'hex');
+      RSharedsecret = secretkey.derive(ephPubKey.getPublic()); // 
       RHashedsecret = ec.keyFromPrivate(keccak256(RSharedsecret.toArray()));
       _sharedSecret = '0x' + RSharedsecret.toArray()[0].toString(16).padStart(2, '0')
       // console.log(z.slice(1, 3).toString() , _sharedSecret.toString().slice(2, 4))
@@ -132,70 +136,70 @@ const Accept = () => {
 
   return (
     <>
-    <div className="py-2 flex space-x-4 justify-center ml-11">
-      {hide !== true && (
-        <input
-          type="text"
-          className="bg-[#fffafa] font-semibold text-gray-700 montserrat-subtitle outline-none border rounded-md p-1 px-2 border-1 border-gray-400 w-[340px]"
-          value={rootsecretkey}
-          onChange={(e) => {
-            setrootsecretkey(e.target.value);
-          }}
-          placeholder="Secretkey (optional)"
-        />
-      )}
-      {hide && (
-        <p className="text-gray-500 p-1 px-2 font-semibold montserrat-small ">
-          Expand to enter the saved Key ( optional )
-        </p>
-      )}
-      {/* expand icon (toggle of input button) */}
-      {hide ? (
-        <AiOutlineArrowsAlt
-          className="cursor-pointer text-gray-500"
-          size={25}
-          onClick={() => sethide(!hide)}
-        />
-      ) : (
-        <AiOutlineShrink
-          className="cursor-pointer text-gray-500"
-          size={25}
-          onClick={() => sethide(!hide)}
-        />
-      )}
-    </div>
-
-    {/* Match key */}
-    <div className="flex justify-center pt-4">
-      <div
-        className="flex items-center cursor-pointer space-x-1 border-1 p-1 text-white bg-[#10F1B4] hover:shadow-xl px-6 text-center rounded-md hover:bg-[#FDF0EF] hover:text-[#10F1B4] font-semibold hover:border-white border-[#10F1B4] border"
-        onClick={generateprivatekey }
-      >
-        {/* <GiKangaroo size={26} /> */}
-        <h2 className='montserrat-small'>Match Key</h2>
+      <div className="py-2 flex space-x-4 justify-center ml-11">
+        {hide !== true && (
+          <input
+            type="text"
+            className="bg-[#fffafa] font-semibold text-gray-700 montserrat-subtitle outline-none border rounded-md p-1 px-2 border-1 border-gray-400 w-[340px]"
+            value={rootsecretkey}
+            onChange={(e) => {
+              setrootsecretkey(e.target.value);
+            }}
+            placeholder="Secretkey (optional)"
+          />
+        )}
+        {hide && (
+          <p className="text-gray-500 p-1 px-2 font-semibold montserrat-small ">
+            Expand to enter the saved Key ( optional )
+          </p>
+        )}
+        {/* expand icon (toggle of input button) */}
+        {hide ? (
+          <AiOutlineArrowsAlt
+            className="cursor-pointer text-gray-500"
+            size={25}
+            onClick={() => sethide(!hide)}
+          />
+        ) : (
+          <AiOutlineShrink
+            className="cursor-pointer text-gray-500"
+            size={25}
+            onClick={() => sethide(!hide)}
+          />
+        )}
       </div>
-    </div>
 
-    {/* message */}
-    <div className="p-4  text-[#10F1B4]  font-semibold">
-      {matching === true ? <p>Running.....</p> : false}
-      {reveal === true ? (
-        <div className="flex ml-60  justify-center space-x-3 montserrat-small">
-          <p>{iscopied}</p>
-          <AiOutlineCopy size={25} className='cursor-pointer text-gray-500 ' onClick={copykey} />
+      {/* Match key */}
+      <div className="flex justify-center pt-4">
+        <div
+          className="flex items-center cursor-pointer space-x-1 border-1 p-1 text-white bg-[#10F1B4] hover:shadow-xl px-6 text-center rounded-md hover:bg-[#FDF0EF] hover:text-[#10F1B4] font-semibold hover:border-white border-[#10F1B4] border"
+          onClick={generateprivatekey}
+        >
+          {/* <GiKangaroo size={26} /> */}
+          <h2 className='montserrat-small'>Match Key</h2>
         </div>
-      ) : (
-        <>
-          <p>{founded !== 'founded' && 'Key doesnt exist'}</p>
-          <p>{err && 'Error : ' + err}</p>
-        </>
-      )}
-    </div>
+      </div>
+
+      {/* message */}
+      <div className="p-4  text-[#10F1B4]  font-semibold">
+        {matching === true ? <p>Running.....</p> : false}
+        {reveal === true ? (
+          <div className="flex ml-60  justify-center space-x-3 montserrat-small">
+            <p>{iscopied}</p>
+            <AiOutlineCopy size={25} className='cursor-pointer text-gray-500 ' onClick={copykey} />
+          </div>
+        ) : (
+          <>
+            <p>{founded !== 'founded' && 'Key doesnt exist'}</p>
+            <p>{err && 'Error : ' + err}</p>
+          </>
+        )}
+      </div>
 
 
 
 
-  </>
+    </>
   )
 }
 
