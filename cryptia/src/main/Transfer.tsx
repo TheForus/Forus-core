@@ -24,7 +24,7 @@ const Transfer = () => {
 
   let ethers: any;
 
-  const contractAddress = '0x6340e1ed7DCe39ccA016C1805286Aa11536b4F3a'
+  // const contractAddress = '0x6340e1ed7DCe39ccA016C1805286Aa11536b4F3a'
   const { ethereum }: any = window;
 
   const [token, settoken] = useState('')
@@ -112,7 +112,7 @@ const Transfer = () => {
 
     const provider = new ethers.providers.JsonRpcProvider(ethereum); // Replace with the Infura project ID and network
     const signer = provider.getSigner();
-    const contract = new ethers.Contract(contractAddress, abi, signer);
+    const contract = new ethers.Contract(connect.contractAddress, abi, signer);
 
     try {
       const contractMethod = contract.connect(signer).trasnferCoin(r, s, a, receipent); // Replace methodName with the desired method
@@ -163,7 +163,7 @@ const Transfer = () => {
     const signer = provider.getSigner();
 
 
-    const contract = new ethers.Contract(contractAddress, abi, signer);
+    const contract = new ethers.Contract(connect.contractAddress, abi, signer);
 
     const trx = await contract.trasnferCoin(r, s, a, token, receipent, amount).send({
       value: ethers.utils.parseEther(amount)
