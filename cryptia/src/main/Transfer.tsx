@@ -178,9 +178,9 @@ const Transfer = () => {
 
 
   return (
-    <div>Transfer
+    <div>
 
-      <button onClick={setUp}>Initalize</button>
+      <button onClick={setUp}>Send</button>
     </div>
   )
 }
