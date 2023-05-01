@@ -16,7 +16,7 @@ const Header = () => {
         {/* left side */}
         <div className='flex flex-col items-start space-y-6 mt-12'>
           <h2 className='montserrat-subtitle font-bold sm:text-[2.0rem] text-[2.4rem] text-[white]'>Stay anonymous & secure</h2>
-          <p className='montserrat-small font-semibold text-[#58707e] text-left break-words  max-w-[400px] text-[1.1rem]'>Unlock the Power of Secure and Private Transactions with Cryptia!
+          <p className='montserrat-small font-semibold text-[#6e828d] text-left break-words  max-w-[400px] text-[1.1rem]'>Unlock the Power of Secure and Private Transactions with Cryptia!
             Safeguard Your Financial Interactions with Cutting-edge Cryptography.!</p>
           <button
             className='border-1 hover:text-white hover:bg-[black] 
