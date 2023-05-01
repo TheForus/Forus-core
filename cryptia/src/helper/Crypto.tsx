@@ -5,7 +5,7 @@ interface Token {
     symbol: string;
 }
 
-export const tokens: Token[] = [
+export const Crypto: Token[] = [
     { name: "NOTE", address: "0x03F734Bd9847575fDbE9bEaDDf9C166F880B5E5f", symbol: "WCANTO" },
     { name: "ATOM", address: "0x04a72466De69109889Db059Cb1A4460Ca0648d9D", symbol: "ATOM" },
     { name: "USDT", address: "0x40E41DC5845619E7Ba73957449b31DFbfB9678b2", symbol: "USDT" },

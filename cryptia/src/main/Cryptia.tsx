@@ -13,7 +13,8 @@ interface ContextValue {
     show: boolean;
     setShow: React.Dispatch<React.SetStateAction<boolean | any>>;
     connectWallet(): void;
-    chainid: string | null
+    chainid: string | null ;
+    contractAddress : string
 };
 
 
@@ -24,6 +25,7 @@ const Cryptia = (props: Props) => {
     const [show, setShow] = useState<boolean>(true);
     const [, setwallet] = useState<boolean>(false);
     const [chainid, setchainid] = useState<string | null>('');
+    let contractAddress : string ='0x6340e1ed7DCe39ccA016C1805286Aa11536b4F3a'
 
     let chainId: string;
 
@@ -97,7 +99,8 @@ const Cryptia = (props: Props) => {
         show,
         setShow,
         connectWallet,
-        chainid
+        chainid,
+        contractAddress
     };
 
     return (
