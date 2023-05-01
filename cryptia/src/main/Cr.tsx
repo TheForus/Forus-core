@@ -85,20 +85,35 @@ const Cr = (props: Props) => {
 
   return (
     <>
-      <div>
+      <div className="bg-white flex flex-col items-center p-4 rounded-t-md">
 
-        <h1> Unlock the power of secrecy with Cryptia,</h1>
+        <div className="pb-6 flex flex-col space-y-4 items-center border-b w-full">
+        <h1 
+        className="mx-auto w-[70%] montserrat-subtitle text-gray-700 md:text-3xl 
+        text-2xl  font-bold"
+        > Unlock the 
+        <span className="montserrat-subtitle md:text-3xl 
+        text-2xl font-extrabold text-[#10F1B4]"> power of secrecy</span> with Cryptia,</h1>
+        
         {note === true &&
-          <p>Guard the key, unleash the cr. Never reveal the 'secret key' , only share your secure 'Cr encess' for confidential transactions. </p>}
+          <p 
+          className="montserrat-small font-mono w-[80%]">
+          Guard the key, unleash the cr. Never reveal the 'secret key' , only share your secure 'Cr encess' for confidential transactions. </p>}
+          </div>
 
-
-        <div>
-          <p>#Cryptia#{cryptiaaddress}</p>
-          <AiOutlineCopy onClick={copy} />
+        <div className="my-6 flex gap-4 items-center p-2 px-3 rounded-md bg-gray-100">
+          <p className="montserrat-small font-medium">
+            <span className="text-gray-800 font-semibold">#Cryptia</span> 
+            - #{cryptiaaddress}</p>
+          <AiOutlineCopy className='font-bold text-2xl' onClick={copy} />
         </div>
 
-        <button onClick={Generate}>Generate</button>
-
+        <button 
+        className="mb-4 montserrat-subtitle border-1 p-1 montserrat-subtitle  
+        text-black bg-[#10F1B4] hover:shadow-xl px-6 text-center 
+        rounded-md  font-semibold   hover:bg-gray-800 
+        hover:text-[#10F1B4]  hover:border-white border-gray-200 border" 
+        onClick={Generate}>Generate</button>
       </div>
     </>
   )

@@ -102,13 +102,15 @@ const Cryptia = (props: Props) => {
 
     return (
         <AppContext.Provider value={ContextValue}>
-            <div >
+            <div className='bg-[#dcfff6] md:h-[98vh]'>
                 <Navmain />
-                <Cr />
-
-                <div>
-                    <Instruction />
-                    <Trx />
+                <div className='md:w-[90%] max-w-[1020px] mx-auto
+                  py-8 p-4'>
+                    <Cr />
+                    <div className='flex flex-col-reverse space-y-4 sm:flex-row justify-between p-3 py-4'>
+                        <Instruction />
+                        <Trx />
+                    </div>
                 </div>
             </div>
         </AppContext.Provider>

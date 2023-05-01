@@ -10,10 +10,10 @@ const Tutorial = (props: Props) => {
     <div className='flex flex-col py-10 items-center justify-center'>
       <h1 className='montserrat-heading py-4 font-semibold text-3xl
        text-[#435864] border-b border-gray-400'>See how it works</h1>
-       <div className='py-5'>
+       <div className='py-5 flex justify-center md:h-[580px] h-[300px] lg:w-[60%] w-full'>
        <ReactPlayer
-          width='900px'
-          height='460px'
+          width='90%'
+          height='95%'
           url='https://www.youtube.com/watch?v=JhqLO40y60A&t=66s'
           />
        </div>

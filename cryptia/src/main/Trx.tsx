@@ -22,11 +22,26 @@ const Trx = (props: Props) => {
   };
 
   return (
-    <div>
-      <button onClick={handleTransferClick}>Transfer</button>
-      <button onClick={handleAcceptClick}>Accept</button>
-
+    <div className='flex flex-col p-5 backdrop-blur-[50px] hover:backdrop-blur-lg
+     h-full'>
+      <div className='flex space-x-4 montserrat-subtitle text-xl 
+      border-b pb-2 border-gray-300
+      font-bold'>
+        <button 
+        onClick={handleTransferClick}
+        className={`px-3 
+        text-${showTransfer ? '[#10F1B4]' : 'gray-900'}`}
+        >Transfer</button>
+        <button 
+        onClick={handleAcceptClick}
+        className={`px-3 
+        text-${!showTransfer ? '[#10F1B4]' : 'gray-900'}`}
+        >Accept</button>
+      </div>
+      {/* below buttons */}
+      <div className='p-4'>
       {showTransfer ? <Transfer /> : <Accept />}
+      </div>
     </div>
   );
 };

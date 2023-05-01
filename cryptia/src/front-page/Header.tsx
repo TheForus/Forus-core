@@ -11,11 +11,13 @@ const Header = () => {
     <>
 
 
-      <div className='bg-[#10F1B4] sm:px-20 px-12 p-10   flex justify-between ' >
+      <div className='bg-[#10F1B4] sm:px-20 px-12 p-10 flex 
+      justify-between items-center md:flex-row flex-col space-y-6' >
 
         {/* left side */}
         <div className='flex flex-col items-start space-y-6 mt-12'>
-          <h2 className='montserrat-subtitle font-bold sm:text-[2.0rem] text-[2.4rem] text-[white]'>Stay anonymous & secure</h2>
+          <h2 className='montserrat-subtitle font-bold sm:text-[2.0rem]
+          text-left text-[2.4rem] text-[white]'>Stay anonymous & secure</h2>
           <p className='montserrat-small font-semibold text-[#58707e] text-left break-words  max-w-[400px] text-[1.1rem]'>Unlock the Power of Secure and Private Transactions with Cryptia!
             Safeguard Your Financial Interactions with Cutting-edge Cryptography.!</p>
           <button
@@ -27,7 +29,11 @@ const Header = () => {
         </div>
 
         {/* right Banner */}
-        <div > <img className=' border-1 rounded-lg ' src={workflow} alt='' height={120} width={650} /></div>
+        <div className=''> 
+          <img 
+            className='border-1 rounded-lg' 
+            src={workflow} alt='' height={120} width={650} />
+          </div>
 
 
       </div>
