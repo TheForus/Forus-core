@@ -4,9 +4,10 @@ import EllipticCurve from 'elliptic';
 import { ec as EC } from 'elliptic';
 import { useContext } from 'react';
 import { AppContext } from './Cryptia';
-import abi from "../artifacts/contracts/Logs.sol/Logs.json";
-import  {Crypto} from '../helper/Crypto';
+import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
+import { Crypto } from '../helper/Crypto';
 import { AiOutlineArrowDown } from "react-icons/ai";
+import { ethers } from 'ethers'
 const ec = new EllipticCurve.ec('secp256k1');
 
 
@@ -14,7 +15,10 @@ const ec = new EllipticCurve.ec('secp256k1');
 
 const Transfer = () => {
 
+
   const connect = useContext(AppContext)
+
+
 
 
 
@@ -22,15 +26,15 @@ const Transfer = () => {
   let s: string | null;
   let a: string | null;
 
-  let receipent: string | '';
 
-  let ethers: any;
+
+  // let ethers: any;
 
   // const contractAddress = '0x6340e1ed7DCe39ccA016C1805286Aa11536b4F3a'
   const { ethereum }: any = window;
 
   const [token, settoken] = useState<string | ''>('');
-  const [CrMetaAddress, setCrMetaAddress] = useState<string | ''>('CNQ3HKdeSDpxpZCDGTESp4Ecy8s9BVLNoPg8QvymjftEQN3b');
+  const [CrMetaAddress, setCrMetaAddress] = useState<string | ''>('');
   const [error, seterror] = useState<string | ''>('');
   const [amount, setamount] = useState<string | ''>('');
   const [show, setshow] = useState<boolean>(false);
@@ -38,9 +42,11 @@ const Transfer = () => {
   const [trxid, settrxid] = useState<string>('');
   const [running, setrunning] = useState<boolean>(false);
 
+  let receipent: string | '';
 
 
-  const validatingCr = (event:  any) => {
+
+  const validatingCr = (event: any) => {
 
     if (event.target.value[0] !== 'T' && event.target.value !== '') {
       seterror('Invalid address')
@@ -83,8 +89,8 @@ const Transfer = () => {
       const publicKey = meta?.getPublic()?.add(hashed.getPublic())?.encode('array', false)?.splice(1) || [];
       const address = keccak256(publicKey);
       const _HexString = address.substring(address.length - 40, address.length);
-      receipent = getAddress('0x' + _HexString)
-      console.log(receipent)
+       receipent = getAddress('0x' + _HexString)
+
 
 
       r = '0x' + ephPublic?.getX().toString(16, 64) || '';
@@ -107,13 +113,11 @@ const Transfer = () => {
       return;
     }
 
-    if (connect.chainid !== '0x1e15') {
-      alert('Please connect to canto testnet');
-      return;
-    }
+    setUp()
 
     if (CrMetaAddress === '' || amount === '') {
       seterror('Please enter the cr address');
+      console.log(error)
       setTimeout(() => {
         seterror('');
       }, 4000);
@@ -123,14 +127,22 @@ const Transfer = () => {
     setrunning(true);
 
 
-    const provider = new ethers.providers.JsonRpcProvider(ethereum); // Replace with the Infura project ID and network
+    const provider = new ethers.providers.Web3Provider(ethereum); // Replace with the Infura project ID and network
     const signer = provider.getSigner();
-    const contract = new ethers.Contract(connect.contractAddress, abi, signer);
+    console.log(signer)
+    const contract = new ethers.Contract(connect.contractAddress, Abi.abi, signer);
+    console.log(connect.contractAddress, amount)
 
     try {
-      const transferCoin= contract.connect(signer).TransferCoin(r, s, a, receipent); // Replace methodName with the desired method
-      const value = ethers.utils.parseEther(amount); // Replace '0.1' with the desired amount of ether to send
-      const trx = await transferCoin({ value: value }); // Pass the value property in the transaction object
+
+      const valueToSend = ethers.utils.parseEther(amount);
+      const transactionParameters = {
+        value: valueToSend,
+      };
+      console.log('r', receipent)
+      const transferCoin = await contract.TransferCoin(r, s, a, receipent, transactionParameters); // Replace methodName with the desired method
+
+      const trx = await transferCoin(); // Pass the value property in the transaction object
       const txId = await trx.wait();
       settrxid('https://testnet.tuber.build/' + txId.transactionHash);
 
@@ -173,16 +185,17 @@ const Transfer = () => {
 
 
 
-    const provider = new ethers.providers.JsonRpcProvider(ethereum); // Replace with the Infura project ID and network
+    const provider = new ethers.providers.Web3Provider(ethereum);  // Replace with the Infura project ID and network
 
     const signer = provider.getSigner();
 
 
-    const contract = new ethers.Contract(connect.contractAddress, abi, signer);
+    const contract = new ethers.Contract(connect.contractAddress, Abi.abi, signer);
 
-    const trx = await contract.trasnferCoin(r, s, a, token, receipent, amount).send({
-      value: ethers.utils.parseEther(amount)
-    });
+    const transferCoin = contract.connect(signer).TransferToken(r, s, a, token, receipent, amount); // Replace methodName with the desired method
+
+    const trx = await transferCoin(); // Pass the value property in the transaction object
+
 
     const txId = await trx.wait();
     console.log(txId);
@@ -190,12 +203,12 @@ const Transfer = () => {
 
     setrunning(false);
   };
-    const changedefault = (c :any) => {
-        setshow(!show)
-        setbyDefault(c.name)
-        settoken(c.address)
+  const changedefault = (c: any) => {
+    setshow(!show)
+    setbyDefault(c.name)
+    settoken(c.address)
 
-    }
+  }
 
   return (
     <div>
@@ -235,7 +248,7 @@ const Transfer = () => {
         </div>
 
       </div>
-      <button className='border-2 border-black ' onClick={setUp}>Send</button>
+      <button className='border-2 border-black ' onClick={Transfer}>Send</button>
     </div>
   )
 }
