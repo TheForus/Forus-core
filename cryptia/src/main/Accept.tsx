@@ -6,7 +6,7 @@ import abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { useContext } from 'react';
 import { AppContext } from './Cryptia';
 import { AiOutlineCopy } from "react-icons/ai";
-import { GiKangaroo } from "react-icons/gi";
+// import { GiKangaroo } from "react-icons/gi";
 import { AiOutlineArrowsAlt, AiOutlineShrink } from "react-icons/ai";
 const ec = new EllipticCurve.ec('secp256k1');
 
@@ -24,6 +24,7 @@ const Accept = () => {
   const [reveal, setreveal] = useState(false)
   const [founded, setfounded] = useState('founded')
   const [iscopied, setiscopied] = useState('Copy PrivateKey')
+
   let zkeys: any[] = []
   let ethers: any;
 
@@ -43,7 +44,7 @@ const Accept = () => {
 
         for (let i = 0; i < limit.toString(); i++) {
           let result: any = await contract.logs(i)
-          zkeys.push(`T${result.ss.replace('0x', '')}04${result.x.slice(2)}${result.y.slice(2)}`)
+          zkeys.push(`C${result.ss.replace('0x', '')}04${result.x.slice(2)}${result.y.slice(2)}`)
           localStorage.setItem('ephLogs', JSON.stringify(zkeys))
 
 
@@ -85,10 +86,10 @@ const Accept = () => {
     var _sharedSecret;
 
     const ephLogs : string[] | any= localStorage.getItem('ephLogs');
-    const registry = JSON.parse(ephLogs);
-    console.log(registry)
+    const data = JSON.parse(ephLogs);
+    console.log(data)
 
-    registry.forEach((z: any) => {
+    data.forEach((z: any) => {
 
       ephPublicKey = ec.keyFromPublic(z.slice(3), 'hex');
       RSharedsecret = secretkey.derive(ephPublicKey.getPublic()); // 
@@ -140,7 +141,7 @@ const Accept = () => {
           onChange={(e) => {
             setrootsecretkey(e.target.value);
           }}
-          placeholder="DontRevealMe key (optional)"
+          placeholder="Secretkey (optional)"
         />
       )}
       {hide && (
@@ -170,7 +171,7 @@ const Accept = () => {
         className="flex items-center cursor-pointer space-x-1 border-1 p-1 text-white bg-[#10F1B4] hover:shadow-xl px-6 text-center rounded-md hover:bg-[#FDF0EF] hover:text-[#10F1B4] font-semibold hover:border-white border-[#10F1B4] border"
         onClick={generateprivatekey }
       >
-        <GiKangaroo size={26} />
+        {/* <GiKangaroo size={26} /> */}
         <h2 className='montserrat-small'>Match Key</h2>
       </div>
     </div>
