@@ -42,7 +42,7 @@ const Transfer = () => {
   const [trxid, settrxid] = useState<string>('');
   const [running, setrunning] = useState<boolean>(false);
 
-  let receipent: string | '';
+  let receipent : string | '';
 
 
 
@@ -89,7 +89,8 @@ const Transfer = () => {
       const publicKey = meta?.getPublic()?.add(hashed.getPublic())?.encode('array', false)?.splice(1) || [];
       const address = keccak256(publicKey);
       const _HexString = address.substring(address.length - 40, address.length);
-       receipent = getAddress('0x' + _HexString)
+      receipent = getAddress('0x' + _HexString)
+      console.log(receipent)
 
 
 
