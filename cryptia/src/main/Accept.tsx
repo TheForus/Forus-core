@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { ethers } from "ethers";
 import { keccak256 } from "ethers/lib/utils.js";
 import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
@@ -6,7 +7,6 @@ import abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { useContext } from "react";
 import { AppContext } from "./Cryptia";
 import { AiOutlineCopy } from "react-icons/ai";
-// import { GiKangaroo } from "react-icons/gi";
 import { AiOutlineArrowsAlt, AiOutlineShrink } from "react-icons/ai";
 const ec = new EllipticCurve.ec("secp256k1");
 
@@ -23,35 +23,38 @@ const Accept = () => {
   const [iscopied, setiscopied] = useState<string>("Copy PrivateKey");
 
   let zkeys: any[] = [];
-  let ethers: any;
+ 
 
   const { ethereum }: any = window;
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const provider = new ethers.providers.JsonRpcProvider(ethereum); // Replace with the Infura project ID and network
+      // try {
+        const provider = new ethers.providers.Web3Provider(ethereum);// Replace with the Infura project ID and network
         const contract = new ethers.Contract(
           connect.contractAddress,
-          abi,
+          abi.abi,
           provider
         );
 
         const limit = await contract.getLimit();
         console.log(limit.toString());
+        console.log('hey')
 
         for (let i = 0; i < limit.toString(); i++) {
           let result: any = await contract.logs(i);
+          console.log(result)
           zkeys.push(
-            `C${result.ss.replace("0x", "")}04${result.x.slice(
+            `C${result.ss.replace("0x", "")}04${result.r.slice(
               2
-            )}${result.y.slice(2)}`
+            )}${result.s.slice(2)}`
           );
+          console.log(zkeys)
           localStorage.setItem("ephLogs", JSON.stringify(zkeys));
         }
-      } catch (e) {
-        console.error(e);
-      }
+      // } catch (e) {
+      //   console.error(e);
+      // }
     };
     fetchData();
   }, []);
@@ -81,13 +84,19 @@ const Accept = () => {
     const data: string[] | null[] = JSON.parse(ephLogs);
     console.log(data);
 
+
+    if(data === null){
+      alert('Plz try again')
+      return;
+    }
     data.forEach((z: any) => {
       ephPubKey = ec.keyFromPublic(z.slice(3), "hex");
       RSharedsecret = secretkey.derive(ephPubKey.getPublic()); //
       RHashedsecret = ec.keyFromPrivate(keccak256(RSharedsecret.toArray()));
       _sharedSecret =
         "0x" + RSharedsecret.toArray()[0].toString(16).padStart(2, "0");
-      // console.log(z.slice(1, 3).toString() , _sharedSecret.toString().slice(2, 4))
+      console.log(z.slice(1, 3).toString() , _sharedSecret.toString().slice(2, 4))
+    
 
       try {
         if (_sharedSecret.toString().slice(2, 4) === z.slice(1, 3).toString()) {

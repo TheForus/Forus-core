@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { base58, keccak256, getAddress } from "ethers/lib/utils.js";
 import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
@@ -30,9 +30,11 @@ const Transfer = () => {
   const [byDefault, setbyDefault] = useState<string>("CANTO");
   const [trxid, settrxid] = useState<string>("");
   const [running, setrunning] = useState<boolean>(false);
+  const [receipent, setreceipent] = useState<string>("");
 
 
-  let receipent : string | '';
+  // let receipent: any;
+  // console.log('receipent', receipent)
 
 
 
@@ -51,7 +53,7 @@ const Transfer = () => {
   const setUp = async () => {
     let meta: EC.KeyPair | any;
     let ephPublic: EC.KeyPair | any;
-    let receipent: string | null;
+    // let receipent: string | null;
 
     const ephKey = ec.genKeyPair();
     ephPublic = ephKey.getPublic();
@@ -82,21 +84,13 @@ const Transfer = () => {
       const address = keccak256(publicKey);
       const _HexString = address.substring(address.length - 40, address.length);
 
-      receipent = getAddress('0x' + _HexString)
-      console.log(receipent)
-
-
-
-      r = '0x' + ephPublic?.getX().toString(16, 64) || '';
-      s = '0x' + ephPublic?.getY().toString(16, 64) || '';
-      a = '0x' + sharedsecret.toArray()[0].toString(16).padStart(2, '0');
-
-      receipent = getAddress("0x" + _HexString);
-
+      let rec : string = getAddress('0x' + _HexString)
+      setreceipent(rec)
 
       r = "0x" + ephPublic?.getX().toString(16, 64) || "";
       s = "0x" + ephPublic?.getY().toString(16, 64) || "";
       a = "0x" + sharedsecret.toArray()[0].toString(16).padStart(2, "0");
+
     } catch (e) {
       console.log("error", e);
     }
@@ -104,13 +98,21 @@ const Transfer = () => {
     return true;
   };
 
+  // useEffect(() => {
+
+  //   console.log('hello',receipent)
+  // },[setUp])
+
   const Transfer = async () => {
+
+    setUp();
+  
     if (!ethereum) {
       alert("Please initialize MetaMask");
       return;
     }
 
-    setUp();
+
 
     if (CrMetaAddress === "" || amount === "") {
       seterror("Please enter the cr address");
@@ -120,6 +122,8 @@ const Transfer = () => {
       }, 4000);
       return;
     }
+
+
 
     setrunning(true);
 
@@ -131,7 +135,7 @@ const Transfer = () => {
       Abi.abi,
       signer
     );
-    console.log(connect.contractAddress, amount);
+    console.log(connect.contractAddress, amount,receipent);
 
     try {
       const valueToSend = ethers.utils.parseEther(amount);
@@ -247,10 +251,9 @@ const Transfer = () => {
             </li>
             <div
               className={`
-              ${
-                show &&
+              ${show &&
                 "flex flex-col w-full max-h-28 rounded-b-md absolute overflow-y-auto scrollbar-hide cursor-pointer scrollbar scrollbar-w-[7px] scrollbar-h-3 scrollbar-thumb-rounded-full scrollbar-track-gray-100 "
-              }
+                }
             `}
             >
               {show &&

@@ -8,7 +8,7 @@ const Instruction = (props: Props) => {
   const { show } = useContext(AppContext);
   return (
     <>
-      <div className="border-r border-gray-600">
+      <div className="border-r border-[#d1f5e5]">
         {show ? (
           <div className="flex text-left flex-col gap-3 w-[90%]">
             {" "}

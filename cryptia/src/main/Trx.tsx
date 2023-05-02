@@ -34,14 +34,14 @@ const Trx = (props: Props) => {
         <button
           onClick={handleTransferClick}
           className={`px-3 
-        text-${showTransfer ? "[#10F1B4]" : "gray-900"}`}
+        text-${showTransfer ? "[#10F1B4]" : "[#6c8492]"}`}
         >
           Transfer
         </button>
         <button
           onClick={handleAcceptClick}
           className={`px-3 
-        text-${!showTransfer ? "[#10F1B4]" : "gray-900"}`}
+        text-${!showTransfer ? "[#10F1B4]" : "[#6c8492]"}`}
         >
           Accept
         </button>
