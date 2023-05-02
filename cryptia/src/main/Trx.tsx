@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import Transfer from './Transfer';
-import Accept from './Accept';
+import React, { useState } from "react";
+import Transfer from "./Transfer";
+import Accept from "./Accept";
 
-import { useContext } from 'react';
-import { AppContext } from './Cryptia';
+import { useContext } from "react";
+import { AppContext } from "./Cryptia";
 
 type Props = {};
 
 const Trx = (props: Props) => {
-  const {setShow}=useContext(AppContext);
+  const { setShow } = useContext(AppContext);
   const [showTransfer, setShowTransfer] = useState(true);
 
   const handleTransferClick = () => {
@@ -22,25 +22,33 @@ const Trx = (props: Props) => {
   };
 
   return (
-    <div className='flex flex-col p-5 backdrop-blur-[50px] hover:backdrop-blur-lg
-     h-full'>
-      <div className='flex space-x-4 montserrat-subtitle text-xl 
-      border-b pb-2 border-gray-300
-      font-bold'>
-        <button 
-        onClick={handleTransferClick}
-        className={`px-3 
-        text-${showTransfer ? '[#10F1B4]' : 'gray-900'}`}
-        >Transfer</button>
-        <button 
-        onClick={handleAcceptClick}
-        className={`px-3 
-        text-${!showTransfer ? '[#10F1B4]' : 'gray-900'}`}
-        >Accept</button>
+    <div
+      className="flex flex-col p-5 px-8 backdrop-blur-[50px] hover:backdrop-blur-lg
+     h-full"
+    >
+      <div
+        className="flex mb-4 px-6 justify-between montserrat-subtitle text-[1.4rem] 
+      border-b-2 pb-2 border-gray-300 
+      font-bold"
+      >
+        <button
+          onClick={handleTransferClick}
+          className={`px-3 
+        text-${showTransfer ? "[#10F1B4]" : "gray-900"}`}
+        >
+          Transfer
+        </button>
+        <button
+          onClick={handleAcceptClick}
+          className={`px-3 
+        text-${!showTransfer ? "[#10F1B4]" : "gray-900"}`}
+        >
+          Accept
+        </button>
       </div>
       {/* below buttons */}
-      <div className='p-4'>
-      {showTransfer ? <Transfer /> : <Accept />}
+      <div className="p-4 xl:w-[400px] w-[340px]">
+        {showTransfer ? <Transfer /> : <Accept />}
       </div>
     </div>
   );
