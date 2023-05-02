@@ -1,138 +1,116 @@
-import { useState, useEffect } from 'react'
-import { keccak256 } from 'ethers/lib/utils.js';
-import EllipticCurve from 'elliptic';
-import { ec as EC } from 'elliptic';
+import { useState, useEffect } from "react";
+import { keccak256 } from "ethers/lib/utils.js";
+import EllipticCurve from "elliptic";
+import { ec as EC } from "elliptic";
 import abi from "../artifacts/contracts/Logs.sol/Logs.json";
-import { useContext } from 'react';
-import { AppContext } from './Cryptia';
+import { useContext } from "react";
+import { AppContext } from "./Cryptia";
 import { AiOutlineCopy } from "react-icons/ai";
 // import { GiKangaroo } from "react-icons/gi";
 import { AiOutlineArrowsAlt, AiOutlineShrink } from "react-icons/ai";
-const ec = new EllipticCurve.ec('secp256k1');
-
-
-
+const ec = new EllipticCurve.ec("secp256k1");
 
 const Accept = () => {
-  const connect = useContext(AppContext)
+  const connect = useContext(AppContext);
 
-
-
-  const [rootsecretkey, setrootsecretkey] = useState<string>('');
-  const [privatekey, setprivatekey] = useState<string>('');
+  const [rootsecretkey, setrootsecretkey] = useState<string>("");
+  const [privatekey, setprivatekey] = useState<string>("");
   const [hide, sethide] = useState<boolean>(true);
   const [matching, setmatchingkey] = useState<boolean>(false);
   const [err, seterr] = useState<boolean>(false);
   const [reveal, setreveal] = useState<boolean>(false);
-  const [founded, setfounded] = useState<string>('founded');
-  const [iscopied, setiscopied] = useState<string>('Copy PrivateKey');
+  const [founded, setfounded] = useState<string>("founded");
+  const [iscopied, setiscopied] = useState<string>("Copy PrivateKey");
 
-
-  let zkeys: any[] = []
+  let zkeys: any[] = [];
   let ethers: any;
 
   const { ethereum }: any = window;
 
   useEffect(() => {
-
     const fetchData = async () => {
       try {
-
-
         const provider = new ethers.providers.JsonRpcProvider(ethereum); // Replace with the Infura project ID and network
-        const contract = new ethers.Contract(connect.contractAddress, abi, provider);
+        const contract = new ethers.Contract(
+          connect.contractAddress,
+          abi,
+          provider
+        );
 
         const limit = await contract.getLimit();
-        console.log(limit.toString())
+        console.log(limit.toString());
 
         for (let i = 0; i < limit.toString(); i++) {
-          let result: any = await contract.logs(i)
-          zkeys.push(`C${result.ss.replace('0x', '')}04${result.x.slice(2)}${result.y.slice(2)}`)
-          localStorage.setItem('ephLogs', JSON.stringify(zkeys))
-
-
-
+          let result: any = await contract.logs(i);
+          zkeys.push(
+            `C${result.ss.replace("0x", "")}04${result.x.slice(
+              2
+            )}${result.y.slice(2)}`
+          );
+          localStorage.setItem("ephLogs", JSON.stringify(zkeys));
         }
-
-
       } catch (e) {
         console.error(e);
       }
-    }
+    };
     fetchData();
-
-
   }, []);
 
   const generateprivatekey = (): void => {
-
-    const { ethereum }: any = window
+    const { ethereum }: any = window;
     if (!ethereum) {
-      alert('plz initialize metamask')
-      return
+      alert("plz initialize metamask");
+      return;
     }
-    setmatchingkey(true)
+    setmatchingkey(true);
 
     var secretkey: EC.KeyPair | any;
-    let skey: string | any = localStorage.getItem('secretKey')
-    if (rootsecretkey === '') {
-      secretkey = ec.keyFromPrivate(skey, 'hex');
-
+    let skey: string | any = localStorage.getItem("secretKey");
+    if (rootsecretkey === "") {
+      secretkey = ec.keyFromPrivate(skey, "hex");
+    } else {
+      secretkey = ec.keyFromPrivate(rootsecretkey, "hex");
     }
 
-    else {
-      secretkey = ec.keyFromPrivate(rootsecretkey, 'hex');
-    }
-
-    var ephPubKey : EC.KeyPair | any;
+    var ephPubKey: EC.KeyPair | any;
     var RSharedsecret;
     var RHashedsecret;
-    var _sharedSecret : string | any;
+    var _sharedSecret: string | any;
 
-    const ephLogs: string[] | any = localStorage.getItem('ephLogs');
-    const data : string[] | null[] = JSON.parse(ephLogs);
-    console.log(data)
+    const ephLogs: string[] | any = localStorage.getItem("ephLogs");
+    const data: string[] | null[] = JSON.parse(ephLogs);
+    console.log(data);
 
     data.forEach((z: any) => {
-
-      ephPubKey = ec.keyFromPublic(z.slice(3), 'hex');
-      RSharedsecret = secretkey.derive(ephPubKey.getPublic()); // 
+      ephPubKey = ec.keyFromPublic(z.slice(3), "hex");
+      RSharedsecret = secretkey.derive(ephPubKey.getPublic()); //
       RHashedsecret = ec.keyFromPrivate(keccak256(RSharedsecret.toArray()));
-      _sharedSecret = '0x' + RSharedsecret.toArray()[0].toString(16).padStart(2, '0')
+      _sharedSecret =
+        "0x" + RSharedsecret.toArray()[0].toString(16).padStart(2, "0");
       // console.log(z.slice(1, 3).toString() , _sharedSecret.toString().slice(2, 4))
-
 
       try {
         if (_sharedSecret.toString().slice(2, 4) === z.slice(1, 3).toString()) {
           const _key = secretkey.getPrivate().add(RHashedsecret.getPrivate());
           const pk = _key.mod(ec.curve.n);
-          console.log('Private key to open wallet', pk.toString(16, 32))
-          setprivatekey(pk.toString(16, 32))
-          setreveal(true)
-          setrootsecretkey('')
-          setfounded('founded')
-
+          console.log("Private key to open wallet", pk.toString(16, 32));
+          setprivatekey(pk.toString(16, 32));
+          setreveal(true);
+          setrootsecretkey("");
+          setfounded("founded");
         }
-        return
-
+        return;
+      } catch (e: any) {
+        seterr(e.message);
       }
-
-      catch (e: any) {
-        seterr(e.message)
-      }
-
-
-    })
-    setmatchingkey(false)
-
-
-  }
+    });
+    setmatchingkey(false);
+  };
 
   const copykey = () => {
-    navigator.clipboard.writeText(privatekey)
-    setiscopied('Copied')
-  }
-
+    navigator.clipboard.writeText(privatekey);
+    setiscopied("Copied");
+  };
 
   return (
     <>
@@ -176,7 +154,7 @@ const Accept = () => {
           onClick={generateprivatekey}
         >
           {/* <GiKangaroo size={26} /> */}
-          <h2 className='montserrat-small'>Match Key</h2>
+          <h2 className="montserrat-small">Match Key</h2>
         </div>
       </div>
 
@@ -186,21 +164,21 @@ const Accept = () => {
         {reveal === true ? (
           <div className="flex ml-60  justify-center space-x-3 montserrat-small">
             <p>{iscopied}</p>
-            <AiOutlineCopy size={25} className='cursor-pointer text-gray-500 ' onClick={copykey} />
+            <AiOutlineCopy
+              size={25}
+              className="cursor-pointer text-gray-500 "
+              onClick={copykey}
+            />
           </div>
         ) : (
           <>
-            <p>{founded !== 'founded' && 'Key doesnt exist'}</p>
-            <p>{err && 'Error : ' + err}</p>
+            <p>{founded !== "founded" && "Key doesnt exist"}</p>
+            <p>{err && "Error : " + err}</p>
           </>
         )}
       </div>
-
-
-
-
     </>
-  )
-}
+  );
+};
 
-export default Accept
+export default Accept;
