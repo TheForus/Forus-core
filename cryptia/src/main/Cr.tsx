@@ -3,12 +3,16 @@ import base58 from 'bs58';
 import { useState, useEffect } from 'react'
 import EllipticCurve from 'elliptic';
 import { AiOutlineCopy } from "react-icons/ai";
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
 const ec = new EllipticCurve.ec('secp256k1');
 
 type Props = {}
 
 
 const Cr = (props: Props) => {
+
+  const notyf = new Notyf();
 
   const [cryptiaaddress, setcryptiaaddress] = useState<string | any>('')
   const [, setstoredsecretkey] = useState<string | any>('')
@@ -78,6 +82,7 @@ const Cr = (props: Props) => {
     navigator.clipboard.writeText(cryptiaaddress)
     downloadTxt(localStorage.getItem('secretKey'))
     reveal()
+    notyf.success('Copied')
 
   }
 

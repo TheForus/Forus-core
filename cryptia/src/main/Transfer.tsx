@@ -8,10 +8,16 @@ import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { Crypto } from "../helper/Crypto";
 import { BsChevronDown } from "react-icons/bs";
 import { ethers } from "ethers";
-import sending from "../Logos/sending.gif";
+import sending from '../Logos/sending.gif'
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
+
 const ec = new EllipticCurve.ec("secp256k1");
 
+
 const Transfer = () => {
+  const notyf = new Notyf();
+
   const connect = useContext(AppContext);
 
   const ERCABI = [
@@ -176,8 +182,9 @@ const Transfer = () => {
     if (balance > amount) {
       return true;
     }
-    alert("Insufficient balance");
-    return false;
+   
+    return false
+
   }
 
   const TransferToken = async () => {
@@ -186,10 +193,10 @@ const Transfer = () => {
       return;
     }
 
-    if (connect.chainid !== "0x1e15") {
-      alert("Please connect to canto testnet");
-      return;
-    }
+    // if (connect.chainid !== "0x1e15") {
+    //   alert("Please connect to canto testnet");
+    //   return;
+    // }
 
     if (CrMetaAddress === "" || amount === "") {
       seterror("Please enter the address");
@@ -201,8 +208,8 @@ const Transfer = () => {
 
     const result = await checkBalance();
     if (result === false) {
-      alert("Insufficient balance");
-      return;
+      notyf.error('Insufficient balance')
+      return
     }
 
     setwaiting(true);
@@ -227,16 +234,28 @@ const Transfer = () => {
       settrxid("https://testnet.tuber.build/" + txId.hash);
 
       setwaiting(false);
-    } catch (e: any) {
+    }
+    catch (e: any) {
       console.log(e);
       seterror(e.message);
     }
+
+
   };
   const changedefault = (c: any) => {
     setshow(!show);
     setbyDefault(c.name);
     settoken(c.address);
   };
+
+  const viewtrx = () => {
+
+    if (trxid !== '') {
+        window.open(trxid, '_blank')
+    }
+
+
+}
 
   return (
     <div className="flex flex-col space-y-4 items-start">
@@ -319,10 +338,10 @@ const Transfer = () => {
         )}
       </button>
 
-      {/* <p onClick={opentab} className='montserrat-subtitle  text-gray-500 font-semibold underline underline-offset-8 decoration-[#FF5757] cursor-pointer'>{trxid !== '' ? trxid.slice(8, 58) : ''}</p> */}
-      <p className="montserrat-subtitle text-[#435864] font-semibold flex mx-auto items-center">
-        {error}
-      </p>
+      <p onClick={viewtrx} className='montserrat-subtitle  text-gray-500 font-semibold underline underline-offset-8 decoration-[#FF5757] cursor-pointer'>{trxid !== '' ? trxid.slice(8, 58) : ''}</p>
+      <p className='montserrat-subtitle text-[#435864] font-semibold flex mx-auto items-center'>{error}</p>
+
+
     </div>
   );
 };
