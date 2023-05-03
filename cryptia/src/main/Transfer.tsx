@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { base58, keccak256, getAddress } from "ethers/lib/utils.js";
 import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
@@ -8,14 +8,27 @@ import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { Crypto } from "../helper/Crypto";
 import { BsChevronDown } from "react-icons/bs";
 import { ethers } from "ethers";
+import sending from '../Logos/sending.gif'
 const ec = new EllipticCurve.ec("secp256k1");
 
 const Transfer = () => {
+
   const connect = useContext(AppContext);
+
+  const ERCABI = [
+    "function balanceOf(address) view returns (uint)",
+    "function transfer(address to, uint amount) returns (bool)",
+    "function symbol() external view returns (string memory)",
+    "function name() external view returns (string memory)"
+  ]
 
   let r: string | null;
   let s: string | null;
   let a: string | null;
+
+
+
+
 
   // let ethers: any;
 
@@ -29,18 +42,19 @@ const Transfer = () => {
   const [show, setshow] = useState<boolean>(false);
   const [byDefault, setbyDefault] = useState<string>("CANTO");
   const [trxid, settrxid] = useState<string>("");
-  const [running, setrunning] = useState<boolean>(false);
-  const [receipent, setreceipent] = useState<string>("");
+  const [waiting, setwaiting] = useState<boolean>(false);
+  // const [receipent, setreceipent] = useState<string>("");
 
 
   // let receipent: any;
   // console.log('receipent', receipent)
-
+  var receipent: any;
 
 
 
   const validatingCr = (event: any) => {
-    if (event.target.value[0] !== "T" && event.target.value !== "") {
+    if ((event.target.value[0] !== "C" && event.target.value !== "")
+      || (event.target.value.length > 48 || event.target.value.length < 47)) {
       seterror("Invalid address");
       setTimeout(() => {
         seterror("");
@@ -84,8 +98,8 @@ const Transfer = () => {
       const address = keccak256(publicKey);
       const _HexString = address.substring(address.length - 40, address.length);
 
-      let rec : string = getAddress('0x' + _HexString)
-      setreceipent(rec)
+      receipent = '0x' + _HexString
+      console.log(receipent)
 
       r = "0x" + ephPublic?.getX().toString(16, 64) || "";
       s = "0x" + ephPublic?.getY().toString(16, 64) || "";
@@ -105,8 +119,9 @@ const Transfer = () => {
 
   const Transfer = async () => {
 
+
     setUp();
-  
+
     if (!ethereum) {
       alert("Please initialize MetaMask");
       return;
@@ -116,7 +131,6 @@ const Transfer = () => {
 
     if (CrMetaAddress === "" || amount === "") {
       seterror("Please enter the cr address");
-      console.log(error);
       setTimeout(() => {
         seterror("");
       }, 4000);
@@ -124,8 +138,8 @@ const Transfer = () => {
     }
 
 
+    setwaiting(true)
 
-    setrunning(true);
 
     const provider = new ethers.providers.Web3Provider(ethereum); // Replace with the Infura project ID and network
     const signer = provider.getSigner();
@@ -135,14 +149,15 @@ const Transfer = () => {
       Abi.abi,
       signer
     );
-    console.log(connect.contractAddress, amount,receipent);
+    console.log(connect.contractAddress, amount, receipent);
+
 
     try {
       const valueToSend = ethers.utils.parseEther(amount);
       const transactionParameters = {
         value: valueToSend,
       };
-      console.log("r", receipent);
+
       const transferCoin = await contract.TransferCoin(
         r,
         s,
@@ -151,18 +166,54 @@ const Transfer = () => {
         transactionParameters
       ); // Replace methodName with the desired method
 
-      const trx = await transferCoin(); // Pass the value property in the transaction object
-      const txId = await trx.wait();
-      settrxid("https://testnet.tuber.build/" + txId.transactionHash);
 
-      setrunning(false);
-    } catch (e) {
+      const txId = await transferCoin.wait();
+      console.log(txId.hash);
+      settrxid("https://testnet.tuber.build/" + txId.hash);
+      console.log(txId.hash);
+
+      setwaiting(false);
+      setCrMetaAddress('')
+      setamount('')
+    } catch (e: any) {
       console.log(e);
-      setrunning(false);
+      seterror(e.message)
+
     }
   };
 
+
+
+
+
+
+
+
+
+
+  async function checkBalance(): Promise<boolean> {
+    const provider = new ethers.providers.Web3Provider(ethereum); // Replace with the Infura project ID and network
+
+    const contract = new ethers.Contract(
+      token,
+      ERCABI,
+      provider
+    );
+
+    const balance = await contract.balanceOf(sessionStorage.getItem('address'));
+    if (balance > amount) {
+      return true
+
+    }
+    alert('Insufficient balance')
+    return false
+
+
+
+  }
+
   const TransferToken = async () => {
+
     if (!ethereum) {
       alert("Please initialize MetaMask");
       return;
@@ -181,7 +232,15 @@ const Transfer = () => {
       return;
     }
 
-    setrunning(true);
+
+
+    const result = await checkBalance();
+    if (result === false) {
+      alert('Insufficient balance')
+      return
+    }
+
+    setwaiting(true);
 
     const provider = new ethers.providers.Web3Provider(ethereum); // Replace with the Infura project ID and network
 
@@ -193,17 +252,24 @@ const Transfer = () => {
       signer
     );
 
-    const transferCoin = contract
-      .connect(signer)
-      .TransferToken(r, s, a, token, receipent, amount); // Replace methodName with the desired method
+    try {
+      const transferCoin = contract
+        .connect(signer)
+        .TransferToken(r, s, a, token, receipent, amount);
 
-    const trx = await transferCoin(); // Pass the value property in the transaction object
+      const txId = await transferCoin.wait();
+      console.log(txId.hash);
+      settrxid("https://testnet.tuber.build/" + txId.hash);
 
-    const txId = await trx.wait();
-    console.log(txId);
-    settrxid("https://testnet.tuber.build/" + txId.transactionHash);
+      setwaiting(false);
+    }
 
-    setrunning(false);
+    catch (e: any) {
+      console.log(e);
+      seterror(e.message)
+
+    }
+
   };
   const changedefault = (c: any) => {
     setshow(!show);
@@ -235,7 +301,7 @@ const Transfer = () => {
         montserrat-subtitle outline-none rounded-md py-3 px-3 w-[100%] "
           value={amount}
           type="text"
-          placeholder="Ex: 100trx"
+          placeholder="Ex: 100 Note"
           onChange={(e) => setamount(e.target.value)}
         />
         {/* Tokens Dropdown Menu */}
@@ -247,7 +313,7 @@ const Transfer = () => {
             items-center gap-2 hover:text-gray-800"
             >
               <p>{byDefault}</p>
-              <BsChevronDown color="black" size={18} />
+              <BsChevronDown color="grey" size={18} />
             </li>
             <div
               className={`
@@ -268,8 +334,8 @@ const Transfer = () => {
                       key={c.name}
                       onClick={() => changedefault(c)}
                     >
-                      <p>{c.name}</p>
                       <img src={c.symbol} alt="" height={16} width={20} />
+                      <p>{c.name}</p>
                     </li>
                   </div>
                 ))}
@@ -279,11 +345,17 @@ const Transfer = () => {
       </div>
       <button
         className="flex mx-auto items-center cursor-pointer space-x-1 border-1 p-1 text-white bg-[#10F1B4] 
-        hover:shadow-xl px-7 text-center rounded-md hover:bg-gray-900 hover:text-[#10F1B4] font-semibold hover:border-white border-[#10F1B4] border"
-        onClick={Transfer}
+        hover:shadow-xl px-7 text-center rounded-md font-semibold hover:border-white border-[#10F1B4] border"
+        onClick={byDefault === 'CANTO' ? Transfer : TransferToken}
       >
-        Send
+        {waiting === false ? 'Send' : <img height={30} width={30} src={sending} alt="" />}
       </button>
+
+
+      {/* <p onClick={opentab} className='montserrat-subtitle  text-gray-500 font-semibold underline underline-offset-8 decoration-[#FF5757] cursor-pointer'>{trxid !== '' ? trxid.slice(8, 58) : ''}</p> */}
+      <p className='montserrat-subtitle text-[#435864] font-semibold flex mx-auto items-center'>{error}</p>
+
+
     </div>
   );
 };

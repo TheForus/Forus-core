@@ -21,9 +21,9 @@ const Header = () => {
           <p className='montserrat-small font-semibold text-[#58707e] text-left break-words  max-w-[400px] text-[1.1rem]'>Unlock the Power of Secure and Private Transactions with Cryptia!
             Safeguard Your Financial Interactions with Cutting-edge Cryptography.!</p>
           <button
-            className='border-1 hover:text-white hover:bg-[black] 
-        hover:shadow-xl p-1 px-9 rounded-lg bg-[#E8FDF4] text-[#10F1B4] 
-        font-semibold hover:border-white border text-xl'
+            className='border-1 montserrat-subtitle  hover:bg-gray-900 hover:text-[#10F1B4]
+     p-1 px-9 rounded-lg bg-[#E8FDF4] text-[#10F1B4]  montserrat-subtitle 
+        font-semibold  text-xl'
             onClick={() => navigate('/Cryptia')}
           >Launch</button>
         </div>

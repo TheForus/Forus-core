@@ -15,6 +15,10 @@ interface ContextValue {
     connectWallet(): void;
     chainid: string | null ;
     contractAddress : string
+    sumof : string | any
+    setsumof : React.Dispatch<React.SetStateAction<string | any>>;
+    sumofAddress : string | any
+    setsumofAddress : React.Dispatch<React.SetStateAction<string | any>>;
 };
 
 
@@ -25,6 +29,8 @@ const Cryptia = (props: Props) => {
     const [show, setShow] = useState<boolean>(true);
     const [, setwallet] = useState<boolean>(false);
     const [chainid, setchainid] = useState<string | null>('');
+    const [sumof, setsumof] = useState<string | any>('');
+    const [sumofAddress, setsumofAddress] = useState<string | any>('');
     let contractAddress : string ='0x6340e1ed7DCe39ccA016C1805286Aa11536b4F3a'
 
     let chainId: string;
@@ -100,7 +106,11 @@ const Cryptia = (props: Props) => {
         setShow,
         connectWallet,
         chainid,
-        contractAddress
+        contractAddress,
+        sumof,
+        setsumof,
+        sumofAddress,
+        setsumofAddress
     };
 
     return (

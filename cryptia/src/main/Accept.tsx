@@ -18,43 +18,41 @@ const Accept = () => {
   const [hide, sethide] = useState<boolean>(true);
   const [matching, setmatchingkey] = useState<boolean>(false);
   const [err, seterr] = useState<boolean>(false);
-  const [reveal, setreveal] = useState<boolean>(false);
-  const [founded, setfounded] = useState<string>("founded");
-  const [iscopied, setiscopied] = useState<string>("Copy PrivateKey");
+  const [reveal, setreveal] = useState<boolean | any>(false);
+  const [iscopied, setiscopied] = useState<string>("");
 
   let zkeys: any[] = [];
- 
+
 
   const { ethereum }: any = window;
 
   useEffect(() => {
     const fetchData = async () => {
       // try {
-        const provider = new ethers.providers.Web3Provider(ethereum);// Replace with the Infura project ID and network
-        const contract = new ethers.Contract(
-          connect.contractAddress,
-          abi.abi,
-          provider
+      const provider = new ethers.providers.Web3Provider(ethereum);// Replace with the Infura project ID and network
+      const contract = new ethers.Contract(
+        connect.contractAddress,
+        abi.abi,
+        provider
+      );
+
+      const limit = await contract.getLimit();
+      console.log(limit.toString());
+      connect.setsumof(limit.toString())
+      console.log('hey')
+
+      for (let i = 0; i < limit.toString(); i++) {
+        let result: any = await contract.logs(i);
+        console.log(result)
+        zkeys.push(
+          `C${result.ss.replace("0x", "")}04${result.r.slice(
+            2
+          )}${result.s.slice(2)}`
         );
+        console.log(zkeys)
+        localStorage.setItem("ephLogs", JSON.stringify(zkeys));
+      }
 
-        const limit = await contract.getLimit();
-        console.log(limit.toString());
-        console.log('hey')
-
-        for (let i = 0; i < limit.toString(); i++) {
-          let result: any = await contract.logs(i);
-          console.log(result)
-          zkeys.push(
-            `C${result.ss.replace("0x", "")}04${result.r.slice(
-              2
-            )}${result.s.slice(2)}`
-          );
-          console.log(zkeys)
-          localStorage.setItem("ephLogs", JSON.stringify(zkeys));
-        }
-      // } catch (e) {
-      //   console.error(e);
-      // }
     };
     fetchData();
   }, []);
@@ -85,7 +83,7 @@ const Accept = () => {
     console.log(data);
 
 
-    if(data === null){
+    if (data === null) {
       alert('Plz try again')
       return;
     }
@@ -95,8 +93,8 @@ const Accept = () => {
       RHashedsecret = ec.keyFromPrivate(keccak256(RSharedsecret.toArray()));
       _sharedSecret =
         "0x" + RSharedsecret.toArray()[0].toString(16).padStart(2, "0");
-      console.log(z.slice(1, 3).toString() , _sharedSecret.toString().slice(2, 4))
-    
+      console.log(z.slice(1, 3).toString(), _sharedSecret.toString().slice(2, 4))
+
 
       try {
         if (_sharedSecret.toString().slice(2, 4) === z.slice(1, 3).toString()) {
@@ -104,9 +102,10 @@ const Accept = () => {
           const pk = _key.mod(ec.curve.n);
           console.log("Private key to open wallet", pk.toString(16, 32));
           setprivatekey(pk.toString(16, 32));
+          setiscopied('Copy PrivateKey')
           setreveal(true);
           setrootsecretkey("");
-          setfounded("founded");
+
         }
         return;
       } catch (e: any) {
@@ -137,7 +136,7 @@ const Accept = () => {
         )}
         {hide && (
           <p className="text-gray-500 p-1 px-2 font-semibold montserrat-small ">
-            Expand to enter the saved Key ( optional )
+            Expand to enter the savedKey (optional)
           </p>
         )}
         {/* expand icon (toggle of input button) */}
@@ -159,7 +158,7 @@ const Accept = () => {
       {/* Match key */}
       <div className="flex justify-center pt-4">
         <div
-          className="flex items-center cursor-pointer space-x-1 border-1 p-1 text-white bg-[#10F1B4] hover:shadow-xl px-6 text-center rounded-md hover:bg-[#FDF0EF] hover:text-[#10F1B4] font-semibold hover:border-white border-[#10F1B4] border"
+          className="flex items-center cursor-pointer space-x-1 border-1 p-1 hover:bg-gray-900 hover:text-[#10F1B4]  text-white bg-[#10F1B4] hover:shadow-xl px-6 text-center rounded-md  font-semibold hover:border-white border-[#10F1B4] border"
           onClick={generateprivatekey}
         >
           {/* <GiKangaroo size={26} /> */}
@@ -169,19 +168,17 @@ const Accept = () => {
 
       {/* message */}
       <div className="p-4  text-[#10F1B4]  font-semibold">
-        {matching === true ? <p>Running.....</p> : false}
+        {/* {matching === true ? <p>Running.....</p> : false} */}
         {reveal === true ? (
           <div className="flex ml-60  justify-center space-x-3 montserrat-small">
+           
             <p>{iscopied}</p>
-            <AiOutlineCopy
-              size={25}
-              className="cursor-pointer text-gray-500 "
-              onClick={copykey}
-            />
+            <p onClick={copykey}>copy</p>
+           
           </div>
         ) : (
           <>
-            <p>{founded !== "founded" && "Key doesnt exist"}</p>
+            {/* <p>{founded !== "founded" && "Key doesnt exist"}</p> */}
             <p>{err && "Error : " + err}</p>
           </>
         )}
