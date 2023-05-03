@@ -263,12 +263,12 @@ const Transfer = () => {
 
       setwaiting(false);
     }
-
     catch (e: any) {
       console.log(e);
       seterror(e.message)
 
     }
+
 
   };
   const changedefault = (c: any) => {
@@ -276,6 +276,15 @@ const Transfer = () => {
     setbyDefault(c.name);
     settoken(c.address);
   };
+
+  const viewtrx = () => {
+
+    if (trxid !== '') {
+        window.open(trxid, '_blank')
+    }
+
+
+}
 
   return (
     <div className="flex flex-col space-y-4 items-start">
@@ -352,7 +361,7 @@ const Transfer = () => {
       </button>
 
 
-      {/* <p onClick={opentab} className='montserrat-subtitle  text-gray-500 font-semibold underline underline-offset-8 decoration-[#FF5757] cursor-pointer'>{trxid !== '' ? trxid.slice(8, 58) : ''}</p> */}
+      <p onClick={viewtrx} className='montserrat-subtitle  text-gray-500 font-semibold underline underline-offset-8 decoration-[#FF5757] cursor-pointer'>{trxid !== '' ? trxid.slice(8, 58) : ''}</p>
       <p className='montserrat-subtitle text-[#435864] font-semibold flex mx-auto items-center'>{error}</p>
 
 

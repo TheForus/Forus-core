@@ -17,7 +17,7 @@
     "buffer-es6": "^4.9.3",
     "dotenv": "^16.0.3",
     "elliptic": "^6.5.4",
-    "ethers": "^6.3.0",
+    "ethers": "^5.7.2",
     "keccak256": "^1.0.6",
     "querystring": "^0.2.1",
     "react": "^18.2.0",
