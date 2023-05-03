@@ -2,7 +2,9 @@ import Navmain from './Navmain'
 import Cr from './Cr'
 import Instruction from './Instruction'
 import Trx from './Trx'
-import React, { createContext, useMemo, useState } from 'react';
+import React, { createContext, useMemo, useState, useEffect } from 'react';
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
 
 
 
@@ -13,25 +15,26 @@ interface ContextValue {
     show: boolean;
     setShow: React.Dispatch<React.SetStateAction<boolean | any>>;
     connectWallet(): void;
-    chainid: string | null ;
-    contractAddress : string
-    sumof : string | any
-    setsumof : React.Dispatch<React.SetStateAction<string | any>>;
-    sumofAddress : string | any
-    setsumofAddress : React.Dispatch<React.SetStateAction<string | any>>;
+    chainid: string | null;
+    contractAddress: string
+    sumof: string | any
+    setsumof: React.Dispatch<React.SetStateAction<string | any>>;
+    sumofAddress: string | any
+    setsumofAddress: React.Dispatch<React.SetStateAction<string | any>>;
 };
 
 
 
 export const AppContext = createContext<ContextValue | any>(null)
 const Cryptia = (props: Props) => {
+    const notyf = new Notyf();
 
     const [show, setShow] = useState<boolean>(true);
     const [, setwallet] = useState<boolean>(false);
     const [chainid, setchainid] = useState<string | null>('');
     const [sumof, setsumof] = useState<string | any>('');
     const [sumofAddress, setsumofAddress] = useState<string | any>('');
-    let contractAddress : string ='0x6340e1ed7DCe39ccA016C1805286Aa11536b4F3a'
+    let contractAddress: string = '0x6340e1ed7DCe39ccA016C1805286Aa11536b4F3a'
 
     let chainId: string;
 
@@ -45,6 +48,19 @@ const Cryptia = (props: Props) => {
 
     };
 
+    useEffect(() => {
+
+        const validateChain = async () => {
+            const chainId = await ethereum.request({ method: 'eth_chainId' });
+
+            if (chainId !== '0x1e15') {
+                notyf.error('plz connect to canto testnet')
+                return
+            }
+        }
+        validateChain()
+    }, [])
+
     useMemo(() => {
         if (ethereum) {
             ethereum.on('accountsChanged', () => {
@@ -56,7 +72,7 @@ const Cryptia = (props: Props) => {
         ethereum.on('chainChanged' || 'accountsChanged', (chId: any) => {
             console.log(chId)
             if (chId !== '0x1e15') {
-                console.log('plz connect to canto testnet')
+                notyf.error('plz connect to canto testnet')
                 return
             }
             window.location.reload()

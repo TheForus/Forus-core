@@ -8,15 +8,18 @@ import { useContext } from "react";
 import { AppContext } from "./Cryptia";
 import { AiOutlineCopy } from "react-icons/ai";
 import { AiOutlineArrowsAlt, AiOutlineShrink } from "react-icons/ai";
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
 const ec = new EllipticCurve.ec("secp256k1");
 
 const Accept = () => {
   const connect = useContext(AppContext);
+  const notyf = new Notyf();
 
   const [rootsecretkey, setrootsecretkey] = useState<string>("");
   const [privatekey, setprivatekey] = useState<string>("");
   const [hide, sethide] = useState<boolean>(true);
-  const [matching, setmatchingkey] = useState<boolean>(false);
+  const [, setmatchingkey] = useState<boolean>(false);
   const [err, seterr] = useState<boolean>(false);
   const [reveal, setreveal] = useState<boolean | any>(false);
   const [iscopied, setiscopied] = useState<string>("");
@@ -84,7 +87,7 @@ const Accept = () => {
 
 
     if (data === null) {
-      alert('Plz try again')
+      notyf.error('Plz try again')
       return;
     }
     data.forEach((z: any) => {
@@ -98,6 +101,7 @@ const Accept = () => {
 
       try {
         if (_sharedSecret.toString().slice(2, 4) === z.slice(1, 3).toString()) {
+          notyf.success('Matched')
           const _key = secretkey.getPrivate().add(RHashedsecret.getPrivate());
           const pk = _key.mod(ec.curve.n);
           console.log("Private key to open wallet", pk.toString(16, 32));
@@ -171,10 +175,10 @@ const Accept = () => {
         {/* {matching === true ? <p>Running.....</p> : false} */}
         {reveal === true ? (
           <div className="flex ml-60  justify-center space-x-3 montserrat-small">
-           
+
             <p>{iscopied}</p>
             <p onClick={copykey}>copy</p>
-           
+
           </div>
         ) : (
           <>

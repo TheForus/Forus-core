@@ -9,9 +9,14 @@ import { Crypto } from "../helper/Crypto";
 import { BsChevronDown } from "react-icons/bs";
 import { ethers } from "ethers";
 import sending from '../Logos/sending.gif'
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
+
 const ec = new EllipticCurve.ec("secp256k1");
 
+
 const Transfer = () => {
+  const notyf = new Notyf();
 
   const connect = useContext(AppContext);
 
@@ -205,10 +210,8 @@ const Transfer = () => {
       return true
 
     }
-    alert('Insufficient balance')
+   
     return false
-
-
 
   }
 
@@ -219,10 +222,10 @@ const Transfer = () => {
       return;
     }
 
-    if (connect.chainid !== "0x1e15") {
-      alert("Please connect to canto testnet");
-      return;
-    }
+    // if (connect.chainid !== "0x1e15") {
+    //   alert("Please connect to canto testnet");
+    //   return;
+    // }
 
     if (CrMetaAddress === "" || amount === "") {
       seterror("Please enter the address");
@@ -236,7 +239,7 @@ const Transfer = () => {
 
     const result = await checkBalance();
     if (result === false) {
-      alert('Insufficient balance')
+      notyf.error('Insufficient balance')
       return
     }
 
