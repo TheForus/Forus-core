@@ -8,27 +8,22 @@ import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { Crypto } from "../helper/Crypto";
 import { BsChevronDown } from "react-icons/bs";
 import { ethers } from "ethers";
-import sending from '../Logos/sending.gif'
+import sending from "../Logos/sending.gif";
 const ec = new EllipticCurve.ec("secp256k1");
 
 const Transfer = () => {
-
   const connect = useContext(AppContext);
 
   const ERCABI = [
     "function balanceOf(address) view returns (uint)",
     "function transfer(address to, uint amount) returns (bool)",
     "function symbol() external view returns (string memory)",
-    "function name() external view returns (string memory)"
-  ]
+    "function name() external view returns (string memory)",
+  ];
 
   let r: string | null;
   let s: string | null;
   let a: string | null;
-
-
-
-
 
   // let ethers: any;
 
@@ -45,16 +40,16 @@ const Transfer = () => {
   const [waiting, setwaiting] = useState<boolean>(false);
   // const [receipent, setreceipent] = useState<string>("");
 
-
   // let receipent: any;
   // console.log('receipent', receipent)
   var receipent: any;
 
-
-
   const validatingCr = (event: any) => {
-    if ((event.target.value[0] !== "C" && event.target.value !== "")
-      || (event.target.value.length > 48 || event.target.value.length < 47)) {
+    if (
+      (event.target.value[0] !== "C" && event.target.value !== "") ||
+      event.target.value.length > 48 ||
+      event.target.value.length < 47
+    ) {
       seterror("Invalid address");
       setTimeout(() => {
         seterror("");
@@ -98,13 +93,12 @@ const Transfer = () => {
       const address = keccak256(publicKey);
       const _HexString = address.substring(address.length - 40, address.length);
 
-      receipent = '0x' + _HexString
-      console.log(receipent)
+      receipent = "0x" + _HexString;
+      console.log(receipent);
 
       r = "0x" + ephPublic?.getX().toString(16, 64) || "";
       s = "0x" + ephPublic?.getY().toString(16, 64) || "";
       a = "0x" + sharedsecret.toArray()[0].toString(16).padStart(2, "0");
-
     } catch (e) {
       console.log("error", e);
     }
@@ -118,16 +112,12 @@ const Transfer = () => {
   // },[setUp])
 
   const Transfer = async () => {
-
-
     setUp();
 
     if (!ethereum) {
       alert("Please initialize MetaMask");
       return;
     }
-
-
 
     if (CrMetaAddress === "" || amount === "") {
       seterror("Please enter the cr address");
@@ -137,9 +127,7 @@ const Transfer = () => {
       return;
     }
 
-
-    setwaiting(true)
-
+    setwaiting(true);
 
     const provider = new ethers.providers.Web3Provider(ethereum); // Replace with the Infura project ID and network
     const signer = provider.getSigner();
@@ -150,7 +138,6 @@ const Transfer = () => {
       signer
     );
     console.log(connect.contractAddress, amount, receipent);
-
 
     try {
       const valueToSend = ethers.utils.parseEther(amount);
@@ -166,54 +153,34 @@ const Transfer = () => {
         transactionParameters
       ); // Replace methodName with the desired method
 
-
       const txId = await transferCoin.wait();
       console.log(txId.hash);
       settrxid("https://testnet.tuber.build/" + txId.hash);
       console.log(txId.hash);
 
       setwaiting(false);
-      setCrMetaAddress('')
-      setamount('')
+      setCrMetaAddress("");
+      setamount("");
     } catch (e: any) {
       console.log(e);
-      seterror(e.message)
-
+      seterror(e.message);
     }
   };
-
-
-
-
-
-
-
-
-
 
   async function checkBalance(): Promise<boolean> {
     const provider = new ethers.providers.Web3Provider(ethereum); // Replace with the Infura project ID and network
 
-    const contract = new ethers.Contract(
-      token,
-      ERCABI,
-      provider
-    );
+    const contract = new ethers.Contract(token, ERCABI, provider);
 
-    const balance = await contract.balanceOf(sessionStorage.getItem('address'));
+    const balance = await contract.balanceOf(sessionStorage.getItem("address"));
     if (balance > amount) {
-      return true
-
+      return true;
     }
-    alert('Insufficient balance')
-    return false
-
-
-
+    alert("Insufficient balance");
+    return false;
   }
 
   const TransferToken = async () => {
-
     if (!ethereum) {
       alert("Please initialize MetaMask");
       return;
@@ -232,12 +199,10 @@ const Transfer = () => {
       return;
     }
 
-
-
     const result = await checkBalance();
     if (result === false) {
-      alert('Insufficient balance')
-      return
+      alert("Insufficient balance");
+      return;
     }
 
     setwaiting(true);
@@ -262,14 +227,10 @@ const Transfer = () => {
       settrxid("https://testnet.tuber.build/" + txId.hash);
 
       setwaiting(false);
-    }
-
-    catch (e: any) {
+    } catch (e: any) {
       console.log(e);
-      seterror(e.message)
-
+      seterror(e.message);
     }
-
   };
   const changedefault = (c: any) => {
     setshow(!show);
@@ -310,31 +271,34 @@ const Transfer = () => {
             <li
               className="flex p-2 px-3 cursor-pointer
             text-[#10F1B4] font-semibold border-l border-gray-300
-            items-center gap-2 hover:text-gray-800"
+            items-center gap-2 hover:text-gray-800 hover:rounded-full hover:bg-[#57ffd2] "
             >
               <p>{byDefault}</p>
               <BsChevronDown color="grey" size={18} />
             </li>
             <div
               className={`
-              ${show &&
-                "flex flex-col w-full max-h-28 rounded-b-md absolute overflow-y-auto scrollbar-hide cursor-pointer scrollbar scrollbar-w-[7px] scrollbar-h-3 scrollbar-thumb-rounded-full scrollbar-track-gray-100 "
-                }
+              ${
+                show &&
+                `transition-all ease-in bg-white py-1 shadow-md flex flex-col w-full max-h-28 rounded-b-md absolute mt-2
+                 scrollbar-thin scrollbar-thumb-[#10F1B4] scrollbar-track-[#b5ffeb] overflow-y-scroll 
+                scrollbar-thumb-rounded scrollbar-rounded-full`
+              }
             `}
             >
               {show &&
                 Crypto.map((c) => (
-                  <div className="bg-gray-800 border-b border-gray-600">
+                  <div className="h-40 border-b border-gray-100">
                     <li
-                      className="flex p-2 px-3 cursor-pointer
-                    text-[#10F1B4] font-semibold border-l border-gray-300
-                    items-center gap-2 hover:text-white 
+                      className="flex flex-row-reverse p-1 px-3 cursor-pointer
+                    text-gray-700 font-semibold border-l border-gray-300
+                    items-center gap-2 hover:text-gray-900 hover:bg-[#8efadd] 
                      montserrat-small text-[0.7rem]
-                    space-x-8 justify-between"
+                    justify-between"
                       key={c.name}
                       onClick={() => changedefault(c)}
                     >
-                      <img src={c.symbol} alt="" height={16} width={20} />
+                      <img src={c.symbol} alt="" height={14} width={18} />
                       <p>{c.name}</p>
                     </li>
                   </div>
@@ -346,16 +310,19 @@ const Transfer = () => {
       <button
         className="flex mx-auto items-center cursor-pointer space-x-1 border-1 p-1 text-white bg-[#10F1B4] 
         hover:shadow-xl px-7 text-center rounded-md font-semibold hover:border-white border-[#10F1B4] border"
-        onClick={byDefault === 'CANTO' ? Transfer : TransferToken}
+        onClick={byDefault === "CANTO" ? Transfer : TransferToken}
       >
-        {waiting === false ? 'Send' : <img height={30} width={30} src={sending} alt="" />}
+        {waiting === false ? (
+          "Send"
+        ) : (
+          <img height={30} width={30} src={sending} alt="" />
+        )}
       </button>
 
-
       {/* <p onClick={opentab} className='montserrat-subtitle  text-gray-500 font-semibold underline underline-offset-8 decoration-[#FF5757] cursor-pointer'>{trxid !== '' ? trxid.slice(8, 58) : ''}</p> */}
-      <p className='montserrat-subtitle text-[#435864] font-semibold flex mx-auto items-center'>{error}</p>
-
-
+      <p className="montserrat-subtitle text-[#435864] font-semibold flex mx-auto items-center">
+        {error}
+      </p>
     </div>
   );
 };

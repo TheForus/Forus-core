@@ -23,13 +23,13 @@ const Trx = (props: Props) => {
 
   return (
     <div
-      className="flex flex-col p-5 px-8 backdrop-blur-[50px] hover:backdrop-blur-lg
+      className="flex flex-col p-5 px-8 backdrop-blur-[50px]
+      max-w-[400px] hover:backdrop-blur-lg
      h-full"
     >
       <div
-        className="flex mb-4 px-6 justify-between montserrat-subtitle text-[1.4rem] 
-      border-b-2 pb-2 border-gray-300 
-      font-bold"
+        className="flex mb-4 px-6 justify-between montserrat-subtitle
+        text-[1.4rem] border-b-2 pb-2 border-gray-300 font-bold"
       >
         <button
           onClick={handleTransferClick}

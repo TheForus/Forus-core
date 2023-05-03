@@ -1,31 +1,31 @@
 @font-face {
   font-family: Montserrat;
-  src: url('../public/Fonts/Montserrat-MediumItalic.ttf');
+  src: url("../public/Fonts/Montserrat-MediumItalic.ttf");
 }
 
 @font-face {
   font-family: MontserratHeading;
-  src: url('../public/Fonts/Montserrat-Regular.ttf');
+  src: url("../public/Fonts/Montserrat-Regular.ttf");
 }
 
 @font-face {
   font-family: MontserratSubHeading;
-  src: url('../public/Fonts/Montserrat-SemiBold.ttf');
+  src: url("../public/Fonts/Montserrat-SemiBold.ttf");
 }
 
 @font-face {
   font-family: MontserraTitle;
-  src: url('../public/Fonts/Montserrat-BoldItalic.ttf');
+  src: url("../public/Fonts/Montserrat-BoldItalic.ttf");
 }
 
 @font-face {
   font-family: MontserraSubTitle;
-  src: url('../public/Fonts/Montserrat-Light.ttf');
+  src: url("../public/Fonts/Montserrat-Light.ttf");
 }
 
 @font-face {
   font-family: MontserratSmall;
-  src: url('../public/Fonts/Montserrat-Light.ttf');
+  src: url("../public/Fonts/Montserrat-Light.ttf");
 }
 
 .montserrat-subtitle {
@@ -62,6 +62,23 @@
   pointer-events: none;
 }
 
+/* Css for QNA Component */
+.show {
+  max-height: 1000px;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.hide {
+  max-height: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -91,4 +108,3 @@
     transform: rotate(360deg);
   }
 }
-

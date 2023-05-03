@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import { keccak256 } from "ethers/lib/utils.js";
+import { keccak256 } from "ethers/lib.esm/utils";
 import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
 import abi from "../artifacts/contracts/Logs.sol/Logs.json";
@@ -23,13 +23,12 @@ const Accept = () => {
 
   let zkeys: any[] = [];
 
-
   const { ethereum }: any = window;
 
   useEffect(() => {
     const fetchData = async () => {
       // try {
-      const provider = new ethers.providers.Web3Provider(ethereum);// Replace with the Infura project ID and network
+      const provider = new ethers.providers.Web3Provider(ethereum); // Replace with the Infura project ID and network
       const contract = new ethers.Contract(
         connect.contractAddress,
         abi.abi,
@@ -38,21 +37,20 @@ const Accept = () => {
 
       const limit = await contract.getLimit();
       console.log(limit.toString());
-      connect.setsumof(limit.toString())
-      console.log('hey')
+      connect.setsumof(limit.toString());
+      console.log("hey");
 
       for (let i = 0; i < limit.toString(); i++) {
         let result: any = await contract.logs(i);
-        console.log(result)
+        console.log(result);
         zkeys.push(
           `C${result.ss.replace("0x", "")}04${result.r.slice(
             2
           )}${result.s.slice(2)}`
         );
-        console.log(zkeys)
+        console.log(zkeys);
         localStorage.setItem("ephLogs", JSON.stringify(zkeys));
       }
-
     };
     fetchData();
   }, []);
@@ -82,9 +80,8 @@ const Accept = () => {
     const data: string[] | null[] = JSON.parse(ephLogs);
     console.log(data);
 
-
     if (data === null) {
-      alert('Plz try again')
+      alert("Plz try again");
       return;
     }
     data.forEach((z: any) => {
@@ -93,8 +90,10 @@ const Accept = () => {
       RHashedsecret = ec.keyFromPrivate(keccak256(RSharedsecret.toArray()));
       _sharedSecret =
         "0x" + RSharedsecret.toArray()[0].toString(16).padStart(2, "0");
-      console.log(z.slice(1, 3).toString(), _sharedSecret.toString().slice(2, 4))
-
+      console.log(
+        z.slice(1, 3).toString(),
+        _sharedSecret.toString().slice(2, 4)
+      );
 
       try {
         if (_sharedSecret.toString().slice(2, 4) === z.slice(1, 3).toString()) {
@@ -102,10 +101,9 @@ const Accept = () => {
           const pk = _key.mod(ec.curve.n);
           console.log("Private key to open wallet", pk.toString(16, 32));
           setprivatekey(pk.toString(16, 32));
-          setiscopied('Copy PrivateKey')
+          setiscopied("Copy PrivateKey");
           setreveal(true);
           setrootsecretkey("");
-
         }
         return;
       } catch (e: any) {
@@ -171,10 +169,8 @@ const Accept = () => {
         {/* {matching === true ? <p>Running.....</p> : false} */}
         {reveal === true ? (
           <div className="flex ml-60  justify-center space-x-3 montserrat-small">
-           
             <p>{iscopied}</p>
             <p onClick={copykey}>copy</p>
-           
           </div>
         ) : (
           <>
