@@ -23,32 +23,35 @@ const Navmain = (props: Props) => {
               Cryptia
             </h1>
           </div>
-
-          <p className="sm:ml-14 ml-6 text-[#58707e] montserrat-subtitle underline-offset-8 font-semibold underline decoration-[#10F1B4]  text-[1.1rem]">
+          <p className="transition-colors duration-75 ease-linear hover:text-gray-900 sm:ml-14 ml-6 text-[#58707e] montserrat-subtitle underline-offset-8 font-semibold underline decoration-[#10F1B4]  text-[1.1rem]">
             Home
           </p>
-          <p className="sm:ml-14 ml-6 text-[#58707e] montserrat-subtitle underline-offset-8 font-semibold underline decoration-[#10F1B4]  text-[1.1rem]">
+          <p className="transition-colors duration-75 ease-linear hover:text-gray-900 sm:ml-14 ml-6 text-[#58707e] montserrat-subtitle underline-offset-8 font-semibold underline decoration-[#10F1B4]  text-[1.1rem]">
             QnA
           </p>
         </div>
 
         {/* rigt side */}
-        <div className="sm:flex-row flex-co flex space-x-3 items-center">
-          <p className="text-[#91acbb]">
-            <a href="/https://discord.gg/qupF3BrP">
-              <FaDiscord size={20} />
-            </a>
-          </p>
-          <p className="text-[#91acbb]">
-            <a href="https://github.com/ScriptKiddii/Cloak">
-              <FaGithub size={20} />
-            </a>
-          </p>
-          <p className="text-[#91acbb]">
-            <a href="https://twitter.com/TronCloak">
-              <FaTwitter size={20} />
-            </a>
-          </p>
+        <div className="sm:flex-row flex space-x-3 items-center">
+          {/* Social Links */}
+          <div className="sm:flex space-x-3 items-center hidden">
+            <p className="text-[#91acbb]">
+              <a href="/https://discord.gg/qupF3BrP">
+                <FaDiscord size={20} />
+              </a>
+            </p>
+            <p className="text-[#91acbb]">
+              <a href="https://github.com/ScriptKiddii/Cloak">
+                <FaGithub size={20} />
+              </a>
+            </p>
+            <p className="text-[#91acbb]">
+              <a href="https://twitter.com/TronCloak">
+                <FaTwitter size={20} />
+              </a>
+            </p>
+          </div>
+
           <p className="sm:text-[1rem] montserrat-small  text-gray-500  font-semibold text-[0.8rem]">
             {sessionStorage.getItem("address") !== null || false
               ? `${sessionStorage.getItem("address")?.slice(0, 19)}...`

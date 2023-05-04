@@ -8,9 +8,9 @@ import { useContext } from "react";
 import { AppContext } from "./Cryptia";
 import { AiOutlineCopy } from "react-icons/ai";
 import { AiOutlineArrowsAlt, AiOutlineShrink } from "react-icons/ai";
-import copy from '../assets/copy.jpg'
-import { Notyf } from 'notyf';
-import 'notyf/notyf.min.css';
+import copy from "../assets/copy.jpg";
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
 const ec = new EllipticCurve.ec("secp256k1");
 
 const Accept = () => {
@@ -85,7 +85,7 @@ const Accept = () => {
     console.log(data);
 
     if (data === null) {
-      notyf.error('Plz try again')
+      notyf.error("Plz try again");
       return;
     }
     data.forEach((z: any) => {
@@ -101,7 +101,7 @@ const Accept = () => {
 
       try {
         if (_sharedSecret.toString().slice(2, 4) === z.slice(1, 3).toString()) {
-          notyf.success('Matched')
+          notyf.success("Matched");
           const _key = secretkey.getPrivate().add(RHashedsecret.getPrivate());
           const pk = _key.mod(ec.curve.n);
           console.log("Private key to open wallet", pk.toString(16, 32));
@@ -174,11 +174,15 @@ const Accept = () => {
         {/* {matching === true ? <p>Running.....</p> : false} */}
         {reveal === true ? (
           <div className="flex ml-60  justify-center items-center space-x-3 montserrat-small">
-
             <p className="text-[#58707e]">{iscopied}</p>
-            <img height={20} width={20} src={copy} onClick={copykey} className="cursor-pointer" alt="" />
-
-
+            <img
+              height={20}
+              width={20}
+              src={copy}
+              onClick={copykey}
+              className="cursor-pointer"
+              alt=""
+            />
           </div>
         ) : (
           <>
