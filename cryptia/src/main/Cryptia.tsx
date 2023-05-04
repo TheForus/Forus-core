@@ -12,7 +12,6 @@ interface ContextValue {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean | any>>;
   connectWallet(): void;
-  chainid: string | null;
   contractAddress: string;
   sumof: string | any;
   setsumof: React.Dispatch<React.SetStateAction<string | any>>;
@@ -27,12 +26,12 @@ const Cryptia = (props: Props) => {
 
   const [show, setShow] = useState<boolean>(true);
   const [, setwallet] = useState<boolean>(false);
-  const [chainid, setchainid] = useState<string | null>("");
+  // const [chainid, setchainid] = useState<string | null>("");
   const [sumof, setsumof] = useState<string | any>("");
   const [sumofAddress, setsumofAddress] = useState<string | any>("");
   let contractAddress: string = "0x6340e1ed7DCe39ccA016C1805286Aa11536b4F3a";
 
-  let chainId: string;
+
 
   const { ethereum }: any = window;
 
@@ -48,7 +47,7 @@ const Cryptia = (props: Props) => {
 
     if (chainId !== "0x1e15") {
       notyf.error("plz connect to canto testnet");
-      return ;
+      return;
     }
 
   };
@@ -65,7 +64,6 @@ const Cryptia = (props: Props) => {
       });
     }
     ethereum.on("chainChanged" || "accountsChanged", (chId: any) => {
-      console.log(chId);
       if (chId !== "0x1e15") {
         notyf.error("plz connect to canto testnet");
         return;
@@ -77,9 +75,10 @@ const Cryptia = (props: Props) => {
 
   const connectWallet = async (): Promise<void> => {
     if (ethereum === undefined) {
-      alert("Plz install metamask");
+      notyf.error("Plz install metamask");
       return;
     }
+
     try {
       if (ethereum) {
         const accounts = await ethereum.request({
@@ -87,17 +86,12 @@ const Cryptia = (props: Props) => {
         });
         sessionStorage.setItem("address", accounts[0]);
 
-        chainId = await ethereum.request({ method: "eth_chainId" });
-        setchainid(chainId);
-        console.log(chainId);
-
-        if (chainId !== "0x1e15") {
-          notyf.error("plz connect to canto testnet");
-        }
+        validateChain();
       }
       setwallet(true);
-    } catch (error) {
-      console.log("Error:", error);
+
+    } catch (e: any) {
+      notyf.error(e);
     }
   };
 
@@ -105,7 +99,6 @@ const Cryptia = (props: Props) => {
     show,
     setShow,
     connectWallet,
-    chainid,
     contractAddress,
     sumof,
     setsumof,

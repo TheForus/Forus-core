@@ -6,7 +6,7 @@ import { ec as EC } from "elliptic";
 import abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { useContext } from "react";
 import { AppContext } from "./Cryptia";
-import { AiOutlineCopy } from "react-icons/ai";
+// import { AiOutlineCopy } from "react-icons/ai";
 import { AiOutlineArrowsAlt, AiOutlineShrink } from "react-icons/ai";
 import copy from "../assets/copy.jpg";
 import { Notyf } from "notyf";
@@ -40,29 +40,30 @@ const Accept = () => {
       );
 
       const limit = await contract.getLimit();
-      console.log(limit.toString());
+      // console.log(limit.toString());
       connect.setsumof(limit.toString());
-      console.log("hey");
 
       for (let i = 0; i < limit.toString(); i++) {
         let result: any = await contract.logs(i);
-        console.log(result);
+        // console.log(result);
         zkeys.push(
           `C${result.ss.replace("0x", "")}04${result.r.slice(
             2
           )}${result.s.slice(2)}`
         );
-        console.log(zkeys);
+        // console.log(zkeys);
         localStorage.setItem("ephLogs", JSON.stringify(zkeys));
       }
     };
+
+
     fetchData();
   }, []);
 
   const generateprivatekey = (): void => {
     const { ethereum }: any = window;
     if (!ethereum) {
-      alert("plz initialize metamask");
+      notyf.error("plz initialize metamask");
       return;
     }
     setmatchingkey(true);
@@ -76,8 +77,8 @@ const Accept = () => {
     }
 
     var ephPubKey: EC.KeyPair | any;
-    var RSharedsecret;
-    var RHashedsecret;
+    var sharedsecret;
+    var hashedsecret;
     var _sharedSecret: string | any;
 
     const ephLogs: string[] | any = localStorage.getItem("ephLogs");
@@ -90,10 +91,9 @@ const Accept = () => {
     }
     data.forEach((z: any) => {
       ephPubKey = ec.keyFromPublic(z.slice(3), "hex");
-      RSharedsecret = secretkey.derive(ephPubKey.getPublic()); //
-      RHashedsecret = ec.keyFromPrivate(keccak256(RSharedsecret.toArray()));
-      _sharedSecret =
-        "0x" + RSharedsecret.toArray()[0].toString(16).padStart(2, "0");
+      sharedsecret = secretkey.derive(ephPubKey.getPublic()); //
+      hashedsecret = ec.keyFromPrivate(keccak256(sharedsecret.toArray()));
+      _sharedSecret ="0x" + sharedsecret.toArray()[0].toString(16).padStart(2, "0");
       console.log(
         z.slice(1, 3).toString(),
         _sharedSecret.toString().slice(2, 4)
@@ -102,7 +102,7 @@ const Accept = () => {
       try {
         if (_sharedSecret.toString().slice(2, 4) === z.slice(1, 3).toString()) {
           notyf.success("Matched");
-          const _key = secretkey.getPrivate().add(RHashedsecret.getPrivate());
+          const _key = secretkey.getPrivate().add(hashedsecret.getPrivate());
           const pk = _key.mod(ec.curve.n);
           console.log("Private key to open wallet", pk.toString(16, 32));
           setprivatekey(pk.toString(16, 32));
