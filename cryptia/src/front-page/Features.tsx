@@ -1,10 +1,5 @@
-// main : #02e48a
-// text : #00db84
-
-import React from 'react';
-import { MdOutlineSecurity, MdPrivacyTip ,MdHandshake ,MdNewReleases } from 'react-icons/md';
+import { MdPrivacyTip ,MdHandshake ,MdNewReleases } from 'react-icons/md';
 import { AiOutlineTransaction } from 'react-icons/ai';
-import { BsCurrencyExchange } from 'react-icons/bs';
 import FeatureBlock from '../components/FeatureBlock';
 
 type Props = {}
@@ -16,7 +11,7 @@ const Features = (props: Props) => {
             <h1 className='montserrat-heading py-4 text-3xl 
             font-semibold      text-[#435864] border-b border-gray-400 '>Features and Capabilities</h1> {/* Heading */}
             <div className='md:grid flex flex-col grid-rows-3 lg:grid-rows-2
-             sm:grid-flow-col gap-4 mr-10'>
+             sm:grid-flow-col gap-4 '>
                 <FeatureBlock 
                   heading='Enhanced Privacy Protection'
                   subheading="Cryptia ensures utmost privacy by employing secure secret addresses for transactions.Transactions are conducted 
@@ -45,19 +40,7 @@ const Features = (props: Props) => {
                 >
                   <MdNewReleases color='#10F1B4' className='text-[60px]' />
                 </FeatureBlock>
-                <FeatureBlock 
-                  heading='Confidentiality and Untraceability'
-                  subheading="By prioritizing privacy and security, Cryptia ensures that users' financial transactions remain confidential and untraceable.The use of secure secret addresses and the one-time public key mechanism 
-                  significantly enhances the confidentiality of transactions, providing users with peace of mind."
-                >
-                  <MdOutlineSecurity color='#10F1B4' className='text-[60px]' />
-                </FeatureBlock>
-                <FeatureBlock 
-                  heading='Easy to Use'
-                  subheading="Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur id unde ullam. Error possimus sit eveniet eligendi, blanditiis impedit debitis."
-                >
-                  <BsCurrencyExchange color='#10F1B4' className='text-[60px]' />
-                </FeatureBlock>
+              
             </div>
         </div>
         </>
