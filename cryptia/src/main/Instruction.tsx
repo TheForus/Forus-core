@@ -8,7 +8,7 @@ const Instruction = (props: Props) => {
   const { show, sumof, sumofAddress } = useContext(AppContext);
   return (
     <>
-      <div className="border-r border-[#d1f5e5]">
+      <div className="">
         {show ? (
           <div className="flex text-left flex-col gap-3 w-[90%]">
             {" "}
@@ -18,21 +18,21 @@ const Instruction = (props: Props) => {
             </h1>
             <div className="py-4 montserrat-heading text-[#6c8492] flex flex-col gap-4 items-center">
               <div className="flex space-x-2 ">
-                <MdVerifiedUser color="#10F1B4" size={23} />
+                <MdVerifiedUser color="#10F1B4" size={29} />
                 <p className="flex-1">
                   Safely insert the recipient's "Cr address" into the designated
                   field.
                 </p>
               </div>
               <div className="flex space-x-2">
-                <MdVerifiedUser color="#10F1B4" size={23} />
+                <MdVerifiedUser color="#10F1B4" size={29} />
                 <p className="flex-1">
                   Specify the exact amount and the specific token or coin you
                   intend to transfer, ensuring a flawless transaction.
                 </p>
               </div>
               <div className="flex space-x-2">
-                <MdVerifiedUser color="#10F1B4" size={23} />
+                <MdVerifiedUser color="#10F1B4" size={29} />
                 <p className="flex-1">
                   Securely initiate transfer with "Transfer" button, ensuring
                   prompt delivery of funds to the recipient's designated
@@ -56,14 +56,14 @@ const Instruction = (props: Props) => {
             </h1>
             <div className="py-4 montserrat-heading text-[#6c8492] flex flex-col gap-4 items-center">
               <div className="flex space-x-2">
-                <MdVerifiedUser color="#10F1B4" size={36} />
+                <MdVerifiedUser color="#10F1B4" size={32} />
                 <p className="flex 1">
                   Click on the "Match" button or optionally paste your "secret
                   key"
                 </p>
               </div>
               <div className="flex space-x-2">
-                <MdVerifiedUser color="#10F1B4" size={36} />
+                <MdVerifiedUser color="#10F1B4" size={32} />
                 <p className="flex 1">
                   Gain access to the specific address where funds have been
                   sent.

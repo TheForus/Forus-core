@@ -28,8 +28,8 @@ const Trx = (props: Props) => {
      h-full"
     >
       <div
-        className="flex mb-4 px-6 justify-between montserrat-subtitle
-        text-[1.4rem] border-b-2 pb-2 border-gray-300 font-bold"
+        className="flex mb-2 justify-between montserrat-subtitle
+        text-[1.4rem] ml-14 border-b-2 pb-2 border-gray-300 font-bold"
       >
         <button
           onClick={handleTransferClick}

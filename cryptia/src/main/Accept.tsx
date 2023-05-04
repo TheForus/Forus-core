@@ -8,6 +8,7 @@ import { useContext } from "react";
 import { AppContext } from "./Cryptia";
 import { AiOutlineCopy } from "react-icons/ai";
 import { AiOutlineArrowsAlt, AiOutlineShrink } from "react-icons/ai";
+import copy from '../assets/copy.jpg'
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
 const ec = new EllipticCurve.ec("secp256k1");
@@ -105,7 +106,7 @@ const Accept = () => {
           const pk = _key.mod(ec.curve.n);
           console.log("Private key to open wallet", pk.toString(16, 32));
           setprivatekey(pk.toString(16, 32));
-          setiscopied("Copy PrivateKey");
+          setiscopied("Copy");
           setreveal(true);
           setrootsecretkey("");
         }
@@ -124,7 +125,7 @@ const Accept = () => {
 
   return (
     <>
-      <div className="py-2 flex space-x-4 justify-center ml-11">
+      <div className="py-2 flex space-x-4 justify-center ml-6">
         {hide !== true && (
           <input
             type="text"
@@ -137,20 +138,20 @@ const Accept = () => {
           />
         )}
         {hide && (
-          <p className="text-gray-500 p-1 px-2 font-semibold montserrat-small ">
+          <p className="text-[#58707e] p-1 px-2 font-semibold montserrat-small ">
             Expand to enter the savedKey (optional)
           </p>
         )}
         {/* expand icon (toggle of input button) */}
         {hide ? (
           <AiOutlineArrowsAlt
-            className="cursor-pointer text-gray-500"
+            className="cursor-pointer text-[#58707e]"
             size={25}
             onClick={() => sethide(!hide)}
           />
         ) : (
           <AiOutlineShrink
-            className="cursor-pointer text-gray-500"
+            className="cursor-pointer text-[#58707e]"
             size={25}
             onClick={() => sethide(!hide)}
           />
@@ -158,9 +159,9 @@ const Accept = () => {
       </div>
 
       {/* Match key */}
-      <div className="flex justify-center pt-4">
+      <div className="flex justify-center pt-2 mr-4">
         <div
-          className="flex items-center cursor-pointer space-x-1 border-1 p-1 hover:bg-gray-900 hover:text-[#10F1B4]  text-white bg-[#10F1B4] hover:shadow-xl px-6 text-center rounded-md  font-semibold hover:border-white border-[#10F1B4] border"
+          className="flex ml-1 items-center cursor-pointer space-x-1 border-1 p-1 hover:bg-gray-900 hover:text-[#10F1B4]  text-white bg-[#10F1B4] hover:shadow-xl px-4 text-center rounded-md  font-semibold hover:border-white border-[#10F1B4] border"
           onClick={generateprivatekey}
         >
           {/* <GiKangaroo size={26} /> */}
@@ -172,11 +173,12 @@ const Accept = () => {
       <div className="p-4  text-[#10F1B4]  font-semibold">
         {/* {matching === true ? <p>Running.....</p> : false} */}
         {reveal === true ? (
-          <div className="flex ml-60  justify-center space-x-3 montserrat-small">
-           
-            <p>{iscopied}</p>
-            <p onClick={copykey}>copy</p>
-           
+          <div className="flex ml-60  justify-center items-center space-x-3 montserrat-small">
+
+            <p className="text-[#58707e]">{iscopied}</p>
+            <img height={20} width={20} src={copy} onClick={copykey} className="cursor-pointer" alt="" />
+
+
           </div>
         ) : (
           <>

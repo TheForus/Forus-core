@@ -112,10 +112,7 @@ const Transfer = () => {
     return true;
   };
 
-  // useEffect(() => {
-
-  //   console.log('hello',receipent)
-  // },[setUp])
+ 
 
   const Transfer = async () => {
     setUp();
@@ -161,7 +158,7 @@ const Transfer = () => {
 
       const txId = await transferCoin.wait();
       console.log(txId.hash);
-      settrxid("https://testnet.tuber.build/" + txId.hash);
+      settrxid("https://testnet.tuber.build/tx/" + txId.transactionHash);
       console.log(txId.hash);
 
       setwaiting(false);
@@ -231,7 +228,7 @@ const Transfer = () => {
 
       const txId = await transferCoin.wait();
       console.log(txId.hash);
-      settrxid("https://testnet.tuber.build/" + txId.hash);
+      settrxid("https://testnet.tuber.build/tx/" + txId.transactionHash);
 
       setwaiting(false);
     }
@@ -258,7 +255,7 @@ const Transfer = () => {
 }
 
   return (
-    <div className="flex flex-col space-y-4 items-start">
+    <div className="flex flex-col justify-center items-center space-y-4 ">
       <div
         className="bg-[#fffafa] py-1 w-[100%] hover:shadow-sm rounded-md 
         border-1 border-gray-300 border"
@@ -299,7 +296,7 @@ const Transfer = () => {
               className={`
               ${
                 show &&
-                `transition-all ease-in bg-white py-1 shadow-md flex flex-col w-full max-h-28 rounded-b-md absolute mt-2
+                `transition-all ease-in bg-white py-1 shadow-md flex flex-col w-[105%] max-h-28 rounded-b-md absolute mt-2
                  scrollbar-thin scrollbar-thumb-[#10F1B4] scrollbar-track-[#b5ffeb] overflow-y-scroll 
                 scrollbar-thumb-rounded scrollbar-rounded-full`
               }
@@ -327,7 +324,7 @@ const Transfer = () => {
         </div>
       </div>
       <button
-        className="flex mx-auto items-center cursor-pointer space-x-1 border-1 p-1 text-white bg-[#10F1B4] 
+        className="flex montserrat-small mx-auto items-center cursor-pointer space-x-1 border-1 p-1 text-white bg-[#10F1B4] 
         hover:shadow-xl px-7 text-center rounded-md font-semibold hover:border-white border-[#10F1B4] border"
         onClick={byDefault === "CANTO" ? Transfer : TransferToken}
       >
@@ -338,7 +335,7 @@ const Transfer = () => {
         )}
       </button>
 
-      <p onClick={viewtrx} className='montserrat-subtitle  text-gray-500 font-semibold underline underline-offset-8 decoration-[#FF5757] cursor-pointer'>{trxid !== '' ? trxid.slice(8, 58) : ''}</p>
+      <p onClick={viewtrx} className='montserrat-subtitle  text-gray-500 font-semibold underline underline-offset-8 decoration-[#10F1B4] cursor-pointer'>{trxid !== '' ? trxid.slice(8, 58) : ''}</p>
       <p className='montserrat-subtitle text-[#435864] font-semibold flex mx-auto items-center'>{error}</p>
 
 
