@@ -112,15 +112,19 @@ const Transfer = () => {
     return true;
   };
 
- 
+
 
   const Transfer = async () => {
     setUp();
 
     if (!ethereum) {
-      alert("Please initialize MetaMask");
+      notyf.error("Please initialize MetaMask");
       return;
     }
+
+    connect.validateChain()
+
+  
 
     if (CrMetaAddress === "" || amount === "") {
       seterror("Please enter the cr address");
@@ -161,13 +165,14 @@ const Transfer = () => {
       settrxid("https://testnet.tuber.build/tx/" + txId.transactionHash);
       console.log(txId.hash);
 
-      setwaiting(false);
+
       setCrMetaAddress("");
       setamount("");
     } catch (e: any) {
       console.log(e);
       seterror(e.message);
     }
+    setwaiting(false);
   };
 
   async function checkBalance(): Promise<boolean> {
@@ -179,21 +184,24 @@ const Transfer = () => {
     if (balance > amount) {
       return true;
     }
-   
+
     return false
 
   }
 
   const TransferToken = async () => {
     if (!ethereum) {
-      alert("Please initialize MetaMask");
+      notyf.error("Please initialize MetaMask");
       return;
     }
+    connect.validateChain()
 
-    // if (connect.chainid !== "0x1e15") {
-    //   alert("Please connect to canto testnet");
-    //   return;
-    // }
+    if (connect.validateChain() !== true) {
+      return
+    }
+
+
+
 
     if (CrMetaAddress === "" || amount === "") {
       seterror("Please enter the address");
@@ -230,13 +238,12 @@ const Transfer = () => {
       console.log(txId.hash);
       settrxid("https://testnet.tuber.build/tx/" + txId.transactionHash);
 
-      setwaiting(false);
     }
     catch (e: any) {
       console.log(e);
       seterror(e.message);
     }
-
+    setwaiting(false);
 
   };
   const changedefault = (c: any) => {
@@ -248,11 +255,11 @@ const Transfer = () => {
   const viewtrx = () => {
 
     if (trxid !== '') {
-        window.open(trxid, '_blank')
+      window.open(trxid, '_blank')
     }
 
 
-}
+  }
 
   return (
     <div className="flex flex-col justify-center items-center space-y-4 ">
@@ -294,12 +301,11 @@ const Transfer = () => {
             </li>
             <div
               className={`
-              ${
-                show &&
+              ${show &&
                 `transition-all ease-in bg-white py-1 shadow-md flex flex-col w-[105%] max-h-28 rounded-b-md absolute mt-2
                  scrollbar-thin scrollbar-thumb-[#10F1B4] scrollbar-track-[#b5ffeb] overflow-y-scroll 
                 scrollbar-thumb-rounded scrollbar-rounded-full`
-              }
+                }
             `}
             >
               {show &&

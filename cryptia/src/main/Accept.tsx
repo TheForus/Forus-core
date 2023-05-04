@@ -159,7 +159,7 @@ const Accept = () => {
       </div>
 
       {/* Match key */}
-      <div className="flex justify-center pt-2 mr-4">
+      <div className="flex justify-center pt-2 mr-2">
         <div
           className="flex ml-1 items-center cursor-pointer space-x-1 border-1 p-1 hover:bg-gray-900 hover:text-[#10F1B4]  text-white bg-[#10F1B4] hover:shadow-xl px-4 text-center rounded-md  font-semibold hover:border-white border-[#10F1B4] border"
           onClick={generateprivatekey}

@@ -18,6 +18,7 @@ interface ContextValue {
   setsumof: React.Dispatch<React.SetStateAction<string | any>>;
   sumofAddress: string | any;
   setsumofAddress: React.Dispatch<React.SetStateAction<string | any>>;
+  validateChain(): void
 }
 
 export const AppContext = createContext<ContextValue | any>(null);
@@ -41,15 +42,18 @@ const Cryptia = (props: Props) => {
     sessionStorage.setItem("address", address);
   };
 
-  useEffect(() => {
-    const validateChain = async () => {
-      const chainId = await ethereum.request({ method: "eth_chainId" });
 
-      if (chainId !== "0x1e15") {
-        notyf.error("plz connect to canto testnet");
-        return;
-      }
-    };
+  const validateChain = async () => {
+    const chainId = await ethereum.request({ method: "eth_chainId" });
+
+    if (chainId !== "0x1e15") {
+      notyf.error("plz connect to canto testnet");
+      return ;
+    }
+
+  };
+
+  useEffect(() => {
     validateChain();
   }, []);
 
@@ -70,6 +74,7 @@ const Cryptia = (props: Props) => {
     });
   }, []);
 
+
   const connectWallet = async (): Promise<void> => {
     if (ethereum === undefined) {
       alert("Plz install metamask");
@@ -87,7 +92,7 @@ const Cryptia = (props: Props) => {
         console.log(chainId);
 
         if (chainId !== "0x1e15") {
-          alert("plz connect to canto testnet");
+          notyf.error("plz connect to canto testnet");
         }
       }
       setwallet(true);
@@ -106,6 +111,7 @@ const Cryptia = (props: Props) => {
     setsumof,
     sumofAddress,
     setsumofAddress,
+    validateChain
   };
 
   return (
