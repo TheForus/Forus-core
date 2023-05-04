@@ -8,12 +8,11 @@ import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { Crypto } from "../helper/Crypto";
 import { BsChevronDown } from "react-icons/bs";
 import { ethers } from "ethers";
-import sending from '../Logos/sending.gif'
-import { Notyf } from 'notyf';
-import 'notyf/notyf.min.css';
+import sending from "../Logos/sending.gif";
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
 
 const ec = new EllipticCurve.ec("secp256k1");
-
 
 const Transfer = () => {
   const notyf = new Notyf();
@@ -112,8 +111,6 @@ const Transfer = () => {
     return true;
   };
 
-
-
   const Transfer = async () => {
     setUp();
 
@@ -122,9 +119,7 @@ const Transfer = () => {
       return;
     }
 
-    connect.validateChain()
-
-  
+    connect.validateChain();
 
     if (CrMetaAddress === "" || amount === "") {
       seterror("Please enter the cr address");
@@ -165,7 +160,6 @@ const Transfer = () => {
       settrxid("https://testnet.tuber.build/tx/" + txId.transactionHash);
       console.log(txId.hash);
 
-
       setCrMetaAddress("");
       setamount("");
     } catch (e: any) {
@@ -185,8 +179,7 @@ const Transfer = () => {
       return true;
     }
 
-    return false
-
+    return false;
   }
 
   const TransferToken = async () => {
@@ -194,14 +187,11 @@ const Transfer = () => {
       notyf.error("Please initialize MetaMask");
       return;
     }
-    connect.validateChain()
+    connect.validateChain();
 
     if (connect.validateChain() !== true) {
-      return
+      return;
     }
-
-
-
 
     if (CrMetaAddress === "" || amount === "") {
       seterror("Please enter the address");
@@ -213,8 +203,8 @@ const Transfer = () => {
 
     const result = await checkBalance();
     if (result === false) {
-      notyf.error('Insufficient balance')
-      return
+      notyf.error("Insufficient balance");
+      return;
     }
 
     setwaiting(true);
@@ -237,14 +227,11 @@ const Transfer = () => {
       const txId = await transferCoin.wait();
       console.log(txId.hash);
       settrxid("https://testnet.tuber.build/tx/" + txId.transactionHash);
-
-    }
-    catch (e: any) {
+    } catch (e: any) {
       console.log(e);
       seterror(e.message);
     }
     setwaiting(false);
-
   };
   const changedefault = (c: any) => {
     setshow(!show);
@@ -253,13 +240,10 @@ const Transfer = () => {
   };
 
   const viewtrx = () => {
-
-    if (trxid !== '') {
-      window.open(trxid, '_blank')
+    if (trxid !== "") {
+      window.open(trxid, "_blank");
     }
-
-
-  }
+  };
 
   return (
     <div className="flex flex-col justify-center items-center space-y-4 ">
@@ -289,7 +273,7 @@ const Transfer = () => {
           onChange={(e) => setamount(e.target.value)}
         />
         {/* Tokens Dropdown Menu */}
-        <div className="absolute right-1">
+        <div className="min-w-[95px] absolute right-1">
           <ul onClick={() => setshow(!show)}>
             <li
               className="flex p-2 px-3 cursor-pointer
@@ -301,11 +285,12 @@ const Transfer = () => {
             </li>
             <div
               className={`
-              ${show &&
+              ${
+                show &&
                 `transition-all ease-in bg-white py-1 shadow-md flex flex-col w-[105%] max-h-28 rounded-b-md absolute mt-2
                  scrollbar-thin scrollbar-thumb-[#10F1B4] scrollbar-track-[#b5ffeb] overflow-y-scroll 
                 scrollbar-thumb-rounded scrollbar-rounded-full`
-                }
+              }
             `}
             >
               {show &&
@@ -341,10 +326,15 @@ const Transfer = () => {
         )}
       </button>
 
-      <p onClick={viewtrx} className='montserrat-subtitle  text-gray-500 font-semibold underline underline-offset-8 decoration-[#10F1B4] cursor-pointer'>{trxid !== '' ? trxid.slice(8, 58) : ''}</p>
-      <p className='montserrat-subtitle text-[#435864] font-semibold flex mx-auto items-center'>{error}</p>
-
-
+      <p
+        onClick={viewtrx}
+        className="montserrat-subtitle  text-gray-500 font-semibold underline underline-offset-8 decoration-[#10F1B4] cursor-pointer"
+      >
+        {trxid !== "" ? trxid.slice(8, 58) : ""}
+      </p>
+      <p className="montserrat-subtitle text-[#435864] font-semibold flex mx-auto items-center">
+        {error}
+      </p>
     </div>
   );
 };
