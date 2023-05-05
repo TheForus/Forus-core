@@ -10,11 +10,14 @@ import { BsChevronDown } from "react-icons/bs";
 import { ethers } from "ethers";
 import sending from "../Logos/sending.gif";
 import { Notyf } from "notyf";
+import BigNumber from 'bignumber.js';
 import "notyf/notyf.min.css";
 
 const ec = new EllipticCurve.ec("secp256k1");
 
 const Transfer = () => {
+
+
   const notyf = new Notyf();
 
   const connect = useContext(AppContext);
@@ -24,7 +27,11 @@ const Transfer = () => {
     "function transfer(address to, uint amount) returns (bool)",
     "function symbol() external view returns (string memory)",
     "function name() external view returns (string memory)",
+    "function approve(address owner, uint256 amount) external returns (bool)",
+    "function allowance(address owner, address spender) view returns (uint)",
   ];
+
+
 
   let r: string | null;
   let s: string | null;
@@ -43,11 +50,9 @@ const Transfer = () => {
   const [byDefault, setbyDefault] = useState<string>("CANTO");
   const [trxid, settrxid] = useState<string>("");
   const [waiting, setwaiting] = useState<boolean>(false);
-  // const [receipent, setreceipent] = useState<string>("");
 
-  // let receipent: any;
-  // console.log('receipent', receipent)
   var receipent: any;
+
 
   const validatingCr = (event: any) => {
     if (
@@ -133,13 +138,13 @@ const Transfer = () => {
 
     const provider = new ethers.providers.Web3Provider(ethereum); // Replace with the Infura project ID and network
     const signer = provider.getSigner();
-    console.log(signer);
+
     const contract = new ethers.Contract(
       connect.contractAddress,
       Abi.abi,
       signer
     );
-    console.log(connect.contractAddress, amount, receipent);
+
 
     try {
       const valueToSend = ethers.utils.parseEther(amount);
@@ -156,12 +161,11 @@ const Transfer = () => {
       ); // Replace methodName with the desired method
 
       const txId = await transferCoin.wait();
-      console.log(txId.hash);
+      console.log("https://testnet.tuber.build/tx/" + txId.transactionHash);
       settrxid("https://testnet.tuber.build/tx/" + txId.transactionHash);
-      console.log(txId.hash);
 
-      setCrMetaAddress("");
-      setamount("");
+      // setCrMetaAddress("");
+      // setamount("");
     } catch (e: any) {
       console.log(e);
       seterror(e.message);
@@ -169,41 +173,84 @@ const Transfer = () => {
     setwaiting(false);
   };
 
-  async function checkBalance(): Promise<boolean> {
-    const provider = new ethers.providers.Web3Provider(ethereum); // Replace with the Infura project ID and network
 
-    const contract = new ethers.Contract(token, ERCABI, provider);
 
-    const balance = await contract.balanceOf(sessionStorage.getItem("address"));
-    if (balance > amount) {
-      return true;
+  async function approve(): Promise<boolean> {
+
+    const provider = new ethers.providers.Web3Provider(ethereum);
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(token, ERCABI, signer);
+
+
+    try {
+
+      const msgSender = sessionStorage.getItem("address")
+      const res = await contract.allowance(msgSender, connect.contractAddress);
+      const bigNumber = new BigNumber(res._hex);
+      const allowance: string | any = ((bigNumber.toNumber()) / 10 ** 18);
+      console.log(allowance)
+
+      if (allowance < amount  ) {
+        const approvedAmount: any = ethers.utils.parseUnits(amount, 18);
+        const approve = await contract.approve(connect.contractAddress, approvedAmount);
+        await approve.wait()
+        notyf.success("approved")
+
+        TransferToken()
+      }
+
+      else {
+        TransferToken()
+      }
+
+
     }
-
-    return false;
+    catch (e: any) {
+      console.log(e.message)
+      seterror(e.message)
+    }
+    return false
   }
 
-  const TransferToken = async () => {
+
+
+  async function proceed() {
+
     if (!ethereum) {
       notyf.error("Please initialize MetaMask");
       return;
     }
-    connect.validateChain();
 
-    if (connect.validateChain() !== true) {
-      return;
+    connect.validateChain();
+    const provider = new ethers.providers.Web3Provider(ethereum); // Replace with the Infura project ID and network
+    const contract = new ethers.Contract(token, ERCABI, provider);
+
+
+    const balance = await contract.balanceOf(sessionStorage.getItem("address"));
+    const bigNumber = new BigNumber(balance._hex);
+    const tospend: any = (bigNumber.toNumber()) / 10 ** 18
+    if (tospend >= amount) {
+      approve()
     }
+
+    else {
+      notyf.error('insufficient balance')
+    }
+
+
+  }
+
+
+  const TransferToken = async () => {
+
+    setUp();
+
 
     if (CrMetaAddress === "" || amount === "") {
       seterror("Please enter the address");
       setTimeout(() => {
         seterror("");
       }, 4000);
-      return;
-    }
-
-    const result = await checkBalance();
-    if (result === false) {
-      notyf.error("Insufficient balance");
       return;
     }
 
@@ -220,12 +267,10 @@ const Transfer = () => {
     );
 
     try {
-      const transferCoin = contract
-        .connect(signer)
-        .TransferToken(r, s, a, token, receipent, amount);
-
+      //to send exact amount ow tokens are always counted as gacanto amount**18
+      const amountParams: any = ethers.utils.parseUnits(amount, 18);
+      const transferCoin = await contract.TransferToken(r, s, a, token, receipent, amountParams);
       const txId = await transferCoin.wait();
-      console.log(txId.hash);
       settrxid("https://testnet.tuber.build/tx/" + txId.transactionHash);
     } catch (e: any) {
       console.log(e);
@@ -233,11 +278,15 @@ const Transfer = () => {
     }
     setwaiting(false);
   };
+  
   const changedefault = (c: any) => {
     setshow(!show);
     setbyDefault(c.name);
     settoken(c.address);
   };
+
+
+
 
   const viewtrx = () => {
     if (trxid !== "") {
@@ -285,12 +334,11 @@ const Transfer = () => {
             </li>
             <div
               className={`
-              ${
-                show &&
+              ${show &&
                 `transition-all ease-in bg-white py-1 shadow-md flex flex-col w-[105%] max-h-28 rounded-b-md absolute mt-2
                  scrollbar-thin scrollbar-thumb-[#10F1B4] scrollbar-track-[#b5ffeb] overflow-y-scroll 
                 scrollbar-thumb-rounded scrollbar-rounded-full`
-              }
+                }
             `}
             >
               {show &&
@@ -317,7 +365,7 @@ const Transfer = () => {
       <button
         className="flex montserrat-small mx-auto items-center cursor-pointer space-x-1 border-1 p-1 text-white bg-[#10F1B4] 
         hover:shadow-xl px-7 text-center rounded-md font-semibold hover:border-white border-[#10F1B4] border"
-        onClick={byDefault === "CANTO" ? Transfer : TransferToken}
+        onClick={byDefault === "CANTO" ? Transfer : proceed}
       >
         {waiting === false ? (
           "Send"

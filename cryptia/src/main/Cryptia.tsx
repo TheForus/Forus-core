@@ -5,6 +5,8 @@ import Trx from "./Trx";
 import React, { createContext, useMemo, useState, useEffect } from "react";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
+import abi from "../artifacts/contracts/Logs.sol/Logs.json";
+import { ethers } from "ethers";
 
 type Props = {};
 
@@ -29,11 +31,31 @@ const Cryptia = (props: Props) => {
   // const [chainid, setchainid] = useState<string | null>("");
   const [sumof, setsumof] = useState<string | any>("");
   const [sumofAddress, setsumofAddress] = useState<string | any>("");
-  let contractAddress: string = "0x6340e1ed7DCe39ccA016C1805286Aa11536b4F3a";
+  let contractAddress: string = "0x09F10aAfd4baEf6bbcef62E62f8D93C271E71d24";
 
 
 
   const { ethereum }: any = window;
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+  
+      const provider = new ethers.providers.Web3Provider(ethereum); 
+      const contract = new ethers.Contract(
+        contractAddress,
+        abi.abi,
+        provider
+      );
+
+      const limit = await contract.getLimit();
+      const totalFunds = await contract.getTotalFunds();
+      setsumof(limit.toString());
+      setsumofAddress(totalFunds / 10 ** 18)
+
+    }
+    fetchData();
+  }, []);
 
   const accountChecker = async () => {
     const accounts = await ethereum.request({ method: "eth_requestAccounts" });

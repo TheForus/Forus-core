@@ -71,8 +71,8 @@ const Instruction = (props: Props) => {
               </div>
             </div>
             <div className="montserrat-heading text-[#58707e] ">
-              <h4 className="font-semibold text-[1.1rem]"> {sumof}</h4>
-              <p>More than {sumof} Funds have been received</p>
+              <h4 className="font-semibold text-[1.1rem]"> {sumofAddress}</h4>
+              <p>More than {sumofAddress} Funds have been received</p>
             </div>
           </div>
         )}

@@ -14,8 +14,7 @@ const Features = (props: Props) => {
              sm:grid-flow-col gap-4 '>
                 <FeatureBlock 
                   heading='Enhanced Privacy Protection'
-                  subheading="Cryptia ensures utmost privacy by employing secure secret addresses for transactions.Transactions are conducted 
-                  through a unique and anonymous 'stealth address' exclusively linked to the recipient, making it virtually impossible to trace or monitor transactions by anyone else"
+                  subheading="Cryptia ensures utmost privacy by employing secret addresses.Transactions are conducted through a unique and anonymous address exclusively linked to the recipient, making it virtually impossible to trace the history"
                 >
                   <MdPrivacyTip color='#10F1B4' className='text-[60px]' />
                 </FeatureBlock>
@@ -28,8 +27,7 @@ const Features = (props: Props) => {
                 </FeatureBlock>
                 <FeatureBlock 
                   heading='Secure Fund Transfer'
-                  subheading="Cryptia ensures utmost privacy by employing secure secret addresses for transactions.Transactions are conducted through 
-                  a unique and anonymous 'stealth address' exclusively linked to the recipient, making it virtually impossible to trace or monitor transactions by anyone else"
+                  subheading="Cryptia revolutionizes the way funds are transferred by prioritizing utmost privacy and security. With its advanced encryption techniques and innovative approach, Cryptia ensures that your transactions remain confidential and untraceable."
                 >
                   <AiOutlineTransaction color='#10F1B4' className='text-[60px]' />
                 </FeatureBlock>
