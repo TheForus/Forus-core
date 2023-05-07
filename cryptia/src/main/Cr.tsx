@@ -105,7 +105,7 @@ const Cr = (props: Props) => {
             {cryptiaaddress}
           </p>
           <AiOutlineCopy
-            className="font-bold text-2xl text-[#6c8492]"
+            className="font-bold text-2xl text-[#6c8492] cursor-pointer"
             onClick={copy}
           />
         </div>

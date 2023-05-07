@@ -10,7 +10,7 @@ const FeatureBlock = (props: Props) => {
   return (
     <>
       <div
-        className="cursor-default max-w-[500px] bg-[#e8fdf4] p-3 py-10 md:py-5 rounded-md flex flex-col
+        className="cursor-default max-w-[650px] bg-[#e8fdf4] p-3 py-10 md:py-5 rounded-md flex flex-col
          space-y-4 items-center"
       >
         <div className="flex space-y-5 md:flex-col items-center">

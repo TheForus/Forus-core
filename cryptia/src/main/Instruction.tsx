@@ -34,7 +34,7 @@ const Instruction = (props: Props) => {
               <div className="flex space-x-2">
                 <MdVerifiedUser color="#10F1B4" size={29} />
                 <p className="flex-1">
-                  Securely initiate transfer with "Transfer" button, ensuring
+                  Securely initiate transfer with "send" button, ensuring
                   prompt delivery of funds to the recipient's designated
                   address.
                 </p>

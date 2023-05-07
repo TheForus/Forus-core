@@ -31,6 +31,7 @@ const Cryptia = (props: Props) => {
   // const [chainid, setchainid] = useState<string | null>("");
   const [sumof, setsumof] = useState<string | any>("");
   const [sumofAddress, setsumofAddress] = useState<string | any>("");
+  
   let contractAddress: string = "0x09F10aAfd4baEf6bbcef62E62f8D93C271E71d24";
 
 

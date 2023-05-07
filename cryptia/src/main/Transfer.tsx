@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { base58, keccak256, getAddress } from "ethers/lib/utils.js";
+import { base58, keccak256 } from "ethers/lib/utils.js";
 import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
 import { useContext } from "react";
@@ -39,7 +39,7 @@ const Transfer = () => {
 
   // let ethers: any;
 
-  // const contractAddress = '0x6340e1ed7DCe39ccA016C1805286Aa11536b4F3a'
+
   const { ethereum }: any = window;
 
   const [token, settoken] = useState<string | "">("");
@@ -136,7 +136,7 @@ const Transfer = () => {
 
     setwaiting(true);
 
-    const provider = new ethers.providers.Web3Provider(ethereum); // Replace with the Infura project ID and network
+    const provider = new ethers.providers.Web3Provider(ethereum); 
     const signer = provider.getSigner();
 
     const contract = new ethers.Contract(
@@ -158,88 +158,22 @@ const Transfer = () => {
         a,
         receipent,
         transactionParameters
-      ); // Replace methodName with the desired method
+      ); 
 
       const txId = await transferCoin.wait();
-      console.log("https://testnet.tuber.build/tx/" + txId.transactionHash);
+      // console.log("https://testnet.tuber.build/tx/" + txId.transactionHash);
       settrxid("https://testnet.tuber.build/tx/" + txId.transactionHash);
 
       // setCrMetaAddress("");
-      // setamount("");
+      setamount("");
+
     } catch (e: any) {
       console.log(e);
       seterror(e.message);
     }
     setwaiting(false);
+
   };
-
-
-
-  async function approve(): Promise<boolean> {
-
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const signer = provider.getSigner();
-    const contract = new ethers.Contract(token, ERCABI, signer);
-
-
-    try {
-
-      const msgSender = sessionStorage.getItem("address")
-      const res = await contract.allowance(msgSender, connect.contractAddress);
-      const bigNumber = new BigNumber(res._hex);
-      const allowance: string | any = ((bigNumber.toNumber()) / 10 ** 18);
-      console.log(allowance)
-
-      if (allowance < amount  ) {
-        const approvedAmount: any = ethers.utils.parseUnits(amount, 18);
-        const approve = await contract.approve(connect.contractAddress, approvedAmount);
-        await approve.wait()
-        notyf.success("approved")
-
-        TransferToken()
-      }
-
-      else {
-        TransferToken()
-      }
-
-
-    }
-    catch (e: any) {
-      console.log(e.message)
-      seterror(e.message)
-    }
-    return false
-  }
-
-
-
-  async function proceed() {
-
-    if (!ethereum) {
-      notyf.error("Please initialize MetaMask");
-      return;
-    }
-
-    connect.validateChain();
-    const provider = new ethers.providers.Web3Provider(ethereum); // Replace with the Infura project ID and network
-    const contract = new ethers.Contract(token, ERCABI, provider);
-
-
-    const balance = await contract.balanceOf(sessionStorage.getItem("address"));
-    const bigNumber = new BigNumber(balance._hex);
-    const tospend: any = (bigNumber.toNumber()) / 10 ** 18
-    if (tospend >= amount) {
-      approve()
-    }
-
-    else {
-      notyf.error('insufficient balance')
-    }
-
-
-  }
-
 
   const TransferToken = async () => {
 
@@ -277,8 +211,79 @@ const Transfer = () => {
       seterror(e.message);
     }
     setwaiting(false);
+
   };
-  
+
+
+  async function approve(): Promise<boolean> {
+
+    const provider = new ethers.providers.Web3Provider(ethereum);
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(token, ERCABI, signer);
+
+
+    try {
+
+      const msgSender = sessionStorage.getItem("address")
+      const res = await contract.allowance(msgSender, connect.contractAddress);
+      const bigNumber = new BigNumber(res._hex);
+      const allowance: string | any = ((bigNumber.toNumber()) / 10 ** 18);
+      console.log(allowance)
+
+      if (allowance < amount) {
+        const approvedAmount: any = ethers.utils.parseUnits(amount, 18);
+        const approve = await contract.approve(connect.contractAddress, approvedAmount);
+        await approve.wait()
+        notyf.success("approved")
+
+        TransferToken()
+      }
+
+      else {
+        TransferToken()
+      }
+
+
+    }
+    catch (e: any) {
+      console.log(e.message)
+      seterror(e.message)
+    }
+    return false
+  }
+
+
+
+  async function proceed() {
+
+    if (!ethereum) {
+      notyf.error("Please initialize MetaMask");
+      return;
+    }
+
+    connect.validateChain();
+
+    const provider = new ethers.providers.Web3Provider(ethereum); // Replace with the Infura project ID and network
+    const contract = new ethers.Contract(token, ERCABI, provider);
+
+
+    const balance = await contract.balanceOf(sessionStorage.getItem("address"));
+    const bigNumber = new BigNumber(balance._hex);
+    const tospend: any = (bigNumber.toNumber()) / 10 ** 18
+    if (tospend >= amount) {
+      approve()
+    }
+
+    else {
+      notyf.error('insufficient balance')
+    }
+
+
+  }
+
+
+
+
   const changedefault = (c: any) => {
     setshow(!show);
     setbyDefault(c.name);
@@ -293,6 +298,7 @@ const Transfer = () => {
       window.open(trxid, "_blank");
     }
   };
+
 
   return (
     <div className="flex flex-col justify-center items-center space-y-4 ">
@@ -318,7 +324,7 @@ const Transfer = () => {
         montserrat-subtitle outline-none rounded-md py-3 px-3 w-[100%] "
           value={amount}
           type="text"
-          placeholder="Ex: 100 Note"
+          placeholder="eg: 100 Canto"
           onChange={(e) => setamount(e.target.value)}
         />
         {/* Tokens Dropdown Menu */}

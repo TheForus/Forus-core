@@ -18,7 +18,7 @@ const Tutorial = (props: Props) => {
           <ReactPlayer
             width="90%"
             height="95%"
-            url="https://www.youtube.com/watch?v=JhqLO40y60A&t=66s"
+            url="https://www.youtube.com/watch?v=0VP7HKu4z8A"
           />
         </div>
 
