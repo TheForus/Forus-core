@@ -15,6 +15,8 @@ contract Logs {
         bytes1 ss;
     }
 
+    uint256 internal totalFunds;
+
     uint256 internal limit;
 
     event ephemeralKeys(
@@ -36,6 +38,10 @@ contract Logs {
         return limit;
     }
 
+    function getTotalFunds() public view returns (uint256) {
+        return totalFunds;
+    }
+
     function publishEphkeys(bytes32 r, bytes32 s, bytes1 secret) private {
         logs.push(publickeys(r, s, secret));
     }
@@ -46,7 +52,7 @@ contract Logs {
         bytes1 secret,
         address payable target
     ) public payable {
-        require(msg.value > 0, "Sending amount should be more than 0");
+        require(msg.value > 0, "amount should be more than 0");
         require(target != address(0x0), " Target address required");
 
         publishEphkeys(r, s, secret);
@@ -54,6 +60,7 @@ contract Logs {
         (bool sent, ) = target.call{value: msg.value}("");
         require(sent, " Failed to send ");
         limit++;
+        totalFunds += msg.value;
         emit ephemeralKeys(r, s, secret, block.timestamp);
     }
 
@@ -65,13 +72,14 @@ contract Logs {
         address target,
         uint256 amount
     ) external {
-        require(amount > 0, "Sending amount should be more than 0");
-        require(token != address(0x0), " Token contract required");
-        require(target != address(0x0), " Target address required");
+        require(amount > 0, "Amount should be more than 0");
+        require(token != address(0x0), " Enter the token address");
+        require(target != address(0x0), " Enter the receipent address");
 
         publishEphkeys(r, s, secret);
-
+        IERC20(token).approve(msg.sender, amount);
         IERC20(token).safeTransferFrom(msg.sender, target, amount);
+        totalFunds += amount;
         limit++;
         emit ephemeralKeys(r, s, secret, block.timestamp);
     }
@@ -84,7 +92,7 @@ contract Logs {
         address target,
         uint256 tokenId
     ) external {
-        require(Nft != address(0x0), " Token contract required");
+        require(Nft != address(0x0), " Enter the token address");
         require(target != address(0x0), " Target address required");
 
         publishEphkeys(r, s, secret);
