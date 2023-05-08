@@ -79,6 +79,19 @@
   padding-bottom: 0;
 }
 
+/* Dark theme css */
+.theme-btn:hover .dark {
+  display: inline-block;
+}
+
+.light {
+  display: inline-block;
+}
+
+.theme-btn:hover .light {
+  display: none;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

@@ -76,14 +76,14 @@ const Cr = (props: Props) => {
       <div className="flex flex-col items-center p-8 rounded-t-md">
         <div className="pb-6 flex flex-col space-y-4 items-center border-b w-full">
           <h1
-            className="mx-auto sm:w-[70%] montserrat-subtitle text-[#6c8492]  md:text-3xl 
+            className="mx-auto sm:w-[70%] montserrat-subtitle dark:text-gray-100 text-[#6c8492]  md:text-3xl 
         text-4xl  font-bold"
           >
             {" "}
             Unlock the
             <span
               className="montserrat-subtitle md:text-3xl 
-        text-4xl font-extrabold text-[#6c8492] "
+        text-4xl font-extrabold"
             >
               {" "}
               power of secrecy
@@ -99,13 +99,15 @@ const Cr = (props: Props) => {
           )}
         </div>
 
-        <div className="my-6 flex gap-4 items-center p-2 px-3 rounded-md  bg-[#d1f5e5]">
-          <p className="montserrat-small  font-semibold text-[#435864]">
-            <span className="text-[#435864] font-semibold">#Cryptia</span>- #
-            {cryptiaaddress}
+        <div className="my-6 flex sm:gap-4 items-center p-2 sm:px-3 sm:mx-0 mx-3  rounded-md  bg-[#d1f5e5]">
+          <p className="sm:text-[1rem] text-[0.9rem] montserrat-small font-semibold dark:text-gray-900 text-[#435864]">
+            <span className="text-gray-900 dark:text-black text-md font-bold">
+              #Cryptia
+            </span>{" "}
+            - #{cryptiaaddress}
           </p>
           <AiOutlineCopy
-            className="font-bold text-2xl text-[#6c8492] cursor-pointer"
+            className="font-bold text-2xl text-[#6c8492] hover:text-[#4e6979] cursor-pointer"
             onClick={copy}
           />
         </div>
@@ -114,7 +116,7 @@ const Cr = (props: Props) => {
           className="mb-4 montserrat-subtitle border-1 p-1 montserrat-subtitle  
         text-[#E8FDF4] bg-[#10F1B4]  hover:shadow-xl px-6 text-center 
         rounded-md  font-semibold   hover:bg-gray-800 
-        hover:text-[#10F1B4]  hover:border-white border-gray-200 border"
+        hover:text-[#10F1B4]  hover:border-white dark:border-bgGreen dark:hover:bg-gray-800 border-gray-200 border"
           onClick={Generate}
         >
           Generate
