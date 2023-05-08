@@ -32,7 +32,7 @@ ___Sender would send funds by doing Following:
 ___Receiver would accept the funds Now how would he do it?
 
 
-1.Private key = If(EphPubKey * SecretKey) == 2bytes of Stealth address  "
+1.Private key = If ((EphPubKey * SecretKey) == 2bytes of Stealth address)) returns true  "
 
 
 
