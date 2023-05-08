@@ -19,7 +19,7 @@ interface ContextValue {
   setsumof: React.Dispatch<React.SetStateAction<string | any>>;
   sumofAddress: string | any;
   setsumofAddress: React.Dispatch<React.SetStateAction<string | any>>;
-  validateChain(): void
+  validateChain(): void;
 }
 
 export const AppContext = createContext<ContextValue | any>(null);
@@ -31,30 +31,21 @@ const Cryptia = (props: Props) => {
   // const [chainid, setchainid] = useState<string | null>("");
   const [sumof, setsumof] = useState<string | any>("");
   const [sumofAddress, setsumofAddress] = useState<string | any>("");
-  
+
   let contractAddress: string = "0x09F10aAfd4baEf6bbcef62E62f8D93C271E71d24";
-
-
 
   const { ethereum }: any = window;
 
-
   useEffect(() => {
     const fetchData = async () => {
-  
-      const provider = new ethers.providers.Web3Provider(ethereum); 
-      const contract = new ethers.Contract(
-        contractAddress,
-        abi.abi,
-        provider
-      );
+      const provider = new ethers.providers.Web3Provider(ethereum);
+      const contract = new ethers.Contract(contractAddress, abi.abi, provider);
 
       const limit = await contract.getLimit();
       const totalFunds = await contract.getTotalFunds();
       setsumof(limit.toString());
-      setsumofAddress(totalFunds / 10 ** 18)
-
-    }
+      setsumofAddress(totalFunds / 10 ** 18);
+    };
     fetchData();
   }, []);
 
@@ -64,7 +55,6 @@ const Cryptia = (props: Props) => {
     sessionStorage.setItem("address", address);
   };
 
-
   const validateChain = async () => {
     const chainId = await ethereum.request({ method: "eth_chainId" });
 
@@ -72,7 +62,6 @@ const Cryptia = (props: Props) => {
       notyf.error("plz connect to canto testnet");
       return;
     }
-
   };
 
   useEffect(() => {
@@ -95,7 +84,6 @@ const Cryptia = (props: Props) => {
     });
   }, []);
 
-
   const connectWallet = async (): Promise<void> => {
     if (ethereum === undefined) {
       notyf.error("Plz install metamask");
@@ -112,7 +100,6 @@ const Cryptia = (props: Props) => {
         validateChain();
       }
       setwallet(true);
-
     } catch (e: any) {
       notyf.error(e);
     }
@@ -127,12 +114,12 @@ const Cryptia = (props: Props) => {
     setsumof,
     sumofAddress,
     setsumofAddress,
-    validateChain
+    validateChain,
   };
 
   return (
     <AppContext.Provider value={ContextValue}>
-      <div className="bg-[#f4fffc] md:h-[98vh]">
+      <div className="bg-[#f4fffc] dark:bg-bgBlack md:h-[100vh]">
         <Navmain />
         <div
           className="md:w-[90%] max-w-[1020px] mx-auto

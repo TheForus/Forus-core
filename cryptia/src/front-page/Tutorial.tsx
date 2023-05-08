@@ -7,10 +7,13 @@ type Props = {};
 const Tutorial = (props: Props) => {
   return (
     <>
-      <div className="flex flex-col py-10 items-center justify-center">
+      <div
+        id="howitworks"
+        className="flex flex-col py-10 items-center justify-center"
+      >
         <h1
           className="montserrat-heading py-4 font-semibold text-3xl
-       text-[#435864] border-b border-gray-400"
+       text-[#435864] dark:text-gray-100 border-b border-gray-400"
         >
           See how it works
         </h1>

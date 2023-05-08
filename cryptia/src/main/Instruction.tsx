@@ -13,10 +13,10 @@ const Instruction = (props: Props) => {
           <div className="flex text-left flex-col gap-3 w-[90%]">
             {" "}
             {/* on Transfer */}
-            <h1 className="montserrat-subheading text-[#6c8492] font-semibold text-[1.5rem]">
+            <h1 className="montserrat-subheading dark:text-gray-300 text-[#6c8492] font-semibold text-[1.5rem]">
               Transfer
             </h1>
-            <div className="py-4 montserrat-heading text-[#6c8492] flex flex-col gap-4 items-center">
+            <div className="py-4 montserrat-heading dark:text-[#89a1af] text-[#6c8492] flex flex-col gap-4 items-center">
               <div className="flex space-x-2 ">
                 <MdVerifiedUser color="#10F1B4" size={29} />
                 <p className="flex-1">
@@ -34,13 +34,12 @@ const Instruction = (props: Props) => {
               <div className="flex space-x-2">
                 <MdVerifiedUser color="#10F1B4" size={29} />
                 <p className="flex-1">
-                  Securely initiate transfer with "send" button, ensuring
-                  prompt delivery of funds to the recipient's designated
-                  address.
+                  Securely initiate transfer with "send" button, ensuring prompt
+                  delivery of funds to the recipient's designated address.
                 </p>
               </div>
             </div>
-            <div className="montserrat-heading text-[#58707e]">
+            <div className="montserrat-heading dark:text-[#9cb4c2] text-[#58707e]">
               <h4 className="font-semibold text-[#6c8492] text-[1.1rem]">
                 {sumof}
               </h4>
@@ -51,10 +50,10 @@ const Instruction = (props: Props) => {
           <div className="flex text-left flex-col gap-3 w-[90%]">
             {" "}
             {/* on Accept */}
-            <h1 className="montserrat-subheading text-[#6c8492] font-semibold text-[1.5rem]">
+            <h1 className="montserrat-subheading dark:text-[#89a1af] text-[#6c8492] font-semibold text-[1.5rem]">
               Accept
             </h1>
-            <div className="py-4 montserrat-heading text-[#6c8492] flex flex-col gap-4 items-center">
+            <div className="py-4 montserrat-heading dark:text-[#89a1af] text-[#6c8492] flex flex-col gap-4 items-center">
               <div className="flex space-x-2">
                 <MdVerifiedUser color="#10F1B4" size={32} />
                 <p className="flex 1">
@@ -70,7 +69,7 @@ const Instruction = (props: Props) => {
                 </p>
               </div>
             </div>
-            <div className="montserrat-heading text-[#58707e] ">
+            <div className="montserrat-heading dark:text-[#9cb4c2] text-[#58707e] ">
               <h4 className="font-semibold text-[1.1rem]"> {sumofAddress}</h4>
               <p>More than {sumofAddress} Funds have been received</p>
             </div>
