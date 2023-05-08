@@ -1,3 +1,9 @@
+Dont forget to read 'ReadMe' to understand functionalities deeply 
+
+Live app : https://cryptia.netlify.app
+
+
+
 Cryptia allows you to receive funds without revealing your wallet address with anyone
 
 
