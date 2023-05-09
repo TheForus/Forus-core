@@ -119,7 +119,7 @@ const Cryptia = (props: Props) => {
 
   return (
     <AppContext.Provider value={ContextValue}>
-      <div className="bg-[#f4fffc] dark:bg-bgBlack md:h-[100vh]">
+      <div className="bg-[#f4fffc] dark:bg-black min-h-[100vh] max-h-max">
         <Navmain />
         <div
           className="md:w-[90%] max-w-[1020px] mx-auto
