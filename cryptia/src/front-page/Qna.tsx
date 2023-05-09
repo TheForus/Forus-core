@@ -15,7 +15,7 @@ const Qna = (props: Props) => {
   return (
     <div
       id="faq"
-      className="p-5 py-10 flex flex-col items-center justify-center bg-[#10F1B4] dark:bg-bgBlack"
+      className="p-5 py-10 flex flex-col items-center justify-center bg-[#10F1B4] dark:bg-black"
     >
       <h1 className="montserrat-subheading text-2xl mb-6 text-white dark:text-[#435864] border-b pb-2 border-gray-200">
         FAQ
