@@ -7,20 +7,19 @@ type Props = {};
 const Features = (props: Props) => {
   return (
 
-    <div className='sm:px-20 px-12 p-4 flex flex-col py-10 space-y-10 justify-center items-center'>
-      <h1 className='montserrat-heading py-4 text-3xl 
-            font-semibold      text-[#435864] border-b border-gray-400 '>Features and Capabilities</h1> {/* Heading */}
-      <div className='md:grid flex flex-col grid-rows-3 lg:grid-rows-2
-             sm:grid-flow-col gap-4 '>
+    // <div className='sm:px-20 px-12 p-4 flex flex-col py-10 space-y-10 justify-center items-center'>
+    //   <h1 className='montserrat-heading py-4 text-3xl 
+    //         font-semibold      text-[#435864] border-b border-gray-400 '>Features and Capabilities</h1> {/* Heading */}
+    //   <div className='md:grid flex flex-col grid-rows-3 lg:grid-rows-2
+    //          sm:grid-flow-col gap-4 '>
 
-        {/* <div className="sm:px-20 px-12 p-4 flex flex-col py-10 space-y-10 justify-center items-center">
+        <div className="sm:px-20 px-12 p-4 flex flex-col py-10 space-y-10 justify-center items-center">
           <h1
             className="montserrat-heading py-4 text-3xl 
             font-semibold text-[#435864] dark:text-gray-100 border-b border-gray-400 "
           >
             Features and Capabilities
-          </h1>{" "} */}
-        {/* Heading */}
+          </h1>{" "} 
         <div
           className="md:grid flex flex-col grid-rows-3 md:grid-rows-2
              sm:grid-flow-col gap-4 "
@@ -51,7 +50,7 @@ const Features = (props: Props) => {
           </FeatureBlock>
         </div>
       </div>
-    </div>
+    // </div>
 
   );
 };
