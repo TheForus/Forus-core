@@ -7,7 +7,7 @@ const Header = () => {
   return (
     <>
       <div
-        className="bg-[#10F1B4] dark:bg-bgBlack sm:px-20 px-12 p-10 flex
+        className="bg-[#10F1B4] dark:bg-black sm:px-20 px-12 p-10 flex
       justify-between items-center md:flex-row flex-col space-y-6"
       >
         {/* left side */}

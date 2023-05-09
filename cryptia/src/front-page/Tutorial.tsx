@@ -13,7 +13,7 @@ const Tutorial = (props: Props) => {
       >
         <h1
           className="montserrat-heading py-4 font-semibold text-3xl
-       text-[#435864] dark:text-gray-100 border-b border-gray-400"
+       text-[#435864] border-b border-gray-400"
         >
           See how it works
         </h1>

@@ -19,9 +19,9 @@ const Navmain = (props: Props) => {
           className="flex items-center cursor-pointer"
           onClick={() => navigate("/")}
         >
-          <div className="flex space-x-1 items-center">
-            <img src={logo} alt="" className="w-[35px] h-[32px]" />
-            <h1 className="dark:text-gray-300 montserrat-subtitle sm:text-[1.3rem] font-semibold text-[1.2rem] text-[#6c8492]">
+          <div className="flex space-x-1 items-center logo-div">
+            <img src={logo} alt="" className="logo w-[35px] h-[32px]" />
+            <h1 className="dark:text-white montserrat-subtitle sm:text-[1.3rem] font-bold text-[1.2rem] text-[#6c8492]">
               Cryptia
             </h1>
           </div>
@@ -29,12 +29,9 @@ const Navmain = (props: Props) => {
           <div className="flex items-center space-x-4">
             <button
               onClick={() => navigate("/")}
-              className="flex items-end space-x-1 sm:ml-14 ml-6 hover:text-gray-800 dark:hover:text-gray-200 text-[#91acbb] dark:text-gra-200 montserrat-subtitle underline-offset-8 font-bold hover:underline decoration-[#10F1B4]  sm:text-[1rem] text-[0.9rem]"
+              className="flex transition-all ease-linear items-end space-x-1 sm:ml-14 ml-6 hover:text-gray-800 dark:hover:text-gray-200 text-[#91acbb] dark:text-gra-200 montserrat-subtitle underline-offset-8 font-bold hover:underline decoration-[#10F1B4]  sm:text-[1rem] text-[0.9rem]"
             >
-              <IoMdHome
-                size={28}
-                className="self-start text-[#91acbb] dark:text-gra-200"
-              />
+              <IoMdHome size={28} className="self-start text-[#91acbb]" />
               <p>Home</p>
             </button>
             <div

@@ -10,7 +10,7 @@ type Props = {};
 const Wrapper = (props: Props) => {
   // dark:bg-[#015235]
   return (
-    <div className="bg-[#ECFFFA] dark:bg-bgGray">
+    <div className="bg-[#ECFFFA] dark:bg-bgBlack">
       <Nav />
       <div className=" mt-[1.2px] dark:mt-0 "></div>
       <Header />

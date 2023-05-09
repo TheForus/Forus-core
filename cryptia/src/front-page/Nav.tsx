@@ -24,8 +24,8 @@ const Nav = (props: Props) => {
 
   return (
     <div
-      className="bg-[#10F1B4] dark:bg-bgBlack text-white dark:text-[#10F1B4] sm:px-20 px-12 p-5 flex 
-        justify-between items-center border-b border-gray-300 dark:border-textGreenb"
+      className="bg-[#10F1B4] dark:bg-black text-white dark:text-[#10F1B4] sm:px-20 px-12 p-5 flex 
+        justify-between items-center border-b border-gray-300 dark:border-gray-400"
     >
       {/* logo left */}
       <div className="flex space-x-1 items-center">

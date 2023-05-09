@@ -62,6 +62,23 @@
   pointer-events: none;
 }
 
+/* bouncing wolf */
+.logo-div:hover .logo {
+  @keyframes bounce {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  /* Apply the animation to the element with the [animate-bounce] class */
+  animation: bounce 0.5s infinite;
+  animation-duration: 1500ms;
+}
+
 /* Css for QNA Component */
 .show {
   max-height: 1000px;
