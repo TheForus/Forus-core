@@ -23,7 +23,7 @@ const Trx = (props: Props) => {
 
   return (
     <div
-      className="flex flex-col p-5 px-8 backdrop-blur-[50px]
+      className="flex flex-col sm:p-5 sm:px-8 backdrop-blur-[50px]
       max-w-[500px] hover:backdrop-blur-lg
      h-full"
     >

@@ -29,18 +29,22 @@ const Navmain = (props: Props) => {
           <div className="flex items-center space-x-4">
             <button
               onClick={() => navigate("/")}
-              className="flex transition-all ease-linear items-end space-x-1 sm:ml-14 ml-6 hover:text-gray-800 dark:hover:text-gray-200 text-[#91acbb] dark:text-gra-200 montserrat-subtitle underline-offset-8 font-bold hover:underline decoration-[#10F1B4]  sm:text-[1rem] text-[0.9rem]"
+              className="flex md:flex-row flex-col items-center transition-all ease-linear md:items-end space-x-1 sm:ml-14 ml-6 hover:text-gray-800 dark:hover:text-gray-200 text-[#91acbb] dark:text-gra-200 montserrat-subtitle underline-offset-8 font-bold hover:underline decoration-[#10F1B4]  sm:text-[1rem] text-[0.9rem]"
             >
-              <IoMdHome size={28} className="self-start text-[#91acbb]" />
+              <IoMdHome size={28} className="md:self-start text-[#91acbb]" />
               <p>Home</p>
             </button>
             <div
               onClick={() => navigate("/")}
-              className="flex items-end space-x-1 sm:ml-14 ml-6 hover:text-gray-800 text-[#91acbb] dark:hover:text-gray-200 dark:text-gra-200 montserrat-subtitle underline-offset-8 font-bold hover:underline decoration-[#10F1B4]  sm:text-[1rem] text-[0.9rem]"
+              className="flex md:flex-row flex-col items-center md:items-end space-x-1 sm:ml-14 ml-6 hover:text-gray-800
+               text-[#91acbb] dark:hover:text-gray-200 dark:text-gra-200
+                montserrat-subtitle underline-offset-8
+                 font-bold hover:underline decoration-[#10F1B4] 
+                 sm:text-[1rem] text-[0.9rem]"
             >
               <HiQuestionMarkCircle
                 size={28}
-                className="self-start text-[#91acbb] dark:text-gra-200"
+                className="md:self-start text-[#91acbb] dark:text-gra-200"
               />
               <p>QnA</p>
             </div>

@@ -10,14 +10,12 @@ import { BsChevronDown } from "react-icons/bs";
 import { ethers } from "ethers";
 import sending from "../Logos/sending.gif";
 import { Notyf } from "notyf";
-import BigNumber from 'bignumber.js';
+import BigNumber from "bignumber.js";
 import "notyf/notyf.min.css";
 
 const ec = new EllipticCurve.ec("secp256k1");
 
 const Transfer = () => {
-
-
   const notyf = new Notyf();
 
   const connect = useContext(AppContext);
@@ -31,14 +29,11 @@ const Transfer = () => {
     "function allowance(address owner, address spender) view returns (uint)",
   ];
 
-
-
   let r: string | null;
   let s: string | null;
   let a: string | null;
 
   // let ethers: any;
-
 
   const { ethereum }: any = window;
 
@@ -52,7 +47,6 @@ const Transfer = () => {
   const [waiting, setwaiting] = useState<boolean>(false);
 
   var receipent: any;
-
 
   const validatingCr = (event: any) => {
     if (
@@ -136,7 +130,7 @@ const Transfer = () => {
 
     setwaiting(true);
 
-    const provider = new ethers.providers.Web3Provider(ethereum); 
+    const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
 
     const contract = new ethers.Contract(
@@ -144,7 +138,6 @@ const Transfer = () => {
       Abi.abi,
       signer
     );
-
 
     try {
       const valueToSend = ethers.utils.parseEther(amount);
@@ -158,7 +151,7 @@ const Transfer = () => {
         a,
         receipent,
         transactionParameters
-      ); 
+      );
 
       const txId = await transferCoin.wait();
       // console.log("https://testnet.tuber.build/tx/" + txId.transactionHash);
@@ -166,19 +159,15 @@ const Transfer = () => {
 
       // setCrMetaAddress("");
       setamount("");
-
     } catch (e: any) {
       console.log(e);
       seterror(e.message);
     }
     setwaiting(false);
-
   };
 
   const TransferToken = async () => {
-
     setUp();
-
 
     if (CrMetaAddress === "" || amount === "") {
       seterror("Please enter the address");
@@ -203,7 +192,14 @@ const Transfer = () => {
     try {
       //to send exact amount ow tokens are always counted as gacanto amount**18
       const amountParams: any = ethers.utils.parseUnits(amount, 18);
-      const transferCoin = await contract.TransferToken(r, s, a, token, receipent, amountParams);
+      const transferCoin = await contract.TransferToken(
+        r,
+        s,
+        a,
+        token,
+        receipent,
+        amountParams
+      );
       const txId = await transferCoin.wait();
       settrxid("https://testnet.tuber.build/tx/" + txId.transactionHash);
     } catch (e: any) {
@@ -211,51 +207,41 @@ const Transfer = () => {
       seterror(e.message);
     }
     setwaiting(false);
-
   };
 
-
   async function approve(): Promise<boolean> {
-
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
     const contract = new ethers.Contract(token, ERCABI, signer);
 
-
     try {
-
-      const msgSender = sessionStorage.getItem("address")
+      const msgSender = sessionStorage.getItem("address");
       const res = await contract.allowance(msgSender, connect.contractAddress);
       const bigNumber = new BigNumber(res._hex);
-      const allowance: string | any = ((bigNumber.toNumber()) / 10 ** 18);
-      console.log(allowance)
+      const allowance: string | any = bigNumber.toNumber() / 10 ** 18;
+      console.log(allowance);
 
       if (allowance < amount) {
         const approvedAmount: any = ethers.utils.parseUnits(amount, 18);
-        const approve = await contract.approve(connect.contractAddress, approvedAmount);
-        await approve.wait()
-        notyf.success("approved")
+        const approve = await contract.approve(
+          connect.contractAddress,
+          approvedAmount
+        );
+        await approve.wait();
+        notyf.success("approved");
 
-        TransferToken()
+        TransferToken();
+      } else {
+        TransferToken();
       }
-
-      else {
-        TransferToken()
-      }
-
-
+    } catch (e: any) {
+      console.log(e.message);
+      seterror(e.message);
     }
-    catch (e: any) {
-      console.log(e.message)
-      seterror(e.message)
-    }
-    return false
+    return false;
   }
 
-
-
   async function proceed() {
-
     if (!ethereum) {
       notyf.error("Please initialize MetaMask");
       return;
@@ -266,23 +252,15 @@ const Transfer = () => {
     const provider = new ethers.providers.Web3Provider(ethereum); // Replace with the Infura project ID and network
     const contract = new ethers.Contract(token, ERCABI, provider);
 
-
     const balance = await contract.balanceOf(sessionStorage.getItem("address"));
     const bigNumber = new BigNumber(balance._hex);
-    const tospend: any = (bigNumber.toNumber()) / 10 ** 18
+    const tospend: any = bigNumber.toNumber() / 10 ** 18;
     if (tospend >= amount) {
-      approve()
+      approve();
+    } else {
+      notyf.error("insufficient balance");
     }
-
-    else {
-      notyf.error('insufficient balance')
-    }
-
-
   }
-
-
-
 
   const changedefault = (c: any) => {
     setshow(!show);
@@ -290,15 +268,11 @@ const Transfer = () => {
     settoken(c.address);
   };
 
-
-
-
   const viewtrx = () => {
     if (trxid !== "") {
       window.open(trxid, "_blank");
     }
   };
-
 
   return (
     <div className="flex flex-col justify-center items-center space-y-4 ">
@@ -340,11 +314,12 @@ const Transfer = () => {
             </li>
             <div
               className={`
-              ${show &&
+              ${
+                show &&
                 `transition-all ease-in bg-white py-1 shadow-md flex flex-col w-[105%] max-h-28 rounded-b-md absolute mt-2
                  scrollbar-thin scrollbar-thumb-[#10F1B4] scrollbar-track-[#b5ffeb] overflow-y-scroll 
                 scrollbar-thumb-rounded scrollbar-rounded-full`
-                }
+              }
             `}
             >
               {show &&
@@ -369,7 +344,7 @@ const Transfer = () => {
         </div>
       </div>
       <button
-        className="flex montserrat-small mx-auto items-center cursor-pointer space-x-1 border-1 p-1 text-white bg-[#10F1B4] 
+        className="dark:text-[#06324e] dark:hover:text-gray-300 hover:bg-gray-800 dark:border-gray-700 flex montserrat-small mx-auto items-center cursor-pointer space-x-1 border-1 p-1 text-white bg-[#10F1B4] 
         hover:shadow-xl px-7 text-center rounded-md font-semibold hover:border-white border-[#10F1B4] border"
         onClick={byDefault === "CANTO" ? Transfer : proceed}
       >

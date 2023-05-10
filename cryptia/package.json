@@ -59,7 +59,7 @@
   "devDependencies": {
     "@types/elliptic": "^6.4.14",
     "@types/react-scroll": "^1.8.7",
-    "tailwind-scrollbar": "^3.0.0",
+    "tailwind-scrollbar": "^3.0.1",
     "tailwindcss": "^3.3.2"
   }
 }

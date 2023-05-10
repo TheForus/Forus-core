@@ -32,7 +32,7 @@ const Accept = () => {
   useEffect(() => {
     const fetchData = async () => {
       // try {
-      const provider = new ethers.providers.Web3Provider(ethereum); 
+      const provider = new ethers.providers.Web3Provider(ethereum);
       const contract = new ethers.Contract(
         connect.contractAddress,
         abi.abi,
@@ -52,7 +52,6 @@ const Accept = () => {
         localStorage.setItem("ephLogs", JSON.stringify(zkeys));
       }
     };
-
 
     fetchData();
   }, []);
@@ -90,7 +89,8 @@ const Accept = () => {
       ephPubKey = ec.keyFromPublic(z.slice(3), "hex");
       sharedsecret = secretkey.derive(ephPubKey.getPublic()); //
       hashedsecret = ec.keyFromPrivate(keccak256(sharedsecret.toArray()));
-      _sharedSecret = "0x" + sharedsecret.toArray()[0].toString(16).padStart(2, "0");
+      _sharedSecret =
+        "0x" + sharedsecret.toArray()[0].toString(16).padStart(2, "0");
       console.log(
         z.slice(1, 3).toString(),
         _sharedSecret.toString().slice(2, 4)
@@ -157,7 +157,7 @@ const Accept = () => {
       {/* Match key */}
       <div className="flex justify-center pt-2 mr-4">
         <div
-          className="flex ml-1 items-center cursor-pointer space-x-1 border-1 p-1 hover:bg-gray-900 hover:text-[#10F1B4]  text-white bg-[#10F1B4] hover:shadow-xl px-4 text-center rounded-md  font-semibold hover:border-white border-[#10F1B4] border"
+          className="flex ml-1 dark:text-[#06324e] dark:hover:text-gray-300 dark:border-gray-700 items-center cursor-pointer space-x-1 border-1 p-1 hover:bg-gray-900 hover:text-[#10F1B4]  text-white bg-[#10F1B4] hover:shadow-xl px-4 text-center rounded-md  font-semibold hover:border-white border-[#10F1B4] border"
           onClick={generateprivatekey}
         >
           {/* <GiKangaroo size={26} /> */}

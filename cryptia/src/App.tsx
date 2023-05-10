@@ -6,7 +6,7 @@ import Cryptia from "./main/Cryptia";
 
 function App() {
   return (
-    <div className="App ">
+    <div className="App">
       <Router>
         <Routes>
           <Route path="/" element={<Wrapper />} />

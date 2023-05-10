@@ -98,10 +98,10 @@ const Cr = (props: Props) => {
             </p>
           )}
         </div>
-
+        {/* cryptia */}
         <div className="my-6 flex sm:gap-4 items-center p-2 sm:px-3 sm:mx-0 mx-3  rounded-md  bg-[#d1f5e5]">
-          <p className="sm:text-[1rem] text-[0.9rem] montserrat-small font-semibold dark:text-gray-900 text-[#435864]">
-            <span className="text-gray-900 dark:text-black text-md font-bold">
+          <p className="sm:text-[1rem] text-[0.7rem] montserrat-small font-semibold dark:text-gray-900 text-[#435864]">
+            <span className="sm:text-[1rem] text-[0.8rem] text-gray-900 dark:text-black text-md font-bold">
               #Cryptia
             </span>{" "}
             - #{cryptiaaddress}
@@ -114,8 +114,8 @@ const Cr = (props: Props) => {
 
         <button
           className="mb-4 montserrat-subtitle border-1 p-1 montserrat-subtitle  
-        text-[#E8FDF4] bg-[#10F1B4]  hover:shadow-xl px-6 text-center 
-        rounded-md  font-semibold   hover:bg-gray-800 
+        text-[#E8FDF4] dark:text-[#06324e] dark:hover:text-gray-300 bg-[#10F1B4]  hover:shadow-xl px-6 text-center 
+        rounded-md  font-semibold   hover:bg-gray-800 dark:border-gray-700 
         hover:text-[#10F1B4]  hover:border-white dark:border-bgGreen dark:hover:bg-gray-800 border-gray-200 border"
           onClick={Generate}
         >

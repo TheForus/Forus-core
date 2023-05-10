@@ -54,7 +54,7 @@ const Nav = (props: Props) => {
           className="focus:outline-none cursor-pointer dark:bg-bgBlack dark:hover:bg-gray-500 bg-[#10F1B4] hover:bg-[#22b48d] 
             sm:p-2 p-1 rounded-full border-2 dark:border-gray-500 border-gray-200"
         >
-          <button className="transition-all theme-btn text-gray-200">
+          <button className="theme-btn text-gray-200">
             {darkTheme ? (
               <>
                 <BiSun size={30} className="text-gray-200 light hidden" />
