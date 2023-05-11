@@ -21,14 +21,9 @@ const Tutorial = (props: Props) => {
           <ReactPlayer
             width="90%"
             height="95%"
-            url="https://www.youtube.com/watch?v=sN-ROIAtt04"
+            url="https://youtu.be/HiD30ezJNrw"
           />
         </div>
-
-        {/* <video width = "500" height = "300" controls>
-         <source src="https://www.youtube.com/watch?v=JhqLO40y60A&t=66s" type = "video/mp4" />
-         This browser doesn't support video tag.
-      </video> */}
       </div>
     </>
   );
