@@ -74,7 +74,7 @@ const Cryptia = (props: Props) => {
         accountChecker();
         window.location.reload();
       });
-    }
+ 
     ethereum.on("chainChanged" || "accountsChanged", (chId: any) => {
       if (chId !== "0x1e15") {
         notyf.error("plz connect to canto testnet");
@@ -82,6 +82,10 @@ const Cryptia = (props: Props) => {
       }
       window.location.reload();
     });
+  }
+  else{
+    notyf.error("Plz install metamask");
+  }
   }, []);
 
   const connectWallet = async (): Promise<void> => {
