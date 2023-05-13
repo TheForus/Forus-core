@@ -2,7 +2,7 @@
 
 **Where : R=(Receiver) S=(Sender) G=(Generator)**
 
-### R would create an cloakAddress(public key) by doing following:
+### R would create an crAddress (publickey) by doing following:
 
 1.let secretKey= G * (Random Numbers)
 
