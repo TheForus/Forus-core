@@ -7,14 +7,16 @@ import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 const ec = new EllipticCurve.ec("secp256k1");
 
+
 type Props = {};
 
 const Cr = (props: Props) => {
-  const notyf = new Notyf();
 
+  const notyf = new Notyf();
   const [cryptiaaddress, setcryptiaaddress] = useState<string | any>("");
   const [, setstoredsecretkey] = useState<string | any>("");
   const [note, setnote] = useState<boolean>(false);
+
 
   const Generate = () => {
     try {
@@ -64,6 +66,7 @@ const Cr = (props: Props) => {
     }, 9000);
   };
 
+
   const copy = () => {
     navigator.clipboard.writeText(cryptiaaddress);
     downloadTxt(localStorage.getItem("secretKey"));
@@ -71,6 +74,7 @@ const Cr = (props: Props) => {
     notyf.success("Copied");
   };
 
+  
   return (
     <>
       <div className="flex flex-col items-center p-8 rounded-t-md">

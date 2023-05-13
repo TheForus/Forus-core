@@ -12,6 +12,7 @@ const Navmain = (props: Props) => {
   const connect = useContext(AppContext);
   const navigate = useNavigate();
   return (
+
     <div className="max-w-[1090px] mx-auto pt-4 sm:pt-8 pb-12 ">
       <div className="sm:px-7 px-4 flex justify-between">
         {/* leftside logo */}
@@ -90,6 +91,7 @@ const Navmain = (props: Props) => {
         </div>
       </div>
     </div>
+    
   );
 };
 

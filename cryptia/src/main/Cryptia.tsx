@@ -22,7 +22,7 @@ interface ContextValue {
   validateChain(): void;
 }
 
-export const AppContext = createContext<ContextValue | any>(null);
+export const AppContext = createContext<ContextValue | any> (null);
 const Cryptia = (props: Props) => {
   const notyf = new Notyf();
 

@@ -1,14 +1,21 @@
-# Sample Hardhat Project
+# Here is the quick worflow of cryptia :
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+**Where : R=(Receiver) S=(Sender) G=(Generator)**
 
-Try running some of the following tasks:
+### R would create an cloakAddress(public key) by doing following:
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
-```
- 
+1.let secretKey= G * (Random Numbers)
+
+2.let cr = G * (secretKey)
+
+### S would send funds to R by doing Following:
+
+1.let ephKey= G * (Random Numbers)
+
+2.let stealthAddress = ephKey * (cr)
+
+3.let ephpubKey = stealthaddress.slice(0,2) + G * (ephKey)
+
+### R would accept the funds Now how would he do it?
+
+1.If ((ephpubKey * secretKey) == stealthaddress.slice(0,2) ) returns **privatekey**
