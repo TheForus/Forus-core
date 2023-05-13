@@ -26,10 +26,6 @@ const Tutorial = (props: Props) => {
           />
         </div>
 
-        {/* <video width = "500" height = "300" controls>
-         <source src="https://www.youtube.com/watch?v=JhqLO40y60A&t=66s" type = "video/mp4" />
-         This browser doesn't support video tag.
-      </video> */}
       </div>
     </>
   );
