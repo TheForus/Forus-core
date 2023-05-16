@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import workflow from "../Logos/work.png";
+import cryptia from "../main/Cryptia"
 
 const Header = () => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ const Header = () => {
             className="border-1 montserrat-subtitle  hover:bg-gray-900 hover:text-[#10F1B4]
             p-1 px-9 rounded-lg bg-[#E8FDF4]  dark:bg-[#181818] hover:border-gray-900 border border-gray-300 text-[#00ca94]  montserrat-subtitle 
             font-semibold  text-xl"
-            onClick={() => navigate("/Cryptia")}
+            onClick={() => navigate('/cryptia')}
           >
             Launch
           </button>
