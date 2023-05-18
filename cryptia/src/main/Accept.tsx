@@ -21,15 +21,16 @@ const Accept = () => {
   const [privatekey, setprivatekey] = useState<string>("");
   const [hide, sethide] = useState<boolean>(true);
   const [, setmatchingkey] = useState<boolean>(false);
-  const [err, seterr] = useState<boolean>(false);
+  const [err, seterr] = useState<any>(false);
   const [reveal, setreveal] = useState<boolean | any>(false);
   const [iscopied, setiscopied] = useState<string>("");
+  const [isfounded, setisfounded] = useState<string>('founded');
 
   let zkeys: any[] = [];
 
   const { ethereum }: any = window;
 
-  useEffect(() => {
+  // useEffect(() => {
     const fetchData = async () => {
       // try {
       const provider = new ethers.providers.Web3Provider(ethereum);
@@ -40,10 +41,10 @@ const Accept = () => {
       );
 
       const limit = await contract.getLimit();
+      console.log(limit.toString());
 
       for (let i = 0; i < limit.toString(); i++) {
         let result: any = await contract.logs(i);
-
         zkeys.push(
           `C${result.ss.replace("0x", "")}04${result.r.slice(
             2
@@ -53,10 +54,11 @@ const Accept = () => {
       }
     };
 
-    fetchData();
-  }, []);
+  
+  // }, []);
 
   const generateprivatekey = (): void => {
+    fetchData();
     const { ethereum }: any = window;
     if (!ethereum) {
       notyf.error("plz initialize metamask");
@@ -79,25 +81,24 @@ const Accept = () => {
 
     const ephLogs: string[] | any = localStorage.getItem("ephLogs");
     const data: string[] | null[] = JSON.parse(ephLogs);
-    console.log(data);
+    console.log(zkeys.length);
 
     if (data === null) {
       notyf.error("Plz try again");
       return;
     }
-    data.forEach((z: any) => {
+    data.forEach((z: any , index : number) => {
       ephPubKey = ec.keyFromPublic(z.slice(3), "hex");
       sharedsecret = secretkey.derive(ephPubKey.getPublic()); //
       hashedsecret = ec.keyFromPrivate(keccak256(sharedsecret.toArray()));
       _sharedSecret =
         "0x" + sharedsecret.toArray()[0].toString(16).padStart(2, "0");
-      console.log(
-        z.slice(1, 3).toString(),
-        _sharedSecret.toString().slice(2, 4)
-      );
+  
+      console.log(index)
 
       try {
         if (_sharedSecret.toString().slice(2, 4) === z.slice(1, 3).toString()) {
+          setisfounded('')
           notyf.success("Matched");
           const _key = secretkey.getPrivate().add(hashedsecret.getPrivate());
           const pk = _key.mod(ec.curve.n);
@@ -111,6 +112,10 @@ const Accept = () => {
         seterr(e.message);
       }
     });
+
+    if (isfounded === 'founded') {
+      seterr('try again');
+    }
     setmatchingkey(false);
   };
 
@@ -183,7 +188,7 @@ const Accept = () => {
         ) : (
           <>
             {/* <p>{founded !== "founded" && "Key doesnt exist"}</p> */}
-            <p>{err && "Error : " + err}</p>
+            <p className="montserrat-subtitle text-red-400 font-semibold ">{err && "Unfortunate : " + err}</p>
           </>
         )}
       </div>

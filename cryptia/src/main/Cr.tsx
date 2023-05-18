@@ -108,7 +108,7 @@ const Cr = (props: Props) => {
             <span className="sm:text-[1rem] text-[0.8rem] text-gray-900 dark:text-black text-md font-bold">
               #Cryptia
             </span>{" "}
-            - #{cryptiaaddress}
+            - {cryptiaaddress}
           </p>
           <AiOutlineCopy
             className="font-bold text-2xl text-[#6c8492] hover:text-[#4e6979] cursor-pointer"
