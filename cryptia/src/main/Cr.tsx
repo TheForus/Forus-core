@@ -5,6 +5,7 @@ import EllipticCurve from "elliptic";
 import { AiOutlineCopy } from "react-icons/ai";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
+import {downloadTxt} from '../helper/downloadTxt'
 const ec = new EllipticCurve.ec("secp256k1");
 
 
@@ -22,7 +23,7 @@ const Cr = (props: Props) => {
     try {
       let key = ec.genKeyPair();
 
-      const skey: void = localStorage.setItem(
+      const skey: void = sessionStorage.setItem(
         "secretKey",
         key.getPrivate().toString(16)
       );
@@ -37,9 +38,9 @@ const Cr = (props: Props) => {
       const enc: Uint8Array = new Uint8Array(pub.length + 2);
       enc.set(pub);
       enc.set(crc, pub.length);
-      const C: string = "C" + base58.encode(enc);
-      localStorage.setItem("Cr", C);
-      setcryptiaaddress(C);
+      const cp: string = "cp" + base58.encode(enc);
+      sessionStorage.setItem("Cr", cp);
+      setcryptiaaddress(cp);
     } catch (e) {
       console.error(e);
     }
@@ -49,15 +50,6 @@ const Cr = (props: Props) => {
     Generate();
   }, []);
 
-  const downloadTxt = (text: any) => {
-    const element = document.createElement("a");
-    const file = new Blob([text], { type: "text/plain" });
-    element.href = URL.createObjectURL(file);
-    element.download = "cryptia-secretKey.txt";
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
-  };
 
   const reveal = () => {
     setnote(true);
@@ -69,58 +61,51 @@ const Cr = (props: Props) => {
 
   const copy = () => {
     navigator.clipboard.writeText(cryptiaaddress);
-    downloadTxt(localStorage.getItem("secretKey"));
+    downloadTxt(sessionStorage.getItem("secretKey"),"cryptia-secretKey.txt");
     reveal();
     notyf.success("Copied");
   };
 
-  
+
   return (
     <>
-      <div className="flex flex-col items-center p-8 rounded-t-md">
+      <div className="flex flex-col items-center p-6 rounded-t-md">
         <div className="pb-6 flex flex-col space-y-4 items-center border-b w-full">
           <h1
-            className="mx-auto sm:w-[70%] montserrat-subtitle dark:text-gray-100 text-[#6c8492]  md:text-3xl 
-        text-4xl  font-bold"
+            className="mx-auto  montserrat-subtitle font-extrabold sm:text-[3.4rem]  text-[#181b1f]  md:text-5xl 
+        text-4xl  "
           >
             {" "}
-            Unlock the
-            <span
-              className="montserrat-subtitle md:text-3xl 
-        text-4xl font-extrabold"
-            >
-              {" "}
-              power of secrecy
-            </span>{" "}
-            with Cryptia Protocol
+            Unleash the potential of confidentiality with the vpn of blockchain
+
           </h1>
 
           {note === true && (
-            <p className="montserrat-small text-[#6c8492] font-semibold font-mono w-[80%]">
-              Guard the key, unleash the cr. Never reveal the 'secret key' ,
-              only share your secure 'Cr address' for confidential transactions.{" "}
+            <p className="montserrat-small text-[#181b1f] font-semibold font-mono w-[80%]">
+              Guard the key, unleash the cp. Never reveal the 'secret key' ,
+              only share your secure 'Cp address' for confidential transactions.{" "}
             </p>
           )}
         </div>
         {/* cryptia */}
-        <div className="my-6 flex sm:gap-4 items-center p-2 sm:px-3 sm:mx-0 mx-3  rounded-md  bg-[#d1f5e5]">
-          <p className="sm:text-[1rem] text-[0.7rem] montserrat-small font-semibold dark:text-gray-900 text-[#435864]">
-            <span className="sm:text-[1rem] text-[0.8rem] text-gray-900 dark:text-black text-md font-bold">
+        <div className="my-6 flex sm:gap-4 items-center p-2 sm:px-3 sm:mx-0 mx-3  rounded-md  shadow-md hover:shadow-lg px-2   ">
+          <p className="sm:text-[1rem] text-[0.7rem] montserrat-small font-semibold  text-[#202a30]">
+            <span className="sm:text-[1rem] text-[0.8rem] text-gray-900  text-md font-bold">
               #Cryptia
             </span>{" "}
             - {cryptiaaddress}
           </p>
           <AiOutlineCopy
-            className="font-bold text-2xl text-[#6c8492] hover:text-[#4e6979] cursor-pointer"
+            className="font-bold text-2xl text-[#181b1f] hover:text-[#4e6979] cursor-pointer"
             onClick={copy}
           />
         </div>
 
         <button
           className="mb-4 montserrat-subtitle border-1 p-1 montserrat-subtitle  
-        text-[#E8FDF4] dark:text-[#06324e] dark:hover:text-gray-300 bg-[#10F1B4]  hover:shadow-xl px-6 text-center 
-        rounded-md  font-semibold   hover:bg-gray-800 dark:border-gray-700 
-        hover:text-[#10F1B4]  hover:border-white dark:border-bgGreen dark:hover:bg-gray-800 border-gray-200 border"
+         bg-[#181b1f]  hover:shadow-xl px-6 text-center 
+        rounded-md  font-semibold   
+        text-[#dbe6eb]  border-[#181b1f] border"
           onClick={Generate}
         >
           Generate

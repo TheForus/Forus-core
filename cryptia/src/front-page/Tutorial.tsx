@@ -12,8 +12,8 @@ const Tutorial = (props: Props) => {
         className="flex flex-col py-10 items-center justify-center"
       >
         <h1
-          className="montserrat-heading py-4 font-semibold text-3xl
-          text-[#435864] dark:text-[#9aacb8] border-b border-gray-400"
+          className="montserrat-subtitle py-4 font-semibold text-4xl
+          text-[#9ff3ff] d border-b border-gray-400"
         >
           See how it works
         </h1>

@@ -15,20 +15,20 @@ const Qna = (props: Props) => {
   return (
     <div
       id="faq"
-      className="p-5 py-10 flex flex-col items-center justify-center bg-[#10F1B4] dark:bg-black"
+      className="p-5 py-10 flex flex-col items-center justify-center bg-[#dbe6eb] "
     >
-      <h1 className="montserrat-subheading text-2xl mb-6 text-white dark:text-[#9aacb8] border-b pb-2 border-gray-200">
+      <h1 className="montserrat-subheading text-4xl mb-6 text-[#131619]  pb-2 ">
         FAQ
       </h1>
       <div
-        className="xl:p-14 xl:px-20 bg-[#ECFFFA]  dark:bg-bgBlack md:w-[790px] lg:w-[900px] p-5 rounded-md
+        className="xl:p-14 xl:px-20 bg-[#ECFFFA]  md:w-[790px] lg:w-[900px] p-5 rounded-md
        shadow-lg flex flex-col items-start justify-center"
       >
         <h4
           onClick={() => toggleAnswer(0)}
           className={`${
-            showAnswers[0] && "dark:text-[#09d8a1]"
-          } text-left justify-between w-full dark:text-gray-300 dark:hover:text-[white] dark:hover:shadow-lg hover:text-gray-700
+            showAnswers[0] 
+          } text-left justify-between w-full  hover:text-gray-700
         lg:text-lg cursor-pointer flex items-center
          montserrat-subheading py-4 text-gray-600 gap-16`}
         >
@@ -37,12 +37,12 @@ const Qna = (props: Props) => {
           <span>
             {showAnswers[0] ? (
               <IoAddSharp
-                color="#10F1B4"
+                color="#131619"
                 className="lg:text-4xl text-3xl rotate-45 transition-all duration-100"
               />
             ) : (
               <IoAddSharp
-                color="#10F1B4"
+                color="#131619"
                 className="lg:text-4xl text-3xl duration-100"
               />
             )}
@@ -69,12 +69,12 @@ const Qna = (props: Props) => {
           <span>
             {showAnswers[1] ? (
               <IoAddSharp
-                color="#10F1B4"
+                color="#131619"
                 className="lg:text-4xl text-3xl rotate-45 transition-all duration-100"
               />
             ) : (
               <IoAddSharp
-                color="#10F1B4"
+                color="#131619"
                 className="lg:text-4xl text-3xl duration-100"
               />
             )}
@@ -96,24 +96,24 @@ const Qna = (props: Props) => {
         lg:text-lg cursor-pointer flex items-center
          montserrat-subheading py-4 text-gray-600 gap-16`}
         >
-          3: How do I generate a unique Cr address?
+          3: How do I generate a unique CP address?
           <span>
             {showAnswers[2] ? (
               <IoAddSharp
-                color="#10F1B4"
+                color="#131619"
                 className="lg:text-4xl text-3xl rotate-45 transition-all duration-100"
               />
             ) : (
               <IoAddSharp
-                color="#10F1B4"
+                color="#131619"
                 className="lg:text-4xl text-3xl duration-100"
               />
             )}
           </span>
         </h4>
         {showAnswers[2] && (
-          <p className="dark:text-gray-300 w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
-            Simply click the "generate" button on our app, and a unique Cr
+          <p className=" w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
+            Simply click the "generate" button on our app, and a unique Cp
             address will be generated for you. Make sure to save the
             accompanying secret key in a secure location for future use.
           </p>
@@ -121,30 +121,30 @@ const Qna = (props: Props) => {
         <h4
           onClick={() => toggleAnswer(3)}
           className={`${
-            showAnswers[3] && "dark:text-[#09d8a1]"
+            showAnswers[3] 
           } text-left justify-between w-full dark:text-gray-300 dark:hover:text-[white] dark:hover:shadow-lg hover:text-gray-700
         lg:text-lg cursor-pointer flex items-center
          montserrat-subheading py-4 text-gray-600 gap-16`}
         >
           4: Can I retrieve my private key after funds have been sent to my
-          Cryptia address?
+          CP address?
           <span>
             {showAnswers[3] ? (
               <IoAddSharp
-                color="#10F1B4"
+                color="#131619"
                 className="lg:text-4xl text-3xl rotate-45 transition-all duration-100"
               />
             ) : (
               <IoAddSharp
-                color="#10F1B4"
+                color="#131619"
                 className="lg:text-4xl text-3xl duration-100"
               />
             )}
           </span>
         </h4>
         {showAnswers[3] && (
-          <p className="dark:text-gray-300 w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
-            Yes, you can retrieve your private key by clicking on the "match"
+          <p className=" w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
+            Yes, you can retrieve your private key by clicking on the "scan"
             button or by pasting your secret key (optional) into our app. This
             will allow you to access the specific address where the funds have
             been sent.
@@ -163,12 +163,12 @@ const Qna = (props: Props) => {
           <span>
             {showAnswers[4] ? (
               <IoAddSharp
-                color="#10F1B4"
+                color="#131619"
                 className="lg:text-4xl text-3xl rotate-45 transition-all duration-100"
               />
             ) : (
               <IoAddSharp
-                color="#10F1B4"
+                color="#131619"
                 className="lg:text-4xl text-3xl duration-100"
               />
             )}

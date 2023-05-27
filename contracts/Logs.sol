@@ -1,18 +1,14 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.16;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
+import "./IXRC20.sol";
+import "./IXRC721.sol";
 
 contract Logs {
-    using SafeERC20 for IERC20;
-
     struct publickeys {
         bytes32 r;
         bytes32 s;
-        bytes1 ss;
+        bytes4 v;
     }
 
     uint256 internal totalFunds;
@@ -22,7 +18,7 @@ contract Logs {
     event ephemeralKeys(
         bytes32 r,
         bytes32 s,
-        bytes1 secret,
+        bytes4 secret,
         uint256 indexed timestamp
     );
 
@@ -34,22 +30,22 @@ contract Logs {
         owner = msg.sender;
     }
 
-    function getLimit() public view returns (uint256) {
+    function getTotalAddresses() public view returns (uint256) {
         return limit;
     }
 
-    function getTotalFunds() public view returns (uint256) {
+    function getTotalVolume() public view returns (uint256) {
         return totalFunds;
     }
 
-    function publishEphkeys(bytes32 r, bytes32 s, bytes1 secret) private {
-        logs.push(publickeys(r, s, secret));
+    function publishEphkeys(bytes32 r, bytes32 s, bytes4 v) private {
+        logs.push(publickeys(r, s, v));
     }
 
-    function TransferCoin(
+    function TransferXDC(
         bytes32 r,
         bytes32 s,
-        bytes1 secret,
+        bytes4 secret,
         address payable target
     ) public payable {
         require(msg.value > 0, "amount should be more than 0");
@@ -59,15 +55,20 @@ contract Logs {
 
         (bool sent, ) = target.call{value: msg.value}("");
         require(sent, " Failed to send ");
-        limit++;
-        totalFunds += msg.value;
+        // Perform calculations and updates using temporary variables
+        uint256 updatedTotalFunds = totalFunds + msg.value;
+        uint256 updatedLimit = limit + 1;
+
+        // Update storage variables with the updated values
+        totalFunds = updatedTotalFunds;
+        limit = updatedLimit;
         emit ephemeralKeys(r, s, secret, block.timestamp);
     }
 
-    function TransferToken(
+    function TransferXRC20(
         bytes32 r,
         bytes32 s,
-        bytes1 secret,
+        bytes4 secret,
         address token,
         address target,
         uint256 amount
@@ -77,28 +78,39 @@ contract Logs {
         require(target != address(0x0), " Enter the receipent address");
 
         publishEphkeys(r, s, secret);
-        IERC20(token).approve(msg.sender, amount);
-        IERC20(token).safeTransferFrom(msg.sender, target, amount);
-        totalFunds += amount;
-        limit++;
+
+        IXRC20(token).transferFrom(msg.sender, target, amount);
+        // Perform calculations and updates using temporary variables
+        uint256 updatedTotalFunds = totalFunds + amount;
+        uint256 updatedLimit = limit + 1;
+
+        // Update storage variables with the updated values
+        totalFunds = updatedTotalFunds;
+        limit = updatedLimit;
         emit ephemeralKeys(r, s, secret, block.timestamp);
     }
 
-    function TransferNft(
+    function TransferXRC721(
         bytes32 r,
         bytes32 s,
-        bytes1 secret,
-        address Nft,
+        bytes4 secret,
+        address NftToken,
         address target,
         uint256 tokenId
     ) external {
-        require(Nft != address(0x0), " Enter the token address");
+        require(NftToken != address(0x0), " Enter the token address");
         require(target != address(0x0), " Target address required");
 
         publishEphkeys(r, s, secret);
 
-        IERC721(Nft).safeTransferFrom(msg.sender, target, tokenId);
-        limit++;
+        IXRC721(NftToken).transferFrom(msg.sender, target, tokenId);
+        // Perform calculations and updates using temporary variables
+        uint256 updatedTotalFunds = totalFunds + tokenId;
+        uint256 updatedLimit = limit + 1;
+
+        // Update storage variables with the updated values
+        totalFunds = updatedTotalFunds;
+        limit = updatedLimit;
         emit ephemeralKeys(r, s, secret, block.timestamp);
     }
 }

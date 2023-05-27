@@ -32,7 +32,7 @@ const Cryptia = (props: Props) => {
   const [sumof, setsumof] = useState<string | any>("");
   const [sumofAddress, setsumofAddress] = useState<string | any>("");
 
-  let contractAddress: string = "0x09F10aAfd4baEf6bbcef62E62f8D93C271E71d24";
+  let contractAddress: string = "0x0A3E438D24b28de5359a2C77f9bf3C530E1953A4";
 
   const { ethereum }: any = window;
 
@@ -41,8 +41,8 @@ const Cryptia = (props: Props) => {
       const provider = new ethers.providers.Web3Provider(ethereum);
       const contract = new ethers.Contract(contractAddress, abi.abi, provider);
 
-      const limit = await contract.getLimit();
-      const totalFunds = await contract.getTotalFunds();
+      const limit = await contract.getTotalAddresses();
+      const totalFunds = await contract.getTotalVolume();
       setsumof(limit.toString());
       setsumofAddress(totalFunds / 10 ** 18);
     };
@@ -58,8 +58,8 @@ const Cryptia = (props: Props) => {
   const validateChain = async () => {
     const chainId = await ethereum.request({ method: "eth_chainId" });
 
-    if (chainId !== "0x1e15") {
-      notyf.error("plz connect to canto testnet");
+    if (chainId !== "0x33") {
+      notyf.error("plz connect to Xdc apothem testnet");
       return;
     }
   };
@@ -76,8 +76,9 @@ const Cryptia = (props: Props) => {
       });
  
     ethereum.on("chainChanged" || "accountsChanged", (chId: any) => {
-      if (chId !== "0x1e15") {
-        notyf.error("plz connect to canto testnet");
+      console.log(chId)
+      if (chId !== "0x33") {
+        notyf.error("plz connect to Xdc apothem testnet");
         return;
       }
       window.location.reload();
@@ -123,10 +124,10 @@ const Cryptia = (props: Props) => {
 
   return (
     <AppContext.Provider value={ContextValue}>
-      <div className="bg-[#f4fffc] dark:bg-black min-h-[100vh] max-h-max">
+      <div className="bg-[#dbe6eb]  min-h-[100vh] max-h-max">
         <Navmain />
         <div
-          className="md:w-[90%] max-w-[1020px] mx-auto
+          className="md:w-[90%] max-w-[1220px] mx-auto
                   py-8 p-4"
         >
           <Cr />

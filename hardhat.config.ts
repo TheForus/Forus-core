@@ -1,21 +1,23 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
-require("dotenv").config({ path: ".env" });
+import * as dotenv from "dotenv";
 
-
-const PRIVATEKEY : string | any  = process.env.privateKey
+dotenv.config();
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.17",
+  solidity: "0.8.16",
   networks: {
-    cantoTestnet: {
-      url: "https://canto-testnet.plexnode.wtf",
-      accounts : [PRIVATEKEY]
-      // Additional RPC configuration parameters can be added here if needed
+    xinfin: {
+      url: process.env.XINFIN_NETWORK_URL,
+      accounts: [process.env.PRIVATE_KEY!]
     },
-  },
+    apothem: {
+      url: process.env.APOTHEM_NETWORK_URL,
+      accounts: [process.env.PRIVATE_KEY!]
+    }
+  }
 };
 
 export default config;
 
-// Contract address 0x6340e1ed7DCe39ccA016C1805286Aa11536b4F3a
+//0x0A3E438D24b28de5359a2C77f9bf3C530E1953A4

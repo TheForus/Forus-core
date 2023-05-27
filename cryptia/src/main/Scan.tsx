@@ -1,21 +1,22 @@
-import { useState, useEffect } from "react";
-import { ethers } from "ethers";
+import { useState, } from "react";
 import { keccak256 } from "ethers/lib.esm/utils";
 import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
-import abi from "../artifacts/contracts/Logs.sol/Logs.json";
-import { useContext } from "react";
-import { AppContext } from "./Cryptia";
 // import { AiOutlineCopy } from "react-icons/ai";
 import { AiOutlineArrowsAlt, AiOutlineShrink } from "react-icons/ai";
 import copy from "../assets/copy.jpg";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
+import { db } from "../config/firebase.js"
+import { getDocs, collection, deleteDoc, doc } from "firebase/firestore";
+import { downloadTxt } from '../helper/downloadTxt'
 const ec = new EllipticCurve.ec("secp256k1");
 
-const Accept = () => {
-  const connect = useContext(AppContext);
+
+const Scan = () => {
+
   const notyf = new Notyf();
+  var secretkey: EC.KeyPair | any;
 
   const [rootsecretkey, setrootsecretkey] = useState<string>("");
   const [privatekey, setprivatekey] = useState<string>("");
@@ -24,82 +25,52 @@ const Accept = () => {
   const [err, seterr] = useState<any>(false);
   const [reveal, setreveal] = useState<boolean | any>(false);
   const [iscopied, setiscopied] = useState<string>("");
-  const [isfounded, setisfounded] = useState<string>('founded');
+  const [id, setId] = useState<string | any>('');
+  const [isfounded, setisfounded] = useState<string>('');
 
-  let zkeys: any[] = [];
 
-  const { ethereum }: any = window;
 
-  // useEffect(() => {
-    const fetchData = async () => {
-      // try {
-      const provider = new ethers.providers.Web3Provider(ethereum);
-      const contract = new ethers.Contract(
-        connect.contractAddress,
-        abi.abi,
-        provider
-      );
 
-      const limit = await contract.getLimit();
-      console.log(limit.toString());
 
-      for (let i = 0; i < limit.toString(); i++) {
-        let result: any = await contract.logs(i);
-        zkeys.push(
-          `C${result.ss.replace("0x", "")}04${result.r.slice(
-            2
-          )}${result.s.slice(2)}`
-        );
-        localStorage.setItem("ephLogs", JSON.stringify(zkeys));
-      }
-    };
+  const keys = collection(db, "Logs");
 
-  
-  // }, []);
+  const fetchData = async () => {
 
-  const generateprivatekey = (): void => {
-    fetchData();
-    const { ethereum }: any = window;
-    if (!ethereum) {
-      notyf.error("plz initialize metamask");
-      return;
+    let logs: any[] = [];
+
+    try {
+      const data = await getDocs(keys);
+      logs = data.docs.map((doc: any) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+    } catch (err: any) {
+      console.error(err);
+      seterr(err.message)
     }
-    setmatchingkey(true);
 
-    var secretkey: EC.KeyPair | any;
-    let skey: string | any = localStorage.getItem("secretKey");
-    if (rootsecretkey === "") {
-      secretkey = ec.keyFromPrivate(skey, "hex");
-    } else {
-      secretkey = ec.keyFromPrivate(rootsecretkey, "hex");
-    }
 
     var ephPubKey: EC.KeyPair | any;
     var sharedsecret;
     var hashedsecret;
     var _sharedSecret: string | any;
 
-    const ephLogs: string[] | any = localStorage.getItem("ephLogs");
-    const data: string[] | null[] = JSON.parse(ephLogs);
-    console.log(zkeys.length);
 
-    if (data === null) {
-      notyf.error("Plz try again");
-      return;
-    }
-    data.forEach((z: any , index : number) => {
-      ephPubKey = ec.keyFromPublic(z.slice(3), "hex");
+
+    logs.forEach((z: any, index: number) => {
+      ephPubKey = ec.keyFromPublic(z.keys.slice(9), "hex");
       sharedsecret = secretkey.derive(ephPubKey.getPublic()); //
       hashedsecret = ec.keyFromPrivate(keccak256(sharedsecret.toArray()));
+      const suffix: string | any = hashedsecret.getPublic().encode('hex', false).toString().slice(-6)
       _sharedSecret =
-        "0x" + sharedsecret.toArray()[0].toString(16).padStart(2, "0");
-  
-      console.log(index)
+        "0x" + sharedsecret.toArray()[0].toString(16).padStart(2, "0") + suffix;
+      console.log(_sharedSecret, _sharedSecret.toString().slice(2, 10), z.keys.slice(1, 9))
+
 
       try {
-        if (_sharedSecret.toString().slice(2, 4) === z.slice(1, 3).toString()) {
-          setisfounded('')
-          notyf.success("Matched");
+        if (_sharedSecret.toString().slice(2, 10) === z.keys.slice(1, 9).toString()) {
+          setId(z.id)
+          setisfounded('founded')
           const _key = secretkey.getPrivate().add(hashedsecret.getPrivate());
           const pk = _key.mod(ec.curve.n);
           setprivatekey(pk.toString(16, 32));
@@ -113,15 +84,55 @@ const Accept = () => {
       }
     });
 
-    if (isfounded === 'founded') {
-      seterr('try again');
+
+  };
+
+
+
+
+  const generateprivatekey = (): void => {
+
+    const { ethereum }: any = window;
+    if (!ethereum) {
+      notyf.error("plz initialize metamask");
+      return;
     }
+
+    setmatchingkey(true);
+
+
+    let skey: string | any = sessionStorage.getItem("secretKey");
+    if (rootsecretkey === "") {
+      secretkey = ec.keyFromPrivate(skey, "hex");
+    } else {
+      secretkey = ec.keyFromPrivate(rootsecretkey, "hex");
+    }
+
+    fetchData()
+
+    if (isfounded === 'founded') {
+      notyf.success("Matched");
+    }
+
+
+
     setmatchingkey(false);
   };
+
+  const removingKey = async () => {
+    console.log(id)
+    const Doc = doc(db, "Keys", id);
+    await deleteDoc(Doc);
+
+  }
 
   const copykey = () => {
     navigator.clipboard.writeText(privatekey);
     setiscopied("Copied");
+    downloadTxt(privatekey, "Cryptia-privatekey.txt");
+
+    /// remove the key from firebase database
+    removingKey()
   };
 
   return (
@@ -130,7 +141,7 @@ const Accept = () => {
         {hide !== true && (
           <input
             type="text"
-            className="bg-[#fffafa] font-semibold text-gray-700 montserrat-subtitle outline-none border rounded-md p-1 px-2 border-1 border-gray-400 w-[340px]"
+            className="bg-[#ebf3f7] font-semibold text-gray-700 montserrat-subtitle outline-none border rounded-md p-1 px-2 border-1 border-gray-400 w-[340px]"
             value={rootsecretkey}
             onChange={(e) => {
               setrootsecretkey(e.target.value);
@@ -139,20 +150,20 @@ const Accept = () => {
           />
         )}
         {hide && (
-          <p className="text-[#58707e] p-1 px-2 font-semibold montserrat-small ">
+          <p className="text-[#181b1f] p-1 px-2 font-semibold montserrat-small ">
             Expand to enter the savedKey (optional)
           </p>
         )}
         {/* expand icon (toggle of input button) */}
         {hide ? (
           <AiOutlineArrowsAlt
-            className="cursor-pointer text-[#58707e]"
+            className="cursor-pointer text-[#181b1f]"
             size={25}
             onClick={() => sethide(!hide)}
           />
         ) : (
           <AiOutlineShrink
-            className="cursor-pointer text-[#58707e]"
+            className="cursor-pointer text-[#181b1f]"
             size={25}
             onClick={() => sethide(!hide)}
           />
@@ -162,20 +173,20 @@ const Accept = () => {
       {/* Match key */}
       <div className="flex justify-center pt-2 mr-4">
         <div
-          className="flex ml-1 dark:text-[#06324e] dark:hover:text-gray-300 dark:border-gray-700 items-center cursor-pointer space-x-1 border-1 p-1 hover:bg-gray-900 hover:text-[#10F1B4]  text-white bg-[#10F1B4] hover:shadow-xl px-4 text-center rounded-md  font-semibold hover:border-white border-[#10F1B4] border"
+          className="flex ml-1  items-center cursor-pointer space-x-1 border-1 p-1 hover:bg-gray-900   text-white bg-[#181b1f] hover:shadow-xl px-4 text-center rounded-md  font-semibold hover:border-white border-[#181b1f] border"
           onClick={generateprivatekey}
         >
           {/* <GiKangaroo size={26} /> */}
-          <h2 className="montserrat-small">Match Key</h2>
+          <h2 className="montserrat-small">Scan Key</h2>
         </div>
       </div>
 
       {/* message */}
-      <div className="p-4  text-[#10F1B4]  font-semibold">
+      <div className="p-4  text-[#181b1f]  font-semibold">
         {/* {matching === true ? <p>Running.....</p> : false} */}
         {reveal === true ? (
           <div className="flex ml-60  justify-center items-center space-x-3 montserrat-small">
-            <p className="text-[#58707e]">{iscopied}</p>
+            <p className="text-[#181b1f]">{iscopied}</p>
             <img
               height={20}
               width={20}
@@ -196,4 +207,4 @@ const Accept = () => {
   );
 };
 
-export default Accept;
+export default Scan;

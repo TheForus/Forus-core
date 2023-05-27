@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Transfer from "./Transfer";
-import Accept from "./Accept";
+import Accept from "./Scan";
 
 import { useContext } from "react";
 import { AppContext } from "./Cryptia";
@@ -34,14 +34,14 @@ const Trx = (props: Props) => {
         <button
           onClick={handleTransferClick}
           className={`px-3 
-        text-${showTransfer ? "[#10F1B4]" : "[#6c8492]"}`}
+        text-${showTransfer ? "[#131619]" : "[#d4e2eb]"}`}
         >
           Transfer
         </button>
         <button
           onClick={handleAcceptClick}
           className={`px-3 
-        text-${!showTransfer ? "[#10F1B4]" : "[#6c8492]"}`}
+        text-${!showTransfer ? "[#131619]" : "[#d4e2eb]"}`}
         >
           Accept
         </button>

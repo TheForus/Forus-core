@@ -19,6 +19,7 @@
     "dotenv": "^16.0.3",
     "elliptic": "^6.5.4",
     "ethers": "^5.7.2",
+    "firebase": "^9.22.1",
     "keccak256": "^1.0.6",
     "notyf": "^3.10.0",
     "querystring": "^0.2.1",

@@ -1,9 +1,10 @@
-import NOTE from '../assets/note.png'
-import CANTO from '../assets/canto.png'
-import ATOM from '../assets/atom.png'
 import USDT from '../assets/usdt.png'
-import ETH from '../assets/eth.png'
-import USDC from '../assets/usdc.png'
+import PLI from "../assets/pli.png"
+import stXDC from "../assets/stxdc.jpeg"
+import USXD from "../assets/usxd.jpeg"
+import SRX  from "../assets/SRX.png"
+import XDC  from "../assets/WXDC.png"
+
 
 
 interface Token {
@@ -13,12 +14,13 @@ interface Token {
 }
 
 export const Crypto: Token[] = [
-    { name: "NOTE", address: "0x03F734Bd9847575fDbE9bEaDDf9C166F880B5E5f", symbol: NOTE },
-    { name: "ATOM", address: "0x04a72466De69109889Db059Cb1A4460Ca0648d9D", symbol: ATOM },
-    { name: "USDT", address: "0x40E41DC5845619E7Ba73957449b31DFbfB9678b2", symbol: USDT },
-    { name: "ETH", address: "0xCa03230E7FB13456326a234443aAd111AC96410A", symbol: ETH },
-    { name: "USDC", address: "0xc51534568489f47949A828C8e3BF68463bdF3566", symbol: USDC },
-    { name: "CANTO", address: " ", symbol: CANTO }
+    { name: "PLI", address: "0x33f4212b027e22af7e6ba21fc572843c0d701cd1", symbol: PLI },
+    { name: "SRX", address: "0x5D5f074837f5d4618B3916ba74De1Bf9662a3fEd", symbol: SRX },
+    { name: "stXDC", address: "0xa151660a77f223e87298de16ee5bb7447982b62f", symbol: stXDC },
+    { name: "USDT", address: "0xd4b5f10d61916bd6e0860144a91ac658de8a1437", symbol: USDT },
+    { name: "USXD", address: "0x1e2913e1ac339a4996353f8f58be0de3d109b5a5", symbol: USXD },
+    { name: "XDC", address: "", symbol: XDC },
+
 ];
 
 
