@@ -76,6 +76,7 @@ const Cryptia = (props: Props) => {
       });
  
     ethereum.on("chainChanged" || "accountsChanged", (chId: any) => {
+      accountChecker()
       console.log(chId)
       if (chId !== "0x33") {
         notyf.error("plz connect to Xdc apothem testnet");

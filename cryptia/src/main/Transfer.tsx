@@ -32,28 +32,31 @@ const Transfer = () => {
     "function allowance(address owner, address spender) view returns (uint)",
   ];
 
-  let r: any;
-  let s: any;
-  let a: any;
+  let r: string | any;
+  let s: string | any;
+  let a: string | any;
 
   // let ethers: any;
 
   const { ethereum }: any = window;
 
   const [token, settoken] = useState<string | "">("");
-  const [cpMetaAddress, setcpMetaAddress] = useState<string | "">("");
+  const [cpAddress, setcpAddress] = useState<string | "">("");
   const [error, seterror] = useState<string | "">("");
   const [amount, setamount] = useState<string | "">("");
   const [show, setshow] = useState<boolean>(false);
   const [byDefault, setbyDefault] = useState<string>("XDC");
   const [trxid, settrxid] = useState<string>("");
   const [waiting, setwaiting] = useState<boolean>(false);
+  const [buttonState, setButtonState] = useState<string>("Transfer");
+
+  const msgSender: string | any = sessionStorage.getItem("address");
 
   var receipent: any;
 
   const validatingCr = (event: any) => {
     if (
-      (event.target.value[0] !== "c" && event.target.value !== "") ||
+      (event.target.value.slice(0, 2) !== "cp" && event.target.value !== "") ||
       event.target.value.length > 49 ||
       event.target.value.length < 48
     ) {
@@ -63,7 +66,7 @@ const Transfer = () => {
       }, 4000);
     }
 
-    setcpMetaAddress(event.target.value);
+    setcpAddress(event.target.value);
   };
 
   const setUp = async () => {
@@ -75,15 +78,15 @@ const Transfer = () => {
     ephPublic = ephKey.getPublic();
 
     try {
-      if (cpMetaAddress.slice(0, 2) === 'cp') {
-        console.log(cpMetaAddress.slice(0, 2))
-        const _cpMetaAddress = cpMetaAddress.slice(2);
-        const decoded = base58.decode(_cpMetaAddress);
+      if (cpAddress.slice(0, 2) === 'cp') {
+        console.log(cpAddress.slice(0, 2))
+        const _cpAddress = cpAddress.slice(2);
+        const decoded = base58.decode(_cpAddress);
         const decodedId = decoded.subarray(0, 33);
         key = ec.keyFromPublic(decodedId, "hex");
 
       } else {
-        seterror("Plz enter the valid  cr address");
+        seterror("Plz enter the valid  cp address");
       }
     } catch (e: any) {
       seterror(e.message);
@@ -143,59 +146,52 @@ const Transfer = () => {
 
     connect.validateChain();
 
-    if (cpMetaAddress === "" || amount === "") {
+    if (cpAddress === "" || amount === "") {
       seterror("Please enter the cr address");
       setTimeout(() => {
         seterror("");
       }, 4000);
       return;
     }
-    // console.log('hey')
 
     setwaiting(true);
 
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
 
-    // const contract = new ethers.Contract(
-    //   connect.contractAddress,
-    //   Abi.abi,
-    //   signer
-    // );
-    storing()
+    const contract = new ethers.Contract(
+      connect.contractAddress,
+      Abi.abi,
+      signer
+    );
+
     try {
       const valueToSend = ethers.utils.parseEther(amount);
-      // const transactionParameters = {
-      //   value: valueToSend,
-      // };
-
-      console.log(`T${a.replace("0x", "")}04${r.slice(2)}${s.slice(2)}`)
-
-      const transaction = {
-        to: receipent,
-        value: valueToSend
+      const transactionParameters = {
+        value: valueToSend,
       };
-    
-      // Send the transaction
-      const txResponse = await signer.sendTransaction(transaction);
-      console.log("https://explorer.apothem.network/" +txResponse.hash);
-      // const transferCoin = await contract.TransferXDC(
-      //   r,
-      //   s,
-      //   a,
-      //   receipent,
-      //   transactionParameters
-      // );
 
-      // const txId = await transferCoin.wait();
-      // const txId = await txResponse.wait();
-      settrxid("https://explorer.apothem.network/" +txResponse.hash);
+      // console.log(`T${a.replace("0x", "")}04${r.slice(2)}${s.slice(2)}`)
+
+      const transferCoin = await contract.TransferXDC(
+        r,
+        s,
+        a,
+        receipent,
+        transactionParameters
+      );
+
+      const txId = await transferCoin
+
+      settrxid("https://explorer.apothem.network/txs/" + txId.hash);
+
+      //storing the eph key in db
       storing()
 
-      setcpMetaAddress("");
+      setcpAddress("");
       setamount("");
-      storing()
-      console.log('stored..')
+
+      // console.log('stored..')
     } catch (e: any) {
       console.log(e);
       seterror(e.message);
@@ -206,7 +202,7 @@ const Transfer = () => {
   const TransferToken = async () => {
     setUp();
 
-    if (cpMetaAddress === "" || amount === "") {
+    if (cpAddress === "" || amount === "") {
       seterror("Please enter the address");
       setTimeout(() => {
         seterror("");
@@ -218,31 +214,44 @@ const Transfer = () => {
 
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
-    const contract = new ethers.Contract(token, XRCABI, signer);
+    const contract = new ethers.Contract(
+      connect.contractAddress,
+      Abi.abi,
+      signer
+    );
 
-    // const contract = new ethers.Contract(
-    //   connect.contractAddress,
-    //   Abi.abi,
-    //   signer
-    // );
+
 
     try {
-      //to send exact amount ow tokens are always counted as canto amount**18
+      //to send exact amount of tokens are always counted as  amount**18
       const amountParams: any = ethers.utils.parseUnits(amount, 18);
-      const msgSender = sessionStorage.getItem("address");
-      const transferCoin=await contract.transferFrom(msgSender,receipent,amountParams);
-      // const transferCoin = await contract.TransferXRC20(
-      //   r,
-      //   s,
-      //   a,
-      //   token,
-      //   receipent,
-      //   amountParams
-      // );
-      const txId = await transferCoin.wait();
-      settrxid("https://explorer.apothem.network/" + txId.transactionHash);
+
+      try {
+
+        console.log(receipent, amountParams)
+        // const transferCoin=await contract.transfer(receipent, amountParams);
+        const transferXrc20 = await contract.TransferXRC20(
+          r,
+          s,
+          a,
+          token,
+          receipent,
+          amountParams
+        );
+
+        const txResponse = await transferXrc20;
+        console.log("https://explorer.apothem.network/txs/" + txResponse.hash);
+      }
+      catch (err: any) {
+        console.log(err.message)
+        seterror(err.message)
+      }
+
+
+      //storing the eph key in db
       storing()
       console.log('stored..')
+
     } catch (e: any) {
       console.log(e);
       seterror(e.message);
@@ -250,40 +259,49 @@ const Transfer = () => {
     setwaiting(false);
   };
 
-  async function approve(): Promise<boolean> {
+  async function approve() {
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
     const contract = new ethers.Contract(token, XRCABI, signer);
 
     try {
-      const msgSender = sessionStorage.getItem("address");
+
       const res = await contract.allowance(msgSender, connect.contractAddress);
       const bigNumber = new BigNumber(res._hex);
       const allowance: string | any = bigNumber.toNumber() / 10 ** 18;
-      console.log(allowance);
+      // console.log(allowance);
 
       if (allowance < amount) {
+        setButtonState('approving')
         const approvedAmount: any = ethers.utils.parseUnits(amount, 18);
         const approve = await contract.approve(
           connect.contractAddress,
           approvedAmount
         );
-        await approve.wait();
+        const txResponse = await approve;
+        console.log("https://explorer.apothem.network/txs/" + txResponse.hash);
+        setButtonState('Transfer')
         notyf.success("approved");
 
-        TransferToken();
+        setTimeout(() => {
+          TransferToken();
+        }, 2000);
+
+      
+
       } else {
         TransferToken();
       }
+
     } catch (e: any) {
       console.log(e.message);
       seterror(e.message);
     }
-    return false;
+
   }
 
   async function proceed() {
-    console.log('hello')
+
     if (!ethereum) {
       notyf.error("Please initialize MetaMask");
       return;
@@ -295,9 +313,9 @@ const Transfer = () => {
     const contract = new ethers.Contract(token, XRCABI, provider);
 
 
-    try{
+    try {
       const balance = await contract.balanceOf(sessionStorage.getItem("address"));
-      console.log(balance)
+      // console.log(balance)
       const bigNumber = new BigNumber(balance._hex);
       const tospend: any = bigNumber.toNumber() / 10 ** 18;
       if (tospend >= amount) {
@@ -306,8 +324,11 @@ const Transfer = () => {
         notyf.error("insufficient balance");
       }
     }
-    catch(err: any){console.log(err.message)}
-   
+    catch (err: any) {
+      console.log(err.message)
+      seterror(err.message)
+    }
+
   }
 
   const changedefault = (c: any) => {
@@ -396,7 +417,7 @@ const Transfer = () => {
         onClick={byDefault === "XDC" ? Transfer : proceed}
       >
         {waiting === false ? (
-          "Send"
+          buttonState
         ) : (
           <img height={30} width={30} src={sending} alt="" />
         )}

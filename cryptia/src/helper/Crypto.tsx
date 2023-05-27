@@ -3,7 +3,9 @@ import PLI from "../assets/pli.png"
 import stXDC from "../assets/stxdc.jpeg"
 import USXD from "../assets/usxd.jpeg"
 import SRX  from "../assets/SRX.png"
+import CP  from  "../assets/Cp.png"
 import XDC  from "../assets/WXDC.png"
+
 
 
 
@@ -14,6 +16,7 @@ interface Token {
 }
 
 export const Crypto: Token[] = [
+    { name: "CP", address:  "0x47ae44b2003f2082140428CA5B3A6566332e6706", symbol: CP},
     { name: "PLI", address: "0x33f4212b027e22af7e6ba21fc572843c0d701cd1", symbol: PLI },
     { name: "SRX", address: "0x5D5f074837f5d4618B3916ba74De1Bf9662a3fEd", symbol: SRX },
     { name: "stXDC", address: "0xa151660a77f223e87298de16ee5bb7447982b62f", symbol: stXDC },

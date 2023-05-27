@@ -114,14 +114,14 @@ const Scan = () => {
       notyf.success("Matched");
     }
 
-
-
     setmatchingkey(false);
   };
 
+
+  
   const removingKey = async () => {
     console.log(id)
-    const Doc = doc(db, "Keys", id);
+    const Doc = doc(db, "Logs", id);
     await deleteDoc(Doc);
 
   }
