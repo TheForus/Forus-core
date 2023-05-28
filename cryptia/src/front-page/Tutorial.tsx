@@ -25,7 +25,6 @@ const Tutorial = (props: Props) => {
             url="https://youtu.be/HiD30ezJNrw"
           />
         </div>
-
       </div>
     </>
   );

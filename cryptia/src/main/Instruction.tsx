@@ -16,7 +16,7 @@ const Instruction = (props: Props) => {
             <h1 className="montserrat-subheading  text-[#181b1f] font-semibold text-[1.5rem]">
               Transfer
             </h1>
-            <div className="py-4 montserrat-heading  text-[#181b1f] flex flex-col gap-4 items-center">
+            <div className="py-4 montserrat-heading  text-[#181b1f] flex flex-col gap-4 items-start">
               <div className="flex space-x-2 ">
                 <MdVerifiedUser color="#181b1f" size={29} />
                 <p className="flex-1">
@@ -55,15 +55,15 @@ const Instruction = (props: Props) => {
             </h1>
             <div className="py-4 montserrat-heading  text-[#181b1f] flex flex-col gap-4 items-center">
               <div className="flex space-x-2">
-                <MdVerifiedUser color="#181b1f" size={32} />
-                <p className="flex 1">
+                <MdVerifiedUser color="#181b1f" size={29} />
+                <p className="flex-1">
                   Click on the "Match" button or optionally paste your "secret
                   key"
                 </p>
               </div>
               <div className="flex space-x-2">
-                <MdVerifiedUser color="#181b1f" size={32} />
-                <p className="flex 1">
+                <MdVerifiedUser color="#181b1f" size={29} />
+                <p className="flex-1">
                   Gain access to the specific address where funds have been
                   sent.
                 </p>

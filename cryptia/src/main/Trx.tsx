@@ -21,6 +21,8 @@ const Trx = (props: Props) => {
     setShow(false);
   };
 
+  console.log("showTransfer : ", showTransfer);
+
   return (
     <div
       className="flex flex-col sm:p-5 sm:px-8 backdrop-blur-[50px]
@@ -34,20 +36,20 @@ const Trx = (props: Props) => {
         <button
           onClick={handleTransferClick}
           className={`px-3 
-        text-${showTransfer ? "[#131619]" : "[#d4e2eb]"}`}
+        ${showTransfer ? "text-[#0d1013]" : "text-[#5f6061]"}`}
         >
           Transfer
         </button>
         <button
           onClick={handleAcceptClick}
           className={`px-3 
-        text-${!showTransfer ? "[#131619]" : "[#d4e2eb]"}`}
+        text-${!showTransfer ? "[#0d1013]" : "[#5f6061]"}`}
         >
           Accept
         </button>
       </div>
       {/* below buttons */}
-      <div className="p-4 xl:w-[400px] w-[340px]">
+      <div className="p-4 xl:w-[400px] w-[340px] mx-auto">
         {showTransfer ? <Transfer /> : <Accept />}
       </div>
     </div>

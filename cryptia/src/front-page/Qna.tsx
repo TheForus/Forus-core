@@ -21,14 +21,12 @@ const Qna = (props: Props) => {
         FAQ
       </h1>
       <div
-        className="xl:p-14 xl:px-20 bg-[#ECFFFA]  md:w-[790px] lg:w-[900px] p-5 rounded-md
+        className="xl:p-14 xl:px-20 bg-[#ECFFFA] transition-all ease-linear md:w-[790px] lg:w-[900px] p-5 rounded-md
        shadow-lg flex flex-col items-start justify-center"
       >
         <h4
           onClick={() => toggleAnswer(0)}
-          className={`${
-            showAnswers[0] 
-          } text-left justify-between w-full  hover:text-gray-700
+          className={`${showAnswers[0]} text-left justify-between w-full  hover:text-gray-700
         lg:text-lg cursor-pointer flex items-center
          montserrat-subheading py-4 text-gray-600 gap-16`}
         >
@@ -120,14 +118,12 @@ const Qna = (props: Props) => {
         )}
         <h4
           onClick={() => toggleAnswer(3)}
-          className={`${
-            showAnswers[3] 
-          } text-left justify-between w-full dark:text-gray-300 dark:hover:text-[white] dark:hover:shadow-lg hover:text-gray-700
+          className={`${showAnswers[3]} text-left justify-between w-full dark:text-gray-300 dark:hover:text-[white] dark:hover:shadow-lg hover:text-gray-700
         lg:text-lg cursor-pointer flex items-center
          montserrat-subheading py-4 text-gray-600 gap-16`}
         >
-          4: Can I retrieve my private key after funds have been sent to my
-          CP address?
+          4: Can I retrieve my private key after funds have been sent to my CP
+          address?
           <span>
             {showAnswers[3] ? (
               <IoAddSharp

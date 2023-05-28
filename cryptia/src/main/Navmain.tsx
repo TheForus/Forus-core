@@ -12,7 +12,6 @@ const Navmain = (props: Props) => {
   const connect = useContext(AppContext);
   const navigate = useNavigate();
   return (
-
     <div className=" mx-auto pt-4 sm:pt-8 pb-12   ">
       <div className="sm:px-7 px-4 flex justify-between">
         {/* leftside logo */}
@@ -30,15 +29,17 @@ const Navmain = (props: Props) => {
           <div className="flex items-center space-x-4">
             <button
               onClick={() => navigate("/")}
-              className="flex md:flex-row flex-col items-center transition-all ease-linear md:items-end space-x-1 sm:ml-14 ml-6 hover:text-gray-800 dark:hover:text-gray-200 text-[#181b1f] dark:text-gra-200 montserrat-subtitle underline-offset-8 font-bold hover:underline decoration-[#181b1f]  sm:text-[1.3rem] text-[0.9rem]"
+              className="flex md:flex-row flex-col items-center transition-all ease-linear
+               md:items-end space-x-1 sm:ml-14 ml-9 hover:text-gray-900 text-[#181b1f] 
+                montserrat-subtitle underline-offset-8 font-bold hover:underline decoration-[#181b1f]  sm:text-[1.3rem] text-[0.9rem]"
             >
               <IoMdHome size={28} className="md:self-start text-gray-700" />
-              <p>Home</p>
+              <p className="sm:inline-flex hidden">Home</p>
             </button>
             <div
               onClick={() => navigate("/")}
-              className="flex md:flex-row flex-col items-center md:items-end space-x-1 sm:ml-14 ml-6 hover:text-gray-800
-               text-[#181b1f] 
+              className="flex md:flex-row flex-col items-center md:items-end space-x-1 sm:ml-14 
+               text-[#181b1f] hover:text-gray-900 ml-2
                 montserrat-subtitle underline-offset-8
                  font-bold hover:underline decoration-[#181b1f] 
                  sm:text-[1.3rem] text-[0.9rem]"
@@ -47,7 +48,7 @@ const Navmain = (props: Props) => {
                 size={28}
                 className="md:self-start text-gray-700 "
               />
-              <p>QnA</p>
+              <p className="sm:inline-flex hidden">QnA</p>
             </div>
           </div>
         </div>
@@ -55,18 +56,18 @@ const Navmain = (props: Props) => {
         {/* rigt side */}
         <div className="sm:flex-row flex space-x-3 items-center">
           {/* Social Links */}
-          <div className="sm:flex space-x-3 items-center hidden">
-            <p className=" text-gray-700">
+          <div className="lg:flex space-x-3 items-center hidden">
+            <p className=" text-gray-700 hover:text-gray-900">
               <a href="/https://discord.gg/qupF3BrP">
                 <FaDiscord size={26} />
               </a>
             </p>
-            <p className=" text-gray-700">
+            <p className=" text-gray-700 hover:text-gray-900">
               <a href="https://github.com/CryptiaProtocol">
                 <FaGithub size={26} />
               </a>
             </p>
-            <p className=" text-gray-700">
+            <p className=" text-gray-700 hover:text-gray-900">
               <a href="https://twitter.com/CryptiaProtocol">
                 <FaTwitter size={26} />
               </a>
@@ -90,7 +91,6 @@ const Navmain = (props: Props) => {
         </div>
       </div>
     </div>
-    
   );
 };
 

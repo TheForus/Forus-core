@@ -11,7 +11,7 @@ import { ethers } from "ethers";
 import sending from "../Logos/sending.gif";
 import { Notyf } from "notyf";
 import BigNumber from "bignumber.js";
-import { db } from "../config/firebase.js"
+import { db } from "../config/firebase.js";
 import { collection, addDoc } from "firebase/firestore";
 import "notyf/notyf.min.css";
 
@@ -78,13 +78,12 @@ const Transfer = () => {
     ephPublic = ephKey.getPublic();
 
     try {
-      if (cpAddress.slice(0, 2) === 'cp') {
-        console.log(cpAddress.slice(0, 2))
+      if (cpAddress.slice(0, 2) === "cp") {
+        console.log(cpAddress.slice(0, 2));
         const _cpAddress = cpAddress.slice(2);
         const decoded = base58.decode(_cpAddress);
         const decodedId = decoded.subarray(0, 33);
         key = ec.keyFromPublic(decodedId, "hex");
-
       } else {
         seterror("Plz enter the valid  cp address");
       }
@@ -95,7 +94,11 @@ const Transfer = () => {
     try {
       const sharedsecret = ephKey.derive(key.getPublic());
       const hashed = ec.keyFromPrivate(keccak256(sharedsecret.toArray()));
-      const suffix: string | any = hashed.getPublic().encode('hex', false).toString().slice(-6)
+      const suffix: string | any = hashed
+        .getPublic()
+        .encode("hex", false)
+        .toString()
+        .slice(-6);
       const publicKey =
         key
           ?.getPublic()
@@ -110,8 +113,8 @@ const Transfer = () => {
 
       r = "0x" + ephPublic?.getX().toString(16, 64) || "";
       s = "0x" + ephPublic?.getY().toString(16, 64) || "";
-      a = "0x" + sharedsecret.toArray()[0].toString(16).padStart(2, "0") + suffix;
-
+      a =
+        "0x" + sharedsecret.toArray()[0].toString(16).padStart(2, "0") + suffix;
     } catch (e) {
       console.log("error", e);
     }
@@ -121,20 +124,18 @@ const Transfer = () => {
 
   const logs = collection(db, "Logs");
 
-
   const storing = async () => {
-    const stored = `T${a.replace("0x", "")}04${r.slice(2)}${s.slice(2)}`
-    console.log(stored)
+    const stored = `T${a.replace("0x", "")}04${r.slice(2)}${s.slice(2)}`;
+    console.log(stored);
     try {
       await addDoc(logs, {
         keys: stored,
-
       });
     } catch (err) {
       console.error(err);
     }
-    console.log('storing...')
-  }
+    console.log("storing...");
+  };
 
   const Transfer = async () => {
     setUp();
@@ -181,12 +182,12 @@ const Transfer = () => {
         transactionParameters
       );
 
-      const txId = await transferCoin
+      const txId = await transferCoin;
 
       settrxid("https://explorer.apothem.network/txs/" + txId.hash);
 
       //storing the eph key in db
-      storing()
+      storing();
 
       setcpAddress("");
       setamount("");
@@ -220,15 +221,12 @@ const Transfer = () => {
       signer
     );
 
-
-
     try {
       //to send exact amount of tokens are always counted as  amount**18
       const amountParams: any = ethers.utils.parseUnits(amount, 18);
 
       try {
-
-        console.log(receipent, amountParams)
+        console.log(receipent, amountParams);
         // const transferCoin=await contract.transfer(receipent, amountParams);
         const transferXrc20 = await contract.TransferXRC20(
           r,
@@ -242,17 +240,14 @@ const Transfer = () => {
         const txResponse = await transferXrc20;
         console.log("https://explorer.apothem.network/txs/" + txResponse.hash);
         settrxid("https://explorer.apothem.network/txs/" + txResponse.hash);
+      } catch (err: any) {
+        console.log(err.message);
+        seterror(err.message);
       }
-      catch (err: any) {
-        console.log(err.message)
-        seterror(err.message)
-      }
-
 
       //storing the eph key in db
-      storing()
-      console.log('stored..')
-
+      storing();
+      console.log("stored..");
     } catch (e: any) {
       console.log(e);
       seterror(e.message);
@@ -266,14 +261,13 @@ const Transfer = () => {
     const contract = new ethers.Contract(token, XRCABI, signer);
 
     try {
-
       const res = await contract.allowance(msgSender, connect.contractAddress);
       const bigNumber = new BigNumber(res._hex);
       const allowance: string | any = bigNumber.toNumber() / 10 ** 18;
       // console.log(allowance);
 
       if (allowance < amount) {
-        setButtonState('approving..')
+        setButtonState("approving..");
         const approvedAmount: any = ethers.utils.parseUnits(amount, 18);
         const approve = await contract.approve(
           connect.contractAddress,
@@ -281,28 +275,22 @@ const Transfer = () => {
         );
         const txResponse = await approve;
         console.log("https://explorer.apothem.network/txs/" + txResponse.hash);
-        setButtonState('Transfer')
+        setButtonState("Transfer");
         notyf.success("approved");
 
         setTimeout(() => {
           TransferToken();
         }, 2000);
-
-      
-
       } else {
         TransferToken();
       }
-
     } catch (e: any) {
       console.log(e.message);
       seterror(e.message);
     }
-
   }
 
   async function proceed() {
-
     if (!ethereum) {
       notyf.error("Please initialize MetaMask");
       return;
@@ -313,9 +301,10 @@ const Transfer = () => {
     const provider = new ethers.providers.Web3Provider(ethereum); // Replace with the Infura project ID and network
     const contract = new ethers.Contract(token, XRCABI, provider);
 
-
     try {
-      const balance = await contract.balanceOf(sessionStorage.getItem("address"));
+      const balance = await contract.balanceOf(
+        sessionStorage.getItem("address")
+      );
       // console.log(balance)
       const bigNumber = new BigNumber(balance._hex);
       const tospend: any = bigNumber.toNumber() / 10 ** 18;
@@ -324,12 +313,10 @@ const Transfer = () => {
       } else {
         notyf.error("insufficient balance");
       }
+    } catch (err: any) {
+      console.log(err.message);
+      seterror(err.message);
     }
-    catch (err: any) {
-      console.log(err.message)
-      seterror(err.message)
-    }
-
   }
 
   const changedefault = (c: any) => {
@@ -347,13 +334,13 @@ const Transfer = () => {
   return (
     <div className="flex flex-col justify-center items-center space-y-4 ">
       <div
-        className=" py-1 w-[100%] hover:shadow-sm rounded-md 
+        className=" py-1 w-[100%]  rounded-md 
        "
       >
         <input
           // style={{ border: '1px solid red' }}
           className=" text-[0.9rem] font-semibold text-gray-700
-       montserrat-subtitle outline-none px-3 py-3   w-[100%] bg-[#ebf3f7]"
+       montserrat-subtitle outline-none px-3 py-3 h-[100%] hover:shadow-sm rounded-md hover:shadow-gray-400 w-[100%] bg-[#ebf3f7]"
           type="text"
           onChange={validatingCr}
           placeholder="Receipent's Cp address"
@@ -365,7 +352,7 @@ const Transfer = () => {
       >
         <input
           className="text-[0.9rem] font-semibold text-gray-700
-        montserrat-subtitle outline-none rounded-md py-3 px-3 w-[100%] bg-[#ebf3f7] "
+        montserrat-subtitle outline-none py-3 px-3 h-[100%] hover:shadow-sm rounded-md hover:shadow-gray-400 w-[100%] bg-[#ebf3f7] "
           value={amount}
           type="text"
           placeholder="1 XDC"
@@ -375,7 +362,7 @@ const Transfer = () => {
         <div className="min-w-[95px] absolute right-1">
           <ul onClick={() => setshow(!show)}>
             <li
-              className="flex p-2 px-3 cursor-pointer
+              className="flex p-2 px-3 cursor-pointer rounded-md
             text-[#181b1f] font-semibold border-l border-gray-300
             items-center gap-2 hover:text-gray-800 hover:rounded-full hover:bg-[#dbe6eb] "
             >
@@ -384,11 +371,12 @@ const Transfer = () => {
             </li>
             <div
               className={`
-              ${show &&
+              ${
+                show &&
                 `transition-all ease-in bg-white py-1 shadow-md flex flex-col w-[105%] max-h-28 rounded-b-md absolute mt-2
                  scrollbar-thin scrollbar-thumb-[#181b1f] scrollbar-track-[#dbe6eb] overflow-y-scroll 
                 scrollbar-thumb-rounded scrollbar-rounded-full`
-                }
+              }
             `}
             >
               {show &&
@@ -413,8 +401,8 @@ const Transfer = () => {
         </div>
       </div>
       <button
-        className="  flex montserrat-small mx-auto items-center cursor-pointer space-x-1 border-1 p-1 text-[#ebf3f7] bg-[#181b1f] 
-        hover:shadow-xl px-7 text-center rounded-md font-semibold hover:border-white border-[#181b1f] border"
+        className="flex montserrat-small mx-auto items-center cursor-pointer space-x-1 border-1 p-1 text-[#ebf3f7] bg-[#181b1f] 
+        hover:shadow-xl hover:border-none px-7 text-center rounded-md font-semibold hover:border-white border-[#181b1f] border"
         onClick={byDefault === "XDC" ? Transfer : proceed}
       >
         {waiting === false ? (

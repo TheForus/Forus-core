@@ -8,27 +8,30 @@ const Header = () => {
   return (
     <>
       <div
-        className="bg-[#dbe6eb]  sm:px-20 px-12 p-32 flex
+        className="bg-[#dbe6eb] sm:px-20 px-12 sm:p-32 p-24 flex
       justify-between items-center md:flex-row flex-col space-y-8  "
       >
         {/* left side */}
-        <div className="flex flex-col items-start space-y-6 mt-4 w-[70%]">
+        <div className="flex flex-col items-start space-y-6 mt-4 md:w-[70%]">
           <h2
             className="montserrat-subtitle font-extrabold sm:text-[3.4rem]
-          text-left text-[3.4rem] text-[#131619]"
+            text-left text-[2.6rem] text-[#131619]"
           >
             Exchange Xdc and tokens with cryptia anonynously ;)
           </h2>
-          <p className="montserrat-small font-semibold text-[#161b1f]  text-left break-words  max-w-[700px] text-[1.6rem]">
+          <p
+            className="montserrat-small font-semibold text-[#161b1f] 
+           text-left break-words  max-w-[700px] sm:text-[1.6rem] text-[1.3rem]"
+          >
             Unlock the Power of Secure and Private Transactions with Cryptia!
             Safeguard Your Financial Interactions with Cutting-edge
             Cryptography.!
           </p>
           <button
-            className="border-1 montserrat-subtitle  bg-[#dbe6eb] text-[#131619]
-            p-2 px-12 rounded-lg  border-[#131619] border   montserrat-subtitle 
-            font-bold  text-xl"
-            onClick={() => navigate('/cryptia')}
+            className="border-1 montserrat-subtitle  
+            hover:scale-95 transition-all ease-linear p-2 px-12 rounded-lg border-[#131619] border: ;
+             montserrat-subtitle font-bold  text-xl bg-[#131619] text-gray-300"
+            onClick={() => navigate("/cryptia")}
           >
             Launch
           </button>

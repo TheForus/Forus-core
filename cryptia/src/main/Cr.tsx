@@ -5,19 +5,16 @@ import EllipticCurve from "elliptic";
 import { AiOutlineCopy } from "react-icons/ai";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
-import {downloadTxt} from '../helper/downloadTxt'
+import { downloadTxt } from "../helper/downloadTxt";
 const ec = new EllipticCurve.ec("secp256k1");
-
 
 type Props = {};
 
 const Cr = (props: Props) => {
-
   const notyf = new Notyf();
   const [cryptiaaddress, setcryptiaaddress] = useState<string | any>("");
   const [, setstoredsecretkey] = useState<string | any>("");
   const [note, setnote] = useState<boolean>(false);
-
 
   const Generate = () => {
     try {
@@ -50,7 +47,6 @@ const Cr = (props: Props) => {
     Generate();
   }, []);
 
-
   const reveal = () => {
     setnote(true);
     setTimeout(() => {
@@ -58,26 +54,24 @@ const Cr = (props: Props) => {
     }, 9000);
   };
 
-
   const copy = () => {
     navigator.clipboard.writeText(cryptiaaddress);
-    downloadTxt(sessionStorage.getItem("secretKey"),"cryptia-secretKey.txt");
+    downloadTxt(sessionStorage.getItem("secretKey"), "cryptia-secretKey.txt");
     reveal();
     notyf.success("Copied");
   };
-
 
   return (
     <>
       <div className="flex flex-col items-center p-6 rounded-t-md">
         <div className="pb-6 flex flex-col space-y-4 items-center border-b w-full">
           <h1
-            className="mx-auto  montserrat-subtitle font-extrabold sm:text-[3.4rem]  text-[#181b1f]  md:text-5xl 
-        text-4xl  "
+            className="mx-auto montserrat-subtitle font-extrabold
+             sm:text-5xl  text-[#181b1f] 
+              text-3xl"
           >
             {" "}
             Unleash the potential of confidentiality with the vpn of blockchain
-
           </h1>
 
           {note === true && (
@@ -88,9 +82,9 @@ const Cr = (props: Props) => {
           )}
         </div>
         {/* cryptia */}
-        <div className="my-6 flex sm:gap-4 items-center p-2 sm:px-3 sm:mx-0 mx-3  rounded-md  shadow-md hover:shadow-lg px-2   ">
-          <p className="sm:text-[1rem] text-[0.7rem] montserrat-small font-semibold  text-[#202a30]">
-            <span className="sm:text-[1rem] text-[0.8rem] text-gray-900  text-md font-bold">
+        <div className="my-6 flex sm:gap-4 items-center p-2 sm:px-3 sm:mx-0 mx-3  rounded-md  shadow-md shadow-gray-300 hover:shadow-lg px-2   ">
+          <p className="sm:text-[1rem] text-[0.8rem] montserrat-small font-semibold text-gray-800">
+            <span className="sm:text-[1.1rem] text-[0.9rem] text-gray-900 text-md font-extrabold">
               #Cryptia
             </span>{" "}
             - {cryptiaaddress}

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@firebase/firestore": "^3.12.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -59,6 +60,7 @@
   },
   "devDependencies": {
     "@types/elliptic": "^6.4.14",
+    "@types/firebase": "^3.2.1",
     "@types/react-scroll": "^1.8.7",
     "tailwind-scrollbar": "^3.0.1",
     "tailwindcss": "^3.3.2"

@@ -67,7 +67,6 @@ const Cryptia = (props: Props) => {
     validateChain();
   }, []);
 
-
   if (ethereum) {
     ethereum.on("accountsChanged", (address: any) => {
       sessionStorage.setItem("address", address);
@@ -75,19 +74,16 @@ const Cryptia = (props: Props) => {
     });
 
     ethereum.on("chainChanged" || "accountsChanged", (chId: any) => {
-      accountChecker()
-      console.log(chId)
+      accountChecker();
+      console.log(chId);
       if (chId !== "0x33") {
         notyf.error("plz connect to Xdc apothem testnet");
         return;
       }
-
     });
-  }
-  else {
+  } else {
     notyf.error("Plz install metamask");
   }
-
 
   const connectWallet = async (): Promise<void> => {
     if (ethereum === undefined) {
@@ -97,7 +93,7 @@ const Cryptia = (props: Props) => {
 
     try {
       if (ethereum) {
-        accountChecker()
+        accountChecker();
         validateChain();
       }
       setwallet(true);
