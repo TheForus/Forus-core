@@ -241,6 +241,7 @@ const Transfer = () => {
 
         const txResponse = await transferXrc20;
         console.log("https://explorer.apothem.network/txs/" + txResponse.hash);
+        settrxid("https://explorer.apothem.network/txs/" + txResponse.hash);
       }
       catch (err: any) {
         console.log(err.message)
@@ -272,7 +273,7 @@ const Transfer = () => {
       // console.log(allowance);
 
       if (allowance < amount) {
-        setButtonState('approving')
+        setButtonState('approving..')
         const approvedAmount: any = ethers.utils.parseUnits(amount, 18);
         const approve = await contract.approve(
           connect.contractAddress,

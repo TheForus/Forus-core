@@ -4,7 +4,7 @@ import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
 // import { AiOutlineCopy } from "react-icons/ai";
 import { AiOutlineArrowsAlt, AiOutlineShrink } from "react-icons/ai";
-import copy from "../assets/copy.jpg";
+import copy from "../Logos/copy.png";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import { db } from "../config/firebase.js"

@@ -2,7 +2,7 @@ import Navmain from "./Navmain";
 import Cr from "./Cr";
 import Instruction from "./Instruction";
 import Trx from "./Trx";
-import React, { createContext, useMemo, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import abi from "../artifacts/contracts/Logs.sol/Logs.json";
@@ -22,7 +22,7 @@ interface ContextValue {
   validateChain(): void;
 }
 
-export const AppContext = createContext<ContextValue | any> (null);
+export const AppContext = createContext<ContextValue | any>(null);
 const Cryptia = (props: Props) => {
   const notyf = new Notyf();
 
@@ -47,12 +47,11 @@ const Cryptia = (props: Props) => {
       setsumofAddress(totalFunds / 10 ** 18);
     };
     fetchData();
-  }, []);
+  }, [show]);
 
   const accountChecker = async () => {
     const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-    const address = accounts[0];
-    sessionStorage.setItem("address", address);
+    sessionStorage.setItem("address", accounts[0]);
   };
 
   const validateChain = async () => {
@@ -68,13 +67,13 @@ const Cryptia = (props: Props) => {
     validateChain();
   }, []);
 
-  useMemo(() => {
-    if (ethereum) {
-      ethereum.on("accountsChanged", () => {
-        accountChecker();
-        window.location.reload();
-      });
- 
+
+  if (ethereum) {
+    ethereum.on("accountsChanged", (address: any) => {
+      sessionStorage.setItem("address", address);
+      window.location.reload();
+    });
+
     ethereum.on("chainChanged" || "accountsChanged", (chId: any) => {
       accountChecker()
       console.log(chId)
@@ -82,13 +81,13 @@ const Cryptia = (props: Props) => {
         notyf.error("plz connect to Xdc apothem testnet");
         return;
       }
-      window.location.reload();
+
     });
   }
-  else{
+  else {
     notyf.error("Plz install metamask");
   }
-  }, []);
+
 
   const connectWallet = async (): Promise<void> => {
     if (ethereum === undefined) {
@@ -98,11 +97,7 @@ const Cryptia = (props: Props) => {
 
     try {
       if (ethereum) {
-        const accounts = await ethereum.request({
-          method: "eth_requestAccounts",
-        });
-        sessionStorage.setItem("address", accounts[0]);
-
+        accountChecker()
         validateChain();
       }
       setwallet(true);
