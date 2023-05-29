@@ -19,3 +19,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+*::selection {
+  /* Set the background color to red */
+  background-color: #dbe6eb;
+}

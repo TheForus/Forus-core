@@ -1,5 +1,5 @@
-import Navmain from "./Navmain";
-import Cr from "./Cr";
+import NavBar from "./NavBar";
+import CpAddress from "./CpAddress";
 import Instruction from "./Instruction";
 import Trx from "./Trx";
 import React, { createContext, useState, useEffect } from "react";
@@ -32,7 +32,7 @@ const Cryptia = (props: Props) => {
   const [sumof, setsumof] = useState<string | any>("");
   const [sumofAddress, setsumofAddress] = useState<string | any>("");
 
-  let contractAddress: string = "0x0A3E438D24b28de5359a2C77f9bf3C530E1953A4";
+  let contractAddress: string = "0x35e9E15240AcA60eD329125e6856C85ed84F6cCF";
 
   const { ethereum }: any = window;
 
@@ -92,10 +92,11 @@ const Cryptia = (props: Props) => {
     }
 
     try {
-      if (ethereum) {
-        accountChecker();
-        validateChain();
-      }
+
+      const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+      sessionStorage.setItem("address", accounts[0]);
+      validateChain();
+
       setwallet(true);
     } catch (e: any) {
       notyf.error(e);
@@ -117,12 +118,12 @@ const Cryptia = (props: Props) => {
   return (
     <AppContext.Provider value={ContextValue}>
       <div className="bg-[#dbe6eb]  min-h-[100vh] max-h-max">
-        <Navmain />
+        <NavBar />
         <div
           className="md:w-[90%] max-w-[1220px] mx-auto
                   py-8 p-4"
         >
-          <Cr />
+          <CpAddress />
           <div className="flex flex-col-reverse space-y-4 sm:flex-row justify-between p-3 py-4">
             <Instruction />
             <Trx />

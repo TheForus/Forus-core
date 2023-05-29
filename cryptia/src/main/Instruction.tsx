@@ -57,7 +57,7 @@ const Instruction = (props: Props) => {
               <div className="flex space-x-2">
                 <MdVerifiedUser color="#181b1f" size={29} />
                 <p className="flex-1">
-                  Click on the "Match" button or optionally paste your "secret
+                  Click on the "Scan" button or optionally paste your "secret
                   key"
                 </p>
               </div>

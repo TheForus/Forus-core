@@ -12,6 +12,9 @@ import { getDocs, collection, deleteDoc, doc } from "firebase/firestore";
 import { downloadTxt } from "../helper/downloadTxt";
 const ec = new EllipticCurve.ec("secp256k1");
 
+
+//Combining the publickey with secretKey to calcuate the private key of stealth address
+
 const Scan = () => {
   const notyf = new Notyf();
   var secretkey: EC.KeyPair | any;

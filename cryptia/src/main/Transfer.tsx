@@ -298,7 +298,7 @@ const Transfer = () => {
 
     connect.validateChain();
 
-    const provider = new ethers.providers.Web3Provider(ethereum); // Replace with the Infura project ID and network
+    const provider = new ethers.providers.Web3Provider(ethereum); //
     const contract = new ethers.Contract(token, XRCABI, provider);
 
     try {

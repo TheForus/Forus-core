@@ -10,12 +10,13 @@ const ec = new EllipticCurve.ec("secp256k1");
 
 type Props = {};
 
-const Cr = (props: Props) => {
+const CpAddress = (props: Props) => {
   const notyf = new Notyf();
-  const [cryptiaaddress, setcryptiaaddress] = useState<string | any>("");
+  const [cpaddress, setcpaddress] = useState<string | any>("");
   const [, setstoredsecretkey] = useState<string | any>("");
   const [note, setnote] = useState<boolean>(false);
 
+  //generating the cp address and secret key
   const Generate = () => {
     try {
       let key = ec.genKeyPair();
@@ -37,7 +38,7 @@ const Cr = (props: Props) => {
       enc.set(crc, pub.length);
       const cp: string = "cp" + base58.encode(enc);
       sessionStorage.setItem("Cr", cp);
-      setcryptiaaddress(cp);
+      setcpaddress(cp);
     } catch (e) {
       console.error(e);
     }
@@ -55,7 +56,7 @@ const Cr = (props: Props) => {
   };
 
   const copy = () => {
-    navigator.clipboard.writeText(cryptiaaddress);
+    navigator.clipboard.writeText(cpaddress);
     downloadTxt(sessionStorage.getItem("secretKey"), "cryptia-secretKey.txt");
     reveal();
     notyf.success("Copied");
@@ -82,12 +83,12 @@ const Cr = (props: Props) => {
           )}
         </div>
         {/* cryptia */}
-        <div className="my-6 flex sm:gap-4 items-center p-2 sm:px-3 sm:mx-0 mx-3  rounded-md  shadow-md shadow-gray-300 hover:shadow-lg px-2   ">
+        <div className="my-4 flex sm:gap-4 items-center p-2 sm:px-3 sm:mx-0 mx-3 bg-[#cddbe2]  rounded-md  shadow-md shadow-gray-300 hover:shadow-lg px-2   ">
           <p className="sm:text-[1rem] text-[0.8rem] montserrat-small font-semibold text-gray-800">
             <span className="sm:text-[1.1rem] text-[0.9rem] text-gray-900 text-md font-extrabold">
               #Cryptia
             </span>{" "}
-            - {cryptiaaddress}
+            - {cpaddress}
           </p>
           <AiOutlineCopy
             className="font-bold text-2xl text-[#181b1f] hover:text-[#4e6979] cursor-pointer"
@@ -96,7 +97,7 @@ const Cr = (props: Props) => {
         </div>
 
         <button
-          className="mb-4 montserrat-subtitle border-1 p-1 montserrat-subtitle  
+          className="mb-4 my-2 montserrat-subtitle border-1 p-1 montserrat-subtitle  
          bg-[#181b1f]  hover:shadow-xl px-6 text-center 
         rounded-md  font-semibold   
         text-[#dbe6eb]  border-[#181b1f] border"
@@ -109,4 +110,4 @@ const Cr = (props: Props) => {
   );
 };
 
-export default Cr;
+export default CpAddress;

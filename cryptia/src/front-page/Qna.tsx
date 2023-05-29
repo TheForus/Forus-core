@@ -21,7 +21,7 @@ const Qna = (props: Props) => {
         FAQ
       </h1>
       <div
-        className="xl:p-14 xl:px-20 bg-[#ECFFFA] transition-all ease-linear md:w-[790px] lg:w-[900px] p-5 rounded-md
+        className="xl:p-14 xl:px-20 bg-[#d7e4eb] transition-all ease-linear md:w-[790px] lg:w-[900px] p-5 rounded-md
        shadow-lg flex flex-col items-start justify-center"
       >
         <h4
@@ -47,7 +47,7 @@ const Qna = (props: Props) => {
           </span>
         </h4>
         {showAnswers[0] && (
-          <p className="dark:text-gray-300 w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
+          <p className=" w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
             Cryptia employs secure secret addresses and a one-time public key
             mechanism, making it virtually impossible to trace or monitor
             transactions by anyone else. This ensures enhanced privacy and
@@ -57,7 +57,7 @@ const Qna = (props: Props) => {
         <h4
           onClick={() => toggleAnswer(1)}
           className={`${
-            showAnswers[1] && "dark:text-[#09d8a1]"
+            showAnswers[1] 
           } text-left justify-between w-full dark:text-gray-300 dark:hover:text-[white] dark:hover:shadow-lg hover:text-gray-700
         lg:text-lg cursor-pointer flex items-center
          montserrat-subheading py-4 text-gray-600 gap-16`}
