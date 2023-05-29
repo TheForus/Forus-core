@@ -4,7 +4,24 @@ pragma solidity ^0.8.16;
 import "./IXRC20.sol";
 import "./IXRC721.sol";
 
+
+/**
+ * @title Logs
+ * @dev A smart contract that enables the publication of pub keys on the blockchain and facilitates fund transfers to a specified address.
+ *
+ * The Logs contract allows senders to publish their public keys on the blockchain, consisting of the parameters r, s, and v.
+ * These keys serve as authorization for the associated transactions and provide an additional layer of security.
+ *
+ * Users can publish their pub keys by invoking the appropriate functions in the contract.
+ * The contract maintains a log of published keys and keeps track of the total funds received.
+ *
+ * Users can transfer XDC, XRC20 tokens, and XRC721 tokens to a designated recipient address, authorized by their published keys.
+ */
+
+
+
 contract Logs {
+
     struct publickeys {
         bytes32 r;
         bytes32 s;
@@ -15,7 +32,7 @@ contract Logs {
 
     uint256 internal limit;
 
-    event ephemeralKeys(
+    event publicKeys(
         bytes32 r,
         bytes32 s,
         bytes4 secret,
@@ -62,7 +79,7 @@ contract Logs {
         // Update storage variables with the updated values
         totalFunds = updatedTotalFunds;
         limit = updatedLimit;
-        emit ephemeralKeys(r, s, secret, block.timestamp);
+        emit publicKeys(r, s, secret, block.timestamp);
     }
 
     function TransferXRC20(
@@ -87,7 +104,7 @@ contract Logs {
         // Update storage variables with the updated values
         totalFunds = updatedTotalFunds;
         limit = updatedLimit;
-        emit ephemeralKeys(r, s, secret, block.timestamp);
+        emit publicKeys(r, s, secret, block.timestamp);
     }
 
     function TransferXRC721(
@@ -111,6 +128,6 @@ contract Logs {
         // Update storage variables with the updated values
         totalFunds = updatedTotalFunds;
         limit = updatedLimit;
-        emit ephemeralKeys(r, s, secret, block.timestamp);
+        emit publicKeys(r, s, secret, block.timestamp);
     }
 }
