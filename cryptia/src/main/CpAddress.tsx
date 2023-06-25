@@ -100,7 +100,7 @@ const CpAddress = (props: Props) => {
           className="mb-4 my-2 montserrat-subtitle border-1 p-1 montserrat-subtitle  
          bg-[#181b1f]  hover:shadow-xl px-6 text-center 
         rounded-md  font-semibold   
-        text-[#dbe6eb]  border-[#181b1f] border"
+        text-primarybg  border-[#181b1f] border"
           onClick={Generate}
         >
           Generate

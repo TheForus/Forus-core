@@ -13,7 +13,7 @@ const Tutorial = (props: Props) => {
       >
         <h1
           className="montserrat-subtitle py-4 font-semibold text-4xl
-          text-[#9ff3ff] d border-b border-gray-400"
+          text-sectionheader d border-b border-gray-400"
         >
           See how it works
         </h1>

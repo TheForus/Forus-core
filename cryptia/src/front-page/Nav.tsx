@@ -9,13 +9,13 @@ type Props = {};
 const Nav = (props: Props) => {
   return (
     <div
-      className="bg-[#dbe6eb] text-white sm:px-20 px-12 p-5 flex 
+      className="bg-primarybg text-white sm:px-20 px-12 p-5 flex 
         justify-between items-center border-b border-gray-300"
     >
       {/* logo left */}
       <div className="flex space-x-1 items-center">
         <img src={logo} alt="" className="w-[55px] h-[52px]" />
-        <h1 className="montserrat-subheading sm:text-[1.8rem] font-extrabold text-[1.6rem] text-[#131619]">
+        <h1 className="montserrat-subheading sm:text-[1.8rem] font-extrabold text-[1.6rem] text-primarydark">
           Cryptia
         </h1>
       </div>

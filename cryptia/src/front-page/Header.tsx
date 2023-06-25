@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import workflow from "../Logos/workflowCryptia.png";
+// import workflow from "../Logos/workflowCryptia.png";
 // import cryptia from "../main/Cryptia"
 
 const Header = () => {
@@ -8,14 +8,14 @@ const Header = () => {
   return (
     <>
       <div
-        className="bg-[#dbe6eb] sm:px-20 px-12 sm:p-32 p-24 flex
-      justify-between items-center md:flex-row flex-col space-y-8  "
+        className="bg-primarybg sm:px-20 px-12 sm:p-32 p-24 flex
+      justify-between items-center md:flex-row flex-col space-y-8"
       >
         {/* left side */}
         <div className="flex flex-col items-start space-y-6 mt-4 md:w-[70%]">
           <h2
             className="montserrat-subtitle font-extrabold sm:text-[3.4rem]
-            text-left text-[2.6rem] text-[#131619]"
+            text-left text-[2.6rem] text-primarydark"
           >
             Exchange Xdc and tokens with cryptia anonynously ;)
           </h2>
@@ -29,8 +29,8 @@ const Header = () => {
           </p>
           <button
             className="border-1 montserrat-subtitle  
-            hover:scale-95 transition-all ease-linear p-2 px-12 rounded-lg border-[#131619] border: ;
-             montserrat-subtitle font-bold  text-xl bg-[#131619] text-gray-300"
+            hover:scale-95 transition-all ease-linear p-2 px-12 rounded-lg border-primarydark border: ;
+             montserrat-subtitle font-bold  text-xl bg-primarydark text-gray-300"
             onClick={() => navigate("/cryptia")}
           >
             Launch

@@ -15,13 +15,13 @@ const Qna = (props: Props) => {
   return (
     <div
       id="faq"
-      className="p-5 py-10 flex flex-col items-center justify-center bg-[#dbe6eb] "
+      className="p-5 py-10 flex flex-col items-center justify-center bg-primarybg "
     >
-      <h1 className="montserrat-subheading text-4xl mb-6 text-[#131619]  pb-2 ">
+      <h1 className="montserrat-subheading text-4xl mb-6 text-primarydark  pb-2 ">
         FAQ
       </h1>
       <div
-        className="xl:p-14 xl:px-20 bg-[#d7e4eb] transition-all ease-linear md:w-[790px] lg:w-[900px] p-5 rounded-md
+        className="xl:p-14 xl:px-20 bg-fqbg transition-all ease-linear md:w-[790px] lg:w-[900px] p-5 rounded-md
        shadow-lg flex flex-col items-start justify-center"
       >
         <h4
@@ -56,9 +56,7 @@ const Qna = (props: Props) => {
         )}
         <h4
           onClick={() => toggleAnswer(1)}
-          className={`${
-            showAnswers[1] 
-          } text-left justify-between w-full dark:text-gray-300 dark:hover:text-[white] dark:hover:shadow-lg hover:text-gray-700
+          className={`${showAnswers[1]} text-left justify-between w-full dark:text-gray-300 dark:hover:text-[white] dark:hover:shadow-lg hover:text-gray-700
         lg:text-lg cursor-pointer flex items-center
          montserrat-subheading py-4 text-gray-600 gap-16`}
         >

@@ -92,8 +92,9 @@ const Cryptia = (props: Props) => {
     }
 
     try {
-
-      const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+      const accounts = await ethereum.request({
+        method: "eth_requestAccounts",
+      });
       sessionStorage.setItem("address", accounts[0]);
       validateChain();
 
@@ -117,7 +118,7 @@ const Cryptia = (props: Props) => {
 
   return (
     <AppContext.Provider value={ContextValue}>
-      <div className="bg-[#dbe6eb]  min-h-[100vh] max-h-max">
+      <div className="bg-primarybg  min-h-[100vh] max-h-max">
         <NavBar />
         <div
           className="md:w-[90%] max-w-[1220px] mx-auto

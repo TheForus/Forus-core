@@ -17,14 +17,14 @@ const FeatureBlock = (props: Props) => {
           {props.children}
           <h4
             className="montserrat-subheading 
-            text-[#9ff3ff]  md:text-2xl text-xl font-extrabold mb-2"
+            text-sectionheader  md:text-2xl text-xl font-extrabold mb-2"
           >
             {props.heading}
           </h4>
         </div>
         {/* <i>privacy</i> */}
         <p
-          className="leading-6  w-[75%] md:text-md text-base text-[#9ff3ff] 
+          className="leading-6  w-[75%] md:text-md text-base text-sectionheader 
             font-light montserrat-small"
         >
           {props.subheading}
