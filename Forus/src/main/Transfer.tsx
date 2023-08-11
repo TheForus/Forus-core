@@ -4,7 +4,7 @@ import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
 import { useContext } from "react";
 import { AppContext } from "./Forus";
-import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
+// import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { Crypto } from "../helper/Tokens";
 import { BsChevronDown } from "react-icons/bs";
 import { ethers } from "ethers";
@@ -158,102 +158,102 @@ const Transfer = () => {
 
     setwaiting(true);
 
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const signer = provider.getSigner();
+    // const provider = new ethers.providers.Web3Provider(ethereum);
+    // const signer = provider.getSigner();
 
-    const contract = new ethers.Contract(
-      connect.contractAddress,
-      Abi.abi,
-      signer
-    );
+    // const contract = new ethers.Contract(
+    //   connect.contractAddress,
+    //   Abi.abi,
+    //   signer
+    // );
 
-    try {
-      const valueToSend = ethers.utils.parseEther(amount);
-      const transactionParameters = {
-        value: valueToSend,
-      };
+    // try {
+    //   const valueToSend = ethers.utils.parseEther(amount);
+    //   const transactionParameters = {
+    //     value: valueToSend,
+    //   };
 
-      // console.log(`T${a.replace("0x", "")}04${r.slice(2)}${s.slice(2)}`)
+    //   // console.log(`T${a.replace("0x", "")}04${r.slice(2)}${s.slice(2)}`)
 
-      const transferCoin = await contract.Transfer(
-        r,
-        s,
-        a,
-        receipent,
-        transactionParameters
-      );
+    //   const transferCoin = await contract.Transfer(
+    //     r,
+    //     s,
+    //     a,
+    //     receipent,
+    //     transactionParameters
+    //   );
 
-      const txId = await transferCoin;
+    //   const txId = await transferCoin;
 
-      settrxid("https://sepolia.etherscan.io/tx/" + txId.hash);
+    //   settrxid("https://sepolia.etherscan.io/tx/" + txId.hash);
 
-      //storing the eph key in db
-      storing();
+    //   //storing the eph key in db
+    //   storing();
 
-      setforusKey("");
-      setamount("");
+    //   setforusKey("");
+    //   setamount("");
 
-      // console.log('stored..')
-    } catch (e: any) {
-      console.log(e);
-      seterror(e.message);
-    }
-    setwaiting(false);
+    //   // console.log('stored..')
+    // } catch (e: any) {
+    //   console.log(e);
+    //   seterror(e.message);
+    // }
+    // setwaiting(false);
   };
 
   const TransferToken = async () => {
-    setUp();
+    // setUp();
 
-    if (forusKey === "" || amount === "") {
-      seterror("Please enter the address");
-      setTimeout(() => {
-        seterror("");
-      }, 4000);
-      return;
-    }
+    // if (forusKey === "" || amount === "") {
+    //   seterror("Please enter the address");
+    //   setTimeout(() => {
+    //     seterror("");
+    //   }, 4000);
+    //   return;
+    // }
 
-    setwaiting(true);
+    // setwaiting(true);
 
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const signer = provider.getSigner();
-    const contract = new ethers.Contract(
-      connect.contractAddress,
-      Abi.abi,
-      signer
-    );
+    // const provider = new ethers.providers.Web3Provider(ethereum);
+    // const signer = provider.getSigner();
+    // const contract = new ethers.Contract(
+    //   connect.contractAddress,
+    //   Abi.abi,
+    //   signer
+    // );
 
-    try {
-      //to send exact amount of tokens are always counted as  amount**18
-      const amountParams: any = ethers.utils.parseUnits(amount, 18);
+    // try {
+    //   //to send exact amount of tokens are always counted as  amount**18
+    //   const amountParams: any = ethers.utils.parseUnits(amount, 18);
 
-      try {
-        console.log(receipent, amountParams);
-        // const transferCoin=await contract.transfer(receipent, amountParams);
-        const transferERC20 = await contract.TransferERC20(
-          r,
-          s,
-          a,
-          token,
-          receipent,
-          amountParams
-        );
+    //   try {
+    //     console.log(receipent, amountParams);
+    //     // const transferCoin=await contract.transfer(receipent, amountParams);
+    //     const transferERC20 = await contract.TransferERC20(
+    //       r,
+    //       s,
+    //       a,
+    //       token,
+    //       receipent,
+    //       amountParams
+    //     );
 
-        const txResponse = await transferERC20;
-        console.log("https://sepolia.etherscan.io/tx/" + txResponse.hash);
-        settrxid("https://sepolia.etherscan.io/tx/" + txResponse.hash);
-      } catch (err: any) {
-        console.log(err.message);
-        seterror(err.message);
-      }
+    //     const txResponse = await transferERC20;
+    //     console.log("https://sepolia.etherscan.io/tx/" + txResponse.hash);
+    //     settrxid("https://sepolia.etherscan.io/tx/" + txResponse.hash);
+    //   } catch (err: any) {
+    //     console.log(err.message);
+    //     seterror(err.message);
+    //   }
 
-      //storing the eph key in db
-      storing();
-      console.log("stored..");
-    } catch (e: any) {
-      console.log(e);
-      seterror(e.message);
-    }
-    setwaiting(false);
+    //   //storing the eph key in db
+    //   storing();
+    //   console.log("stored..");
+    // } catch (e: any) {
+    //   console.log(e);
+    //   seterror(e.message);
+    // }
+    // setwaiting(false);
   };
 
   async function approve() {
@@ -340,7 +340,7 @@ const Transfer = () => {
       >
         <input
           // style={{ border: '1px solid red' }}
-          className=" text-[0.9rem] font-semibold text-gray-900
+          className=" text-[0.9rem] font-semibold text-gray-900 placeholder:text-gray-700
        montserrat-subtitle outline-none px-3 py-3 h-[100%] hover:shadow-sm rounded-md hover:shadow-gray-400 w-[100%] bg-[#cdd4dc]"
           type="text"
           onChange={validatingCr}
@@ -352,7 +352,7 @@ const Transfer = () => {
        "
       >
         <input
-          className="text-[0.9rem] font-semibold text-gray-900
+          className="text-[0.9rem] font-semibold text-gray-900 placeholder:text-gray-700
         montserrat-subtitle outline-none py-3 px-3 h-[100%] hover:shadow-sm rounded-md hover:shadow-gray-400 w-[100%] bg-[#cdd4dc] "
           value={amount}
           type="text"
@@ -368,7 +368,7 @@ const Transfer = () => {
             items-center gap-2 hover:text-gray-800 hover:rounded-full hover:bg-[#dbe6eb] "
             >
               <p>{byDefault}</p>
-              <BsChevronDown color="grey" size={18} />
+              <BsChevronDown className="text-gray-900" size={18} />
             </li>
             <div
               className={`
@@ -401,7 +401,8 @@ const Transfer = () => {
         </div>
       </div>
       <button
-        className="flex montserrat-small mx-auto items-center cursor-pointer space-x-1 border-1 p-1 text-[#cdd4dc] bg-[#1f2429]
+        className="flex montserrat-small bg-highlight hover:scale-105 transition-all ease-linear mx-auto items-center cursor-pointer 
+        space-x-1 border-1 p-1 text-white
         hover:shadow-xl hover:border-none px-7 text-center rounded-md font-semibold "
         onClick={byDefault === "ETH" ? Transfer : proceed}
       >

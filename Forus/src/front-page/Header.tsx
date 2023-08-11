@@ -12,16 +12,16 @@ const Header = () => {
       justify-between items-center md:flex-row flex-col space-y-8  "
       >
         {/* left side */}
-        <div className="flex flex-col items-start space-y-6 mt-4 md:w-[70%]">
+        <div className="flex flex-col items-start space-y-3 mt-4 md:w-[100%]">
           <h2
             className="montserrat-subtitle font-extrabold sm:text-[3.4rem]
-            text-left text-[2.6rem] text-[#131619]"
+            text-left text-[2.6rem] text-[#131619] xl:w-[70%] w-full"
           >
-            Receive Eth and tokens with forus anonynously ;)
+            Receive Eth and tokens with forus anonynously 
           </h2>
           <p
-            className="montserrat-small font-semibold text-[#161b1f] 
-           text-left break-words  max-w-[700px] sm:text-[1.6rem] text-[1.3rem]"
+            className="montserrat-small font-semibold pb-8 text-gray-800
+           text-left break-words  max-w-[700px] sm:text-[1.2rem] text-[1rem]"
           >
             Unlock the Power of Secure and Private Transactions!
             Breaking the link between sender and receiver!

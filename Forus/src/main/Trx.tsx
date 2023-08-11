@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Transfer from "./Transfer";
 import Accept from "./Scan";
+// import cardBg from '../Logos/cardBg.png';
 
 import { useContext } from "react";
 import { AppContext } from "./Forus";
@@ -28,22 +29,23 @@ const Trx = (props: Props) => {
       className="flex flex-col sm:p-5 sm:px-8 backdrop-blur-[50px]
       max-w-[500px] hover:backdrop-blur-lg
      h-full"
+    //  style={{backgroundImage: `url(${cardBg})`}} 
     >
       <div
         className="max-w-[400px] xl:space-x-36 mx-auto flex space-x-32 mb-2  montserrat-subtitle
-        text-[1.4rem] border-b-2 pb-2 border-[#cdd4dc] font-bold"
+        text-[1.4rem] border-b pb-2 border-[#cdd4dc] font-bold"
       >
         <button
           onClick={handleTransferClick}
           className={`px-3 
-        ${showTransfer ? "text-[#cdd4dc]" : "text-[#cdd4dc]"}`}
+        ${showTransfer ? "text-[#cdd4dc]" : "text-[#7f7f80]"}`}
         >
           Transfer
         </button>
         <button
           onClick={handleAcceptClick}
           className={`px-3 
-        text-${!showTransfer ? "[#cdd4dc]" : "[#cdd4dc]"}`}
+        text-${!showTransfer ? "[#cdd4dc]" : "[#7f7f80]"}`}
         >
           Accept
         </button>

@@ -1,6 +1,8 @@
 import { useContext } from "react";
 import { AppContext } from "./Forus";
 import { MdVerifiedUser } from "react-icons/md";
+// import { url } from "inspector";
+import cardBg from '../Logos/cardBg.png';
 
 type Props = {};
 
@@ -8,7 +10,9 @@ const Instruction = (props: Props) => {
   const { show, sumof, sumofAddress } = useContext(AppContext);
   return (
     <>
-      <div className="">
+    <div 
+    // style={{backgroundImage: `url(${cardBg})`}} 
+    className='bg-cover'>
         {show ? (
           <div className="flex text-left flex-col gap-3 w-[90%]">
             {" "}
