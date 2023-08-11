@@ -4,7 +4,6 @@ async function main() {
 
   const Logs = await ethers.getContractFactory("Logs");
   const log = await Logs.deploy();
-
   await log.deployed();
 
   console.log(`Contract address ${log.address}`);

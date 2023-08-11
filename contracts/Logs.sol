@@ -1,45 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.16;
 
-
-
 import "./IERC20.sol";
 import "./IERC721.sol";
 
 
-
 /**
  * @title Logs
-<<<<<<< HEAD
-<<<<<<< HEAD
- * @dev A smart contract that enables the publication of public keys on the blockchain and facilitates fund transfers to a specified address.
-=======
- * @dev A smart contract that enables the publication of pub keys on the blockchain and facilitates fund transfers to a specified address.
->>>>>>> origin/master
-=======
- * @dev A smart contract that enables the publication of pub keys on the blockchain and facilitates fund transfers to a specified address.
->>>>>>> origin/master
- *
+
  * The Logs contract allows senders to publish their public keys on the blockchain, consisting of the parameters r, s, and v.
  * These keys serve as authorization for the associated transactions and provide an additional layer of security.
- *
-<<<<<<< HEAD
-<<<<<<< HEAD
  * Users publish their public keys by invoking the appropriate functions in the contract.
  * The contract maintains a log of published keys and keeps track of the total funds received.
- *
  * Users can transfer ERC, ERC20 tokens, and ERC721 tokens to a designated recipient address, authorized by their published keys.
-=======
-=======
->>>>>>> origin/master
- * Users can publish their pub keys by invoking the appropriate functions in the contract.
- * The contract maintains a log of published keys and keeps track of the total funds received.
- *
- * Users can transfer XDC, XRC20 tokens, and XRC721 tokens to a designated recipient address, authorized by their published keys.
-<<<<<<< HEAD
->>>>>>> origin/master
-=======
->>>>>>> origin/master
  */
 
 

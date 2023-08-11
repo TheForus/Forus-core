@@ -58,7 +58,7 @@ const NavBar = (props: Props) => {
           {/* Social Links */}
           <div className="lg:flex space-x-3 items-center hidden">
             <p className=" text-[#cdd4dc] ">
-              <a href="/https://discord.gg/qupF3BrP">
+              <a href="https://discord.gg/EppRjheW">
                 <FaDiscord size={22} />
               </a>
             </p>

@@ -13,13 +13,13 @@ import { downloadTxt } from "../helper/downloadTxt";
 const ec = new EllipticCurve.ec("secp256k1");
 
 
-//Combining the publickey with secretKey to calcuate the private key of stealth address
+//Combining the publickey with signatureKey to calcuate the private key of stealth address
 
 const Scan = () => {
   const notyf = new Notyf();
-  var secretkey: EC.KeyPair | any;
+  var signaturekey: EC.KeyPair | any;
 
-  const [rootsecretkey, setrootsecretkey] = useState<string>("");
+  const [rootsignaturekey, setrootsignaturekey] = useState<string>("");
   const [privatekey, setprivatekey] = useState<string>("");
   const [hide, sethide] = useState<boolean>(true);
   const [, setmatchingkey] = useState<boolean>(false);
@@ -40,46 +40,48 @@ const Scan = () => {
         ...doc.data(),
         id: doc.id,
       }));
+      console.log(logs);
     } catch (err: any) {
       console.error(err);
       seterr(err.message);
     }
 
     var ephPubKey: EC.KeyPair | any;
-    var sharedsecret;
-    var hashedsecret;
-    var _sharedSecret: string | any;
+    var sharedsignature;
+    var hashedsignature;
+    var _sharedsignature: string | any;
 
     logs.forEach((z: any, index: number) => {
-      ephPubKey = ec.keyFromPublic(z.keys.slice(9), "hex");
-      sharedsecret = secretkey.derive(ephPubKey.getPublic()); //
-      hashedsecret = ec.keyFromPrivate(keccak256(sharedsecret.toArray()));
-      const suffix: string | any = hashedsecret
+      console.log(z.Keys.slice(9))
+      ephPubKey = ec.keyFromPublic(z.Keys.slice(9), "hex");
+      sharedsignature = signaturekey.derive(ephPubKey.getPublic()); //
+      hashedsignature = ec.keyFromPrivate(keccak256(sharedsignature.toArray()));
+      const suffix: string | any = hashedsignature
         .getPublic()
         .encode("hex", false)
         .toString()
         .slice(-6);
-      _sharedSecret =
-        "0x" + sharedsecret.toArray()[0].toString(16).padStart(2, "0") + suffix;
+      _sharedsignature =
+        "0x" + sharedsignature.toArray()[0].toString(16).padStart(2, "0") + suffix;
       console.log(
-        _sharedSecret,
-        _sharedSecret.toString().slice(2, 10),
-        z.keys.slice(1, 9)
+        _sharedsignature,
+        _sharedsignature.toString().slice(2, 10),
+        z.Keys.slice(1, 9)
       );
 
       try {
         if (
-          _sharedSecret.toString().slice(2, 10) ===
-          z.keys.slice(1, 9).toString()
+          _sharedsignature.toString().slice(2, 10) ===
+          z.Keys.slice(1, 9).toString()
         ) {
           setId(z.id);
           setisfounded("founded");
-          const _key = secretkey.getPrivate().add(hashedsecret.getPrivate());
+          const _key = signaturekey.getPrivate().add(hashedsignature.getPrivate());
           const pk = _key.mod(ec.curve.n);
           setprivatekey(pk.toString(16, 32));
           setiscopied("Copy");
           setreveal(true);
-          setrootsecretkey("");
+          setrootsignaturekey("");
         }
         return;
       } catch (e: any) {
@@ -97,11 +99,11 @@ const Scan = () => {
 
     setmatchingkey(true);
 
-    let skey: string | any = sessionStorage.getItem("secretKey");
-    if (rootsecretkey === "") {
-      secretkey = ec.keyFromPrivate(skey, "hex");
+    let skey: string | any = sessionStorage.getItem("signature");
+    if (rootsignaturekey === "") {
+      signaturekey = ec.keyFromPrivate(skey, "hex");
     } else {
-      secretkey = ec.keyFromPrivate(rootsecretkey, "hex");
+      signaturekey = ec.keyFromPrivate(rootsignaturekey, "hex");
     }
 
     fetchData();
@@ -137,9 +139,9 @@ const Scan = () => {
             className=" text-[0.9rem] font-semibold text-gray-300
             montserrat-subtitle outline-none px-3 py-3 h-[100%] hover:shadow-sm rounded-md hover:shadow-gray-400 w-[100%] bg-[#cdd4dc]"
             // className="bg-[#ebf3f7] font-semibold text-gray-700 montserrat-subtitle outline-none border rounded-md p-1 px-2 border-1 border-gray-400 w-[340px]"
-            value={rootsecretkey}
+            value={rootsignaturekey}
             onChange={(e) => {
-              setrootsecretkey(e.target.value);
+              setrootsignaturekey(e.target.value);
             }}
             placeholder="Signature (optional)"
           />
@@ -180,11 +182,11 @@ const Scan = () => {
       <div className="p-4  text-[#cdd4dc]  font-semibold">
         {/* {matching === true ? <p>Running.....</p> : false} */}
         {reveal === true ? (
-          <div className="flex ml-60  justify-center items-center space-x-3 montserrat-small">
-            <p className="text-[#cdd4dc]">{iscopied}</p>
+          <div className="flex ml-60  justify-center items-center space-x-3 ">
+            <p className="text-[#cdd4dc] montserrat-subtitle text-[0.9rem] ">{iscopied}</p>
             <img
-              height={25}
-              width={25}
+              height={30}
+              width={30}
               src={copy}
               onClick={copykey}
               className="cursor-pointer"

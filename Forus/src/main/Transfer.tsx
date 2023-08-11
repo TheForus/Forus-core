@@ -5,7 +5,7 @@ import { ec as EC } from "elliptic";
 import { useContext } from "react";
 import { AppContext } from "./Forus";
 import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
-import { Crypto } from "../helper/Crypto";
+import { Crypto } from "../helper/Tokens";
 import { BsChevronDown } from "react-icons/bs";
 import { ethers } from "ethers";
 import sending from "../Logos/sending.gif";
@@ -79,9 +79,9 @@ const Transfer = () => {
     console.log(forusKey.slice(0, 2).toLowerCase() === "fk")
     try {
       if (forusKey.slice(0, 2).toLowerCase() === "fk") {
-        console.log(forusKey.slice(0, 2));
+        // console.log(forusKey.slice(0, 2));
         const _forusKey = forusKey.slice(2);
-        console.log(_forusKey);
+        // console.log(_forusKey);
         const decoded = base58.decode(_forusKey);
         const decodedId = decoded.subarray(0, 33);
         key = ec.keyFromPublic(decodedId, "hex");
@@ -114,8 +114,8 @@ const Transfer = () => {
 
       r = "0x" + ephPublic?.getX().toString(16, 64) || "";
       s = "0x" + ephPublic?.getY().toString(16, 64) || "";
-      a =
-        "0x" + sharedsecret.toArray()[0].toString(16).padStart(2, "0") + suffix;
+      a = "0x" + sharedsecret.toArray()[0].toString(16).padStart(2, "0") + suffix;
+
     } catch (e) {
       console.log("error", e);
     }
@@ -130,7 +130,7 @@ const Transfer = () => {
     console.log(stored);
     try {
       await addDoc(logs, {
-        keys: stored,
+        Keys: stored,
       });
     } catch (err) {
       console.error(err);
@@ -364,7 +364,7 @@ const Transfer = () => {
           <ul onClick={() => setshow(!show)}>
             <li
               className="flex p-2 px-3 cursor-pointer rounded-md
-            text-[#cdd4dc] font-semibold border-l border-gray-300
+            text-[#1f2429] font-semibold border-l border-gray-300
             items-center gap-2 hover:text-gray-800 hover:rounded-full hover:bg-[#dbe6eb] "
             >
               <p>{byDefault}</p>
@@ -372,12 +372,11 @@ const Transfer = () => {
             </li>
             <div
               className={`
-              ${
-                show &&
+              ${show &&
                 `transition-all ease-in bg-white py-1 shadow-md flex flex-col w-[105%] max-h-28 rounded-b-md absolute mt-2
                  scrollbar-thin scrollbar-thumb-[#cdd4dc] scrollbar-track-[#dbe6eb] overflow-y-scroll 
                 scrollbar-thumb-rounded scrollbar-rounded-full`
-              }
+                }
             `}
             >
               {show &&

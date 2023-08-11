@@ -60,13 +60,14 @@ const ForusKey = (props: Props) => {
 
   const copy = () => {
     navigator.clipboard.writeText(ForusKey);
+    notyf.success("Copied");
   };
 
   const load = () => {
     navigator.clipboard.writeText(ForusKey);
     downloadTxt(sessionStorage.getItem("signature"), "Forus-signature.txt");
     reveal();
-    notyf.success("Copied");
+
   };
 
 
