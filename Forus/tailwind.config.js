@@ -10,6 +10,7 @@ module.exports = {
         bgGreen: "#141A18",
         textGreenb: "#06FC99",
         textGreen: "#18c792",
+        highlight: "#5944CF",
       },
     },
   },

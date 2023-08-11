@@ -7,6 +7,8 @@ import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import { downloadTxt } from "../helper/downloadTxt";
 import {FaFileSignature } from "react-icons/fa";
+import cardBg from '../Logos/cardBg.png';
+
 const ec = new EllipticCurve.ec("secp256k1");
 
 
@@ -73,7 +75,9 @@ const ForusKey = (props: Props) => {
 
   return (
     <>
-      <div className="flex flex-col items-center p-8 rounded-t-md">
+      <div 
+      style={{backgroundImage: `url(https://img.freepik.com/premium-vector/abstract-dark-background-design_54768-380.jpg)`}} 
+      className="bg-cover object-scale-down border border-gray-800 rounded-md backdrop-blur-lg bg-no-repeat flex flex-col items-center p-8 rounded-t-md">
         <div className="pb-6 flex flex-col space-y-4 items-center border-b w-full">
           <h1
             className="mx-auto montserrat-subtitle font-extrabold
@@ -92,26 +96,30 @@ const ForusKey = (props: Props) => {
           )}
         </div>
         {/* Forus */}
-        <div className="my-4 flex sm:gap-4 items-center p-2 sm:px-3 sm:mx-0 mx-3 bg-[#cdd4dc]  rounded-md  shadow-md shadow-gray-300 hover:shadow-lg px-2   ">
-          <p className="sm:text-[1rem] text-[0.8rem] montserrat-small font-semibold text-gray-900">
-            <span className="sm:text-[1.1rem] text-[0.9rem] text-gray-900 text-md font-extrabold">
-              #Foruskey
-            </span>{" "}
-            - {ForusKey}
-          </p>
+        <div className="flex space-x-4">
+          <div className="my-4 flex sm:gap-4 items-center p-2 sm:px-3 sm:mx-0 mx-3 bg-gray-500 bg-opacity-60
+           rounded-md hover:shadow-sm shadow-gray-300 px-2   ">
+            <p className="sm:text-[1rem] text-[0.8rem] montserrat-small font-extrabold text-purple-500">
+              <span className="sm:text-[1.1rem] text-[0.9rem] text-white text-md font-extrabold">
+                #Foruskey
+              </span>{" "}
+              - {ForusKey}
+            </p>
+          </div>
+          <div className='flex items-center text-white space-x-3'>
           <AiOutlineCopy
-            className="font-bold text-2xl text-[#181b1f] hover:text-[#4e6979] cursor-pointer"
-            onClick={copy}
-          />
-
-          <FaFileSignature className="font-bold text-2xl text-[#181b1f] hover:text-[#4e6979] cursor-pointer" onClick={load} />
+              className="font-bold text-2xl text-[181b1f] hover:text-[#4e6979] cursor-pointer"
+              onClick={copy}
+            />
+            <FaFileSignature className="font-bold text-2xl text-[181b1f] hover:text-[#4e6979] cursor-pointer" onClick={load} />
+          </div>
         </div>
 
         <button
           className="mb-4 my-2 montserrat-subtitle border-1 p-1 montserrat-subtitle  
-         bg-[#1f2429]  hover:shadow-xl px-6 text-center 
-        rounded-md  font-semibold   
-        text-[#cdd4dc]  border-[#1f2429] border"
+         bg-highlight  hover:shadow-xl px-6 text-center 
+        rounded-md  font-semibold   hover:scale-105 transition-all ease-linear
+        text-white  border-[#1f2429] border"
           onClick={Generate}
         >
           Generate
