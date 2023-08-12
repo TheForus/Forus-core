@@ -174,7 +174,7 @@ const Scan = () => {
         <div
           className="flex ml-1  items-center cursor-pointer space-x-1 border-1
            p-1 hover:bg-gray-900 hover:border-none  text-white 
-            bg-highlight hover:shadow-xl px-4 text-center rounded-md   bg-[#98aadb]
+            bg-highlight hover:shadow-xl px-4 text-center rounded-md   bg-[#9a9bd1]
             font-semibold hover:border-white border-[#181b1f] border"
           onClick={generateprivatekey}
         >
