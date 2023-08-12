@@ -8,29 +8,28 @@ const Header = () => {
   return (
     <>
       <div
-        className="bg-[#cdd4dc] sm:px-20 px-12 sm:p-32 p-24 flex
-      justify-between items-center md:flex-row flex-col space-y-8  "
+        className="bg-[#cdd4dc] sm:px-20 px-12 sm:p-32 p-16 flex
+      justify-between items-center md:flex-row flex-col space-y-4  "
       >
         {/* left side */}
-        <div className="flex flex-col items-start space-y-3 mt-4 md:w-[100%]">
+        <div className="flex flex-col items-start space-y-3 mt- md:w-[100%]">
           <h2
-            className="montserrat-subtitle font-extrabold sm:text-[3.4rem]
-            text-left text-[2.6rem] text-[#131619] xl:w-[70%] w-full"
+            className="montserrat-subtitle font-extrabold sm:text-[2.9rem]
+            text-left text-[2.1rem] text-[#131619] xl:w-[70%] w-full"
           >
-            Receive Eth and tokens with forus anonynously 
+            Receive Eth and tokens with forus confidentially
           </h2>
           <p
-            className="montserrat-small font-semibold pb-8 text-gray-800
+            className="montserrat-small font-semibold pb-4 text-gray-800
            text-left break-words  max-w-[700px] sm:text-[1.2rem] text-[1rem]"
           >
-            Unlock the Power of Secure and Private Transactions!
-            Breaking the link between sender and receiver!
+            Breaking the link between sender and receiver !!
             Safeguard Your Financial Interactions with Cutting-edge
             Cryptography.!
           </p>
           <button
             className="border-1 montserrat-subtitle  
-            hover:scale-95 transition-all ease-linear p-2 px-12 rounded-lg border-[#131619] border: ;
+            hover:scale-95 transition-all ease-linear p-1 px-10 rounded-lg border-[#131619] 
              montserrat-subtitle font-bold  text-xl bg-[#131619] text-gray-300"
             onClick={() => navigate("/forus")}
           >

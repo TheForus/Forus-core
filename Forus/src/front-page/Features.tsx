@@ -28,7 +28,7 @@ const Features = (props: Props) => {
         </FeatureBlock>
         <FeatureBlock
           heading="Secure Fund Transfer"
-          subheading="Forus enables users to receive funds securely and confidentially using its state-of-the-art system. Through the utilization of stealth or secret addresses, the user can receive amount without revealing their identities or sensitive financial details. The sender generates a corresponding stealth address based on the recipient's unique forus key, ensuring that the funds are received securely and privately. Additionally, Forus employs robust encryption algorithms and stringent security protocols, further bolstering the safety of fund transfers.."
+          subheading="Forus enables users to receive funds securely and confidentially using its state-of-the-art system. Through the utilization of stealth or secret addresses, the user can receive amount without revealing their identities or sensitive financial details. The sender generates a corresponding stealth address based on the recipient's unique forus key, ensuring that the funds are received securely and privately..."
         >
           <AiOutlineTransaction color="#cdd4dc" className="text-[60px]" />
         </FeatureBlock>

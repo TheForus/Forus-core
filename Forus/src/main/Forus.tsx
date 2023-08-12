@@ -5,7 +5,7 @@ import Trx from "./Trx";
 import React, { createContext, useState, useEffect } from "react";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
-// import abi from "../artifacts/contracts/Logs.sol/Logs.json";
+import abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { ethers } from "ethers";
 
 type Props = {};
@@ -37,16 +37,16 @@ const Cryptia = (props: Props) => {
   const { ethereum }: any = window;
 
   useEffect(() => {
-    // const fetchData = async () => {
-    //   const provider = new ethers.providers.Web3Provider(ethereum);
-    //   const contract = new ethers.Contract(contractAddress, abi.abi, provider);
+    const fetchData = async () => {
+      const provider = new ethers.providers.Web3Provider(ethereum);
+      const contract = new ethers.Contract(contractAddress, abi.abi, provider);
 
-    //   const limit = await contract.getTotalAddresses();
-    //   const totalFunds = await contract.getTotalVolume();
-    //   setsumof(limit.toString());
-    //   setsumofAddress(totalFunds / 10 ** 18);
-    // };
-    // fetchData();
+      const limit = await contract.getTotalAddresses();
+      const totalFunds = await contract.getTotalVolume();
+      setsumof(limit.toString());
+      setsumofAddress(totalFunds / 10 ** 18);
+    };
+    fetchData();
   }, [show]);
 
   const accountChecker = async () => {
@@ -124,7 +124,7 @@ const Cryptia = (props: Props) => {
                   py-8 p-4"
         >
           <Foruskey />
-          <div className="flex flex-col-reverse space-y-4 sm:flex-row justify-between p-3 py-4">
+          <div className="flex flex-col-reverse space-y-4 sm:flex-row justify-between p-3 py-16 ">
             <Instruction />
             <Trx />
           </div>

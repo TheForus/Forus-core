@@ -35,17 +35,17 @@ const Trx = (props: Props) => {
         className="max-w-[400px] xl:space-x-36 mx-auto flex space-x-32 mb-2  montserrat-subtitle
         text-[1.4rem] border-b pb-2 border-[#cdd4dc] font-bold"
       >
-        <button
+        <button 
           onClick={handleTransferClick}
           className={`px-3 
-        ${showTransfer ? "text-[#cdd4dc]" : "text-[#7f7f80]"}`}
+        ${showTransfer ? "text-[#cdd4dc]" : "text-[#9caedf]"}`}
         >
           Transfer
         </button>
         <button
           onClick={handleAcceptClick}
           className={`px-3 
-        text-${!showTransfer ? "[#cdd4dc]" : "[#7f7f80]"}`}
+        text-${!showTransfer ? "[#cdd4dc]" : "[#9caedf]"}`}
         >
           Accept
         </button>

@@ -136,7 +136,7 @@ const Scan = () => {
         {hide !== true && (
           <input
             type="text"
-            className=" text-[0.9rem] font-semibold text-gray-300 placeholder:text-gray-700
+            className=" text-[0.9rem] tect font-semibold text-gray-700 placeholder:text-gray-700
             montserrat-subtitle outline-none px-3 py-3 h-[100%] hover:shadow-sm rounded-md hover:shadow-gray-400 w-[100%] bg-[#cdd4dc]"
             // className="bg-[#ebf3f7] font-semibold text-gray-700 montserrat-subtitle outline-none border rounded-md p-1 px-2 border-1 border-gray-400 w-[340px]"
             value={rootsignaturekey}
@@ -173,8 +173,8 @@ const Scan = () => {
       <div className="flex justify-center pt-2 mr-4">
         <div
           className="flex ml-1  items-center cursor-pointer space-x-1 border-1
-           p-1 hover:bg-gray-900 hover:border-none  text-white
-            bg-highlight hover:shadow-xl px-4 text-center rounded-md  
+           p-1 hover:bg-gray-900 hover:border-none  text-white 
+            bg-highlight hover:shadow-xl px-4 text-center rounded-md   bg-[#98aadb]
             font-semibold hover:border-white border-[#181b1f] border"
           onClick={generateprivatekey}
         >

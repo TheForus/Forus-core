@@ -99,7 +99,7 @@ const ForusKey = (props: Props) => {
         <div className="flex space-x-4">
           <div className="my-4 flex sm:gap-4 items-center p-2 sm:px-3 sm:mx-0 mx-3 bg-gray-500 bg-opacity-60
            rounded-md hover:shadow-sm shadow-gray-300 px-2   ">
-            <p className="sm:text-[1rem] text-[0.8rem] montserrat-small font-extrabold text-purple-500">
+            <p className="sm:text-[1rem] text-[0.8rem] montserrat-small font-extrabold text-[#9caedf] ">
               <span className="sm:text-[1.1rem] text-[0.9rem] text-white text-md font-extrabold">
                 #Foruskey
               </span>{" "}
@@ -117,9 +117,9 @@ const ForusKey = (props: Props) => {
 
         <button
           className="mb-4 my-2 montserrat-subtitle border-1 p-1 montserrat-subtitle  
-         bg-highlight  hover:shadow-xl px-6 text-center 
+         bg-highlight  hover:shadow-xl px-6 text-center  bg-[#9eb0e2]
         rounded-md  font-semibold   hover:scale-105 transition-all ease-linear
-        text-white  border-[#1f2429] border"
+        text-white  border-[#9caedf] border"
           onClick={Generate}
         >
           Generate

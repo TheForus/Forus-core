@@ -139,7 +139,7 @@ const Qna = (props: Props) => {
         {showAnswers[3] && (
           <p className=" w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
             Yes, you can retrieve your private key by clicking on the "scan"
-            button or by pasting your signature key (optional) into our app. This
+            button or by pasting your signature key (optional) . This
             will allow you to access the specific address where the funds have
             been sent.
           </p>
