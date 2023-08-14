@@ -19,9 +19,9 @@ const NavBar = (props: Props) => {
           className="flex items-center cursor-pointer"
           onClick={() => navigate("/")}
         >
-          <div className="flex space-x-1 items-center logo-div">
+          <div className="flex items-center logo-div">
             <img src={logo} alt="" className="logo w-[49px] h-[47px]" />
-            <h1 className="montserrat-subtitle sm:text-[1.5rem] font-bold text-[1.4rem] text-[#cdd4dc]">
+            <h1 className="-ml-1 montserrat-subtitle sm:text-[1.5rem] font-bold text-[1.4rem] text-[#cdd4dc]">
               Forus
             </h1>
           </div>
@@ -81,8 +81,10 @@ const NavBar = (props: Props) => {
           </p>
           <button
             onClick={connect.connectWallet}
-            className=" montserrat-subtitle border-1 p-1 sm:text-[1rem] text-[0.8rem] bg-[#9a9bd1]
-                     shadow-md hover:shadow-lg px-2 sm:px-4 rounded-md  text-white font-bold border-black "
+            className=" montserrat-subtitle border-1 p-1 sm:text-[1rem] text-[0.8rem] bg-[#1c1c1d]
+                    hover:text-white px-2 sm:px-4 rounded-md 
+                     border-black text-purple-400 font-extrabold hover:bg-clip-text hover:shadow-sm hover:shadow-gray-800 hover:bg-gradient-to-r hover:from-purple-500 hover:to-blue-500 hover:text-transparent
+                     "
           >
             {sessionStorage.getItem("address") === null || false
               ? "connect wallet"

@@ -7,7 +7,6 @@ import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import { downloadTxt } from "../helper/downloadTxt";
 import {FaFileSignature } from "react-icons/fa";
-import cardBg from '../Logos/cardBg.png';
 
 const ec = new EllipticCurve.ec("secp256k1");
 
@@ -80,8 +79,8 @@ const ForusKey = (props: Props) => {
       className="bg-cover object-scale-down border border-gray-800 rounded-md backdrop-blur-lg bg-no-repeat flex flex-col items-center p-8 rounded-t-md">
         <div className="pb-6 flex flex-col space-y-4 items-center border-b w-full">
           <h1
-            className="mx-auto montserrat-subtitle font-extrabold
-             sm:text-4xl  text-[#cdd4dc] 
+            className="mx-auto montserrat-heading font-[1000]
+             sm:text-4xl bg-clip-text bg-gradient-to-r from-purple-500 via-purple-200 to-blue-500 text-transparent
               text-3xl"
           >
             {" "}
@@ -99,7 +98,8 @@ const ForusKey = (props: Props) => {
         <div className="flex space-x-4">
           <div className="my-4 flex sm:gap-4 items-center p-2 sm:px-3 sm:mx-0 mx-3 bg-gray-500 bg-opacity-60
            rounded-md hover:shadow-sm shadow-gray-300 px-2   ">
-            <p className="sm:text-[1rem] text-[0.8rem] montserrat-small font-extrabold text-[#9caedf] ">
+            <p className="sm:text-[1rem] text-[0.8rem] montserrat-small font-extrabold 
+            text-[#a855f6] ">
               <span className="sm:text-[1.1rem] text-[0.9rem] text-white text-md font-extrabold">
                 #Foruskey
               </span>{" "}
@@ -117,9 +117,10 @@ const ForusKey = (props: Props) => {
 
         <button
           className="mb-4 my-2 montserrat-subtitle border-1 p-1 montserrat-subtitle  
-         bg-highlight  hover:shadow-xl px-6 text-center  bg-[#9dc4d6]
+         bg-highlight  hover:shadow-xl px-6 text-center  bg-highlight
         rounded-md  font-semibold   hover:scale-105 transition-all ease-linear
-        text-white  border-[#9caedf] border"
+        text-white  border-[#15161a] border bg-gradient-to-r from-purple-500
+        hover:bg-highlight hover:bg-gradient-to-r hover:from-purple-500 hover:to-blue-500"
           onClick={Generate}
         >
           Generate

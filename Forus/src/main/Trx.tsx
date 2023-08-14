@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Transfer from "./Transfer";
 import Accept from "./Scan";
-// import cardBg from '../Logos/cardBg.png';
 
 import { useContext } from "react";
 import { AppContext } from "./Forus";
@@ -38,14 +37,14 @@ const Trx = (props: Props) => {
         <button 
           onClick={handleTransferClick}
           className={`px-3 
-        ${showTransfer ? "text-[#cdd4dc]" : "text-[#9caedf]"}`}
+        ${showTransfer ? "text-[#cdd4dc]" : "text-[#5e5e5e]"}`}
         >
           Transfer
         </button>
         <button
           onClick={handleAcceptClick}
           className={`px-3 
-        text-${!showTransfer ? "[#cdd4dc]" : "[#9caedf]"}`}
+          ${!showTransfer ? "text-[#cdd4dc]" : "text-[#5e5e5e]"}`}
         >
           Accept
         </button>
