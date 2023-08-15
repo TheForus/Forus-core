@@ -25,9 +25,9 @@ const Nav = (props: Props) => {
           <p
             className="text-gray-700 hover:text-gray-900 p-1 sm:px-4 rounded-lg 
             montserrat-subtitle cursor-pointer 
-            sm:text-[1.4rem] text-[1.2rem] font-semibold"
+            sm:text-[1.3rem] text-[1.1rem] font-semibold"
           >
-            How it works?
+            How it works ?
           </p>
         </Link>
         {/* theme button */}

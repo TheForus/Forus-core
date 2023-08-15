@@ -1,7 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-// import workflow from "../Logos/workflowCryptia.png";
-// import cryptia from "../main/Cryptia"
+
 
 const Header = () => {
   const navigate = useNavigate();
@@ -12,20 +11,20 @@ const Header = () => {
       justify-between items-center md:flex-row flex-col space-y-4  "
       >
         {/* left side */}
-        <div className="flex flex-col items-start space-y-4 mt- md:w-[100%]">
+        <div className="flex flex-col items-start space-y-4 ml-6  md:w-[100%]">
           <h2
             className="montserrat-subtitle font-extrabold sm:text-[2.6rem]
             text-left text-[1.7rem] text-[#131619] xl:w-[70%] w-full"
           >
-            Receive Eth and tokens with forus confidentially
+            Receive Eth and tokens with forus confidentially !!
           </h2>
           <p
             className="montserrat-small font-semibold pb-4 text-gray-800
            text-left break-words  max-w-[700px] sm:text-[1.2rem] text-[1rem]"
           >
-            Breaking the link between sender and receiver !!
+            Breaking the link between sender and receiver.
             Safeguard Your Financial Interactions with Cutting-edge
-            Cryptography.!
+            Cryptography.
           </p>
           <button
             className="border-1 montserrat-subtitle  
