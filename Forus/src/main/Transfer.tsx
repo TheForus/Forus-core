@@ -402,7 +402,7 @@ const Transfer = () => {
       </div>
       <button
         className="flex montserrat-small bg-highlight hover:scale-105 transition-all ease-linear mx-auto items-center cursor-pointer 
-        space-x-1  p-1 text-white bg-[#9a9bd1]
+        space-x-1  p-1 text-white bg-[#40414d]
         hover:shadow-xl hover:border-none px-7 text-center rounded-md font-semibold "
         onClick={byDefault === "ETH" ? Transfer : proceed}
       >
