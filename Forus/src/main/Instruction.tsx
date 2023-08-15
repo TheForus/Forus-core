@@ -1,8 +1,6 @@
 import { useContext } from "react";
 import { AppContext } from "./Forus";
 import { MdVerifiedUser } from "react-icons/md";
-// import { url } from "inspector";
-import cardBg from '../Logos/cardBg.png';
 
 type Props = {};
 
