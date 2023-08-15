@@ -401,12 +401,9 @@ const Transfer = () => {
         </div>
       </div>
       <button
-        className="flex montserrat-small bg-highlight hover:scale-105 transition-all ease-linear mx-auto items-center cursor-pointer 
-
-        space-x-1  p-1 text-white bg-highlight bg-gradient-to-r from-purple-500
-        hover:bg-highlight hover:bg-gradient-to-r hover:from-purple-500 hover:to-blue-500
-
-        hover:shadow-xl hover:border-none px-7 text-center rounded-md font-semibold "
+        className="mb-4 my-2 montserrat-subtitle border-1 p-1 montserrat-subtitle  
+        bg-highlight  hover:shadow-xl px-6 text-center  bg-slate-300 text-black 
+       rounded-md  font-semibold   hover:scale-105 transition-all ease-linear "
         onClick={byDefault === "ETH" ? Transfer : proceed}
       >
         {waiting === false ? (

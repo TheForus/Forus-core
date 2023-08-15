@@ -172,12 +172,10 @@ const Scan = () => {
       {/* Match key */}
       <div className="flex justify-center pt-2 mr-4">
         <div
-          className="flex ml-1  items-center cursor-pointer space-x-1 border-1
-           p-1 hover:bg-gray-900 hover:border-none  text-white 
-            bg-highlight hover:shadow-xl px-4 text-center rounded-md
-            font-semibold border-[#181b1f] border hover:scale-105 transition-all
-            bg-gradient-to-r from-purple-500
-        hover:bg-highlight hover:bg-gradient-to-r hover:from-purple-500 hover:to-blue-500"
+          className="mb-4 my-2 montserrat-subtitle border-1 p-1 montserrat-subtitle  
+          bg-highlight  hover:shadow-xl px-6 text-center  bg-slate-300 text-black 
+         rounded-md  font-semibold   hover:scale-105 transition-all ease-linear
+         "
           onClick={generateprivatekey}
         >
           {/* <GiKangaroo size={26} /> */}

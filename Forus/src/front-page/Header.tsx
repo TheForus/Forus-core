@@ -8,14 +8,14 @@ const Header = () => {
   return (
     <>
       <div
-        className="bg-[#cdd4dc] sm:px-20 px-12 sm:p-32 p-16 flex
+        className="bg-[#cdd4dc] sm:px-17 px-12 sm:p-27 p-16 flex
       justify-between items-center md:flex-row flex-col space-y-4  "
       >
         {/* left side */}
-        <div className="flex flex-col items-start space-y-3 mt- md:w-[100%]">
+        <div className="flex flex-col items-start space-y-4 mt- md:w-[100%]">
           <h2
-            className="montserrat-subtitle font-extrabold sm:text-[2.9rem]
-            text-left text-[2.1rem] text-[#131619] xl:w-[70%] w-full"
+            className="montserrat-subtitle font-extrabold sm:text-[2.6rem]
+            text-left text-[1.7rem] text-[#131619] xl:w-[70%] w-full"
           >
             Receive Eth and tokens with forus confidentially
           </h2>
