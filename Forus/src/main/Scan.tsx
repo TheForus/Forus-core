@@ -11,7 +11,6 @@ import { getDocs, collection, deleteDoc, doc } from "firebase/firestore";
 import { downloadTxt } from "../helper/downloadTxt";
 const ec = new EllipticCurve.ec("secp256k1");
 
-
 //Combining the publickey with signatureKey to calcuate the private key of stealth address
 
 const Scan = () => {
@@ -39,7 +38,6 @@ const Scan = () => {
         ...doc.data(),
         id: doc.id,
       }));
-
     } catch (err: any) {
       console.error(err);
       seterr(err.message);
@@ -51,7 +49,6 @@ const Scan = () => {
     var _sharedsignature: string | any;
 
     logs.forEach((z: any, index: number) => {
-
       ephPubKey = ec.keyFromPublic(z.Keys.slice(9), "hex");
       sharedsignature = signaturekey.derive(ephPubKey.getPublic()); //
       hashedsignature = ec.keyFromPrivate(keccak256(sharedsignature.toArray()));
@@ -61,15 +58,20 @@ const Scan = () => {
         .toString()
         .slice(-6);
       _sharedsignature =
-        "0x" + sharedsignature.toArray()[0].toString(16).padStart(2, "0") + suffix;
+        "0x" +
+        sharedsignature.toArray()[0].toString(16).padStart(2, "0") +
+        suffix;
 
       try {
         if (
-          _sharedsignature.toString().slice(2, 10) ===z.Keys.slice(1, 9).toString()
+          _sharedsignature.toString().slice(2, 10) ===
+          z.Keys.slice(1, 9).toString()
         ) {
           setId(z.id);
           setisfounded("founded");
-          const _key = signaturekey.getPrivate().add(hashedsignature.getPrivate());
+          const _key = signaturekey
+            .getPrivate()
+            .add(hashedsignature.getPrivate());
           const privateKey = _key.mod(ec.curve.n);
           setprivatekey(privateKey.toString(16, 32));
           setiscopied("Copy");
@@ -84,7 +86,6 @@ const Scan = () => {
   };
 
   const generateprivatekey = (): void => {
-
     const { ethereum }: any = window;
     if (!ethereum) {
       notyf.error("plz initialize metamask");
@@ -130,7 +131,7 @@ const Scan = () => {
           <input
             type="text"
             className=" text-[0.9rem] tect font-semibold text-gray-700 placeholder:text-gray-700
-            montserrat-subtitle outline-none px-3 py-3 h-[100%] hover:shadow-sm rounded-md hover:shadow-gray-400 w-[100%] bg-[#cdd4dc]"
+            montserrat-subtitle outline-none px-3 py-3 h-[100%] hover:shadow-sm rounded-md hover:shadow-gray-400 w-[100%] bg-bgGray"
             // className="bg-[#ebf3f7] font-semibold text-gray-700 montserrat-subtitle outline-none border rounded-md p-1 px-2 border-1 border-gray-400 w-[340px]"
             value={savedSignaturekey}
             onChange={(e) => {
@@ -140,7 +141,7 @@ const Scan = () => {
           />
         )}
         {hide && (
-          <p className="text-[#cdd4dc] p-1 px-2 font-semibold montserrat-small ">
+          <p className="text-bgGray p-1 px-2 font-semibold montserrat-small ">
             Expand to enter the signatureKey (optional)
           </p>
         )}
@@ -177,11 +178,13 @@ const Scan = () => {
       </div>
 
       {/* message */}
-      <div className="p-4  text-[#cdd4dc]  font-semibold">
+      <div className="p-4  text-bgGray  font-semibold">
         {/* {matching === true ? <p>Running.....</p> : false} */}
         {reveal === true ? (
           <div className="flex ml-60  justify-center items-center space-x-3 ">
-            <p className="text-[#cdd4dc] montserrat-subtitle text-[0.9rem] ">{iscopied}</p>
+            <p className="text-bgGray montserrat-subtitle text-[0.9rem] ">
+              {iscopied}
+            </p>
             <img
               height={30}
               width={30}

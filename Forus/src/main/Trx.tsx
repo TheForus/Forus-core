@@ -28,23 +28,23 @@ const Trx = (props: Props) => {
       className="flex flex-col sm:p-5 sm:px-8 backdrop-blur-[50px]
       max-w-[500px] hover:backdrop-blur-lg
      h-full"
-    //  style={{backgroundImage: `url(${cardBg})`}} 
+      //  style={{backgroundImage: `url(${cardBg})`}}
     >
       <div
         className="max-w-[400px] xl:space-x-36 mx-auto flex space-x-32 mb-2  montserrat-subtitle
-        text-[1.4rem] border-b pb-2 border-[#cdd4dc] font-bold"
+        text-[1.4rem] border-b pb-2 border-bgGray font-bold"
       >
-        <button 
+        <button
           onClick={handleTransferClick}
           className={`px-3 
-        ${showTransfer ? "text-[#cdd4dc]" : "text-[#5e5e5e]"}`}
+        ${showTransfer ? "text-bgGray" : "text-[#5e5e5e]"}`}
         >
           Transfer
         </button>
         <button
           onClick={handleAcceptClick}
           className={`px-3 
-          ${!showTransfer ? "text-[#cdd4dc]" : "text-[#5e5e5e]"}`}
+          ${!showTransfer ? "text-bgGray" : "text-[#5e5e5e]"}`}
         >
           Accept
         </button>

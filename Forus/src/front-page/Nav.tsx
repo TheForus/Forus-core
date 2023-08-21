@@ -9,7 +9,7 @@ type Props = {};
 const Nav = (props: Props) => {
   return (
     <div
-      className="bg-[#cdd4dc] text-white sm:px-20 px-12 p-5 flex 
+      className="bg-bgGray text-white xl:px-28 md:px-22 px-8 p-5 flex : ;
         justify-between items-center"
     >
       {/* logo left */}
