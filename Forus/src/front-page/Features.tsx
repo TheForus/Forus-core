@@ -7,7 +7,7 @@ type Props = {};
 const Features = (props: Props) => {
   return (
     <div className="sm:px-20 px-12 p-4 flex flex-col py-24 space-y-10 justify-center items-center">
-      <h1 className="montserrat-subtitle font-extrabold py-4 text-4xl  text-[#cdd4dc]  border-b border-gray-400">
+      <h1 className="montserrat-subtitle font-extrabold py-4 text-4xl  text-bgGray  border-b border-gray-400">
         Features and Capabilities
       </h1>{" "}
       <div

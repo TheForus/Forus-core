@@ -40,7 +40,6 @@ const Cryptia = (props: Props) => {
     const fetchData = async () => {
       const provider = new ethers.providers.Web3Provider(ethereum);
       const contract = new ethers.Contract(contractAddress, abi.abi, provider);
-
       const limit = await contract.getTotalAddresses();
       const totalFunds = await contract.getTotalVolume();
       setsumof(limit.toString());
@@ -92,8 +91,9 @@ const Cryptia = (props: Props) => {
     }
 
     try {
-
-      const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+      const accounts = await ethereum.request({
+        method: "eth_requestAccounts",
+      });
       sessionStorage.setItem("address", accounts[0]);
       validateChain();
 

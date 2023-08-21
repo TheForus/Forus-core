@@ -56,7 +56,8 @@ const Transfer = () => {
 
   const validatingForuskey = (event: any) => {
     if (
-      (event.target.value.slice(0, 2).toLowerCase() !== "fk" && event.target.value !== "") ||
+      (event.target.value.slice(0, 2).toLowerCase() !== "fk" &&
+        event.target.value !== "") ||
       event.target.value.length > 49 ||
       event.target.value.length < 48
     ) {
@@ -112,8 +113,8 @@ const Transfer = () => {
 
       r = "0x" + ephemeralPublic?.getX().toString(16, 64) || "";
       s = "0x" + ephemeralPublic?.getY().toString(16, 64) || "";
-      v = "0x" + sharedsecret.toArray()[0].toString(16).padStart(2, "0") + suffix;
-
+      v =
+        "0x" + sharedsecret.toArray()[0].toString(16).padStart(2, "0") + suffix;
     } catch (e) {
       console.log("error", e);
     }
@@ -137,16 +138,12 @@ const Transfer = () => {
   };
 
   const Transfer = async () => {
-
     setUp();
-
     if (!ethereum) {
       notyf.error("Please initialize MetaMask");
       return;
     }
-
     connect.validateChain();
-
     if (forusKey === "" || amount === "") {
       seterror("Please enter the forus key");
       setTimeout(() => {
@@ -154,24 +151,19 @@ const Transfer = () => {
       }, 4000);
       return;
     }
-
     setwaiting(true);
-
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
-
     const contract = new ethers.Contract(
       connect.contractAddress,
       Abi.abi,
       signer
     );
-
     try {
       const valueToSend = ethers.utils.parseEther(amount);
       const transactionParameters = {
         value: valueToSend,
       };
-
       const transferCoin = await contract.Transfer(
         r,
         s,
@@ -179,17 +171,12 @@ const Transfer = () => {
         receipent,
         transactionParameters
       );
-
       const txId = await transferCoin;
-
       settrxid("https://sepolia.etherscan.io/tx/" + txId.hash);
-
       //storing the ephemeral key in db
       storing();
-
       setforusKey("");
       setamount("");
-
       // console.log('stored..')
     } catch (e: any) {
       console.log(e);
@@ -200,7 +187,6 @@ const Transfer = () => {
 
   const TransferToken = async () => {
     setUp();
-
     if (forusKey === "" || amount === "") {
       seterror("Please enter the address");
       setTimeout(() => {
@@ -208,9 +194,7 @@ const Transfer = () => {
       }, 4000);
       return;
     }
-
     setwaiting(true);
-
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
     const contract = new ethers.Contract(
@@ -218,11 +202,9 @@ const Transfer = () => {
       Abi.abi,
       signer
     );
-
     try {
       //to send exact amount of tokens are always counted as  amount**18
       const amountParams: any = ethers.utils.parseUnits(amount, 18);
-
       try {
         console.log(receipent, amountParams);
         // const transferCoin=await contract.transfer(receipent, amountParams);
@@ -234,15 +216,12 @@ const Transfer = () => {
           receipent,
           amountParams
         );
-
         const txResponse = await transferERC20;
         settrxid("https://sepolia.etherscan.io/tx/" + txResponse.hash);
-        
       } catch (err: any) {
         console.log(err.message);
         seterror(err.message);
       }
-
       //storing the ephemeral key in db
       storing();
       console.log("stored..");
@@ -338,7 +317,7 @@ const Transfer = () => {
         <input
           // style={{ border: '1px solid red' }}
           className=" text-[0.9rem] font-semibold text-gray-900 placeholder:text-gray-700
-       montserrat-subtitle outline-none px-3 py-3 h-[100%] hover:shadow-sm rounded-md hover:shadow-gray-400 w-[100%] bg-[#cdd4dc]"
+       montserrat-subtitle outline-none px-3 py-3 h-[100%] hover:shadow-sm rounded-md hover:shadow-gray-400 w-[100%] bg-bgGray"
           type="text"
           onChange={validatingForuskey}
           placeholder="Forus Key"
@@ -350,7 +329,7 @@ const Transfer = () => {
       >
         <input
           className="text-[0.9rem] font-semibold text-gray-900 placeholder:text-gray-700
-        montserrat-subtitle outline-none py-3 px-3 h-[100%] hover:shadow-sm rounded-md hover:shadow-gray-400 w-[100%] bg-[#cdd4dc] "
+        montserrat-subtitle outline-none py-3 px-3 h-[100%] hover:shadow-sm rounded-md hover:shadow-gray-400 w-[100%] bg-bgGray "
           value={amount}
           type="text"
           placeholder="1 ETH"
@@ -369,11 +348,12 @@ const Transfer = () => {
             </li>
             <div
               className={`
-              ${show &&
+              ${
+                show &&
                 `transition-all ease-in bg-white py-1 shadow-md flex flex-col w-[105%] max-h-28 rounded-b-md absolute mt-2
-                 scrollbar-thin scrollbar-thumb-[#cdd4dc] scrollbar-track-[#dbe6eb] overflow-y-scroll 
+                 scrollbar-thin scrollbar-thumb-bgGray scrollbar-track-[#dbe6eb] overflow-y-scroll 
                 scrollbar-thumb-rounded scrollbar-rounded-full`
-                }
+              }
             `}
             >
               {show &&
@@ -412,11 +392,11 @@ const Transfer = () => {
 
       <p
         onClick={viewtrx}
-        className="montserrat-subtitle  text-gray-500 font-semibold underline underline-offset-8 decoration-[#cdd4dc] cursor-pointer"
+        className="montserrat-subtitle  text-gray-500 font-semibold underline underline-offset-8 decoration-bgGray cursor-pointer"
       >
         {trxid !== "" ? trxid.slice(8, 58) : ""}
       </p>
-      <p className="montserrat-subtitle text-[#cdd4dc] font-semibold flex mx-auto items-center">
+      <p className="montserrat-subtitle text-bgGray font-semibold flex mx-auto items-center">
         {error}
       </p>
     </div>

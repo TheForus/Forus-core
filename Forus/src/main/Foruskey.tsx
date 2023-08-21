@@ -11,8 +11,6 @@ import bg from "../assets/bg.png";
 
 const ec = new EllipticCurve.ec("secp256k1");
 
-
-
 type Props = {};
 
 const ForusKey = (props: Props) => {
@@ -32,7 +30,10 @@ const ForusKey = (props: Props) => {
       );
       setstoredsignatureKey(signature);
 
-      const signatureKey = ec.keyFromPrivate(key.getPrivate().toString(16), "hex");
+      const signatureKey = ec.keyFromPrivate(
+        key.getPrivate().toString(16),
+        "hex"
+      );
 
       const publicKey = Uint8Array.from(
         signatureKey.getPublic().encodeCompressed("array")
@@ -70,50 +71,57 @@ const ForusKey = (props: Props) => {
     navigator.clipboard.writeText(ForusKey);
     downloadTxt(sessionStorage.getItem("signature"), "Forus-signature.txt");
     reveal();
-
   };
-
 
   return (
     <>
       <div
         style={{ backgroundImage: `url(${bg})` }}
-        className="bg-cover object-scale-down border border-black rounded-md backdrop-blur-lg bg-no-repeat flex flex-col items-center p-8 rounded-t-md">
+        className="bg-cover object-scale-down border border-black rounded-md backdrop-blur-lg bg-no-repeat flex flex-col items-center p-8 rounded-t-md"
+      >
         <div className="pb-6 flex flex-col space-y-4 items-center border-black border-b w-full">
           <h1
             className="mx-auto montserrat-heading font-[1000]
-             sm:text-4xl bg-clip-text text-[#cdd4dc]
+             sm:text-4xl bg-clip-text text-bgGray
               text-3xl"
           >
             {" "}
-            Get your funds privately and securly without revealing any of your personal wallet address !!!
+            Get your funds privately and securly without revealing any of your
+            personal wallet address !!!
           </h1>
 
           {note === true && (
-            <p className="montserrat-small text-[#cdd4dc] font-semibold font-mono w-[80%]">
-              Guard the signature, unleash the Key. Never reveal the 'signature' ,
-              only share your 'ForusKey' for confidential transactions.{" "}
+            <p className="montserrat-small text-bgGray font-semibold font-mono w-[80%]">
+              Guard the signature, unleash the Key. Never reveal the 'signature'
+              , only share your 'ForusKey' for confidential transactions.{" "}
             </p>
           )}
         </div>
         {/* Forus */}
         <div className="flex space-x-4">
-          <div className="my-4 flex sm:gap-4 items-center p-2 sm:px-3 sm:mx-0 mx-3 bg-gray-500 bg-opacity-60
-           rounded-md hover:shadow-sm shadow-gray-300 px-2   ">
-            <p className="sm:text-[1rem] text-[0.8rem] montserrat-small font-extrabold 
-            text-[#cdd4dc] ">
+          <div
+            className="my-4 flex sm:gap-4 items-center p-2 sm:px-3 sm:mx-0 mx-3 bg-gray-500 bg-opacity-60
+           rounded-md hover:shadow-sm shadow-gray-300 px-2   "
+          >
+            <p
+              className="sm:text-[1rem] text-[0.8rem] montserrat-small font-extrabold 
+            text-bgGray "
+            >
               <span className="sm:text-[1.1rem] text-[0.9rem] text-white text-md font-extrabold">
                 #Foruskey
               </span>{" "}
               - {ForusKey}
             </p>
           </div>
-          <div className='flex items-center text-white space-x-3'>
+          <div className="flex items-center text-white space-x-3">
             <AiOutlineCopy
               className="font-bold text-2xl text-[181b1f] hover:text-[#4e6979] cursor-pointer"
               onClick={copy}
             />
-            <FaFileSignature className="font-bold text-2xl text-[181b1f] hover:text-[#4e6979] cursor-pointer" onClick={load} />
+            <FaFileSignature
+              className="font-bold text-2xl text-[181b1f] hover:text-[#4e6979] cursor-pointer"
+              onClick={load}
+            />
           </div>
         </div>
 

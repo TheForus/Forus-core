@@ -21,7 +21,7 @@ const NavBar = (props: Props) => {
         >
           <div className="flex items-center logo-div">
             <img src={logo} alt="" className="logo w-[49px] h-[47px]" />
-            <h1 className="-ml-1 montserrat-subtitle sm:text-[1.5rem] font-bold text-[1.4rem] text-[#cdd4dc]">
+            <h1 className="-ml-1 montserrat-subtitle sm:text-[1.5rem] font-bold text-[1.4rem] text-bgGray">
               Forus
             </h1>
           </div>
@@ -30,23 +30,23 @@ const NavBar = (props: Props) => {
             <button
               onClick={() => navigate("/")}
               className="flex md:flex-row flex-col items-center transition-all ease-linear
-               md:items-end space-x-1 sm:ml-14 ml-9  text-[#cdd4dc] 
-                montserrat-subtitle underline-offset-8 font-bold hover:underline decoration-[#cdd4dc]  sm:text-[1.1rem] text-[0.8rem]"
+               md:items-end space-x-1 sm:ml-14 ml-9  text-bgGray 
+                montserrat-subtitle underline-offset-8 font-bold hover:underline decoration-bgGray  sm:text-[1.1rem] text-[0.8rem]"
             >
-              <IoMdHome size={23} className="md:self-start text-[#cdd4dc] " />
+              <IoMdHome size={23} className="md:self-start text-bgGray " />
               <p className="sm:inline-flex hidden">Home</p>
             </button>
             <div
               onClick={() => navigate("/")}
               className="flex md:flex-row flex-col items-center md:items-end space-x-1 sm:ml-14 
-               text-[#cdd4dc]   ml-2
+               text-bgGray   ml-2
                 montserrat-subtitle underline-offset-8
-                 font-bold hover:underline decoration-[#cdd4dc] 
+                 font-bold hover:underline decoration-bgGray 
                  sm:text-[1.1rem] text-[0.8rem]"
             >
               <HiQuestionMarkCircle
                 size={23}
-                className="md:self-start text-[#cdd4dc]  "
+                className="md:self-start text-bgGray  "
               />
               <p className="sm:inline-flex hidden">QnA</p>
             </div>
@@ -57,24 +57,24 @@ const NavBar = (props: Props) => {
         <div className="sm:flex-row flex space-x-3 items-center">
           {/* Social Links */}
           <div className="lg:flex space-x-3 items-center hidden">
-            <p className=" text-[#cdd4dc] ">
+            <p className=" text-bgGray ">
               <a href="https://discord.gg/EppRjheW">
                 <FaDiscord size={22} />
               </a>
             </p>
-            <p className=" text-[#cdd4dc]  ">
+            <p className=" text-bgGray  ">
               <a href="https://github.com/TheForus">
                 <FaGithub size={22} />
               </a>
             </p>
-            <p className=" text-[#cdd4dc]  ">
+            <p className=" text-bgGray  ">
               <a href="https://twitter.com/The_Forus">
                 <FaTwitter size={22} />
               </a>
             </p>
           </div>
 
-          <p className="sm:text-[1.1rem] montserrat-small text-[#cdd4dc]   font-semibold text-[1rem]">
+          <p className="sm:text-[1.1rem] montserrat-small text-bgGray   font-semibold text-[1rem]">
             {sessionStorage.getItem("address") !== null || false
               ? `${sessionStorage.getItem("address")?.slice(0, 19)}...`
               : ""}
