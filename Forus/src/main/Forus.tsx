@@ -15,6 +15,7 @@ interface ContextValue {
   setShow: React.Dispatch<React.SetStateAction<boolean | any>>;
   connectWallet(): void;
   contractAddress: string;
+  chainname: string;
   sumof: string | any;
   setsumof: React.Dispatch<React.SetStateAction<string | any>>;
   sumofAddress: string | any;
@@ -28,18 +29,50 @@ const Cryptia = (props: Props) => {
 
   const [show, setShow] = useState<boolean>(true);
   const [, setwallet] = useState<boolean>(false);
-  // const [chainid, setchainid] = useState<string | null>("");
   const [sumof, setsumof] = useState<string | any>("");
   const [sumofAddress, setsumofAddress] = useState<string | any>("");
+  const [chainname, setchainname] = useState<string | any>("");
 
   let contractAddress: string = "0x60BA717Dd36b84557E46690c6163De5dbDc6F6bb";
+  let apothemcontractAddress: string = "0x5c75A721154B03C8cAA8Beaab9803b1c214D2a3b";
 
   const { ethereum }: any = window;
 
+  const CHAIN_NAMES: any = {
+    '1': 'Mainnet',
+    '5': 'Goerli',
+    '11155111': 'Sepolia',
+    '51': 'Apothem'
+
+    // Add more chain IDs and names as needed
+  };
+
+  const fetchChainName = async () => {
+    const provider = new ethers.providers.Web3Provider(ethereum);
+    const network = await provider.getNetwork();
+    setchainname(CHAIN_NAMES[network.chainId.toString()] || 'Unsupprted❌');
+    // console.log("network", chainName)
+
+  }
+
   useEffect(() => {
+
+
     const fetchData = async () => {
       const provider = new ethers.providers.Web3Provider(ethereum);
-      const contract = new ethers.Contract(contractAddress, abi.abi, provider);
+      console.log(chainname)
+
+      let contract :any;
+      if (chainname === 'Sepolia') {
+        contract = new ethers.Contract(contractAddress, abi.abi, provider);
+        console.log(contract);
+      }
+      if (chainname === 'Apothem'){
+        contract = new ethers.Contract(apothemcontractAddress, abi.abi, provider);
+        console.log('hello')
+        console.log(contract);
+      }
+
 
       const limit = await contract.getTotalAddresses();
       const totalFunds = await contract.getTotalVolume();
@@ -56,15 +89,17 @@ const Cryptia = (props: Props) => {
 
   const validateChain = async () => {
     const chainId = await ethereum.request({ method: "eth_chainId" });
+    console.log(chainId)
 
-    if (chainId !== "0xaa36a7") {
-      notyf.error("plz connect to sepolia testnet");
+    if (chainId !== "0xaa36a7" && chainId !== "0x33") {
+      notyf.error("unSupported Chain");
       return;
     }
   };
 
   useEffect(() => {
     validateChain();
+    fetchChainName()
   }, []);
 
   if (ethereum) {
@@ -75,9 +110,9 @@ const Cryptia = (props: Props) => {
 
     ethereum.on("chainChanged" || "accountsChanged", (chId: any) => {
       accountChecker();
-      console.log(chId);
-      if (chId !== "0xaa36a7") {
-        notyf.error("plz connect to sepolia testnet");
+      window.location.reload();
+      if (chId !== "0xaa36a7" && chId !== "0x33") {
+        notyf.error("unSupported Chain");
         return;
       }
     });
@@ -90,10 +125,12 @@ const Cryptia = (props: Props) => {
       notyf.error("Plz install metamask");
       return;
     }
+    fetchChainName()
 
     try {
 
       const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+
       sessionStorage.setItem("address", accounts[0]);
       validateChain();
 
@@ -113,6 +150,7 @@ const Cryptia = (props: Props) => {
     sumofAddress,
     setsumofAddress,
     validateChain,
+    chainname,
   };
 
   return (

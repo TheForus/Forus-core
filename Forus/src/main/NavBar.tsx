@@ -72,9 +72,14 @@ const NavBar = (props: Props) => {
                 <FaTwitter size={22} />
               </a>
             </p>
+
           </div>
 
-          <p className="sm:text-[1.1rem] montserrat-small text-[#cdd4dc]   font-semibold text-[1rem]">
+          <p className=" montserrat-subtitle border-1 p-1 sm:text-[1rem] text-[0.8rem] px-1 sm:px-4 rounded-md 
+               text-[#cdd4dc] font-extrabold  bg-slate-600
+                     ">{connect.chainname} </p>
+          <p className="sm:text-[1.1rem] montserrat-small text-[#cdd4dc]  font-semibold text-[1rem]">
+
             {sessionStorage.getItem("address") !== null || false
               ? `${sessionStorage.getItem("address")?.slice(0, 19)}...`
               : ""}
