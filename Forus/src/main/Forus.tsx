@@ -59,25 +59,28 @@ const Cryptia = (props: Props) => {
 
 
     const fetchData = async () => {
-      const provider = new ethers.providers.Web3Provider(ethereum);
-      console.log(chainname)
 
-      let contract :any;
+      const provider = new ethers.providers.Web3Provider(ethereum);
+
+      let contract: any;
+
       if (chainname === 'Sepolia') {
         contract = new ethers.Contract(contractAddress, abi.abi, provider);
         console.log(contract);
       }
-      if (chainname === 'Apothem'){
+      if (chainname === 'Apothem') {
         contract = new ethers.Contract(apothemcontractAddress, abi.abi, provider);
         console.log('hello')
         console.log(contract);
       }
 
 
+
       const limit = await contract.getTotalAddresses();
       const totalFunds = await contract.getTotalVolume();
       setsumof(limit.toString());
       setsumofAddress(totalFunds / 10 ** 18);
+
     };
     fetchData();
   }, [show]);
@@ -98,8 +101,10 @@ const Cryptia = (props: Props) => {
   };
 
   useEffect(() => {
+
     validateChain();
     fetchChainName()
+
   }, []);
 
   if (ethereum) {
@@ -121,6 +126,7 @@ const Cryptia = (props: Props) => {
   }
 
   const connectWallet = async (): Promise<void> => {
+    
     if (ethereum === undefined) {
       notyf.error("Plz install metamask");
       return;
@@ -129,9 +135,10 @@ const Cryptia = (props: Props) => {
 
     try {
 
-      const accounts = await ethereum.request({ method: "eth_requestAccounts" });
 
+      const accounts = await ethereum.request({ method: "eth_requestAccounts" });
       sessionStorage.setItem("address", accounts[0]);
+
       validateChain();
 
       setwallet(true);
