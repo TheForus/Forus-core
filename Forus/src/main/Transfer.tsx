@@ -34,7 +34,7 @@ const Transfer = () => {
 
   let r: string | any;
   let s: string | any;
-  let a: string | any;
+  let v: string | any;
 
   // let ethers: any;
 
@@ -54,7 +54,7 @@ const Transfer = () => {
 
   var receipent: any;
 
-  const validatingCr = (event: any) => {
+  const validatingForuskey = (event: any) => {
     if (
       (event.target.value.slice(0, 2).toLowerCase() !== "fk" && event.target.value !== "") ||
       event.target.value.length > 49 ||
@@ -71,17 +71,15 @@ const Transfer = () => {
 
   const setUp = async () => {
     let key: EC.KeyPair | any;
-    let ephPublic: EC.KeyPair | any;
+    let ephemeralPublic: EC.KeyPair | any;
     // let receipent: string | null;
 
-    const ephKey = ec.genKeyPair();
-    ephPublic = ephKey.getPublic();
-    console.log(forusKey.slice(0, 2).toLowerCase() === "fk")
+    const ephemeralPrivateKey = ec.genKeyPair();
+    ephemeralPublic = ephemeralPrivateKey.getPublic();
+
     try {
       if (forusKey.slice(0, 2).toLowerCase() === "fk") {
-        // console.log(forusKey.slice(0, 2));
         const _forusKey = forusKey.slice(2);
-        // console.log(_forusKey);
         const decoded = base58.decode(_forusKey);
         const decodedId = decoded.subarray(0, 33);
         key = ec.keyFromPublic(decodedId, "hex");
@@ -93,9 +91,9 @@ const Transfer = () => {
     }
     //
     try {
-      const sharedsecret = ephKey.derive(key.getPublic());
-      const hashed = ec.keyFromPrivate(keccak256(sharedsecret.toArray()));
-      const suffix: string | any = hashed
+      const sharedsecret = ephemeralPrivateKey.derive(key.getPublic());
+      const hashedSecret = ec.keyFromPrivate(keccak256(sharedsecret.toArray()));
+      const suffix: string | any = hashedSecret
         .getPublic()
         .encode("hex", false)
         .toString()
@@ -103,18 +101,18 @@ const Transfer = () => {
       const publicKey =
         key
           ?.getPublic()
-          ?.add(hashed.getPublic())
+          ?.add(hashedSecret.getPublic())
           ?.encode("array", false)
           ?.splice(1) || [];
       const address = keccak256(publicKey);
       const _HexString = address.substring(address.length - 40, address.length);
 
       receipent = "0x" + _HexString;
-      console.log(receipent);
+      // console.log(receipent);
 
-      r = "0x" + ephPublic?.getX().toString(16, 64) || "";
-      s = "0x" + ephPublic?.getY().toString(16, 64) || "";
-      a = "0x" + sharedsecret.toArray()[0].toString(16).padStart(2, "0") + suffix;
+      r = "0x" + ephemeralPublic?.getX().toString(16, 64) || "";
+      s = "0x" + ephemeralPublic?.getY().toString(16, 64) || "";
+      v = "0x" + sharedsecret.toArray()[0].toString(16).padStart(2, "0") + suffix;
 
     } catch (e) {
       console.log("error", e);
@@ -126,8 +124,8 @@ const Transfer = () => {
   const logs = collection(db, "Logs");
 
   const storing = async () => {
-    const stored = `T${a.replace("0x", "")}04${r.slice(2)}${s.slice(2)}`;
-    console.log(stored);
+    const stored = `T${v.replace("0x", "")}04${r.slice(2)}${s.slice(2)}`;
+    // console.log(stored);
     try {
       await addDoc(logs, {
         Keys: stored,
@@ -139,6 +137,7 @@ const Transfer = () => {
   };
 
   const Transfer = async () => {
+
     setUp();
 
     if (!ethereum) {
@@ -173,12 +172,10 @@ const Transfer = () => {
         value: valueToSend,
       };
 
-      // console.log(`T${a.replace("0x", "")}04${r.slice(2)}${s.slice(2)}`)
-
       const transferCoin = await contract.Transfer(
         r,
         s,
-        a,
+        v,
         receipent,
         transactionParameters
       );
@@ -187,7 +184,7 @@ const Transfer = () => {
 
       settrxid("https://sepolia.etherscan.io/tx/" + txId.hash);
 
-      //storing the eph key in db
+      //storing the ephemeral key in db
       storing();
 
       setforusKey("");
@@ -232,21 +229,21 @@ const Transfer = () => {
         const transferERC20 = await contract.TransferERC20(
           r,
           s,
-          a,
+          v,
           token,
           receipent,
           amountParams
         );
 
         const txResponse = await transferERC20;
-        console.log("https://sepolia.etherscan.io/tx/" + txResponse.hash);
         settrxid("https://sepolia.etherscan.io/tx/" + txResponse.hash);
+        
       } catch (err: any) {
         console.log(err.message);
         seterror(err.message);
       }
 
-      //storing the eph key in db
+      //storing the ephemeral key in db
       storing();
       console.log("stored..");
     } catch (e: any) {
@@ -343,7 +340,7 @@ const Transfer = () => {
           className=" text-[0.9rem] font-semibold text-gray-900 placeholder:text-gray-700
        montserrat-subtitle outline-none px-3 py-3 h-[100%] hover:shadow-sm rounded-md hover:shadow-gray-400 w-[100%] bg-[#cdd4dc]"
           type="text"
-          onChange={validatingCr}
+          onChange={validatingForuskey}
           placeholder="Forus Key"
         />
       </div>

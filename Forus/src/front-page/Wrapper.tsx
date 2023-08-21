@@ -12,7 +12,7 @@ const Wrapper = (props: Props) => {
   return (
     <div className="bg-[#131619] ">
       <Nav />
-      <div className=" mt-[1px] dark:mt-0 "></div>
+      {/* <div className=" mt-[1px] dark:mt-0 "></div> */}
       <Header />
       <Features />
       <Tutorial />

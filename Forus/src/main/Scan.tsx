@@ -2,7 +2,6 @@ import { useState } from "react";
 import { keccak256 } from "ethers/lib.esm/utils";
 import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
-// import { AiOutlineCopy } from "react-icons/ai";
 import { AiOutlineArrowsAlt, AiOutlineShrink } from "react-icons/ai";
 import copy from "../Logos/copy.jpg";
 import { Notyf } from "notyf";
@@ -19,7 +18,7 @@ const Scan = () => {
   const notyf = new Notyf();
   var signaturekey: EC.KeyPair | any;
 
-  const [rootsignaturekey, setrootsignaturekey] = useState<string>("");
+  const [savedSignaturekey, setsavedSignaturekey] = useState<string>("");
   const [privatekey, setprivatekey] = useState<string>("");
   const [hide, sethide] = useState<boolean>(true);
   const [, setmatchingkey] = useState<boolean>(false);
@@ -40,7 +39,7 @@ const Scan = () => {
         ...doc.data(),
         id: doc.id,
       }));
-      console.log(logs);
+
     } catch (err: any) {
       console.error(err);
       seterr(err.message);
@@ -52,7 +51,7 @@ const Scan = () => {
     var _sharedsignature: string | any;
 
     logs.forEach((z: any, index: number) => {
-      console.log(z.Keys.slice(9))
+
       ephPubKey = ec.keyFromPublic(z.Keys.slice(9), "hex");
       sharedsignature = signaturekey.derive(ephPubKey.getPublic()); //
       hashedsignature = ec.keyFromPrivate(keccak256(sharedsignature.toArray()));
@@ -63,25 +62,19 @@ const Scan = () => {
         .slice(-6);
       _sharedsignature =
         "0x" + sharedsignature.toArray()[0].toString(16).padStart(2, "0") + suffix;
-      console.log(
-        _sharedsignature,
-        _sharedsignature.toString().slice(2, 10),
-        z.Keys.slice(1, 9)
-      );
 
       try {
         if (
-          _sharedsignature.toString().slice(2, 10) ===
-          z.Keys.slice(1, 9).toString()
+          _sharedsignature.toString().slice(2, 10) ===z.Keys.slice(1, 9).toString()
         ) {
           setId(z.id);
           setisfounded("founded");
           const _key = signaturekey.getPrivate().add(hashedsignature.getPrivate());
-          const pk = _key.mod(ec.curve.n);
-          setprivatekey(pk.toString(16, 32));
+          const privateKey = _key.mod(ec.curve.n);
+          setprivatekey(privateKey.toString(16, 32));
           setiscopied("Copy");
           setreveal(true);
-          setrootsignaturekey("");
+          setsavedSignaturekey("");
         }
         return;
       } catch (e: any) {
@@ -91,6 +84,7 @@ const Scan = () => {
   };
 
   const generateprivatekey = (): void => {
+
     const { ethereum }: any = window;
     if (!ethereum) {
       notyf.error("plz initialize metamask");
@@ -100,10 +94,10 @@ const Scan = () => {
     setmatchingkey(true);
 
     let skey: string | any = sessionStorage.getItem("signature");
-    if (rootsignaturekey === "") {
+    if (savedSignaturekey === "") {
       signaturekey = ec.keyFromPrivate(skey, "hex");
     } else {
-      signaturekey = ec.keyFromPrivate(rootsignaturekey, "hex");
+      signaturekey = ec.keyFromPrivate(savedSignaturekey, "hex");
     }
 
     fetchData();
@@ -116,7 +110,6 @@ const Scan = () => {
   };
 
   const removingKey = async () => {
-    console.log(id);
     const Doc = doc(db, "Logs", id);
     await deleteDoc(Doc);
   };
@@ -139,9 +132,9 @@ const Scan = () => {
             className=" text-[0.9rem] tect font-semibold text-gray-700 placeholder:text-gray-700
             montserrat-subtitle outline-none px-3 py-3 h-[100%] hover:shadow-sm rounded-md hover:shadow-gray-400 w-[100%] bg-[#cdd4dc]"
             // className="bg-[#ebf3f7] font-semibold text-gray-700 montserrat-subtitle outline-none border rounded-md p-1 px-2 border-1 border-gray-400 w-[340px]"
-            value={rootsignaturekey}
+            value={savedSignaturekey}
             onChange={(e) => {
-              setrootsignaturekey(e.target.value);
+              setsavedSignaturekey(e.target.value);
             }}
             placeholder="Signature (optional)"
           />
@@ -153,19 +146,19 @@ const Scan = () => {
         )}
         {/* expand icon (toggle of input button) */}
         <div className="flex items-center">
-        {hide ? (
-          <AiOutlineArrowsAlt
-            className=" cursor-pointer  text-[#a7acb3]"
-            size={28}
-            onClick={() => sethide(!hide)}
-          />
-        ) : (
-          <AiOutlineShrink
-            className="cursor-pointer  text-[#a7acb3]"
-            size={28}
-            onClick={() => sethide(!hide)}
-          />
-        )}
+          {hide ? (
+            <AiOutlineArrowsAlt
+              className=" cursor-pointer  text-[#a7acb3]"
+              size={28}
+              onClick={() => sethide(!hide)}
+            />
+          ) : (
+            <AiOutlineShrink
+              className="cursor-pointer  text-[#a7acb3]"
+              size={28}
+              onClick={() => sethide(!hide)}
+            />
+          )}
         </div>
       </div>
 

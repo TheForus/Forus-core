@@ -8,9 +8,7 @@ const Instruction = (props: Props) => {
   const { show, sumof, sumofAddress } = useContext(AppContext);
   return (
     <>
-    <div 
-    // style={{backgroundImage: `url(${cardBg})`}} 
-    className='bg-cover'>
+      <div className='bg-cover'>
         {show ? (
           <div className="flex text-left flex-col gap-3 w-[90%]">
             {" "}

@@ -6,7 +6,8 @@ import { AiOutlineCopy } from "react-icons/ai";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import { downloadTxt } from "../helper/downloadTxt";
-import {FaFileSignature } from "react-icons/fa";
+import { FaFileSignature } from "react-icons/fa";
+import bg from "../assets/bg.png";
 
 const ec = new EllipticCurve.ec("secp256k1");
 
@@ -17,7 +18,7 @@ type Props = {};
 const ForusKey = (props: Props) => {
   const notyf = new Notyf();
   const [ForusKey, setForusKey] = useState<string | any>("");
-  const [, setstoredsecretkey] = useState<string | any>("");
+  const [, setstoredsignatureKey] = useState<string | any>("");
   const [note, setnote] = useState<boolean>(false);
 
   //generating the cp address and secret key
@@ -25,21 +26,22 @@ const ForusKey = (props: Props) => {
     try {
       let key = ec.genKeyPair();
 
-      const skey: void = sessionStorage.setItem(
+      const signature: void = sessionStorage.setItem(
         "signature",
         key.getPrivate().toString(16)
       );
-      const secretKey = ec.keyFromPrivate(key.getPrivate().toString(16), "hex");
-      setstoredsecretkey(skey);
+      setstoredsignatureKey(signature);
 
-      const pub = Uint8Array.from(
-        secretKey.getPublic().encodeCompressed("array")
+      const signatureKey = ec.keyFromPrivate(key.getPrivate().toString(16), "hex");
+
+      const publicKey = Uint8Array.from(
+        signatureKey.getPublic().encodeCompressed("array")
       );
 
-      const crc = Crc(pub);
-      const enc: Uint8Array = new Uint8Array(pub.length + 2);
-      enc.set(pub);
-      enc.set(crc, pub.length);
+      const crc = Crc(publicKey);
+      const enc: Uint8Array = new Uint8Array(publicKey.length + 2);
+      enc.set(publicKey);
+      enc.set(crc, publicKey.length);
       const fk: string = "Fk" + base58.encode(enc);
       sessionStorage.setItem("fk", fk);
       setForusKey(fk);
@@ -74,17 +76,17 @@ const ForusKey = (props: Props) => {
 
   return (
     <>
-      <div 
-      style={{backgroundImage: `url(https://img.freepik.com/premium-vector/abstract-dark-background-design_54768-380.jpg)`}} 
-      className="bg-cover object-scale-down border border-gray-800 rounded-md backdrop-blur-lg bg-no-repeat flex flex-col items-center p-8 rounded-t-md">
-        <div className="pb-6 flex flex-col space-y-4 items-center border-b w-full">
+      <div
+        style={{ backgroundImage: `url(${bg})` }}
+        className="bg-cover object-scale-down border border-black rounded-md backdrop-blur-lg bg-no-repeat flex flex-col items-center p-8 rounded-t-md">
+        <div className="pb-6 flex flex-col space-y-4 items-center border-black border-b w-full">
           <h1
             className="mx-auto montserrat-heading font-[1000]
              sm:text-4xl bg-clip-text text-[#cdd4dc]
               text-3xl"
           >
             {" "}
-            Get your funds privately without revealing any personal wallet address !!!
+            Get your funds privately and securly without revealing any of your personal wallet address !!!
           </h1>
 
           {note === true && (
@@ -107,7 +109,7 @@ const ForusKey = (props: Props) => {
             </p>
           </div>
           <div className='flex items-center text-white space-x-3'>
-          <AiOutlineCopy
+            <AiOutlineCopy
               className="font-bold text-2xl text-[181b1f] hover:text-[#4e6979] cursor-pointer"
               onClick={copy}
             />

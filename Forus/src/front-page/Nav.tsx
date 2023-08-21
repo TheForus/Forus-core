@@ -10,11 +10,11 @@ const Nav = (props: Props) => {
   return (
     <div
       className="bg-[#cdd4dc] text-white sm:px-20 px-12 p-5 flex 
-        justify-between items-center border-b border-gray-300"
+        justify-between items-center"
     >
       {/* logo left */}
       <div className="-ml-6 flex items-center">
-        <img src={logo} alt="" className="w-[85px] h-[82px]" />
+        <img src={logo} alt="" className="w-[95px] h-[92px]" />
         <h1 className="-ml-2 montserrat-subheading sm:text-[1.8rem] font-extrabold text-[1.6rem] text-[#131619]">
           Forus
         </h1>
