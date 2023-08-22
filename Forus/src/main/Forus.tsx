@@ -5,7 +5,7 @@ import Trx from "./Trx";
 import React, { createContext, useState, useEffect } from "react";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
-// import abi from "../artifacts/contracts/Logs.sol/Logs.json";
+import abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { ethers } from "ethers";
 
 // chain logo png's
@@ -59,10 +59,10 @@ const Forus = (props: Props) => {
     // Add more chain IDs and names as needed
   };
 
-  const chainOptions = [
+  const chainOptions: any = [
     { name: "Sepolia", label: "0xaa36a7", symbol: sepolia },
     { name: "Apothem", label: "0x33", symbol: apothem },
-    { name: "Goerli", label: "0x5", symbol: goerli },
+    { name: "goerli", label: "0x5", symbol: goerli },
   ];
 
   const [selectedChain, setSelectedChain] = useState<string | any>(
@@ -70,10 +70,6 @@ const Forus = (props: Props) => {
   );
 
   const handleChainChange = async (chainId: any) => {
-    console.log(chainId);
-
-    console.log(selectedChain);
-
     try {
       if (ethereum) {
         await ethereum.request({
@@ -91,32 +87,36 @@ const Forus = (props: Props) => {
   const fetchChainName = async () => {
     const provider = new ethers.providers.Web3Provider(ethereum);
     const network = await provider.getNetwork();
-    setchainname(
-      CHAIN_NAMES[network.chainId.toString()] || "Unsupprted Network"
-    );
-    console.log("network", chainname);
+    chainOptions.map((e: any) => {
+      if (network !== e.name) {
+        localStorage.setItem("chain", "Unsupprted Network");
+      }
+    });
   };
 
   useEffect(() => {
-    // const fetchData = async () => {
-    //   const provider = new ethers.providers.Web3Provider(ethereum);
-    //   let contract: any;
-    //   if (selectedChain === "sepolia") {
-    //     contract = new ethers.Contract(contractAddress, abi.abi, provider);
-    //   }
-    //   if (selectedChain === "apothem") {
-    //     contract = new ethers.Contract(
-    //       apothemcontractAddress,
-    //       abi.abi,
-    //       provider
-    //     );
-    //   }
-    //   const limit = await contract.getTotalAddresses();
-    //   const totalFunds = await contract.getTotalVolume();
-    //   setsumof(limit.toString());
-    //   setsumofAddress(totalFunds / 10 ** 18);
-    // };
-    // fetchData();
+    const fetchData = async () => {
+      const provider = new ethers.providers.Web3Provider(ethereum);
+
+      let contract: any;
+      if (selectedChain === "Sepolia") {
+        contract = new ethers.Contract(contractAddress, abi.abi, provider);
+      }
+
+      if (selectedChain === "Apothem") {
+        contract = new ethers.Contract(
+          apothemcontractAddress,
+          abi.abi,
+          provider
+        );
+      }
+
+      const limit = await contract.getTotalAddresses();
+      const totalFunds = await contract.getTotalVolume();
+      setsumof(limit.toString());
+      setsumofAddress(totalFunds / 10 ** 18);
+    };
+    fetchData();
   }, [show]);
 
   const accountChecker = async () => {
@@ -150,6 +150,7 @@ const Forus = (props: Props) => {
       // window.location.reload();
       if (chId !== "0xaa36a7" && chId !== "0x33") {
         notyf.error("unSupported Chain");
+        localStorage.setItem("chain", "Unsupprted Network");
         return;
       }
     });
