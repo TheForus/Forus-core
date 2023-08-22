@@ -8,6 +8,10 @@ import "notyf/notyf.min.css";
 import abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { ethers } from "ethers";
 
+import apothem from "../assets/chains/apothem.png";
+import goerli from "../assets/chains/goerli.png";
+import sepolia from "../assets/chains/sepolia.png";
+
 // chain logo png's
 
 
@@ -32,6 +36,7 @@ interface ContextValue {
 }
 
 export const AppContext = createContext<ContextValue | any>(null);
+
 const Forus = (props: Props) => {
   const notyf = new Notyf();
 
@@ -57,9 +62,7 @@ const Forus = (props: Props) => {
 
 
 
-  const [selectedChain, setSelectedChain] = useState<string | any>(
-      localStorage.getItem("chain")
-    );
+  const [selectedChain, setSelectedChain] = useState<string | any>(localStorage.getItem("chain"));
 
   const handleChainChange = async (chainId: any) => {
 
@@ -88,17 +91,7 @@ const fetchChainName = async () => {
   //   };
 
 
-  // const provider = new ethers.providers.Web3Provider(ethereum);
-  // const network = await provider.getNetwork();
 
-  // chainOptions.find((e: any) => {
-
-  //   if (network.name.toLowerCase() === e.name.toString().toLowerCase()) {
-  //     localStorage.setItem('chain', network.name.toLowerCase())
-  //   }
-
-  // })
-  //  localStorage.setItem('chain', "unknown network")
 
 
 }
