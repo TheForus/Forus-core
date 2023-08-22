@@ -8,12 +8,11 @@ import "notyf/notyf.min.css";
 import abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { ethers } from "ethers";
 
+// chain logo's
+
 import apothem from "../assets/chains/apothem.png";
 import goerli from "../assets/chains/goerli.png";
 import sepolia from "../assets/chains/sepolia.png";
-
-// chain logo png's
-
 
 type Props = {};
 
@@ -36,7 +35,6 @@ interface ContextValue {
 }
 
 export const AppContext = createContext<ContextValue | any>(null);
-
 const Forus = (props: Props) => {
   const notyf = new Notyf();
 
@@ -52,169 +50,163 @@ const Forus = (props: Props) => {
 
   const { ethereum }: any = window;
 
-
-
   const chainOptions: any = [
     { name: "Sepolia", label: "0xaa36a7", symbol: sepolia },
     { name: "Apothem", label: "0x33", symbol: apothem },
     { name: "goerli", label: "0x5", symbol: goerli },
+  ];
 
-
-
-
-  const [selectedChain, setSelectedChain] = useState<string | any>(localStorage.getItem("chain"));
+  const [selectedChain, setSelectedChain] = useState<string | any>(
+    localStorage.getItem("chain")
+  );
 
   const handleChainChange = async (chainId: any) => {
-
-    if (ethereum) {
-      await ethereum.request({
-        method: "wallet_switchEthereumChain",
-        params: [{ chainId: chainId }],
-      });
-    } else {
-      console.error("MetaMask not found or not connected.");
+    try {
+      if (ethereum) {
+        await ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: chainId }],
+        });
+      } else {
+        console.error("MetaMask not found or not connected.");
+      }
+    } catch (error) {
+      console.error("Error switching Ethereum chain:", error);
     }
-  } catch (error) {
-    console.error("Error switching Ethereum chain:", error);
-  }
-};
-
-const fetchChainName = async () => {
-
-  //     const provider = new ethers.providers.Web3Provider(ethereum);
-  //     const network = await provider.getNetwork();
-  //     chainOptions.map((e: any) => {
-  //       if (network !== e.name) {
-  //         localStorage.setItem("chain", "Unsupprted Network");
-  //       }
-  //     });
-  //   };
-
-
-
-
-
-}
-
-useEffect(() => {
-  const fetchData = async () => {
-    const provider = new ethers.providers.Web3Provider(ethereum);
-
-    let contract: any;
-
-    switch (selectedChain) {
-      case 'Sepolia':
-        contract = new ethers.Contract(contractAddress, abi.abi, provider);
-        break;
-
-      case 'Apothem':
-        contract = new ethers.Contract(apothemcontractAddress, abi.abi, provider);
-        break;
-
-      default:
-        // Handle the default case if needed
-        break;
-
-    }
-    const limit = await contract.getTotalAddresses();
-    const totalFunds = await contract.getTotalVolume();
-    setsumof(limit.toString());
-    setsumofAddress(totalFunds / 10 ** 18);
   };
-  fetchData();
-}, [show]);
 
-const accountChecker = async () => {
-  const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-  sessionStorage.setItem("address", accounts[0]);
-};
+  const fetchChainName = async () => {
+    // const provider = new ethers.providers.Web3Provider(ethereum);
+    // const network = await provider.getNetwork();
+    // chainOptions.find((e: any) => {
+    //   if (network.name.toLowerCase() === e.name.toString().toLowerCase()) {
+    //     localStorage.setItem('chain', network.name.toLowerCase())
+    //   }
+    // })
+    //  localStorage.setItem('chain', "unknown network")
+  };
 
-const validateChain = async () => {
-  const chainId = await ethereum.request({ method: "eth_chainId" });
-  console.log(chainId);
+  useEffect(() => {
+    const fetchData = async () => {
+      const provider = new ethers.providers.Web3Provider(ethereum);
 
-  if (chainId !== "0xaa36a7" && chainId !== "0x33") {
-    notyf.error("unSupported Chain");
-    return;
-  }
-};
+      let contract: any;
+      switch (selectedChain) {
+        case "Sepolia":
+          contract = new ethers.Contract(contractAddress, abi.abi, provider);
+          break;
 
-useEffect(() => {
-  fetchChainName();
-  validateChain();
-}, []);
+        case "Apothem":
+          contract = new ethers.Contract(
+            apothemcontractAddress,
+            abi.abi,
+            provider
+          );
+          break;
 
-if (ethereum) {
-  ethereum.on("accountsChanged", (address: any) => {
-    accountChecker();
-    sessionStorage.setItem("address", address);
-    window.location.reload();
-  });
+        default:
+          // Handle the default case if needed
+          break;
+      }
 
-  ethereum.on("chainChanged" || "accountsChanged", (chId: any) => {
-    validateChain()
+      const limit = await contract.getTotalAddresses();
+      const totalFunds = await contract.getTotalVolume();
+      setsumof(limit.toString());
+      setsumofAddress(totalFunds / 10 ** 18);
+    };
+    fetchData();
+  }, [show]);
 
-  });
-} else {
-  notyf.error("Plz install metamask");
-}
+  const accountChecker = async () => {
+    const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+    sessionStorage.setItem("address", accounts[0]);
+  };
 
-const connectWallet = async (): Promise<void> => {
-  if (ethereum === undefined) {
-    notyf.error("Plz install metamask");
-    return;
-  }
-  fetchChainName();
+  const validateChain = async () => {
+    const chainId = await ethereum.request({ method: "eth_chainId" });
+    console.log(chainId);
 
-  try {
-    const accounts = await ethereum.request({
-      method: "eth_requestAccounts",
+    if (chainId !== "0xaa36a7" && chainId !== "0x33") {
+      notyf.error("unSupported Chain");
+      return;
+    }
+  };
+
+  useEffect(() => {
+    fetchChainName();
+    validateChain();
+  }, []);
+
+  if (ethereum) {
+    ethereum.on("accountsChanged", (address: any) => {
+      accountChecker();
+      sessionStorage.setItem("address", address);
+      window.location.reload();
     });
 
-    sessionStorage.setItem("address", accounts[0]);
-    validateChain();
-
-    setwallet(true);
-  } catch (e: any) {
-    notyf.error(e);
+    ethereum.on("chainChanged" || "accountsChanged", (chId: any) => {
+      validateChain();
+    });
+  } else {
+    notyf.error("Plz install metamask");
   }
-};
 
-const ContextValue: ContextValue = {
-  show,
-  setShow,
-  chainOptions,
-  connectWallet,
-  contractAddress,
-  sumof,
-  setsumof,
-  sumofAddress,
-  setsumofAddress,
-  validateChain,
-  chainname,
-  apothemcontractAddress,
-  handleChainChange,
-  selectedChain,
-  setSelectedChain,
-};
+  const connectWallet = async (): Promise<void> => {
+    if (ethereum === undefined) {
+      notyf.error("Plz install metamask");
+      return;
+    }
+    fetchChainName();
 
-return (
-  <AppContext.Provider value={ContextValue}>
-    <div className="bg-[#000000]  min-h-[100vh] max-h-max">
-      <NavBar />
-      <div
-        className="md:w-[90%] max-w-[1220px] mx-auto
+    try {
+      const accounts = await ethereum.request({
+        method: "eth_requestAccounts",
+      });
+
+      sessionStorage.setItem("address", accounts[0]);
+      validateChain();
+
+      setwallet(true);
+    } catch (e: any) {
+      notyf.error(e);
+    }
+  };
+
+  const ContextValue: ContextValue = {
+    show,
+    setShow,
+    chainOptions,
+    connectWallet,
+    contractAddress,
+    sumof,
+    setsumof,
+    sumofAddress,
+    setsumofAddress,
+    validateChain,
+    chainname,
+    apothemcontractAddress,
+    handleChainChange,
+    selectedChain,
+    setSelectedChain,
+  };
+
+  return (
+    <AppContext.Provider value={ContextValue}>
+      <div className="bg-[#000000]  min-h-[100vh] max-h-max">
+        <NavBar />
+        <div
+          className="md:w-[90%] max-w-[1220px] mx-auto
                   py-8 p-4"
-      >
-        <Foruskey />
-        <div className="flex flex-col-reverse space-y-4 sm:flex-row justify-between p-3 py-16 ">
-          <Instruction />
-          <Trx />
+        >
+          <Foruskey />
+          <div className="flex flex-col-reverse space-y-4 sm:flex-row justify-between p-3 py-16 ">
+            <Instruction />
+            <Trx />
+          </div>
         </div>
       </div>
-    </div>
-  </AppContext.Provider>
-);
+    </AppContext.Provider>
+  );
 };
 
 export default Forus;
