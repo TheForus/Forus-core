@@ -20,9 +20,11 @@ const NavBar = (props: Props) => {
 
   const changedefault = async (c: any) => {
     setshow(!show);
+
     await connect.handleChainChange(c.label);
     connect.setSelectedChain(c.name);
     localStorage.setItem("chain", c.name);
+
   };
 
   return (

@@ -50,27 +50,22 @@ const Forus = (props: Props) => {
 
   const { ethereum }: any = window;
 
-  const CHAIN_NAMES: any = {
-    "1": "Mainnet",
-    "5": "Goerli",
-    "11155111": "Sepolia",
-    "51": "Apothem",
 
-    // Add more chain IDs and names as needed
-  };
 
   const chainOptions: any = [
     { name: "Sepolia", label: "0xaa36a7", symbol: sepolia },
     { name: "Apothem", label: "0x33", symbol: apothem },
     { name: "goerli", label: "0x5", symbol: goerli },
-  ];
+
+
+
 
   const [selectedChain, setSelectedChain] = useState<string | any>(
     localStorage.getItem("chain")
   );
 
   const handleChainChange = async (chainId: any) => {
-    try {
+
       if (ethereum) {
         await ethereum.request({
           method: "wallet_switchEthereumChain",
@@ -85,32 +80,52 @@ const Forus = (props: Props) => {
   };
 
   const fetchChainName = async () => {
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const network = await provider.getNetwork();
-    chainOptions.map((e: any) => {
-      if (network !== e.name) {
-        localStorage.setItem("chain", "Unsupprted Network");
-      }
-    });
-  };
+
+//     const provider = new ethers.providers.Web3Provider(ethereum);
+//     const network = await provider.getNetwork();
+//     chainOptions.map((e: any) => {
+//       if (network !== e.name) {
+//         localStorage.setItem("chain", "Unsupprted Network");
+//       }
+//     });
+//   };
+
+
+    // const provider = new ethers.providers.Web3Provider(ethereum);
+    // const network = await provider.getNetwork();
+
+    // chainOptions.find((e: any) => {
+
+    //   if (network.name.toLowerCase() === e.name.toString().toLowerCase()) {
+    //     localStorage.setItem('chain', network.name.toLowerCase())
+    //   }
+ 
+    // })
+    //  localStorage.setItem('chain', "unknown network")
+
+
+  }
 
   useEffect(() => {
     const fetchData = async () => {
       const provider = new ethers.providers.Web3Provider(ethereum);
 
       let contract: any;
-      if (selectedChain === "Sepolia") {
-        contract = new ethers.Contract(contractAddress, abi.abi, provider);
-      }
 
-      if (selectedChain === "Apothem") {
-        contract = new ethers.Contract(
-          apothemcontractAddress,
-          abi.abi,
-          provider
-        );
-      }
+      switch (selectedChain) {
+        case 'Sepolia':
+          contract = new ethers.Contract(contractAddress, abi.abi, provider);
+          break;
 
+        case 'Apothem':
+          contract = new ethers.Contract(apothemcontractAddress, abi.abi, provider);
+          break;
+
+        default:
+          // Handle the default case if needed
+          break;
+
+      }
       const limit = await contract.getTotalAddresses();
       const totalFunds = await contract.getTotalVolume();
       setsumof(limit.toString());
@@ -141,18 +156,14 @@ const Forus = (props: Props) => {
 
   if (ethereum) {
     ethereum.on("accountsChanged", (address: any) => {
+      accountChecker();
       sessionStorage.setItem("address", address);
       window.location.reload();
     });
 
     ethereum.on("chainChanged" || "accountsChanged", (chId: any) => {
-      accountChecker();
-      // window.location.reload();
-      if (chId !== "0xaa36a7" && chId !== "0x33") {
-        notyf.error("unSupported Chain");
-        localStorage.setItem("chain", "Unsupprted Network");
-        return;
-      }
+      validateChain()
+
     });
   } else {
     notyf.error("Plz install metamask");
