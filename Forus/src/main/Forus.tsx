@@ -8,7 +8,7 @@ import "notyf/notyf.min.css";
 import abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { ethers } from "ethers";
 
-// chain logo png's
+// chain logo's
 
 import apothem from "../assets/chains/apothem.png";
 import goerli from "../assets/chains/goerli.png";
