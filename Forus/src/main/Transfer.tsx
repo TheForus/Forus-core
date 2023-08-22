@@ -156,11 +156,11 @@ const Transfer = () => {
     const signer = provider.getSigner();
 
     let contract: any;
-    if (connect.chainname === 'Sepolia') {
+    if (connect.selectedChain === 'Sepolia') {
       contract = new ethers.Contract(connect.contractAddress, Abi.abi, signer);
       console.log(connect.chainname)
     }
-    if (connect.chainname === 'Apothem') {
+    if (connect.selectedChain === 'Apothem') {
       contract = new ethers.Contract(connect.apothemcontractAddress, Abi.abi, signer);
       console.log(connect.chainname)
     }
@@ -204,11 +204,11 @@ const Transfer = () => {
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
     let contract: any;
-    if (connect.chainname === 'Sepolia') {
+    if (connect.selectedChain === 'Sepolia') {
       contract = new ethers.Contract(connect.contractAddress, Abi.abi, signer);
       console.log(connect.chainname)
     }
-    if (connect.chainname === 'Apothem') {
+    if (connect.selectedChain === 'Apothem') {
       contract = new ethers.Contract(connect.apothemcontractAddress, Abi.abi, signer);
       console.log(connect.chainname)
     }

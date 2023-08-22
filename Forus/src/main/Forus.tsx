@@ -52,10 +52,10 @@ const Forus = (props: Props) => {
     // Add more chain IDs and names as needed
   };
 
-  const chainOptions = [
+  const chainOptions: any = [
 
-    { name: 'sepolia', label: '0xaa36a7' },
-    { name: 'apothem', label: '0x33' },
+    { name: 'Sepolia', label: '0xaa36a7' },
+    { name: 'Apothem', label: '0x33' },
     { name: 'goerli', label: '0x5' },
 
   ];
@@ -64,9 +64,7 @@ const Forus = (props: Props) => {
 
   const handleChainChange = async (chainId: any) => {
 
-    console.log(chainId);
 
-    console.log(selectedChain)
 
     try {
       if (ethereum) {
@@ -83,10 +81,15 @@ const Forus = (props: Props) => {
   };
 
   const fetchChainName = async () => {
+
     const provider = new ethers.providers.Web3Provider(ethereum);
     const network = await provider.getNetwork();
-    setchainname(CHAIN_NAMES[network.chainId.toString()] || 'Unsupprted Network');
-    console.log("network", chainname)
+    chainOptions.map((e: any) => {
+      if (network !== e.name) {
+        localStorage.setItem('chain','Unsupprted Network')
+      }
+    })
+
 
   }
 
@@ -97,12 +100,12 @@ const Forus = (props: Props) => {
 
 
       let contract: any;
-      if (selectedChain === 'sepolia') {
+      if (selectedChain === 'Sepolia') {
         contract = new ethers.Contract(contractAddress, abi.abi, provider);
 
       }
 
-      if (selectedChain === 'apothem') {
+      if (selectedChain === 'Apothem') {
         contract = new ethers.Contract(apothemcontractAddress, abi.abi, provider);
       }
 
@@ -145,6 +148,7 @@ const Forus = (props: Props) => {
       // window.location.reload();
       if (chId !== "0xaa36a7" && chId !== "0x33") {
         notyf.error("unSupported Chain");
+        localStorage.setItem('chain','Unsupprted Network')
         return;
       }
     });
