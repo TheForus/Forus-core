@@ -60,12 +60,14 @@ const Forus = (props: Props) => {
 
   ];
 
-  const [selectedChain, setSelectedChain] = useState<string | any>('Mainnet');
+  const [selectedChain, setSelectedChain] = useState<string | any>(localStorage.getItem("chain"));
 
   const handleChainChange = async (chainId: any) => {
 
     console.log(chainId);
+
     console.log(selectedChain)
+
     try {
       if (ethereum) {
         await ethereum.request({
@@ -90,7 +92,6 @@ const Forus = (props: Props) => {
 
   useEffect(() => {
 
-
     const fetchData = async () => {
       const provider = new ethers.providers.Web3Provider(ethereum);
 
@@ -100,10 +101,9 @@ const Forus = (props: Props) => {
         contract = new ethers.Contract(contractAddress, abi.abi, provider);
 
       }
+
       if (selectedChain === 'apothem') {
         contract = new ethers.Contract(apothemcontractAddress, abi.abi, provider);
-
-
       }
 
       const limit = await contract.getTotalAddresses();

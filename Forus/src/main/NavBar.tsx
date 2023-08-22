@@ -16,13 +16,14 @@ const NavBar = (props: Props) => {
   const navigate = useNavigate();
   const [show, setshow] = useState<boolean>(false);
 
- 
 
 
-  const changedefault = async(c: any) => {
+
+  const changedefault = async (c: any) => {
     setshow(!show);
     await connect.handleChainChange(c.label);
     connect.setSelectedChain(c.name);
+    localStorage.setItem("chain", c.name)
   };
 
   return (
@@ -67,7 +68,7 @@ const NavBar = (props: Props) => {
           </div>
         </div>
 
-        
+
 
         {/* rigt side */}
         <div className="sm:flex-row flex space-x-3 items-center">
@@ -77,7 +78,7 @@ const NavBar = (props: Props) => {
               <a href="https://discord.gg/EppRjheW">
                 <FaDiscord size={22} />
               </a>
-       
+
             </p>
             <p className=" text-bgGray  ">
               <a href="https://github.com/TheForus">
@@ -90,17 +91,6 @@ const NavBar = (props: Props) => {
               </a>
             </p>
 
-
-            {/* <select value={connect.selectedChain} onChange={(e) => connect.handleChainChange(e.target.value)}>
-              {connect.chainOptions.map((chain: any) => (
-                <option key={chain.label} value={chain.label}>
-                  {chain.name}
-                </option>
-              ))}
-            </select> */}
-
-
-
             {/* hey bitch */}
 
             <div className=" montserrat-subtitle border-1 p-1 sm:text-[1rem] text-[0.9rem] px-1 sm:px-4 rounded-md 
@@ -111,7 +101,7 @@ const NavBar = (props: Props) => {
            
             items-center gap-2  hover:bg-[#dbe6eb] "
                 >
-                  {connect.selectedChain}
+                  {localStorage.getItem("chain")}
 
                 </li>
                 <div
@@ -124,7 +114,7 @@ const NavBar = (props: Props) => {
             `}
                 >
                   {show &&
-                   connect.chainOptions.map((chain: any) => (
+                    connect.chainOptions.map((chain: any) => (
                       <div className="h-40 border-b border-gray-100 ">
                         <li
                           className="flex flex-row-reverse p-1 px-3 cursor-pointer
@@ -137,7 +127,7 @@ const NavBar = (props: Props) => {
                         >
                           {/* <img src={c.symbol} alt="" height={14} width={18} /> */}
                           {chain.name}
-                      
+
                         </li>
                       </div>
                     ))}
