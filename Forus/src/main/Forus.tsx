@@ -5,8 +5,14 @@ import Trx from "./Trx";
 import React, { createContext, useState, useEffect } from "react";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
-import abi from "../artifacts/contracts/Logs.sol/Logs.json";
+// import abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { ethers } from "ethers";
+
+// chain logo png's
+
+import apothem from "../assets/chains/apothem.png";
+import goerli from "../assets/chains/goerli.png";
+import sepolia from "../assets/chains/sepolia.png";
 
 type Props = {};
 
@@ -23,7 +29,7 @@ interface ContextValue {
   setsumof: React.Dispatch<React.SetStateAction<string | any>>;
   sumofAddress: string | any;
   setsumofAddress: React.Dispatch<React.SetStateAction<string | any>>;
-  chainOptions: [] | any
+  chainOptions: [] | any;
   validateChain(): void;
   handleChainChange(chainId: any): void | any;
 }
@@ -39,79 +45,78 @@ const Forus = (props: Props) => {
   const [chainname, setchainname] = useState<string | any>("");
 
   let contractAddress: string = "0x60BA717Dd36b84557E46690c6163De5dbDc6F6bb";
-  let apothemcontractAddress: string = "0x5c75A721154B03C8cAA8Beaab9803b1c214D2a3b";
+  let apothemcontractAddress: string =
+    "0x5c75A721154B03C8cAA8Beaab9803b1c214D2a3b";
 
   const { ethereum }: any = window;
 
   const CHAIN_NAMES: any = {
-    '1': 'Mainnet',
-    '5': 'Goerli',
-    '11155111': 'Sepolia',
-    '51': 'Apothem'
+    "1": "Mainnet",
+    "5": "Goerli",
+    "11155111": "Sepolia",
+    "51": "Apothem",
 
     // Add more chain IDs and names as needed
   };
 
   const chainOptions = [
-
-    { name: 'sepolia', label: '0xaa36a7' },
-    { name: 'apothem', label: '0x33' },
-    { name: 'goerli', label: '0x5' },
-
+    { name: "Sepolia", label: "0xaa36a7", symbol: sepolia },
+    { name: "Apothem", label: "0x33", symbol: apothem },
+    { name: "Goerli", label: "0x5", symbol: goerli },
   ];
 
-  const [selectedChain, setSelectedChain] = useState<string | any>(localStorage.getItem("chain"));
+  const [selectedChain, setSelectedChain] = useState<string | any>(
+    localStorage.getItem("chain")
+  );
 
   const handleChainChange = async (chainId: any) => {
-
     console.log(chainId);
 
-    console.log(selectedChain)
+    console.log(selectedChain);
 
     try {
       if (ethereum) {
         await ethereum.request({
-          method: 'wallet_switchEthereumChain',
+          method: "wallet_switchEthereumChain",
           params: [{ chainId: chainId }],
         });
       } else {
-        console.error('MetaMask not found or not connected.');
+        console.error("MetaMask not found or not connected.");
       }
     } catch (error) {
-      console.error('Error switching Ethereum chain:', error);
+      console.error("Error switching Ethereum chain:", error);
     }
   };
 
   const fetchChainName = async () => {
     const provider = new ethers.providers.Web3Provider(ethereum);
     const network = await provider.getNetwork();
-    setchainname(CHAIN_NAMES[network.chainId.toString()] || 'Unsupprted Network');
-    console.log("network", chainname)
-
-  }
+    setchainname(
+      CHAIN_NAMES[network.chainId.toString()] || "Unsupprted Network"
+    );
+    console.log("network", chainname);
+  };
 
   useEffect(() => {
-
-    const fetchData = async () => {
-      const provider = new ethers.providers.Web3Provider(ethereum);
-
-
-      let contract: any;
-      if (selectedChain === 'sepolia') {
-        contract = new ethers.Contract(contractAddress, abi.abi, provider);
-
-      }
-
-      if (selectedChain === 'apothem') {
-        contract = new ethers.Contract(apothemcontractAddress, abi.abi, provider);
-      }
-
-      const limit = await contract.getTotalAddresses();
-      const totalFunds = await contract.getTotalVolume();
-      setsumof(limit.toString());
-      setsumofAddress(totalFunds / 10 ** 18);
-    };
-    fetchData();
+    // const fetchData = async () => {
+    //   const provider = new ethers.providers.Web3Provider(ethereum);
+    //   let contract: any;
+    //   if (selectedChain === "sepolia") {
+    //     contract = new ethers.Contract(contractAddress, abi.abi, provider);
+    //   }
+    //   if (selectedChain === "apothem") {
+    //     contract = new ethers.Contract(
+    //       apothemcontractAddress,
+    //       abi.abi,
+    //       provider
+    //     );
+    //   }
+    //   const limit = await contract.getTotalAddresses();
+    //   const totalFunds = await contract.getTotalVolume();
+    //   setsumof(limit.toString());
+    //   setsumofAddress(totalFunds / 10 ** 18);
+    // };
+    // fetchData();
   }, [show]);
 
   const accountChecker = async () => {
@@ -121,7 +126,7 @@ const Forus = (props: Props) => {
 
   const validateChain = async () => {
     const chainId = await ethereum.request({ method: "eth_chainId" });
-    console.log(chainId)
+    console.log(chainId);
 
     if (chainId !== "0xaa36a7" && chainId !== "0x33") {
       notyf.error("unSupported Chain");
@@ -130,7 +135,7 @@ const Forus = (props: Props) => {
   };
 
   useEffect(() => {
-    fetchChainName()
+    fetchChainName();
     validateChain();
   }, []);
 
@@ -157,11 +162,12 @@ const Forus = (props: Props) => {
       notyf.error("Plz install metamask");
       return;
     }
-    fetchChainName()
+    fetchChainName();
 
     try {
-
-      const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+      const accounts = await ethereum.request({
+        method: "eth_requestAccounts",
+      });
 
       sessionStorage.setItem("address", accounts[0]);
       validateChain();
@@ -187,7 +193,7 @@ const Forus = (props: Props) => {
     apothemcontractAddress,
     handleChainChange,
     selectedChain,
-    setSelectedChain
+    setSelectedChain,
   };
 
   return (

@@ -30,11 +30,12 @@ const Header = () => {
           </div>
 
           <h2
-            className="montserrat-heading font-extrabold sm:text-[2.6rem]
-            text-left text-[1.7rem] xl:text-[3.5rem] text-[#131619] xl:w-[60%]"
+            className="flex -space-y-1 xl:-space-y-2 flex-col montserrat-heading font-extrabold
+            text-left text-[1.4rem] md:text-[1.9rem] xl:text-[2.8rem]"
           >
             {/* Receive Eth and tokens with forus confidentially !! */}
-            Confidential & Secure transactions
+            <span>Confidential & Secure</span>
+            <span>transactions</span>
           </h2>
           <p
             className="montserrat-small font-semibold pb-1 text-gray-800
@@ -55,10 +56,10 @@ const Header = () => {
         </div>
 
         {/* right Banner */}
-        <div className="flex justify-end items-center">
+        <div className="flex justify-end items-center neon-button ">
           <img
             className="md:mt-0 mt-10 rounded-[1.7rem] object-center xl:w-[800px] md:w-[900px]
-            lg:h-[280px] h-[250px] sm:[mt-0]
+            lg:h-[280px] xl:h-[290px] h-[250px] sm:[mt-0]
             shadow-xl shadow-[#757575]"
             src={screenshot}
             // height={1000}
