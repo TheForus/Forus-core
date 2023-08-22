@@ -15,16 +15,21 @@ interface ContextValue {
   setShow: React.Dispatch<React.SetStateAction<boolean | any>>;
   connectWallet(): void;
   contractAddress: string;
+  apothemcontractAddress: string;
   chainname: string;
+  selectedChain: string;
+  setSelectedChain: React.Dispatch<React.SetStateAction<string | any>>;
   sumof: string | any;
   setsumof: React.Dispatch<React.SetStateAction<string | any>>;
   sumofAddress: string | any;
   setsumofAddress: React.Dispatch<React.SetStateAction<string | any>>;
+  chainOptions: [] | any
   validateChain(): void;
+  handleChainChange(chainId: any): void | any;
 }
 
 export const AppContext = createContext<ContextValue | any>(null);
-const Cryptia = (props: Props) => {
+const Forus = (props: Props) => {
   const notyf = new Notyf();
 
   const [show, setShow] = useState<boolean>(true);
@@ -47,11 +52,39 @@ const Cryptia = (props: Props) => {
     // Add more chain IDs and names as needed
   };
 
+  const chainOptions = [
+
+    { name: 'sepolia', label: '0xaa36a7' },
+    { name: 'apothem', label: '0x33' },
+    { name: 'goerli', label: '0x5' },
+
+  ];
+
+  const [selectedChain, setSelectedChain] = useState<string | any>('Mainnet');
+
+  const handleChainChange = async (chainId: any) => {
+
+    console.log(chainId);
+    console.log(selectedChain)
+    try {
+      if (ethereum) {
+        await ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: chainId }],
+        });
+      } else {
+        console.error('MetaMask not found or not connected.');
+      }
+    } catch (error) {
+      console.error('Error switching Ethereum chain:', error);
+    }
+  };
+
   const fetchChainName = async () => {
     const provider = new ethers.providers.Web3Provider(ethereum);
     const network = await provider.getNetwork();
-    setchainname(CHAIN_NAMES[network.chainId.toString()] || 'Unsupprted❌');
-    // console.log("network", chainName)
+    setchainname(CHAIN_NAMES[network.chainId.toString()] || 'Unsupprted Network');
+    console.log("network", chainname)
 
   }
 
@@ -63,19 +96,15 @@ const Cryptia = (props: Props) => {
 
 
       let contract: any;
-      if (chainname === 'Sepolia') {
+      if (selectedChain === 'sepolia') {
         contract = new ethers.Contract(contractAddress, abi.abi, provider);
-        console.log(contract);
+
       }
-      if (chainname === 'Apothem') {
+      if (selectedChain === 'apothem') {
         contract = new ethers.Contract(apothemcontractAddress, abi.abi, provider);
-        console.log('hello')
-        console.log(contract);
+
+
       }
-
-
-
-
 
       const limit = await contract.getTotalAddresses();
       const totalFunds = await contract.getTotalVolume();
@@ -101,8 +130,8 @@ const Cryptia = (props: Props) => {
   };
 
   useEffect(() => {
-    validateChain();
     fetchChainName()
+    validateChain();
   }, []);
 
   if (ethereum) {
@@ -113,7 +142,7 @@ const Cryptia = (props: Props) => {
 
     ethereum.on("chainChanged" || "accountsChanged", (chId: any) => {
       accountChecker();
-      window.location.reload();
+      // window.location.reload();
       if (chId !== "0xaa36a7" && chId !== "0x33") {
         notyf.error("unSupported Chain");
         return;
@@ -132,10 +161,7 @@ const Cryptia = (props: Props) => {
 
     try {
 
-
       const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-
-
 
       sessionStorage.setItem("address", accounts[0]);
       validateChain();
@@ -149,6 +175,7 @@ const Cryptia = (props: Props) => {
   const ContextValue: ContextValue = {
     show,
     setShow,
+    chainOptions,
     connectWallet,
     contractAddress,
     sumof,
@@ -157,6 +184,10 @@ const Cryptia = (props: Props) => {
     setsumofAddress,
     validateChain,
     chainname,
+    apothemcontractAddress,
+    handleChainChange,
+    selectedChain,
+    setSelectedChain
   };
 
   return (
@@ -178,4 +209,4 @@ const Cryptia = (props: Props) => {
   );
 };
 
-export default Cryptia;
+export default Forus;

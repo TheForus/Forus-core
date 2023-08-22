@@ -154,11 +154,17 @@ const Transfer = () => {
     setwaiting(true);
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
-    const contract = new ethers.Contract(
-      connect.contractAddress,
-      Abi.abi,
-      signer
-    );
+
+    let contract: any;
+    if (connect.chainname === 'Sepolia') {
+      contract = new ethers.Contract(connect.contractAddress, Abi.abi, signer);
+      console.log(connect.chainname)
+    }
+    if (connect.chainname === 'Apothem') {
+      contract = new ethers.Contract(connect.apothemcontractAddress, Abi.abi, signer);
+      console.log(connect.chainname)
+    }
+
     try {
       const valueToSend = ethers.utils.parseEther(amount);
       const transactionParameters = {
@@ -197,11 +203,15 @@ const Transfer = () => {
     setwaiting(true);
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
-    const contract = new ethers.Contract(
-      connect.contractAddress,
-      Abi.abi,
-      signer
-    );
+    let contract: any;
+    if (connect.chainname === 'Sepolia') {
+      contract = new ethers.Contract(connect.contractAddress, Abi.abi, signer);
+      console.log(connect.chainname)
+    }
+    if (connect.chainname === 'Apothem') {
+      contract = new ethers.Contract(connect.apothemcontractAddress, Abi.abi, signer);
+      console.log(connect.chainname)
+    }
     try {
       //to send exact amount of tokens are always counted as  amount**18
       const amountParams: any = ethers.utils.parseUnits(amount, 18);
@@ -348,12 +358,11 @@ const Transfer = () => {
             </li>
             <div
               className={`
-              ${
-                show &&
+              ${show &&
                 `transition-all ease-in bg-white py-1 shadow-md flex flex-col w-[105%] max-h-28 rounded-b-md absolute mt-2
                  scrollbar-thin scrollbar-thumb-bgGray scrollbar-track-[#dbe6eb] overflow-y-scroll 
                 scrollbar-thumb-rounded scrollbar-rounded-full`
-              }
+                }
             `}
             >
               {show &&
