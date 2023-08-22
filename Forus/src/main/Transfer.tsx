@@ -358,19 +358,20 @@ const Transfer = () => {
             </li>
             <div
               className={`
-              ${show &&
-                `transition-all ease-in bg-white py-1 shadow-md flex flex-col w-[105%] max-h-28 rounded-b-md absolute mt-2
+              ${
+                show &&
+                `transition-all ease-in bg-bgGray py-1 shadow-md flex flex-col w-[105%] max-h-28 rounded-b-md absolute mt-2
                  scrollbar-thin scrollbar-thumb-bgGray scrollbar-track-[#dbe6eb] overflow-y-scroll 
                 scrollbar-thumb-rounded scrollbar-rounded-full`
-                }
+              }
             `}
             >
               {show &&
                 Crypto.map((c) => (
-                  <div className="h-40 border-b border-gray-100 ">
+                  <div className="h-40 border-b border-gray-400 ">
                     <li
                       className="flex flex-row-reverse p-1 px-3 cursor-pointer
-                    text-gray-700 font-semibold border-l border-gray-300 
+                    text-gray-700 font-semibold border-l border-gray-100 
                     items-center gap-2 hover:text-gray-900 hover:bg-[#dbe6eb] 
                      montserrat-small text-[0.7rem]
                     justify-between"

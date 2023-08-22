@@ -8,6 +8,8 @@ import { HiQuestionMarkCircle } from "react-icons/hi";
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 
+import { MdArrowDropDown } from "react-icons/md";
+import { MdArrowDropUp } from "react-icons/md";
 
 type Props = {};
 
@@ -16,13 +18,13 @@ const NavBar = (props: Props) => {
   const navigate = useNavigate();
   const [show, setshow] = useState<boolean>(false);
 
-
-
-
   const changedefault = async (c: any) => {
     setshow(!show);
-    localStorage.setItem("chain", c.name)
+
     await connect.handleChainChange(c.label);
+    connect.setSelectedChain(c.name);
+    localStorage.setItem("chain", c.name);
+
   };
 
   return (
@@ -67,8 +69,6 @@ const NavBar = (props: Props) => {
           </div>
         </div>
 
-
-
         {/* rigt side */}
         <div className="sm:flex-row flex space-x-3 items-center">
           {/* Social Links */}
@@ -77,7 +77,6 @@ const NavBar = (props: Props) => {
               <a href="https://discord.gg/EppRjheW">
                 <FaDiscord size={22} />
               </a>
-
             </p>
             <p className=" text-bgGray  ">
               <a href="https://github.com/TheForus">
@@ -89,67 +88,65 @@ const NavBar = (props: Props) => {
                 <FaTwitter size={22} />
               </a>
             </p>
-
-            {/* hey bitch */}
-
-            <div className=" montserrat-subtitle border-1 p-1 sm:text-[1rem] text-[0.9rem] px-1 sm:px-4 rounded-md 
-               text-[#cdd4dc] font-extrabold  bg-slate-500">
+            <div
+              className=" montserrat-subtitle border-1 sm:text-[1rem] text-[0.9rem] px-2 sm:px-4
+               rounded-full text-[#e9edf1] font-extrabold border border-gray-500 hover:border-white"
+            >
               <ul className="" onClick={() => setshow(!show)}>
                 <li
-                  className="flex p-2 px-3 cursor-pointer rounded-md 
-           
-            items-center gap-2  hover:bg-[#dbe6eb] "
+                  className="flex p-1 px-2 sm:px-4 cursor-pointer rounded-md
+                  items-center gap-2 w-full hover:text-white"
                 >
                   {localStorage.getItem("chain")}
-
+                  {!show ? (
+                    <MdArrowDropDown className="text-[1.4rem]" />
+                  ) : (
+                    <MdArrowDropUp className="text-[1.4rem]" />
+                  )}
                 </li>
                 <div
                   className={`
-              ${show &&
-                    `transition-all ease-in bg-white py-1 shadow-md flex flex-col  max-h-28 rounded-b-md absolute mt-2
-                 scrollbar-thin scrollbar-thumb-bgGray scrollbar-track-[#dbe6eb] overflow-y-scroll 
-                scrollbar-thumb-rounded scrollbar-rounded-full`
-                    }
+              ${
+                show &&
+                `transition-all ease-in py-2 border-none  shadow-md flex flex-col
+                 rounded-b-md absolute -ml-2 mt-1 text-black bg-bgGray z-10`
+              }
             `}
                 >
                   {show &&
                     connect.chainOptions.map((chain: any) => (
-                      <div className="h-40 border-b border-gray-100 ">
+                      <div className=" hover:bg-[#463F2D]">
                         <li
-                          className="flex flex-row-reverse p-1 px-3 cursor-pointer
-                    text-gray-700 font-semibold border-l border-gray-300 
-                    items-center gap-2 hover:text-gray-900 
-                     montserrat-small text-[0.7rem]
+                          className="flex flex-row-reverse p-1 px-4 cursor-pointer
+                           font-semibold
+                    items-center gap-2 hover:text-white
+                     montserrat-small text-[0.9rem]
                     justify-between"
                           key={chain.name}
                           onClick={() => changedefault(chain)}
                         >
-                          {/* <img src={c.symbol} alt="" height={14} width={18} /> */}
+                          <img
+                            src={chain.symbol}
+                            alt=""
+                            className="object-fill rounded-full"
+                            height={12}
+                            width={18}
+                          />
                           {chain.name}
-
                         </li>
                       </div>
                     ))}
                 </div>
               </ul>
             </div>
-
-
-
             {/* Tokens Dropdown Menu */}
-
-
           </div>
-
 
           {/* <p className=" montserrat-subtitle border-1 p-1 sm:text-[1rem] text-[0.8rem] px-1 sm:px-4 rounded-md 
                text-[#cdd4dc] font-extrabold  bg-slate-500
                      ">{connect.chainname} </p> */}
 
-
-
           <p className="sm:text-[1.1rem] montserrat-small text-bgGray   font-semibold text-[1rem]">
-
             {sessionStorage.getItem("address") !== null || false
               ? `${sessionStorage.getItem("address")?.slice(0, 19)}...`
               : ""}
@@ -165,7 +162,6 @@ const NavBar = (props: Props) => {
               ? "connect wallet"
               : "Connected"}
           </button>
-
         </div>
       </div>
     </div>
