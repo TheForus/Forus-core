@@ -79,7 +79,7 @@ const ForusKey = (props: Props) => {
         style={{ backgroundImage: `url(${bg})` }}
         className="bg-cover object-scale-down border border-black rounded-md backdrop-blur-lg bg-no-repeat flex flex-col items-center p-8 rounded-t-md"
       >
-        <div className="pb-6 flex flex-col space-y-4 items-center border-black border-b w-full">
+        <div className="pb-6 flex flex-col space-y-4 items-center border-black  w-full">
           <h1
             className="mx-auto montserrat-heading font-[1000]
              sm:text-4xl bg-clip-text text-bgGray

@@ -12,7 +12,7 @@ import { ethers } from "ethers";
 
 import apothem from "../assets/chains/apothem.png";
 import goerli from "../assets/chains/goerli.png";
-import sepolia from "../assets/chains/sepolia.png";
+import sepolia from "../assets/chains/sepolia.jpeg";
 
 type Props = {};
 
@@ -22,7 +22,6 @@ interface ContextValue {
   connectWallet(): void;
   contractAddress: string;
   apothemcontractAddress: string;
-  chainname: string;
   selectedChain: string;
   setSelectedChain: React.Dispatch<React.SetStateAction<string | any>>;
   sumof: string | any;
@@ -42,11 +41,10 @@ const Forus = (props: Props) => {
   const [, setwallet] = useState<boolean>(false);
   const [sumof, setsumof] = useState<string | any>("");
   const [sumofAddress, setsumofAddress] = useState<string | any>("");
-  const [chainname, setchainname] = useState<string | any>("");
+
 
   let contractAddress: string = "0x60BA717Dd36b84557E46690c6163De5dbDc6F6bb";
-  let apothemcontractAddress: string =
-    "0x5c75A721154B03C8cAA8Beaab9803b1c214D2a3b";
+  let apothemcontractAddress: string ="0x5c75A721154B03C8cAA8Beaab9803b1c214D2a3b";
 
   const { ethereum }: any = window;
 
@@ -57,7 +55,7 @@ const Forus = (props: Props) => {
   ];
 
   const [selectedChain, setSelectedChain] = useState<string | any>(
-    localStorage.getItem("chain")
+    sessionStorage.getItem("chain")
   );
 
   const handleChainChange = async (chainId: any) => {
@@ -75,16 +73,6 @@ const Forus = (props: Props) => {
     }
   };
 
-  const fetchChainName = async () => {
-    // const provider = new ethers.providers.Web3Provider(ethereum);
-    // const network = await provider.getNetwork();
-    // chainOptions.find((e: any) => {
-    //   if (network.name.toLowerCase() === e.name.toString().toLowerCase()) {
-    //     localStorage.setItem('chain', network.name.toLowerCase())
-    //   }
-    // })
-    //  localStorage.setItem('chain', "unknown network")
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -105,7 +93,6 @@ const Forus = (props: Props) => {
           break;
 
         default:
-          // Handle the default case if needed
           break;
       }
 
@@ -124,16 +111,29 @@ const Forus = (props: Props) => {
 
   const validateChain = async () => {
     const chainId = await ethereum.request({ method: "eth_chainId" });
-    console.log(chainId);
 
-    if (chainId !== "0xaa36a7" && chainId !== "0x33") {
-      notyf.error("unSupported Chain");
-      return;
+    switch (chainId) {
+
+      case "0x33":
+        sessionStorage.setItem("chain", "Apothem");
+
+        break;
+
+      case "0xaa36a7":
+        sessionStorage.setItem("chain", "Sepolia");
+
+        break;
+
+      default:
+        sessionStorage.setItem("chain", "Unsupported");
+
+        break;
     }
+
   };
 
   useEffect(() => {
-    fetchChainName();
+
     validateChain();
   }, []);
 
@@ -144,7 +144,8 @@ const Forus = (props: Props) => {
       window.location.reload();
     });
 
-    ethereum.on("chainChanged" || "accountsChanged", (chId: any) => {
+    ethereum.on("chainChanged", (chId: any) => {
+      window.location.reload();
       validateChain();
     });
   } else {
@@ -156,14 +157,9 @@ const Forus = (props: Props) => {
       notyf.error("Plz install metamask");
       return;
     }
-    fetchChainName();
 
     try {
-      const accounts = await ethereum.request({
-        method: "eth_requestAccounts",
-      });
-
-      sessionStorage.setItem("address", accounts[0]);
+      await accountChecker()
       validateChain();
 
       setwallet(true);
@@ -183,7 +179,7 @@ const Forus = (props: Props) => {
     sumofAddress,
     setsumofAddress,
     validateChain,
-    chainname,
+
     apothemcontractAddress,
     handleChainChange,
     selectedChain,

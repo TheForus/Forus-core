@@ -5,7 +5,7 @@ import { ec as EC } from "elliptic";
 import { useContext } from "react";
 import { AppContext } from "./Forus";
 import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
-import { Crypto } from "../helper/Tokens";
+import { EthTokens, XdcTokens } from "../helper/Tokens";
 import { BsChevronDown } from "react-icons/bs";
 import { ethers } from "ethers";
 import sending from "../Logos/sending.gif";
@@ -21,6 +21,7 @@ const Transfer = () => {
   const notyf = new Notyf();
 
   const connect = useContext(AppContext);
+
 
   const ERCABI = [
     "function balanceOf(address) view returns (uint)",
@@ -45,7 +46,7 @@ const Transfer = () => {
   const [error, seterror] = useState<string | "">("");
   const [amount, setamount] = useState<string | "">("");
   const [show, setshow] = useState<boolean>(false);
-  const [byDefault, setbyDefault] = useState<string>("ETH");
+  const [byDefault, setbyDefault] = useState<string>(sessionStorage.getItem("chain") === "Apothem" ? "XDC" : "ETH");
   const [trxid, settrxid] = useState<string>("");
   const [waiting, setwaiting] = useState<boolean>(false);
   const [buttonState, setButtonState] = useState<string>("Transfer");
@@ -70,6 +71,8 @@ const Transfer = () => {
     setforusKey(event.target.value);
   };
 
+
+  console.log('byDefault', byDefault);
   const setUp = async () => {
     let key: EC.KeyPair | any;
     let ephemeralPublic: EC.KeyPair | any;
@@ -138,7 +141,14 @@ const Transfer = () => {
   };
 
   const Transfer = async () => {
+
+
     setUp();
+
+    console.log(r,
+      s,
+      v,
+      receipent,)
     if (!ethereum) {
       notyf.error("Please initialize MetaMask");
       return;
@@ -156,13 +166,12 @@ const Transfer = () => {
     const signer = provider.getSigner();
 
     let contract: any;
-    if (connect.selectedChain === 'Sepolia') {
+    if (sessionStorage.getItem("chain") === 'Sepolia') {
       contract = new ethers.Contract(connect.contractAddress, Abi.abi, signer);
-      console.log(connect.chainname)
+      console.log(sessionStorage.getItem("chain"))
     }
-    if (connect.selectedChain === 'Apothem') {
+    if (sessionStorage.getItem("chain") === 'Apothem') {
       contract = new ethers.Contract(connect.apothemcontractAddress, Abi.abi, signer);
-      console.log(connect.chainname)
     }
 
     try {
@@ -178,7 +187,8 @@ const Transfer = () => {
         transactionParameters
       );
       const txId = await transferCoin;
-      settrxid("https://sepolia.etherscan.io/tx/" + txId.hash);
+      sessionStorage.getItem("chain") === "Apothem" ? settrxid("https://explorer.apothem.network/txs/" + txId.hash) : settrxid("https://sepolia.etherscan.io/tx/" + txId.hash);
+      ;
       //storing the ephemeral key in db
       storing();
       setforusKey("");
@@ -342,7 +352,7 @@ const Transfer = () => {
         montserrat-subtitle outline-none py-3 px-3 h-[100%] hover:shadow-sm rounded-md hover:shadow-gray-400 w-[100%] bg-bgGray "
           value={amount}
           type="text"
-          placeholder="1 ETH"
+          placeholder="0.1"
           onChange={(e) => setamount(e.target.value)}
         />
         {/* Tokens Dropdown Menu */}
@@ -358,31 +368,53 @@ const Transfer = () => {
             </li>
             <div
               className={`
-              ${
-                show &&
+              ${show &&
                 `transition-all ease-in bg-bgGray py-1 shadow-md flex flex-col w-[105%] max-h-28 rounded-b-md absolute mt-2
                  scrollbar-thin scrollbar-thumb-bgGray scrollbar-track-[#dbe6eb] overflow-y-scroll 
                 scrollbar-thumb-rounded scrollbar-rounded-full`
-              }
+                }
             `}
             >
-              {show &&
-                Crypto.map((c) => (
-                  <div className="h-40 border-b border-gray-400 ">
-                    <li
-                      className="flex flex-row-reverse p-1 px-3 cursor-pointer
-                    text-gray-700 font-semibold border-l border-gray-100 
+              {show ?
+
+                sessionStorage.getItem("chain") === 'Apothem' ?
+
+
+                  XdcTokens.map((c) => (
+                    <div className="h-40 border-b border-gray-400 ">
+                      <li
+                        className="flex flex-row-reverse p-1 px-3 cursor-pointer
+                    text-gray-900 font-semibold border-l border-gray-100 
                     items-center gap-2 hover:text-gray-900 hover:bg-[#dbe6eb] 
-                     montserrat-small text-[0.7rem]
+                    montserrat-small text-[0.8rem]
                     justify-between"
-                      key={c.name}
-                      onClick={() => changedefault(c)}
-                    >
-                      <img src={c.symbol} alt="" height={14} width={18} />
-                      <p>{c.name}</p>
-                    </li>
-                  </div>
-                ))}
+                        key={c.name}
+                        onClick={() => changedefault(c)}
+                      >
+                        <img className=" rounded-lg" src={c.symbol} alt="" height={14} width={18} />
+                        <p>{c.name}</p>
+                      </li>
+                    </div>
+                  )) :
+                  EthTokens.map((c) => (
+                    <div className="h-40 border-b border-gray-400 ">
+                      <li
+                        className="flex flex-row-reverse p-1 px-3 cursor-pointer
+                    text-gray-900 font-semibold border-l border-gray-100 
+                    items-center gap-2 hover:text-gray-900 hover:bg-[#dbe6eb] 
+                    montserrat-small text-[0.8rem]
+                    justify-between"
+                        key={c.name}
+                        onClick={() => changedefault(c)}
+                      >
+                        <img className=" rounded-lg" src={c.symbol} alt="" height={14} width={18} />
+                        <p>{c.name}</p>
+                      </li>
+                    </div>
+                  ))
+
+
+                : ''}
             </div>
           </ul>
         </div>
@@ -391,7 +423,7 @@ const Transfer = () => {
         className="mb-4 my-2 montserrat-subtitle border-1 p-1 montserrat-subtitle  
         bg-highlight  hover:shadow-xl px-6 text-center  bg-slate-300 text-black 
        rounded-md  font-semibold   hover:scale-105 transition-all ease-linear "
-        onClick={byDefault === "ETH" ? Transfer : proceed}
+        onClick={byDefault === "ETH" || byDefault === "XDC" ? Transfer : proceed}
       >
         {waiting === false ? (
           buttonState

@@ -18,10 +18,11 @@ const NavBar = (props: Props) => {
   const navigate = useNavigate();
   const [show, setshow] = useState<boolean>(false);
 
-  const changedefault = async (c: any) => {
+  const changeChains = async (c: any) => {
     setshow(!show);
-    localStorage.setItem("chain", c.name);
+    sessionStorage.setItem("chain", c.name);
     await connect.handleChainChange(c.label);
+
   };
 
   return (
@@ -71,7 +72,7 @@ const NavBar = (props: Props) => {
           {/* Social Links */}
           <div className="lg:flex space-x-3 items-center hidden">
             <p className=" text-bgGray ">
-              <a href="https://discord.gg/EppRjheW">
+              <a href="https://discord.gg/keQnv2K8HP">
                 <FaDiscord size={22} />
               </a>
             </p>
@@ -85,7 +86,11 @@ const NavBar = (props: Props) => {
                 <FaTwitter size={22} />
               </a>
             </p>
+
+            {sessionStorage.getItem("address") !==null &&
+            
             <div
+
               className=" montserrat-subtitle border-1 sm:text-[1rem] text-[0.9rem] px-2 sm:px-4
                rounded-full text-[#e9edf1] font-extrabold border border-gray-500 hover:border-white"
             >
@@ -94,7 +99,7 @@ const NavBar = (props: Props) => {
                   className="flex p-1 px-2 sm:px-4 cursor-pointer rounded-md
                   items-center gap-2 w-full hover:text-white"
                 >
-                  {localStorage.getItem("chain")}
+                  {sessionStorage.getItem("chain")}
                   {!show ? (
                     <MdArrowDropDown className="text-[1.4rem]" />
                   ) : (
@@ -106,13 +111,13 @@ const NavBar = (props: Props) => {
               ${
                 show &&
                 `transition-all ease-in py-2 border-none  shadow-md flex flex-col
-                 rounded-b-md absolute -ml-2 mt-1 text-black bg-bgGray z-10`
+                 rounded-b-md absolute ml-1 mt-1 text-black bg-bgGray z-10 `
               }
             `}
                 >
                   {show &&
                     connect.chainOptions.map((chain: any) => (
-                      <div className=" hover:bg-[#463F2D]">
+                      <div className=" hover:bg-slate-500">
                         <li
                           className="flex flex-row-reverse p-1 px-4 cursor-pointer
                            font-semibold
@@ -120,7 +125,7 @@ const NavBar = (props: Props) => {
                      montserrat-small text-[0.9rem]
                     justify-between"
                           key={chain.name}
-                          onClick={() => changedefault(chain)}
+                          onClick={() => changeChains(chain)}
                         >
                           <img
                             src={chain.symbol}
@@ -136,12 +141,10 @@ const NavBar = (props: Props) => {
                 </div>
               </ul>
             </div>
-            {/* Tokens Dropdown Menu */}
+            }
           </div>
 
-          {/* <p className=" montserrat-subtitle border-1 p-1 sm:text-[1rem] text-[0.8rem] px-1 sm:px-4 rounded-md 
-               text-[#cdd4dc] font-extrabold  bg-slate-500
-                     ">{connect.chainname} </p> */}
+      
 
           <p className="sm:text-[1.1rem] montserrat-small text-bgGray   font-semibold text-[1rem]">
             {sessionStorage.getItem("address") !== null || false

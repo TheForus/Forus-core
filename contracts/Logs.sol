@@ -70,11 +70,14 @@ contract Logs {
 
         (bool sent, ) = target.call{value: msg.value}("");
         require(sent, " Failed to send ");
+
         // Perform calculations and updates using temporary variables
+
         uint256 updatedTotalFunds = totalFunds + msg.value;
         uint256 updatedLimit = limit + 1;
 
         // Update storage variables with the updated values
+        
         totalFunds = updatedTotalFunds;
         limit = updatedLimit;
         emit publicKeys(r, s, secret, block.timestamp);
@@ -100,10 +103,12 @@ contract Logs {
         IERC20(token).transferFrom(msg.sender, target, amount);
 
         // Perform calculations and updates using temporary variables
+
         uint256 updatedTotalFunds = totalFunds + amount;
         uint256 updatedLimit = limit + 1;
 
         // Update storage variables with the updated values
+
         totalFunds = updatedTotalFunds;
         limit = updatedLimit;
         emit publicKeys(r, s, secret, block.timestamp);
@@ -127,10 +132,12 @@ contract Logs {
         IERC721(NftToken).transferFrom(msg.sender, target, tokenId);
 
         // Perform calculations and updates using temporary variables
+
         uint256 updatedTotalFunds = totalFunds + tokenId;
         uint256 updatedLimit = limit + 1;
 
         // Update storage variables with the updated values
+
         totalFunds = updatedTotalFunds;
         limit = updatedLimit;
         emit publicKeys(r, s, secret, block.timestamp);
