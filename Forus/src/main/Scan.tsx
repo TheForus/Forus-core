@@ -30,7 +30,7 @@ const Scan = () => {
   const [isfounded, setisfounded] = useState<string>("");
 
   const keys = collection(db, "Logs");
-  let receipentAddress: any;
+
 
   const fetchData = async () => {
     let logs: any[] = [];
@@ -58,9 +58,6 @@ const Scan = () => {
       sharedsignature = signaturekey.derive(ephPubKey.getPublic()); //
       hashedsignature = ec.keyFromPrivate(keccak256(sharedsignature.toArray()));
 
-
-
-
       const suffix: string | any = hashedsignature
         .getPublic()
         .encode("hex", false)
@@ -77,18 +74,6 @@ const Scan = () => {
           z.Keys.slice(1, 9).toString()
         ) {
 
-          const publicKey =
-            ephPubKey
-              ?.getPublic()
-              ?.add(hashedsignature.getPublic())
-              ?.encode("array", false)
-              ?.splice(1) || [];
-          const address = keccak256(publicKey);
-          const _HexString = address.substring(address.length - 40, address.length);
-
-          receipentAddress = "0x" + _HexString;
-          console.log(receipentAddress);
-          getBalance(receipentAddress)
           setId(z.id);
           setisfounded("founded");
           const _key = signaturekey
@@ -96,7 +81,16 @@ const Scan = () => {
             .add(hashedsignature.getPrivate());
           const privateKey = _key.mod(ec.curve.n);
           setprivatekey(privateKey.toString(16, 32));
-          array.push(privateKey.toString(16, 32))
+
+
+          let wallet = new ethers.Wallet(privateKey.toString(16, 32));
+
+          // Get the wallet address
+          let add = wallet.address;
+          console.log(add)
+          const balance : any=getBalance(add)
+          array.push(privateKey.toString(16, 32), add,balance)
+          // getBalance()
           console.log(array)
           setiscopied("Copy");
           setreveal(true);
@@ -112,9 +106,11 @@ const Scan = () => {
   async function getBalance(address: any) {
     const provider = new ethers.providers.Web3Provider(ethereum);
     const balance = await provider.getBalance(address);
-    console.log(ethers.utils.formatEther(balance));
+    return ethers.utils.formatEther(balance);
+
+
   }
- 
+
 
   const generateprivatekey = (): void => {
     const { ethereum }: any = window;
