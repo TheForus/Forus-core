@@ -13,7 +13,7 @@ const ec = new EllipticCurve.ec("secp256k1");
 
 //Combining the publickey with signatureKey to calcuate the private key of stealth address
 
-const Scan = () => {
+const Accept = () => {
   const notyf = new Notyf();
   var signaturekey: EC.KeyPair | any;
 
@@ -126,12 +126,17 @@ const Scan = () => {
 
   return (
     <>
-      <div className="py-2 flex space-x-4 justify-center ml-6">
+      <h2 className="text-bgGray text-[1.3rem] text-left mb-3">Signature </h2>
+      <div className="py-2 flex space-x-1 justify-center mx-2">
         {hide !== true && (
           <input
             type="text"
-            className=" text-[0.9rem] tect font-semibold text-gray-700 placeholder:text-gray-700
-            montserrat-subtitle outline-none px-3 py-3 h-[100%] hover:shadow-sm rounded-md hover:shadow-gray-400 w-[100%] bg-bgGray"
+            className="text-[0.9rem] font-semibold text-gray-100 placeholder:text-gray-500
+            montserrat-subtitle outline-none px-3 py-3 h-[100%] rounded-md
+             hover:border-gray-400 w-[100%] bg-black/40 border-2 border-gray-500"
+            // className="text-[0.9rem] tect font-semibold text-gray-700 placeholder:text-gray-700
+            // montserrat-subtitle outline-none px-3 py-3 h-[100%] hover:shadow-sm
+            //  rounded-md hover:shadow-gray-400 w-[100%] bg-bgGray"
             // className="bg-[#ebf3f7] font-semibold text-gray-700 montserrat-subtitle outline-none border rounded-md p-1 px-2 border-1 border-gray-400 w-[340px]"
             value={savedSignaturekey}
             onChange={(e) => {
@@ -141,7 +146,7 @@ const Scan = () => {
           />
         )}
         {hide && (
-          <p className="text-bgGray p-1 px-2 font-semibold montserrat-small ">
+          <p className="text-gray-400 p-1 font-semibold montserrat-small ">
             Expand to enter the signatureKey (optional)
           </p>
         )}
@@ -150,13 +155,13 @@ const Scan = () => {
           {hide ? (
             <AiOutlineArrowsAlt
               className=" cursor-pointer  text-[#a7acb3]"
-              size={28}
+              size={34}
               onClick={() => sethide(!hide)}
             />
           ) : (
             <AiOutlineShrink
               className="cursor-pointer  text-[#a7acb3]"
-              size={28}
+              size={34}
               onClick={() => sethide(!hide)}
             />
           )}
@@ -164,16 +169,15 @@ const Scan = () => {
       </div>
 
       {/* Match key */}
-      <div className="flex justify-center pt-2 mr-4">
+      <div className="cursor-pointer flex justify-center pt-2 mr-4">
         <div
-          className="mb-4 my-2 montserrat-subtitle border-1 p-1 montserrat-subtitle  
-          bg-highlight  hover:shadow-xl px-6 text-center  bg-slate-300 text-black 
-         rounded-md  font-semibold   hover:scale-105 transition-all ease-linear
-         "
+          className="w-[95%] mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
+          bg-highlight  hover:shadow-xl px-6 text-center bg-gray-300 text-black 
+         rounded-md font-bold hover:bg-gray-100 transition-all ease-linear"
           onClick={generateprivatekey}
         >
           {/* <GiKangaroo size={26} /> */}
-          <h2 className="montserrat-small">Scan Key</h2>
+          <h2 className="montserrat-small">Accept</h2>
         </div>
       </div>
 
@@ -207,4 +211,4 @@ const Scan = () => {
   );
 };
 
-export default Scan;
+export default Accept;

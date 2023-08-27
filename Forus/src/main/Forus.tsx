@@ -42,9 +42,9 @@ const Forus = (props: Props) => {
   const [sumof, setsumof] = useState<string | any>("");
   const [sumofAddress, setsumofAddress] = useState<string | any>("");
 
-
   let contractAddress: string = "0x60BA717Dd36b84557E46690c6163De5dbDc6F6bb";
-  let apothemcontractAddress: string ="0x5c75A721154B03C8cAA8Beaab9803b1c214D2a3b";
+  let apothemcontractAddress: string =
+    "0x5c75A721154B03C8cAA8Beaab9803b1c214D2a3b";
 
   const { ethereum }: any = window;
 
@@ -73,17 +73,14 @@ const Forus = (props: Props) => {
     }
   };
 
-
   useEffect(() => {
     const fetchData = async () => {
       const provider = new ethers.providers.Web3Provider(ethereum);
-
       let contract: any;
       switch (selectedChain) {
         case "Sepolia":
           contract = new ethers.Contract(contractAddress, abi.abi, provider);
           break;
-
         case "Apothem":
           contract = new ethers.Contract(
             apothemcontractAddress,
@@ -91,11 +88,9 @@ const Forus = (props: Props) => {
             provider
           );
           break;
-
         default:
           break;
       }
-
       const limit = await contract.getTotalAddresses();
       const totalFunds = await contract.getTotalVolume();
       setsumof(limit.toString());
@@ -113,7 +108,6 @@ const Forus = (props: Props) => {
     const chainId = await ethereum.request({ method: "eth_chainId" });
 
     switch (chainId) {
-
       case "0x33":
         sessionStorage.setItem("chain", "Apothem");
 
@@ -129,11 +123,9 @@ const Forus = (props: Props) => {
 
         break;
     }
-
   };
 
   useEffect(() => {
-
     validateChain();
   }, []);
 
@@ -159,7 +151,7 @@ const Forus = (props: Props) => {
     }
 
     try {
-      await accountChecker()
+      await accountChecker();
       validateChain();
 
       setwallet(true);

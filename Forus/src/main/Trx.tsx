@@ -1,27 +1,49 @@
 import React, { useState } from "react";
 import Transfer from "./Transfer";
-import Accept from "./Scan";
+import Accept from "./Accept";
 
 import { useContext } from "react";
 import { AppContext } from "./Forus";
+import Withdraw from "./Withdraw";
 
 type Props = {};
 
 const Trx = (props: Props) => {
   const { setShow } = useContext(AppContext);
-  const [showTransfer, setShowTransfer] = useState(true);
+  const [buttonStatus, setButtonStatus] = useState({
+    transfer: true,
+    accept: false,
+    withdraw: false,
+  });
 
   const handleTransferClick = () => {
-    setShowTransfer(true);
+    setButtonStatus({
+      accept: false,
+      withdraw: false,
+      transfer: true,
+    });
     setShow(true);
   };
 
   const handleAcceptClick = () => {
-    setShowTransfer(false);
+    setButtonStatus({
+      accept: true,
+      withdraw: false,
+      transfer: false,
+    });
     setShow(false);
   };
 
-  console.log("showTransfer : ", showTransfer);
+  const handleWithdrawClick = () => {
+    setButtonStatus({
+      withdraw: true,
+      accept: false,
+      transfer: false,
+    });
+    setShow(false);
+  };
+
+  console.log("buttonStatus : ", buttonStatus);
 
   return (
     <div
@@ -31,27 +53,40 @@ const Trx = (props: Props) => {
       //  style={{backgroundImage: `url(${cardBg})`}}
     >
       <div
-        className="max-w-[400px] xl:space-x-36 mx-auto flex space-x-32 mb-2  montserrat-subtitle
-        text-[1.4rem] border-b pb-2 border-bgGray font-bold"
+        className="max-w-[400px] mx-auto flex mb-2  montserrat-subtitle
+        text-[1.2rem] pb-2 border-bgGray font-bold"
       >
         <button
           onClick={handleTransferClick}
-          className={`px-3 
-        ${showTransfer ? "text-bgGray" : "text-[#5e5e5e]"}`}
+          className={`px-6 py-1 border-2 rounded-md border-gray-500
+        ${buttonStatus.transfer ? "text-bgGray" : "text-[#5e5e5e]"}`}
         >
           Transfer
         </button>
         <button
           onClick={handleAcceptClick}
-          className={`px-3 
-          ${!showTransfer ? "text-bgGray" : "text-[#5e5e5e]"}`}
+          className={`px-6 py-1 border-2 rounded-md border-gray-500
+          ${buttonStatus.accept ? "text-bgGray" : "text-[#5e5e5e]"}`}
         >
           Accept
         </button>
+        <button
+          onClick={handleWithdrawClick}
+          className={`px-6 py-1 border-2 rounded-md border-gray-500
+          ${buttonStatus.withdraw ? "text-bgGray" : "text-[#5e5e5e]"}`}
+        >
+          Withdraw
+        </button>
       </div>
       {/* below buttons */}
-      <div className="p-4 xl:w-[400px] w-[340px] mx-auto">
-        {showTransfer ? <Transfer /> : <Accept />}
+      <div className="py-1 xl:w-[400px] w-full">
+        {buttonStatus.transfer ? (
+          <Transfer />
+        ) : buttonStatus.accept ? (
+          <Accept />
+        ) : (
+          <Withdraw />
+        )}
       </div>
     </div>
   );
