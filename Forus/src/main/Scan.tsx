@@ -88,8 +88,8 @@ const Scan = () => {
           // Get the wallet address
           let add = wallet.address;
           console.log(add)
-          const balance : any=getBalance(add)
-          array.push(privateKey.toString(16, 32), add,balance)
+          const balance: any = getBalance(add)
+          array.push(privateKey.toString(16, 32), add, balance)
           // getBalance()
           console.log(array)
           setiscopied("Copy");
