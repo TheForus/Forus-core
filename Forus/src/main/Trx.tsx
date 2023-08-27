@@ -28,7 +28,7 @@ const Trx = (props: Props) => {
       className="flex flex-col sm:p-5 sm:px-8 backdrop-blur-[50px]
       max-w-[500px] hover:backdrop-blur-lg
      h-full"
-      //  style={{backgroundImage: `url(${cardBg})`}}
+    //  style={{backgroundImage: `url(${cardBg})`}}
     >
       <div
         className="max-w-[400px] xl:space-x-36 mx-auto flex space-x-32 mb-2  montserrat-subtitle

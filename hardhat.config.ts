@@ -8,15 +8,19 @@ const config: HardhatUserConfig = {
   solidity: "0.8.16",
   networks: {
 
-    // sepolia: {
-    //   url: process.env.ALCHEMY_API_URL,
-    //   accounts: [process.env.PRIVATE_KEY!]
-    // },
-    // goerli: {
-    //   url: process.env.ALCHEMY_API_URL,
-    //   accounts: [process.env.PRIVATE_KEY!]
-    // }
-    // ,
+    sepolia: {
+      url: process.env.ALCHEMY_API_URL,
+      accounts: [process.env.PRIVATE_KEY!]
+    },
+    goerli: {
+      url: process.env.ALCHEMY_API_URL,
+      accounts: [process.env.PRIVATE_KEY!]
+    }
+    ,
+    fantomtestnet: {
+      url: process.env.FANTOM_API_URL,
+      accounts: [process.env.PRIVATE_KEY!]
+    },
     apothem: {
       url: process.env.APOTHEM_API_URL,
       accounts: [process.env.PRIVATE_KEY!]
@@ -26,6 +30,7 @@ const config: HardhatUserConfig = {
 
 //0x60BA717Dd36b84557E46690c6163De5dbDc6F6bb sepolia
 //0x5c75A721154B03C8cAA8Beaab9803b1c214D2a3b apothem
+//0x8B981955de58B60ffd5dAC0AFc2B7A87D2973770 fantom testnet
 
 export default config;
 

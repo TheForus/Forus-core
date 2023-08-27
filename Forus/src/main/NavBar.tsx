@@ -6,8 +6,7 @@ import { FaDiscord, FaGithub, FaTwitter } from "react-icons/fa";
 import { IoMdHome } from "react-icons/io";
 import { HiQuestionMarkCircle } from "react-icons/hi";
 import { useState, useEffect } from "react";
-import { ethers } from "ethers";
-
+import { AiFillFilePdf } from "react-icons/ai";
 import { MdArrowDropDown } from "react-icons/md";
 import { MdArrowDropUp } from "react-icons/md";
 
@@ -21,7 +20,7 @@ const NavBar = (props: Props) => {
   const changeChains = async (c: any) => {
     setshow(!show);
     sessionStorage.setItem("chain", c.name);
-    await connect.handleChainChange(c.label);
+    await connect.handleChainChange(c.chainId);
 
   };
 
@@ -64,6 +63,21 @@ const NavBar = (props: Props) => {
               />
               <p className="sm:inline-flex hidden">QnA</p>
             </div>
+
+            <div
+              onClick={() => navigate("/")}
+              className="flex md:flex-row flex-col items-center md:items-end space-x-1 sm:ml-14 
+               text-bgGray   ml-2
+                montserrat-subtitle underline-offset-8
+                 font-bold hover:underline decoration-bgGray 
+                 sm:text-[1.1rem] text-[0.8rem]"
+            >
+              <AiFillFilePdf
+                size={23}
+                className="md:self-start text-bgGray  "
+              />
+              <p className="sm:inline-flex hidden">WhitePaper</p>
+            </div>
           </div>
         </div>
 
@@ -87,64 +101,63 @@ const NavBar = (props: Props) => {
               </a>
             </p>
 
-            {sessionStorage.getItem("address") !==null &&
-            
-            <div
+            {sessionStorage.getItem("address") !== null &&
 
-              className=" montserrat-subtitle border-1 sm:text-[1rem] text-[0.9rem] px-2 sm:px-4
+              <div
+
+                className=" montserrat-subtitle border-1 sm:text-[1rem] text-[0.9rem] px-2 sm:px-4
                rounded-full text-[#e9edf1] font-extrabold border border-gray-500 hover:border-white"
-            >
-              <ul className="" onClick={() => setshow(!show)}>
-                <li
-                  className="flex p-1 px-2 sm:px-4 cursor-pointer rounded-md
+              >
+                <ul className="" onClick={() => setshow(!show)}>
+                  <li
+                    className="flex p-1 px-2 sm:px-4 cursor-pointer rounded-md
                   items-center gap-2 w-full hover:text-white"
-                >
-                  {sessionStorage.getItem("chain")}
-                  {!show ? (
-                    <MdArrowDropDown className="text-[1.4rem]" />
-                  ) : (
-                    <MdArrowDropUp className="text-[1.4rem]" />
-                  )}
-                </li>
-                <div
-                  className={`
-              ${
-                show &&
-                `transition-all ease-in py-2 border-none  shadow-md flex flex-col
+                  >
+                    {sessionStorage.getItem("chain")}
+                    {!show ? (
+                      <MdArrowDropDown className="text-[1.4rem]" />
+                    ) : (
+                      <MdArrowDropUp className="text-[1.4rem]" />
+                    )}
+                  </li>
+                  <div
+                    className={`
+              ${show &&
+                      `transition-all ease-in py-2 border-none  shadow-md flex flex-col
                  rounded-b-md absolute ml-1 mt-1 text-black bg-bgGray z-10 `
-              }
+                      }
             `}
-                >
-                  {show &&
-                    connect.chainOptions.map((chain: any) => (
-                      <div className=" hover:bg-slate-500">
-                        <li
-                          className="flex flex-row-reverse p-1 px-4 cursor-pointer
+                  >
+                    {show &&
+                      connect.chainOptions.map((chain: any) => (
+                        <div className=" hover:bg-slate-500">
+                          <li
+                            className="flex flex-row-reverse p-1 px-4 cursor-pointer
                            font-semibold
                     items-center gap-2 hover:text-white
                      montserrat-small text-[0.9rem]
                     justify-between"
-                          key={chain.name}
-                          onClick={() => changeChains(chain)}
-                        >
-                          <img
-                            src={chain.symbol}
-                            alt=""
-                            className="object-fill rounded-full"
-                            height={12}
-                            width={18}
-                          />
-                          {chain.name}
-                        </li>
-                      </div>
-                    ))}
-                </div>
-              </ul>
-            </div>
+                            key={chain.name}
+                            onClick={() => changeChains(chain)}
+                          >
+                            <img
+                              src={chain.symbol}
+                              alt=""
+                              className="object-fill rounded-full"
+                              height={12}
+                              width={18}
+                            />
+                            {chain.name}
+                          </li>
+                        </div>
+                      ))}
+                  </div>
+                </ul>
+              </div>
             }
           </div>
 
-      
+
 
           <p className="sm:text-[1.1rem] montserrat-small text-bgGray   font-semibold text-[1rem]">
             {sessionStorage.getItem("address") !== null || false
