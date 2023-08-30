@@ -24,7 +24,6 @@ const Transfer = () => {
 
   const connect = useContext(AppContext);
 
-
   const ERCABI = [
     "function balanceOf(address) view returns (uint)",
     "function transfer(address to, uint amount) returns (bool)",
@@ -179,7 +178,6 @@ const Transfer = () => {
 
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
-
     let contract: any;
     if (currentNetwork === 'Sepolia') {
       contract = new ethers.Contract(contractAddress, Abi.abi, signer);
@@ -261,11 +259,15 @@ const Transfer = () => {
 
     if (connect.selectedChain === 'Sepolia') {
       contract = new ethers.Contract(connect.contractAddress, Abi.abi, signer);
-      console.log(connect.chainname)
+      console.log(connect.chainname);
     }
-    if (connect.selectedChain === 'Apothem') {
-      contract = new ethers.Contract(connect.apothemcontractAddress, Abi.abi, signer);
-      console.log(connect.chainname)
+    if (connect.selectedChain === "Apothem") {
+      contract = new ethers.Contract(
+        connect.apothemcontractAddress,
+        Abi.abi,
+        signer
+      );
+      console.log(connect.chainname);
     }
     try {
       //to send exact amount of tokens are always counted as  amount**18
@@ -374,50 +376,57 @@ const Transfer = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center space-y-4 ">
+    <div className="flex flex-col justify-center items-start space-y-2 ">
       <div
-        className=" py-1 w-[100%]  rounded-md 
+        className="text-bgGray w-[100%] rounded-md 
        "
       >
+        <h2 className="text-[1.3rem] text-left mb-1">Forus Key </h2>
         <input
           // style={{ border: '1px solid red' }}
-          className=" text-[0.9rem] font-semibold text-gray-900 placeholder:text-gray-700
-       montserrat-subtitle outline-none px-3 py-3 h-[100%] hover:shadow-sm rounded-md hover:shadow-gray-400 w-[100%] bg-bgGray"
+          className="text-[0.9rem] font-semibold text-gray-100 placeholder:text-gray-500
+       montserrat-subtitle outline-none px-3 py-3 h-[100%] rounded-md
+        hover:border-gray-400 w-[100%] bg-black/40 border-2 border-gray-500"
           type="text"
           onChange={validatingForuskey}
-          placeholder="Forus Key"
+          placeholder="Enter your forus key"
         />
       </div>
-      <div
-        className="relative flex items-center  py-1 w-[100%] hover:shadow-sm rounded-md 
+      {/* Amount */}
+      <div className="text-bgGray w-[100%] pb-4 rounded-md">
+        <h2 className="text-[1.3rem] text-left mb-1">Amount </h2>
+        <div
+          className="relative flex items-center  py-1 w-[100%] hover:shadow-sm rounded-md 
        "
-      >
-        <input
-          className="text-[0.9rem] font-semibold text-gray-900 placeholder:text-gray-700
-        montserrat-subtitle outline-none py-3 px-3 h-[100%] hover:shadow-sm rounded-md hover:shadow-gray-400 w-[100%] bg-bgGray "
-          value={amount}
-          type="text"
-          placeholder="0.1"
-          onChange={(e) => setamount(e.target.value)}
-        />
-        {/* Tokens Dropdown Menu */}
-        <div className="min-w-[95px] absolute right-1 ">
-          <ul className="" onClick={() => setshow(!show)}>
-            <li
-              className="flex p-2 px-3 cursor-pointer rounded-md 
-            text-[#1f2429] font-semibold border-l border-gray-300
+        >
+          <input
+            className="text-[0.9rem] font-semibold text-gray-100 placeholder:text-gray-500
+        montserrat-subtitle outline-none py-3 px-3 h-[100%] rounded-md
+         hover:border-gray-400 w-[100%] bg-black/40 border-2 border-gray-500"
+            value={amount}
+            type="text"
+            placeholder="0.1"
+            onChange={(e) => setamount(e.target.value)}
+          />
+          {/* Tokens Dropdown Menu */}
+          <div className="min-w-[95px] absolute right-1 ">
+            <ul onClick={() => setshow(!show)}>
+              <li
+                className="flex p-2 px-3 cursor-pointer rounded-md 
+            text-gray-300 font-semibold border-l border-gray-700
             items-center gap-2 hover:text-gray-800 hover:rounded-full hover:bg-[#dbe6eb] "
-            >
-              <p>{byDefault}</p>
-              <BsChevronDown className="text-gray-900" size={18} />
-            </li>
-            <div
-              className={`
-              ${show &&
+              >
+                <p>{byDefault}</p>
+                <BsChevronDown className="" size={18} />
+              </li>
+              <div
+                className={`
+              ${
+                show &&
                 `transition-all ease-in bg-bgGray py-1 shadow-md flex flex-col w-[105%] max-h-28 rounded-b-md absolute mt-2
                  scrollbar-thin scrollbar-thumb-bgGray scrollbar-track-[#dbe6eb] overflow-y-scroll 
                 scrollbar-thumb-rounded scrollbar-rounded-full`
-                }
+              }
             `}
             >
               {show ?
@@ -461,26 +470,31 @@ const Transfer = () => {
                     items-center gap-2 hover:text-gray-900 hover:bg-[#dbe6eb] 
                     montserrat-small text-[0.8rem]
                     justify-between"
-                        key={c.name}
-                        onClick={() => changedefault(c)}
-                      >
-                        <img className=" rounded-lg" src={c.symbol} alt="" height={14} width={18} />
-                        <p>{c.name}</p>
-                      </li>
-                    </div>
-                  ))
-
-
-                : ''}
-            </div>
-          </ul>
+                            key={c.name}
+                            onClick={() => changedefault(c)}
+                          >
+                            <img
+                              className=" rounded-lg"
+                              src={c.symbol}
+                              alt=""
+                              height={14}
+                              width={18}
+                            />
+                            <p>{c.name}</p>
+                          </li>
+                        </div>
+                      ))
+                  : ""}
+              </div>
+            </ul>
+          </div>
         </div>
       </div>
       <button
         className="mb-4 my-2 montserrat-subtitle border-1 p-1 montserrat-subtitle  
         bg-highlight  hover:shadow-xl px-6 text-center  bg-slate-300 text-black 
        rounded-md  font-semibold   hover:scale-105 transition-all ease-linear "
-        onClick={byDefault === "ETH" || byDefault === "XDC" || byDefault === "FTM" ? Transfer : proceed}
+       onClick={byDefault === "ETH" || byDefault === "XDC" || byDefault === "FTM" ? Transfer : proceed}
       >
         {waiting === false ? (
           buttonState
