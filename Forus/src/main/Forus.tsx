@@ -7,12 +7,12 @@ import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { ethers } from "ethers";
-
-// chain logo's
-
-import apothem from "../assets/chains/apothem.png";
-import goerli from "../assets/chains/goerli.png";
-import sepolia from "../assets/chains/sepolia.jpeg";
+import { chainOptions } from "../helper/ChainOptions";
+import {
+  apothemcontractAddress,
+  fantomcontractAddress,
+  contractAddress,
+} from "../helper/contractAddresses";
 
 type Props = {};
 
@@ -42,17 +42,7 @@ const Forus = (props: Props) => {
   const [sumof, setsumof] = useState<string | any>("");
   const [sumofAddress, setsumofAddress] = useState<string | any>("");
 
-  let contractAddress: string = "0x60BA717Dd36b84557E46690c6163De5dbDc6F6bb";
-  let apothemcontractAddress: string =
-    "0x5c75A721154B03C8cAA8Beaab9803b1c214D2a3b";
-
   const { ethereum }: any = window;
-
-  const chainOptions: any = [
-    { name: "Sepolia", label: "0xaa36a7", symbol: sepolia },
-    { name: "Apothem", label: "0x33", symbol: apothem },
-    { name: "goerli", label: "0x5", symbol: goerli },
-  ];
 
   const [selectedChain, setSelectedChain] = useState<string | any>(
     sessionStorage.getItem("chain")
@@ -88,14 +78,27 @@ const Forus = (props: Props) => {
             provider
           );
           break;
+
+        case "fantom testnet":
+          contract = new ethers.Contract(
+            fantomcontractAddress,
+            abi.abi,
+            provider
+          );
+          break;
+
         default:
           break;
       }
       const limit = await contract.getTotalAddresses();
+
       const totalFunds = await contract.getTotalVolume();
+
       setsumof(limit.toString());
+
       setsumofAddress(totalFunds / 10 ** 18);
     };
+
     fetchData();
   }, [show]);
 
@@ -115,6 +118,11 @@ const Forus = (props: Props) => {
 
       case "0xaa36a7":
         sessionStorage.setItem("chain", "Sepolia");
+
+        break;
+
+      case "0xfa2":
+        sessionStorage.setItem("chain", "fantom testnet");
 
         break;
 

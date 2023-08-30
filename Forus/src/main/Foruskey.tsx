@@ -91,8 +91,8 @@ const ForusKey = (props: Props) => {
           </h1>
 
           {note === true && (
-            <p className="montserrat-small text-bgGray font-semibold font-mono w-[80%]">
-              Guard the signature, unleash the Key. Never reveal the 'signature'
+            <p className="montserrat-small text-bgGray  mb-4 font-semibold font-mono w-[80%]">
+             Note : Guard the signature, unleash the Key. Never reveal the 'signature'
               , only share your 'ForusKey' for confidential transactions.{" "}
             </p>
           )}

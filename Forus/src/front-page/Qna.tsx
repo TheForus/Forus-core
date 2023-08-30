@@ -49,7 +49,7 @@ const Qna = (props: Props) => {
         {showAnswers[0] && (
           <p className=" w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
             forus employs secure stealth addresses and a one-time public key
-            mechanism, making it virtually impossible to trace or monitor
+            mechanism, making it hard to trace or monitor
             transactions by anyone else. This ensures enhanced privacy and
             confidentiality.
           </p>

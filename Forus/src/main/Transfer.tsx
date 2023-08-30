@@ -5,7 +5,7 @@ import { ec as EC } from "elliptic";
 import { useContext } from "react";
 import { AppContext } from "./Forus";
 import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
-import { EthTokens, XdcTokens } from "../helper/Tokens";
+import { EthTokens, XdcTokens, ftmTokens } from "../helper/Tokens";
 import { BsChevronDown } from "react-icons/bs";
 import { ethers } from "ethers";
 import sending from "../Logos/sending.gif";
@@ -13,12 +13,14 @@ import { Notyf } from "notyf";
 import BigNumber from "bignumber.js";
 import { db } from "../config/firebase.js";
 import { collection, addDoc } from "firebase/firestore";
+import { apothemcontractAddress, fantomcontractAddress, contractAddress } from "../helper/contractAddresses";
 import "notyf/notyf.min.css";
 
 const ec = new EllipticCurve.ec("secp256k1");
 
 const Transfer = () => {
   const notyf = new Notyf();
+  let currentNetwork: string | any = sessionStorage.getItem("chain")
 
   const connect = useContext(AppContext);
 
@@ -45,16 +47,14 @@ const Transfer = () => {
   const [error, seterror] = useState<string | "">("");
   const [amount, setamount] = useState<string | "">("");
   const [show, setshow] = useState<boolean>(false);
-  const [byDefault, setbyDefault] = useState<string>(
-    sessionStorage.getItem("chain") === "Apothem" ? "XDC" : "ETH"
-  );
+  const [byDefault, setbyDefault] = useState<string>(currentNetwork === "Apothem" ? "XDC" : currentNetwork === "fantom testnet" ? "FTM" : "ETH");
   const [trxid, settrxid] = useState<string>("");
   const [waiting, setwaiting] = useState<boolean>(false);
   const [buttonState, setButtonState] = useState<string>("Transfer");
 
   const msgSender: string | any = sessionStorage.getItem("address");
 
-  var receipent: any;
+  var receipentAddress: any;
 
   const validatingForuskey = (event: any) => {
     if (
@@ -72,14 +72,20 @@ const Transfer = () => {
     setforusKey(event.target.value);
   };
 
-  console.log("byDefault", byDefault);
-  const setUp = async () => {
+
+
+  const setUpStealthAddress = async () => {
+
     let key: EC.KeyPair | any;
     let ephemeralPublic: EC.KeyPair | any;
-    // let receipent: string | null;
+    // let receipentAddress: string | null;
 
     const ephemeralPrivateKey = ec.genKeyPair();
     ephemeralPublic = ephemeralPrivateKey.getPublic();
+
+    /*
+         removing the prefix "fk" of the forus key then decoding it to generate an stealth address
+    */
 
     try {
       if (forusKey.slice(0, 2).toLowerCase() === "fk") {
@@ -93,7 +99,10 @@ const Transfer = () => {
     } catch (e: any) {
       seterror(e.message);
     }
-    //
+
+    /*
+         Now generating the stealth address by doing some elliptic curve calculation here
+      */
     try {
       const sharedsecret = ephemeralPrivateKey.derive(key.getPublic());
       const hashedSecret = ec.keyFromPrivate(keccak256(sharedsecret.toArray()));
@@ -111,13 +120,13 @@ const Transfer = () => {
       const address = keccak256(publicKey);
       const _HexString = address.substring(address.length - 40, address.length);
 
-      receipent = "0x" + _HexString;
-      // console.log(receipent);
+      receipentAddress = "0x" + _HexString;
+
 
       r = "0x" + ephemeralPublic?.getX().toString(16, 64) || "";
       s = "0x" + ephemeralPublic?.getY().toString(16, 64) || "";
-      v =
-        "0x" + sharedsecret.toArray()[0].toString(16).padStart(2, "0") + suffix;
+      v = "0x" + sharedsecret.toArray()[0].toString(16).padStart(2, "0") + suffix;
+
     } catch (e) {
       console.log("error", e);
     }
@@ -127,9 +136,13 @@ const Transfer = () => {
 
   const logs = collection(db, "Logs");
 
+
+  /*
+     storing the ephemeral public key in firebase along with blockchain to easily and effeciantly retreive
+ the keys  */
+
   const storing = async () => {
     const stored = `T${v.replace("0x", "")}04${r.slice(2)}${s.slice(2)}`;
-    // console.log(stored);
     try {
       await addDoc(logs, {
         Keys: stored,
@@ -141,13 +154,18 @@ const Transfer = () => {
   };
 
   const Transfer = async () => {
-    setUp();
-    console.log(r, s, v, receipent);
+
+
+    setUpStealthAddress();
+
+
     if (!ethereum) {
       notyf.error("Please initialize MetaMask");
       return;
     }
+
     connect.validateChain();
+
     if (forusKey === "" || amount === "") {
       seterror("Please enter the forus key");
       setTimeout(() => {
@@ -155,21 +173,27 @@ const Transfer = () => {
       }, 4000);
       return;
     }
+
     setwaiting(true);
+
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
     let contract: any;
-    if (sessionStorage.getItem("chain") === "Sepolia") {
-      contract = new ethers.Contract(connect.contractAddress, Abi.abi, signer);
-      console.log(sessionStorage.getItem("chain"));
+    if (currentNetwork === 'Sepolia') {
+      contract = new ethers.Contract(contractAddress, Abi.abi, signer);
+      console.log(sessionStorage.getItem("chain"))
     }
-    if (sessionStorage.getItem("chain") === "Apothem") {
-      contract = new ethers.Contract(
-        connect.apothemcontractAddress,
-        Abi.abi,
-        signer
-      );
+    if (currentNetwork === 'Apothem') {
+      contract = new ethers.Contract(apothemcontractAddress, Abi.abi, signer);
     }
+
+    if (currentNetwork === 'fantom testnet') {
+      contract = new ethers.Contract(fantomcontractAddress, Abi.abi, signer);
+
+    }
+
+
+
     try {
       const valueToSend = ethers.utils.parseEther(amount);
       const transactionParameters = {
@@ -179,18 +203,37 @@ const Transfer = () => {
         r,
         s,
         v,
-        receipent,
+        receipentAddress,
         transactionParameters
       );
       const txId = await transferCoin;
-      sessionStorage.getItem("chain") === "Apothem"
-        ? settrxid("https://explorer.apothem.network/txs/" + txId.hash)
-        : settrxid("https://sepolia.etherscan.io/tx/" + txId.hash);
-      //storing the ephemeral key in db
+
+
+      switch (currentNetwork) {
+
+        case "Sepolia":
+          settrxid("https://sepolia.etherscan.io/tx/" + txId.hash)
+          break;
+
+        case "Apothem":
+          settrxid("https://explorer.apothem.network/txs/" + txId.hash)
+          break
+
+        case "fantom testnet":
+          settrxid("https://explorer.testnet.fantom.network/transactions/" + txId.hash)
+          break
+
+        default:
+          break
+
+      }
+
       storing();
+
       setforusKey("");
+
       setamount("");
-      // console.log('stored..')
+
     } catch (e: any) {
       console.log(e);
       seterror(e.message);
@@ -199,7 +242,7 @@ const Transfer = () => {
   };
 
   const TransferToken = async () => {
-    setUp();
+    setUpStealthAddress();
     if (forusKey === "" || amount === "") {
       seterror("Please enter the address");
       setTimeout(() => {
@@ -209,9 +252,12 @@ const Transfer = () => {
     }
     setwaiting(true);
     const provider = new ethers.providers.Web3Provider(ethereum);
+
     const signer = provider.getSigner();
+
     let contract: any;
-    if (connect.selectedChain === "Sepolia") {
+
+    if (connect.selectedChain === 'Sepolia') {
       contract = new ethers.Contract(connect.contractAddress, Abi.abi, signer);
       console.log(connect.chainname);
     }
@@ -227,14 +273,14 @@ const Transfer = () => {
       //to send exact amount of tokens are always counted as  amount**18
       const amountParams: any = ethers.utils.parseUnits(amount, 18);
       try {
-        console.log(receipent, amountParams);
-        // const transferCoin=await contract.transfer(receipent, amountParams);
+        console.log(receipentAddress, amountParams);
+        // const transferCoin=await contract.transfer(receipentAddress, amountParams);
         const transferERC20 = await contract.TransferERC20(
           r,
           s,
           v,
           token,
-          receipent,
+          receipentAddress,
           amountParams
         );
         const txResponse = await transferERC20;
@@ -382,35 +428,44 @@ const Transfer = () => {
                 scrollbar-thumb-rounded scrollbar-rounded-full`
               }
             `}
-              >
-                {show
-                  ? sessionStorage.getItem("chain") === "Apothem"
-                    ? XdcTokens.map((c) => (
-                        <div className="h-40 border-b border-gray-400 ">
-                          <li
-                            className="flex flex-row-reverse p-1 px-3 cursor-pointer
+            >
+              {show ?
+
+                currentNetwork === 'Apothem' ? XdcTokens.map((c) => (
+                  <div className="h-40 border-b border-gray-400 ">
+                    <li
+                      className="flex flex-row-reverse p-1 px-3 cursor-pointer
                     text-gray-900 font-semibold border-l border-gray-100 
                     items-center gap-2 hover:text-gray-900 hover:bg-[#dbe6eb] 
                     montserrat-small text-[0.8rem]
                     justify-between"
-                            key={c.name}
-                            onClick={() => changedefault(c)}
-                          >
-                            <img
-                              className=" rounded-lg"
-                              src={c.symbol}
-                              alt=""
-                              height={14}
-                              width={18}
-                            />
-                            <p>{c.name}</p>
-                          </li>
-                        </div>
-                      ))
-                    : EthTokens.map((c) => (
-                        <div className="h-40 border-b border-gray-400 ">
-                          <li
-                            className="flex flex-row-reverse p-1 px-3 cursor-pointer
+                      key={c.name}
+                      onClick={() => changedefault(c)}
+                    >
+                      <img className=" rounded-lg" src={c.symbol} alt="" height={14} width={18} />
+                      <p>{c.name}</p>
+                    </li>
+                  </div>
+                )) : currentNetwork === 'fantom testnet' ? ftmTokens.map((c) => (
+                  <div className="h-40 border-b border-gray-400 ">
+                    <li
+                      className="flex flex-row-reverse p-1 px-3 cursor-pointer
+                    text-gray-900 font-semibold border-l border-gray-100 
+                    items-center gap-2 hover:text-gray-900 hover:bg-[#dbe6eb] 
+                    montserrat-small text-[0.8rem]
+                    justify-between"
+                      key={c.name}
+                      onClick={() => changedefault(c)}
+                    >
+                      <img className=" rounded-lg" src={c.symbol} alt="" height={14} width={18} />
+                      <p>{c.name}</p>
+                    </li>
+                  </div>
+                )) :
+                  EthTokens.map((c) => (
+                    <div className="h-40 border-b border-gray-400 ">
+                      <li
+                        className="flex flex-row-reverse p-1 px-3 cursor-pointer
                     text-gray-900 font-semibold border-l border-gray-100 
                     items-center gap-2 hover:text-gray-900 hover:bg-[#dbe6eb] 
                     montserrat-small text-[0.8rem]
@@ -436,12 +491,10 @@ const Transfer = () => {
         </div>
       </div>
       <button
-        className="w-[98%] mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
-        bg-highlight  hover:shadow-xl px-6 text-center bg-gray-300 text-black 
-       rounded-md font-bold hover:bg-gray-100 transition-all ease-linear "
-        onClick={
-          byDefault === "ETH" || byDefault === "XDC" ? Transfer : proceed
-        }
+        className="mb-4 my-2 montserrat-subtitle border-1 p-1 montserrat-subtitle  
+        bg-highlight  hover:shadow-xl px-6 text-center  bg-slate-300 text-black 
+       rounded-md  font-semibold   hover:scale-105 transition-all ease-linear "
+       onClick={byDefault === "ETH" || byDefault === "XDC" || byDefault === "FTM" ? Transfer : proceed}
       >
         {waiting === false ? (
           buttonState

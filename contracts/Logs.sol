@@ -84,7 +84,7 @@ contract Logs {
     }
 
 
-    function TransferERC20(
+    function TransferToken(
 
         bytes32 r,
         bytes32 s,
@@ -114,7 +114,7 @@ contract Logs {
         emit publicKeys(r, s, secret, block.timestamp);
     }
 
-    function TransferERC721(
+    function TransferNft(
 
         bytes32 r,
         bytes32 s,
