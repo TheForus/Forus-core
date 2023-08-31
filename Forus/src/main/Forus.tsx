@@ -78,7 +78,6 @@ const Forus = (props: Props) => {
             provider
           );
           break;
-
         case "fantom testnet":
           contract = new ethers.Contract(
             fantomcontractAddress,
@@ -86,19 +85,14 @@ const Forus = (props: Props) => {
             provider
           );
           break;
-
         default:
           break;
       }
       const limit = await contract.getTotalAddresses();
-
       const totalFunds = await contract.getTotalVolume();
-
       setsumof(limit.toString());
-
       setsumofAddress(totalFunds / 10 ** 18);
     };
-
     fetchData();
   }, [show]);
 

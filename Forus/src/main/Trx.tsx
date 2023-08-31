@@ -42,15 +42,11 @@ const Trx = (props: Props) => {
     });
     setShow(false);
   };
-
-  console.log("buttonStatus : ", buttonStatus);
-
   return (
     <div
       className="flex flex-col sm:p-5 sm:px-8 backdrop-blur-[50px]
       max-w-[500px] hover:backdrop-blur-lg
      h-full"
-    //  style={{backgroundImage: `url(${cardBg})`}}
     >
       <div
         className="max-w-[400px] mx-auto flex mb-2  montserrat-subtitle

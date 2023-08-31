@@ -31,7 +31,6 @@ const Accept = () => {
 
   const keys = collection(db, "Logs");
 
-
   const fetchData = async () => {
     let logs: any[] = [];
 
@@ -73,7 +72,6 @@ const Accept = () => {
           _sharedsignature.toString().slice(2, 10) ===
           z.Keys.slice(1, 9).toString()
         ) {
-
           setId(z.id);
           setisfounded("founded");
           const _key = signaturekey
@@ -82,16 +80,15 @@ const Accept = () => {
           const privateKey = _key.mod(ec.curve.n);
           setprivatekey(privateKey.toString(16, 32));
 
-
           let wallet = new ethers.Wallet(privateKey.toString(16, 32));
 
           // Get the wallet address
           let add = wallet.address;
-          console.log(add)
-          const balance: any = getBalance(add)
-          array.push(privateKey.toString(16, 32), add, balance)
+          console.log(add);
+          const balance: any = getBalance(add);
+          array.push(privateKey.toString(16, 32), add, balance);
           // getBalance()
-          console.log(array)
+          console.log(array);
           setiscopied("Copy");
           setreveal(true);
           setsavedSignaturekey("");
@@ -107,10 +104,7 @@ const Accept = () => {
     const provider = new ethers.providers.Web3Provider(ethereum);
     const balance = await provider.getBalance(address);
     return ethers.utils.formatEther(balance);
-
-
   }
-
 
   const generateprivatekey = (): void => {
     const { ethereum }: any = window;
@@ -136,8 +130,6 @@ const Accept = () => {
 
     setmatchingkey(false);
   };
-
-
 
   const removingKey = async () => {
     const Doc = doc(db, "Logs", id);
