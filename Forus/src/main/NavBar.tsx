@@ -163,8 +163,9 @@ const NavBar = (props: Props) => {
           <button
             onClick={connect.connectWallet}
             className=" montserrat-subtitle border-1 p-1 sm:text-[1rem] text-[0.8rem]
-                    hover:text-white px-2 sm:px-4 rounded-md 
-                    bg-slate-300 text-black font-extrabold hover:bg-clip-text hover:shadow-sm hover:shadow-gray-800 hover:bg-gradient-to-r hover:from-purple-500 hover:to-blue-500 hover:text-transparent
+                    px-2 sm:px-4 rounded-md border border-black highlight
+                    bg-highlight text-black font-extrabold hover:bg-clip-text hover:border 
+                    hover:border-highlight hover:text-highlight transition-all ease-linear
                      "
           >
             {sessionStorage.getItem("address") === null || false

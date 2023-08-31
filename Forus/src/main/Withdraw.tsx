@@ -47,8 +47,8 @@ const Withdraw = () => {
       <div className="w-full flex justify-center pt-2 mr-4">
         <button
           className="w-[97%] mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
-          bg-highlight  hover:shadow-xl px-6 text-center bg-gray-300 text-black 
-          rounded-md font-bold hover:bg-gray-100 transition-all ease-linear "
+          hover:shadow-xl px-6 text-center text-black highlight border border-black 
+          rounded-md font-bold hover:border-highlight hover:text-highlight transition-all ease-linear"
           // onClick={generateprivatekey}
         >
           {/* <GiKangaroo size={26} /> */}
