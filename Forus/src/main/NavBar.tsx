@@ -21,7 +21,6 @@ const NavBar = (props: Props) => {
     setshow(!show);
     sessionStorage.setItem("chain", c.name);
     await connect.handleChainChange(c.chainId);
-
   };
 
   return (
@@ -101,10 +100,8 @@ const NavBar = (props: Props) => {
               </a>
             </p>
 
-            {sessionStorage.getItem("address") !== null &&
-
+            {sessionStorage.getItem("address") !== null && (
               <div
-
                 className=" montserrat-subtitle border-1 sm:text-[1rem] text-[0.9rem] px-2 sm:px-4
                rounded-full text-[#e9edf1] font-extrabold border border-gray-500 hover:border-white"
               >
@@ -122,10 +119,11 @@ const NavBar = (props: Props) => {
                   </li>
                   <div
                     className={`
-              ${show &&
-                      `transition-all ease-in py-2 border-none  shadow-md flex flex-col
+              ${
+                show &&
+                `transition-all ease-in py-2 border-none  shadow-md flex flex-col
                  rounded-b-md absolute ml-1 mt-1 text-black bg-bgGray z-10 `
-                      }
+              }
             `}
                   >
                     {show &&
@@ -154,10 +152,8 @@ const NavBar = (props: Props) => {
                   </div>
                 </ul>
               </div>
-            }
+            )}
           </div>
-
-
 
           <p className="sm:text-[1.1rem] montserrat-small text-bgGray   font-semibold text-[1rem]">
             {sessionStorage.getItem("address") !== null || false
@@ -167,8 +163,9 @@ const NavBar = (props: Props) => {
           <button
             onClick={connect.connectWallet}
             className=" montserrat-subtitle border-1 p-1 sm:text-[1rem] text-[0.8rem]
-                    hover:text-white px-2 sm:px-4 rounded-md 
-                    bg-slate-300 text-black font-extrabold hover:bg-clip-text hover:shadow-sm hover:shadow-gray-800 hover:bg-gradient-to-r hover:from-purple-500 hover:to-blue-500 hover:text-transparent
+                    px-2 sm:px-4 rounded-md border border-black highlight
+                    bg-highlight text-black font-extrabold hover:bg-clip-text hover:border 
+                    hover:border-highlight hover:text-highlight transition-all ease-linear
                      "
           >
             {sessionStorage.getItem("address") === null || false

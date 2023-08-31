@@ -82,18 +82,32 @@ const ForusKey = (props: Props) => {
         <div className="pb-6 flex flex-col space-y-4 items-center border-black  w-full">
           <h1
             className="mx-auto montserrat-heading font-[1000]
-             sm:text-4xl bg-clip-text text-bgGray
+             sm:text-[2.1rem] xl:text-[2.7rem] bg-clip-text text-bgGray
               text-3xl"
           >
             {" "}
-            Get your funds privately and securly without revealing any of your
-            personal wallet address !!!
+            Attain Funds
+            <span
+              className="hightlightText
+            text-transparent sm:text-[2.6rem] xl:text-[3.1rem] bg-clip-text 
+            bg-gradient-to-r from-purple-400 to-pink-600
+            bg-gradient-to-r from-highlight to-cyan-600
+            "
+            >
+              {" "}
+              Covertly & Securely
+            </span>{" "}
+            With Forus
           </h1>
+          <p className="text-gray-300 text-[0.8rem] sm:text-[1.1rem]">
+            never reveal the signature. Share your forus key to recieve funds.
+          </p>
 
           {note === true && (
             <p className="montserrat-small text-bgGray  mb-4 font-semibold font-mono w-[80%]">
-             Note : Guard the signature, unleash the Key. Never reveal the 'signature'
-              , only share your 'ForusKey' for confidential transactions.{" "}
+              Note : Guard the signature, unleash the Key. Never reveal the
+              'signature' , only share your 'ForusKey' for confidential
+              transactions.{" "}
             </p>
           )}
         </div>
@@ -126,13 +140,14 @@ const ForusKey = (props: Props) => {
         </div>
 
         <button
-          className="mb-4 my-2 montserrat-subtitle border-1 p-1 montserrat-subtitle  
-         bg-highlight  hover:shadow-xl px-6 text-center  bg-slate-300 text-black 
-        rounded-md  font-semibold   hover:scale-105 transition-all ease-linear"
+          className="mb-4 my-2 montserrat-subtitle border-1 p-1 montserrat-subtitle border border-black
+         hover:text-highlight hover:border hover:border-highlight px-6 text-center  
+         highlight bg-black text-black rounded-md font-semibold transition-all ease-linear"
           onClick={Generate}
         >
           Generate
         </button>
+        <button className="">Generate</button>
       </div>
     </>
   );

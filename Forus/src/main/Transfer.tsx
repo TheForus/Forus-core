@@ -13,17 +13,20 @@ import { Notyf } from "notyf";
 import BigNumber from "bignumber.js";
 import { db } from "../config/firebase.js";
 import { collection, addDoc } from "firebase/firestore";
-import { apothemcontractAddress, fantomcontractAddress, contractAddress } from "../helper/contractAddresses";
+import {
+  apothemcontractAddress,
+  fantomcontractAddress,
+  contractAddress,
+} from "../helper/contractAddresses";
 import "notyf/notyf.min.css";
 
 const ec = new EllipticCurve.ec("secp256k1");
 
 const Transfer = () => {
   const notyf = new Notyf();
-  let currentNetwork: string | any = sessionStorage.getItem("chain")
+  let currentNetwork: string | any = sessionStorage.getItem("chain");
 
   const connect = useContext(AppContext);
-
 
   const ERCABI = [
     "function balanceOf(address) view returns (uint)",
@@ -48,7 +51,13 @@ const Transfer = () => {
   const [error, seterror] = useState<string | "">("");
   const [amount, setamount] = useState<string | "">("");
   const [show, setshow] = useState<boolean>(false);
-  const [byDefault, setbyDefault] = useState<string>(currentNetwork === "Apothem" ? "XDC" : currentNetwork === "fantom testnet" ? "FTM" : "ETH");
+  const [byDefault, setbyDefault] = useState<string>(
+    currentNetwork === "Apothem"
+      ? "XDC"
+      : currentNetwork === "fantom testnet"
+      ? "FTM"
+      : "ETH"
+  );
   const [trxid, settrxid] = useState<string>("");
   const [waiting, setwaiting] = useState<boolean>(false);
   const [buttonState, setButtonState] = useState<string>("Transfer");
@@ -73,10 +82,7 @@ const Transfer = () => {
     setforusKey(event.target.value);
   };
 
-
-
   const setUpStealthAddress = async () => {
-
     let key: EC.KeyPair | any;
     let ephemeralPublic: EC.KeyPair | any;
     // let receipentAddress: string | null;
@@ -123,11 +129,10 @@ const Transfer = () => {
 
       receipentAddress = "0x" + _HexString;
 
-
       r = "0x" + ephemeralPublic?.getX().toString(16, 64) || "";
       s = "0x" + ephemeralPublic?.getY().toString(16, 64) || "";
-      v = "0x" + sharedsecret.toArray()[0].toString(16).padStart(2, "0") + suffix;
-
+      v =
+        "0x" + sharedsecret.toArray()[0].toString(16).padStart(2, "0") + suffix;
     } catch (e) {
       console.log("error", e);
     }
@@ -136,7 +141,6 @@ const Transfer = () => {
   };
 
   const logs = collection(db, "Logs");
-
 
   /*
      storing the ephemeral public key in firebase along with blockchain to easily and effeciantly retreive
@@ -155,18 +159,12 @@ const Transfer = () => {
   };
 
   const Transfer = async () => {
-
-
     setUpStealthAddress();
-
-
     if (!ethereum) {
       notyf.error("Please initialize MetaMask");
       return;
     }
-
     connect.validateChain();
-
     if (forusKey === "" || amount === "") {
       seterror("Please enter the forus key");
       setTimeout(() => {
@@ -174,28 +172,20 @@ const Transfer = () => {
       }, 4000);
       return;
     }
-
     setwaiting(true);
-
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
-
     let contract: any;
-    if (currentNetwork === 'Sepolia') {
+    if (currentNetwork === "Sepolia") {
       contract = new ethers.Contract(contractAddress, Abi.abi, signer);
-      console.log(sessionStorage.getItem("chain"))
+      console.log(sessionStorage.getItem("chain"));
     }
-    if (currentNetwork === 'Apothem') {
+    if (currentNetwork === "Apothem") {
       contract = new ethers.Contract(apothemcontractAddress, Abi.abi, signer);
     }
-
-    if (currentNetwork === 'fantom testnet') {
+    if (currentNetwork === "fantom testnet") {
       contract = new ethers.Contract(fantomcontractAddress, Abi.abi, signer);
-
     }
-
-
-
     try {
       const valueToSend = ethers.utils.parseEther(amount);
       const transactionParameters = {
@@ -209,33 +199,24 @@ const Transfer = () => {
         transactionParameters
       );
       const txId = await transferCoin;
-
-
       switch (currentNetwork) {
-
         case "Sepolia":
-          settrxid("https://sepolia.etherscan.io/tx/" + txId.hash)
+          settrxid("https://sepolia.etherscan.io/tx/" + txId.hash);
           break;
-
         case "Apothem":
-          settrxid("https://explorer.apothem.network/txs/" + txId.hash)
-          break
-
+          settrxid("https://explorer.apothem.network/txs/" + txId.hash);
+          break;
         case "fantom testnet":
-          settrxid("https://explorer.testnet.fantom.network/transactions/" + txId.hash)
-          break
-
+          settrxid(
+            "https://explorer.testnet.fantom.network/transactions/" + txId.hash
+          );
+          break;
         default:
-          break
-
+          break;
       }
-
       storing();
-
       setforusKey("");
-
       setamount("");
-
     } catch (e: any) {
       console.log(e);
       seterror(e.message);
@@ -254,18 +235,19 @@ const Transfer = () => {
     }
     setwaiting(true);
     const provider = new ethers.providers.Web3Provider(ethereum);
-
     const signer = provider.getSigner();
-
     let contract: any;
-
-    if (connect.selectedChain === 'Sepolia') {
+    if (connect.selectedChain === "Sepolia") {
       contract = new ethers.Contract(connect.contractAddress, Abi.abi, signer);
-      console.log(connect.chainname)
+      console.log(connect.chainname);
     }
-    if (connect.selectedChain === 'Apothem') {
-      contract = new ethers.Contract(connect.apothemcontractAddress, Abi.abi, signer);
-      console.log(connect.chainname)
+    if (connect.selectedChain === "Apothem") {
+      contract = new ethers.Contract(
+        connect.apothemcontractAddress,
+        Abi.abi,
+        signer
+      );
+      console.log(connect.chainname);
     }
     try {
       //to send exact amount of tokens are always counted as  amount**18
@@ -374,113 +356,142 @@ const Transfer = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center space-y-4 ">
+    <div className="flex flex-col justify-center items-start space-y-2">
       <div
-        className=" py-1 w-[100%]  rounded-md 
+        className="text-bgGray w-[100%] rounded-md 
        "
       >
+        <h2 className="text-[1.3rem] text-left mb-1">Forus Key </h2>
         <input
-          // style={{ border: '1px solid red' }}
-          className=" text-[0.9rem] font-semibold text-gray-900 placeholder:text-gray-700
-       montserrat-subtitle outline-none px-3 py-3 h-[100%] hover:shadow-sm rounded-md hover:shadow-gray-400 w-[100%] bg-bgGray"
+          className="text-[0.9rem] font-semibold text-gray-100 placeholder:text-gray-500
+          montserrat-subtitle outline-none px-3 py-3 h-[100%] rounded-md
+           hover:border-gray-400 w-[100%] bg-black/40 border-2 border-gray-500"
           type="text"
           onChange={validatingForuskey}
-          placeholder="Forus Key"
+          placeholder="Enter Your Forus Key"
         />
       </div>
-      <div
-        className="relative flex items-center  py-1 w-[100%] hover:shadow-sm rounded-md 
+      {/* Amount */}
+      <div className="text-bgGray w-[100%] pb-4 rounded-md">
+        <h2 className="text-[1.3rem] text-left mb-1">Amount </h2>
+        <div
+          className="relative flex items-center  py-1 w-[100%] hover:shadow-sm rounded-md         
        "
-      >
-        <input
-          className="text-[0.9rem] font-semibold text-gray-900 placeholder:text-gray-700
-        montserrat-subtitle outline-none py-3 px-3 h-[100%] hover:shadow-sm rounded-md hover:shadow-gray-400 w-[100%] bg-bgGray "
-          value={amount}
-          type="text"
-          placeholder="0.1"
-          onChange={(e) => setamount(e.target.value)}
-        />
-        {/* Tokens Dropdown Menu */}
-        <div className="min-w-[95px] absolute right-1 ">
-          <ul className="" onClick={() => setshow(!show)}>
-            <li
-              className="flex p-2 px-3 cursor-pointer rounded-md 
-            text-[#1f2429] font-semibold border-l border-gray-300
+        >
+          <input
+            className="text-[0.9rem] font-semibold text-gray-100 placeholder:text-gray-500
+          montserrat-subtitle outline-none py-3 px-3 h-[100%] rounded-md
+           hover:border-gray-400 w-[100%] bg-black/40 border-2 border-gray-500"
+            value={amount}
+            type="text"
+            placeholder="0.1"
+            onChange={(e) => setamount(e.target.value)}
+          />
+          {/* Tokens Dropdown Menu */}
+          <div className="min-w-[95px] absolute right-1 ">
+            <ul className="" onClick={() => setshow(!show)}>
+              <li
+                className="flex p-2 px-3 cursor-pointer rounded-md 
+            text-gray-300 font-semibold border-l border-gray-700
             items-center gap-2 hover:text-gray-800 hover:rounded-full hover:bg-[#dbe6eb] "
-            >
-              <p>{byDefault}</p>
-              <BsChevronDown className="text-gray-900" size={18} />
-            </li>
-            <div
-              className={`
-              ${show &&
+              >
+                <p>{byDefault}</p>
+                <BsChevronDown size={18} />
+              </li>
+              <div
+                className={`
+              ${
+                show &&
                 `transition-all ease-in bg-bgGray py-1 shadow-md flex flex-col w-[105%] max-h-28 rounded-b-md absolute mt-2
-                 scrollbar-thin scrollbar-thumb-bgGray scrollbar-track-[#dbe6eb] overflow-y-scroll 
-                scrollbar-thumb-rounded scrollbar-rounded-full`
-                }
+                scrollbar-thin scrollbar-thumb-bgGray scrollbar-track-[#dbe6eb] overflow-y-scroll 
+               scrollbar-thumb-rounded scrollbar-rounded-full`
+              }
             `}
-            >
-              {show ?
-
-                currentNetwork === 'Apothem' ? XdcTokens.map((c) => (
-                  <div className="h-40 border-b border-gray-400 ">
-                    <li
-                      className="flex flex-row-reverse p-1 px-3 cursor-pointer
+              >
+                {show
+                  ? currentNetwork === "Apothem"
+                    ? XdcTokens.map((c) => (
+                        <div className="h-40 border-b border-gray-400 ">
+                          <li
+                            className="flex flex-row-reverse p-1 px-3 cursor-pointer
                     text-gray-900 font-semibold border-l border-gray-100 
                     items-center gap-2 hover:text-gray-900 hover:bg-[#dbe6eb] 
                     montserrat-small text-[0.8rem]
                     justify-between"
-                      key={c.name}
-                      onClick={() => changedefault(c)}
-                    >
-                      <img className=" rounded-lg" src={c.symbol} alt="" height={14} width={18} />
-                      <p>{c.name}</p>
-                    </li>
-                  </div>
-                )) : currentNetwork === 'fantom testnet' ? ftmTokens.map((c) => (
-                  <div className="h-40 border-b border-gray-400 ">
-                    <li
-                      className="flex flex-row-reverse p-1 px-3 cursor-pointer
+                            key={c.name}
+                            onClick={() => changedefault(c)}
+                          >
+                            <img
+                              className=" rounded-lg"
+                              src={c.symbol}
+                              alt=""
+                              height={14}
+                              width={18}
+                            />
+                            <p>{c.name}</p>
+                          </li>
+                        </div>
+                      ))
+                    : currentNetwork === "fantom testnet"
+                    ? ftmTokens.map((c) => (
+                        <div className="h-40 border-b border-gray-400 ">
+                          <li
+                            className="flex flex-row-reverse p-1 px-3 cursor-pointer
                     text-gray-900 font-semibold border-l border-gray-100 
                     items-center gap-2 hover:text-gray-900 hover:bg-[#dbe6eb] 
                     montserrat-small text-[0.8rem]
                     justify-between"
-                      key={c.name}
-                      onClick={() => changedefault(c)}
-                    >
-                      <img className=" rounded-lg" src={c.symbol} alt="" height={14} width={18} />
-                      <p>{c.name}</p>
-                    </li>
-                  </div>
-                )) :
-                  EthTokens.map((c) => (
-                    <div className="h-40 border-b border-gray-400 ">
-                      <li
-                        className="flex flex-row-reverse p-1 px-3 cursor-pointer
-                    text-gray-900 font-semibold border-l border-gray-100 
-                    items-center gap-2 hover:text-gray-900 hover:bg-[#dbe6eb] 
-                    montserrat-small text-[0.8rem]
-                    justify-between"
-                        key={c.name}
-                        onClick={() => changedefault(c)}
-                      >
-                        <img className=" rounded-lg" src={c.symbol} alt="" height={14} width={18} />
-                        <p>{c.name}</p>
-                      </li>
-                    </div>
-                  ))
-
-
-                : ''}
-            </div>
-          </ul>
+                            key={c.name}
+                            onClick={() => changedefault(c)}
+                          >
+                            <img
+                              className=" rounded-lg"
+                              src={c.symbol}
+                              alt=""
+                              height={14}
+                              width={18}
+                            />
+                            <p>{c.name}</p>
+                          </li>
+                        </div>
+                      ))
+                    : EthTokens.map((c) => (
+                        <div className="h-40 border-b border-gray-400 ">
+                          <li
+                            className="flex flex-row-reverse p-1 px-3 cursor-pointer
+                        text-gray-900 font-semibold border-l border-gray-100 
+                          items-center gap-2 hover:text-gray-900 hover:bg-[#dbe6eb] 
+                          montserrat-small text-[0.8rem]
+                          justify-between"
+                            key={c.name}
+                            onClick={() => changedefault(c)}
+                          >
+                            <img
+                              className=" rounded-lg"
+                              src={c.symbol}
+                              alt=""
+                              height={14}
+                              width={18}
+                            />
+                            <p>{c.name}</p>
+                          </li>
+                        </div>
+                      ))
+                  : ""}
+              </div>
+            </ul>
+          </div>
         </div>
       </div>
       <button
-        className="mb-4 my-2 montserrat-subtitle border-1 p-1 montserrat-subtitle  
-        bg-highlight  hover:shadow-xl px-6 text-center  bg-slate-300 text-black 
-       rounded-md  font-semibold   hover:scale-105 transition-all ease-linear "
-        onClick={byDefault === "ETH" || byDefault === "XDC" || byDefault === "FTM" ? Transfer : proceed}
+        className="w-[98%] mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
+        px-6 text-center text-black  border border-black highlight
+        rounded-md font-bold hover:border-highlight hover:text-highlight transition-all ease-linear "
+        onClick={
+          byDefault === "ETH" || byDefault === "XDC" || byDefault === "FTM"
+            ? Transfer
+            : proceed
+        }
       >
         {waiting === false ? (
           buttonState
