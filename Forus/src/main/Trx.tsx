@@ -44,32 +44,31 @@ const Trx = (props: Props) => {
   };
   return (
     <div
-      className="flex flex-col sm:p-5 sm:px-8 backdrop-blur-[50px]
-      max-w-[500px] hover:backdrop-blur-lg
-     h-full"
+      className="flex flex-col sm:px-8 backdrop-blur-[50px]
+      max-w-[500px] hover:backdrop-blur-lg"
     >
       <div
-        className="max-w-[400px] mx-auto flex mb-2  montserrat-subtitle
-        text-[1.2rem] pb-2 border-bgGray font-bold"
+        className="max-w-[500px] mx-auto flex montserrat-subheading
+        text-[1.4rem] pb-2 border-bgGray font-extrabold"
       >
         <button
           onClick={handleTransferClick}
-          className={`px-6 py-1 border-2 rounded-md border-gray-500
-        ${buttonStatus.transfer ? "text-bgGray" : "text-[#5e5e5e]"}`}
+          className={`px-6 py-1 border-b-2 border-black
+        ${buttonStatus.transfer ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700" : "text-gray-700"}`}
         >
           Transfer
         </button>
         <button
           onClick={handleAcceptClick}
-          className={`px-6 py-1 border-2 rounded-md border-gray-500
-          ${buttonStatus.accept ? "text-bgGray" : "text-[#5e5e5e]"}`}
+          className={`px-6 py-1 border-b-2 border-black
+          ${buttonStatus.accept ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700" : "text-gray-700"}`}
         >
           Accept
         </button>
         <button
           onClick={handleWithdrawClick}
-          className={`px-6 py-1 border-2 rounded-md border-gray-500
-          ${buttonStatus.withdraw ? "text-bgGray" : "text-[#5e5e5e]"}`}
+          className={`px-6 py-1 border-b-2 border-black
+          ${buttonStatus.withdraw ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700" : "text-gray-700"}`}
         >
           Withdraw
         </button>

@@ -5,7 +5,7 @@ import Trx from "./Trx";
 import React, { createContext, useState, useEffect } from "react";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
-// import abi from "../artifacts/contracts/Logs.sol/Logs.json";
+import abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { ethers } from "ethers";
 import { chainOptions } from "../helper/ChainOptions";
 import {
@@ -64,36 +64,36 @@ const Forus = (props: Props) => {
   };
 
   useEffect(() => {
-    // const fetchData = async () => {
-    //   const provider = new ethers.providers.Web3Provider(ethereum);
-    //   let contract: any;
-    //   switch (selectedChain) {
-    //     case "Sepolia":
-    //       contract = new ethers.Contract(contractAddress, abi.abi, provider);
-    //       break;
-    //     case "Apothem":
-    //       contract = new ethers.Contract(
-    //         apothemcontractAddress,
-    //         abi.abi,
-    //         provider
-    //       );
-    //       break;
-    //     case "fantom testnet":
-    //       contract = new ethers.Contract(
-    //         fantomcontractAddress,
-    //         abi.abi,
-    //         provider
-    //       );
-    //       break;
-    //     default:
-    //       break;
-    //   }
-    //   const limit = await contract.getTotalAddresses();
-    //   const totalFunds = await contract.getTotalVolume();
-    //   setsumof(limit.toString());
-    //   setsumofAddress(totalFunds / 10 ** 18);
-    // };
-    // fetchData();
+    const fetchData = async () => {
+      const provider = new ethers.providers.Web3Provider(ethereum);
+      let contract: any;
+      switch (selectedChain) {
+        case "Sepolia":
+          contract = new ethers.Contract(contractAddress, abi.abi, provider);
+          break;
+        case "Apothem":
+          contract = new ethers.Contract(
+            apothemcontractAddress,
+            abi.abi,
+            provider
+          );
+          break;
+        case "fantom testnet":
+          contract = new ethers.Contract(
+            fantomcontractAddress,
+            abi.abi,
+            provider
+          );
+          break;
+        default:
+          break;
+      }
+      const limit = await contract.getTotalAddresses();
+      const totalFunds = await contract.getTotalVolume();
+      setsumof(limit.toString());
+      setsumofAddress(totalFunds / 10 ** 18);
+    };
+    fetchData();
   }, [show]);
 
   const accountChecker = async () => {
@@ -189,7 +189,7 @@ const Forus = (props: Props) => {
                   py-8 p-4"
         >
           <Foruskey />
-          <div className="flex flex-col-reverse space-y-4 sm:flex-row justify-between p-3 py-16 ">
+          <div className="flex flex-row-reverse sm:flex-row justify-between p-3 py-16 ">
             <Instruction />
             <Trx />
           </div>
