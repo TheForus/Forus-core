@@ -90,7 +90,6 @@ const ForusKey = (props: Props) => {
             <span
               className="hightlightText
             text-transparent sm:text-[2.6rem] xl:text-[3.1rem] bg-clip-text 
-            bg-gradient-to-r from-purple-400 to-pink-600
             bg-gradient-to-r from-highlight to-cyan-600
             "
             >
@@ -129,25 +128,36 @@ const ForusKey = (props: Props) => {
           </div>
           <div className="flex items-center text-white space-x-3">
             <AiOutlineCopy
-              className="font-bold text-2xl text-[181b1f] hover:text-[#4e6979] cursor-pointer"
+              className="cursor-copy font-bold text-2xl text-[181b1f] hover:text-highlight"
               onClick={copy}
-            />
-            <FaFileSignature
-              className="font-bold text-2xl text-[181b1f] hover:text-[#4e6979] cursor-pointer"
-              onClick={load}
             />
           </div>
         </div>
-
-        <button
-          className="mb-4 my-2 montserrat-subtitle border-1 p-1 montserrat-subtitle border border-black
+        <div className="flex space-x-4">
+          <button
+            className="mb-4 my-2 montserrat-subtitle border-1 p-1 montserrat-subtitle border border-black
          hover:text-highlight hover:border hover:border-highlight px-6 text-center  
          highlight bg-black text-black rounded-md font-semibold transition-all ease-linear"
-          onClick={Generate}
-        >
-          Generate
-        </button>
-        <button className="">Generate</button>
+            onClick={Generate}
+          >
+            Generate
+          </button>
+          <div
+            className="flex cursor-pointer space-x-2 mb-4 my-2 montserrat-subtitle border-1 p-1 
+            montserrat-subtitle border border-highlight
+            text-highlight hover:border hover:text-black px-6 text-center  
+            bg-tranparent text-black rounded-md font-semibold transition-all ease-linear
+            hover:bg-gradient-to-r hover:from-teal-400 hover:to-cyan-500
+            "
+            onClick={Generate}
+          >
+            <FaFileSignature
+              className="font-bold text-2xl text-[181b1f]"
+              onClick={load}
+            />
+            <span>Save</span>
+          </div>
+        </div>
       </div>
     </>
   );

@@ -4,7 +4,7 @@ import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
 import { useContext } from "react";
 import { AppContext } from "./Forus";
-import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
+// import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { EthTokens, XdcTokens, ftmTokens } from "../helper/Tokens";
 import { BsChevronDown } from "react-icons/bs";
 import { ethers } from "ethers";
@@ -159,124 +159,124 @@ const Transfer = () => {
   };
 
   const Transfer = async () => {
-    setUpStealthAddress();
-    if (!ethereum) {
-      notyf.error("Please initialize MetaMask");
-      return;
-    }
-    connect.validateChain();
-    if (forusKey === "" || amount === "") {
-      seterror("Please enter the forus key");
-      setTimeout(() => {
-        seterror("");
-      }, 4000);
-      return;
-    }
-    setwaiting(true);
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const signer = provider.getSigner();
-    let contract: any;
-    if (currentNetwork === "Sepolia") {
-      contract = new ethers.Contract(contractAddress, Abi.abi, signer);
-      console.log(sessionStorage.getItem("chain"));
-    }
-    if (currentNetwork === "Apothem") {
-      contract = new ethers.Contract(apothemcontractAddress, Abi.abi, signer);
-    }
-    if (currentNetwork === "fantom testnet") {
-      contract = new ethers.Contract(fantomcontractAddress, Abi.abi, signer);
-    }
-    try {
-      const valueToSend = ethers.utils.parseEther(amount);
-      const transactionParameters = {
-        value: valueToSend,
-      };
-      const transferCoin = await contract.Transfer(
-        r,
-        s,
-        v,
-        receipentAddress,
-        transactionParameters
-      );
-      const txId = await transferCoin;
-      switch (currentNetwork) {
-        case "Sepolia":
-          settrxid("https://sepolia.etherscan.io/tx/" + txId.hash);
-          break;
-        case "Apothem":
-          settrxid("https://explorer.apothem.network/txs/" + txId.hash);
-          break;
-        case "fantom testnet":
-          settrxid(
-            "https://explorer.testnet.fantom.network/transactions/" + txId.hash
-          );
-          break;
-        default:
-          break;
-      }
-      storing();
-      setforusKey("");
-      setamount("");
-    } catch (e: any) {
-      console.log(e);
-      seterror(e.message);
-    }
-    setwaiting(false);
+    // setUpStealthAddress();
+    // if (!ethereum) {
+    //   notyf.error("Please initialize MetaMask");
+    //   return;
+    // }
+    // connect.validateChain();
+    // if (forusKey === "" || amount === "") {
+    //   seterror("Please enter the forus key");
+    //   setTimeout(() => {
+    //     seterror("");
+    //   }, 4000);
+    //   return;
+    // }
+    // setwaiting(true);
+    // const provider = new ethers.providers.Web3Provider(ethereum);
+    // const signer = provider.getSigner();
+    // let contract: any;
+    // if (currentNetwork === "Sepolia") {
+    //   contract = new ethers.Contract(contractAddress, Abi.abi, signer);
+    //   console.log(sessionStorage.getItem("chain"));
+    // }
+    // if (currentNetwork === "Apothem") {
+    //   contract = new ethers.Contract(apothemcontractAddress, Abi.abi, signer);
+    // }
+    // if (currentNetwork === "fantom testnet") {
+    //   contract = new ethers.Contract(fantomcontractAddress, Abi.abi, signer);
+    // }
+    // try {
+    //   const valueToSend = ethers.utils.parseEther(amount);
+    //   const transactionParameters = {
+    //     value: valueToSend,
+    //   };
+    //   const transferCoin = await contract.Transfer(
+    //     r,
+    //     s,
+    //     v,
+    //     receipentAddress,
+    //     transactionParameters
+    //   );
+    //   const txId = await transferCoin;
+    //   switch (currentNetwork) {
+    //     case "Sepolia":
+    //       settrxid("https://sepolia.etherscan.io/tx/" + txId.hash);
+    //       break;
+    //     case "Apothem":
+    //       settrxid("https://explorer.apothem.network/txs/" + txId.hash);
+    //       break;
+    //     case "fantom testnet":
+    //       settrxid(
+    //         "https://explorer.testnet.fantom.network/transactions/" + txId.hash
+    //       );
+    //       break;
+    //     default:
+    //       break;
+    //   }
+    //   storing();
+    //   setforusKey("");
+    //   setamount("");
+    // } catch (e: any) {
+    //   console.log(e);
+    //   seterror(e.message);
+    // }
+    // setwaiting(false);
   };
 
   const TransferToken = async () => {
-    setUpStealthAddress();
-    if (forusKey === "" || amount === "") {
-      seterror("Please enter the address");
-      setTimeout(() => {
-        seterror("");
-      }, 4000);
-      return;
-    }
-    setwaiting(true);
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const signer = provider.getSigner();
-    let contract: any;
-    if (connect.selectedChain === "Sepolia") {
-      contract = new ethers.Contract(connect.contractAddress, Abi.abi, signer);
-      console.log(connect.chainname);
-    }
-    if (connect.selectedChain === "Apothem") {
-      contract = new ethers.Contract(
-        connect.apothemcontractAddress,
-        Abi.abi,
-        signer
-      );
-      console.log(connect.chainname);
-    }
-    try {
-      //to send exact amount of tokens are always counted as  amount**18
-      const amountParams: any = ethers.utils.parseUnits(amount, 18);
-      try {
-        console.log(receipentAddress, amountParams);
-        // const transferCoin=await contract.transfer(receipentAddress, amountParams);
-        const transferERC20 = await contract.TransferERC20(
-          r,
-          s,
-          v,
-          token,
-          receipentAddress,
-          amountParams
-        );
-        const txResponse = await transferERC20;
-        settrxid("https://sepolia.etherscan.io/tx/" + txResponse.hash);
-      } catch (err: any) {
-        console.log(err.message);
-        seterror(err.message);
-      }
-      //storing the ephemeral key in db
-      storing();
-      console.log("stored..");
-    } catch (e: any) {
-      console.log(e);
-      seterror(e.message);
-    }
-    setwaiting(false);
+    // setUpStealthAddress();
+    // if (forusKey === "" || amount === "") {
+    //   seterror("Please enter the address");
+    //   setTimeout(() => {
+    //     seterror("");
+    //   }, 4000);
+    //   return;
+    // }
+    // setwaiting(true);
+    // const provider = new ethers.providers.Web3Provider(ethereum);
+    // const signer = provider.getSigner();
+    // let contract: any;
+    // if (connect.selectedChain === "Sepolia") {
+    //   contract = new ethers.Contract(connect.contractAddress, Abi.abi, signer);
+    //   console.log(connect.chainname);
+    // }
+    // if (connect.selectedChain === "Apothem") {
+    //   contract = new ethers.Contract(
+    //     connect.apothemcontractAddress,
+    //     Abi.abi,
+    //     signer
+    //   );
+    //   console.log(connect.chainname);
+    // }
+    // try {
+    //   //to send exact amount of tokens are always counted as  amount**18
+    //   const amountParams: any = ethers.utils.parseUnits(amount, 18);
+    //   try {
+    //     console.log(receipentAddress, amountParams);
+    //     // const transferCoin=await contract.transfer(receipentAddress, amountParams);
+    //     const transferERC20 = await contract.TransferERC20(
+    //       r,
+    //       s,
+    //       v,
+    //       token,
+    //       receipentAddress,
+    //       amountParams
+    //     );
+    //     const txResponse = await transferERC20;
+    //     settrxid("https://sepolia.etherscan.io/tx/" + txResponse.hash);
+    //   } catch (err: any) {
+    //     console.log(err.message);
+    //     seterror(err.message);
+    //   }
+    //   //storing the ephemeral key in db
+    //   storing();
+    //   console.log("stored..");
+    // } catch (e: any) {
+    //   console.log(e);
+    //   seterror(e.message);
+    // }
+    // setwaiting(false);
   };
 
   async function approve() {
