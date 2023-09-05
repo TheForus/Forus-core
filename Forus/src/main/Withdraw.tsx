@@ -24,7 +24,7 @@ const Withdraw = () => {
           type="text"
           className="text-[0.9rem] font-semibold text-gray-100 placeholder:text-gray-500
           montserrat-subtitle outline-none px-3 py-3 h-[100%] rounded-md
-           hover:border-gray-400 w-[100%] bg-black/40 border-2 border-gray-500"
+          hover:border-cyan-900 w-[100%] bg-black/40 border-2 border-gray-500"
           // className=" text-[0.9rem] tect font-semibold text-gray-700 placeholder:text-gray-700
           //   montserrat-subtitle outline-none px-3 py-3 h-[100%] hover:shadow-sm rounded-md hover:shadow-gray-400 w-[100%] bg-bgGray"
           // value={savedSignaturekey}
