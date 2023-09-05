@@ -58,7 +58,7 @@ const Header = () => {
         {/* right Banner */}
         <div className="flex justify-end items-center ">
           <img
-            className="md:mt-0 mt-10 rounded-[1.7rem] object-center xl:w-[800px] md:w-[900px]
+            className="md:mt-0 mt-10 rounded-[1.5rem] object-center xl:w-[800px] md:w-[900px]
             lg:h-[280px] xl:h-[290px] h-[250px] sm:[mt-0]
             shadow-xl shadow-[#757575]"
             src={screenshot}
