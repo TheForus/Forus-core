@@ -361,11 +361,11 @@ const Transfer = () => {
         className="text-bgGray w-[100%] rounded-md 
        "
       >
-        <h2 className="text-[1.3rem] text-left mb-1">Forus Key </h2>
+        {/* <h2 className="text-[1.3rem] text-left mb-1">Forus Key </h2> */}
         <input
-          className="text-[0.9rem] font-semibold text-gray-100 placeholder:text-gray-500
+          className="my-4 text-[0.9rem] font-semibold text-gray-100 placeholder:text-gray-500
           montserrat-subtitle outline-none px-3 py-3 h-[100%] rounded-md
-           hover:border-gray-400 w-[100%] bg-black/40 border-2 border-gray-500"
+           hover:border-cyan-900 w-[100%] bg-black/40 border-2 border-gray-500"
           type="text"
           onChange={validatingForuskey}
           placeholder="Enter Your Forus Key"
@@ -373,7 +373,7 @@ const Transfer = () => {
       </div>
       {/* Amount */}
       <div className="text-bgGray w-[100%] pb-4 rounded-md">
-        <h2 className="text-[1.3rem] text-left mb-1">Amount </h2>
+        {/* <h2 className="text-[1.3rem] text-left mb-1">Amount </h2> */}
         <div
           className="relative flex items-center  py-1 w-[100%] hover:shadow-sm rounded-md         
        "
@@ -381,7 +381,7 @@ const Transfer = () => {
           <input
             className="text-[0.9rem] font-semibold text-gray-100 placeholder:text-gray-500
           montserrat-subtitle outline-none py-3 px-3 h-[100%] rounded-md
-           hover:border-gray-400 w-[100%] bg-black/40 border-2 border-gray-500"
+          hover:border-cyan-900 w-[100%] bg-black/40 border-2 border-gray-500"
             value={amount}
             type="text"
             placeholder="0.1"
@@ -393,7 +393,7 @@ const Transfer = () => {
               <li
                 className="flex p-2 px-3 cursor-pointer rounded-md 
             text-gray-300 font-semibold border-l border-gray-700
-            items-center gap-2 hover:text-gray-800 hover:rounded-full hover:bg-[#dbe6eb] "
+            items-center gap-2 hover:text-cyan-500"
               >
                 <p>{byDefault}</p>
                 <BsChevronDown size={18} />
