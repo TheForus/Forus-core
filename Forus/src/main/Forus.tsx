@@ -189,7 +189,7 @@ const Forus = (props: Props) => {
                   py-8 p-4"
         >
           <Foruskey />
-          <div className="flex flex-col-reverse space-y-4 sm:flex-row justify-between p-3 py-16 ">
+          <div className="flex flex-row-reverse sm:flex-row justify-between p-3 py-16 ">
             <Instruction />
             <Trx />
           </div>

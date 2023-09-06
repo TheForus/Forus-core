@@ -10,6 +10,8 @@ import { db } from "../config/firebase.js";
 import { getDocs, collection, deleteDoc, doc } from "firebase/firestore";
 import { downloadTxt } from "../helper/downloadTxt";
 import { ethers } from "ethers";
+import { MdHistory } from "react-icons/md";
+
 const ec = new EllipticCurve.ec("secp256k1");
 
 //Combining the publickey with signatureKey to calcuate the private key of stealth address
@@ -145,16 +147,33 @@ const Accept = () => {
     removingKey();
   };
 
+  const [temp, settemp] = useState(false);
+
   return (
     <>
-      <h2 className="text-bgGray text-[1.3rem] text-left mb-3">Signature </h2>
-      <div className="py-2 flex space-x-1 justify-center mx-2">
+      <div className="flex px-5 justify-between items-center">
+        <h2 className="text-bgGray text-[1.3rem] text-left mb-3">Signature </h2>
+        <h2 className="flex cursor-pointer hover:text-white text-gray-400 text-[1rem] text-left mb-3"
+        onClick={()=>settemp(!temp)}>
+          <span>
+            <MdHistory className="text-[1.3rem] text-gray-400" />
+          </span>{`\t`}_
+          View Transactions{" "}
+        </h2>
+      </div>
+      {temp ? (
+        <div>
+          <h1 className="text-3xl text-white">Transactions !!!</h1>
+        </div> 
+      ) : (
+          <div>
+        <div className="py-2 flex space-x-1 justify-center mx-2">
         {hide !== true && (
           <input
             type="text"
             className="text-[0.9rem] font-semibold text-gray-100 placeholder:text-gray-500
             montserrat-subtitle outline-none px-3 py-3 h-[100%] rounded-md
-             hover:border-gray-400 w-[100%] bg-black/40 border-2 border-gray-500"
+            hover:border-cyan-900 w-[100%] bg-black/40 border-2 border-gray-500"
             // className="text-[0.9rem] tect font-semibold text-gray-700 placeholder:text-gray-700
             // montserrat-subtitle outline-none px-3 py-3 h-[100%] hover:shadow-sm
             //  rounded-md hover:shadow-gray-400 w-[100%] bg-bgGray"
@@ -227,7 +246,12 @@ const Accept = () => {
             </p>
           </>
         )}
-      </div>
+            </div>
+            
+            </div>
+
+      )}
+     
     </>
   );
 };
