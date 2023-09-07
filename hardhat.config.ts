@@ -17,20 +17,21 @@ const config: HardhatUserConfig = {
       accounts: [process.env.PRIVATE_KEY!]
     }
     ,
-    fantomtestnet: {
-      url: process.env.FANTOM_API_URL,
-      accounts: [process.env.PRIVATE_KEY!]
-    },
     apothem: {
       url: process.env.APOTHEM_API_URL,
       accounts: [process.env.PRIVATE_KEY!]
+    },
+    fantomtestnet: {
+      url: process.env.FANTOM_API_URL,
+      accounts: [process.env.PRIVATE_KEY!]
     }
+
   }
 };
 
-//0x60BA717Dd36b84557E46690c6163De5dbDc6F6bb sepolia
-//0x5c75A721154B03C8cAA8Beaab9803b1c214D2a3b apothem
-//0x8B981955de58B60ffd5dAC0AFc2B7A87D2973770 fantom testnet
+//0x021CC9B8A9Cb9d677cC403cB81F44a689739E2Aa sepolia
+//0x3957018eC2835E8B969245291850575064eCe716 apothem
+//0x2c5033531DC96b4F555D7a644c7E418661ccec64 fantom testnet
 
 export default config;
 

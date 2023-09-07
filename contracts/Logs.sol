@@ -22,7 +22,7 @@ contract Logs {
     struct publickeys {
         bytes32 r;
         bytes32 s;
-        bytes4 v;
+        bytes2 v;
     }
 
     uint256 internal totalFunds;
@@ -32,7 +32,7 @@ contract Logs {
     event publicKeys(
         bytes32 r,
         bytes32 s,
-        bytes4 secret,
+        bytes2 secret,
         uint256 indexed timestamp
     );
 
@@ -52,7 +52,7 @@ contract Logs {
         return totalFunds;
     }
 
-    function publishEphkeys(bytes32 r, bytes32 s, bytes4 v) private {
+    function publishEphkeys(bytes32 r, bytes32 s, bytes2 v) private {
         logs.push(publickeys(r, s, v));
     }
 
@@ -60,7 +60,7 @@ contract Logs {
     function Transfer(
         bytes32 r,
         bytes32 s,
-        bytes4 secret,
+        bytes2 secret,
         address payable target
     ) public payable {
         require(msg.value > 0, "amount should be more than 0");
@@ -88,7 +88,7 @@ contract Logs {
 
         bytes32 r,
         bytes32 s,
-        bytes4 secret,
+        bytes2 secret,
         address token,
         address target,
         uint256 amount
@@ -118,7 +118,7 @@ contract Logs {
 
         bytes32 r,
         bytes32 s,
-        bytes4 secret,
+        bytes2 secret,
         address NftToken,
         address target,
         uint256 tokenId
