@@ -1,7 +1,7 @@
 import NavBar from "./NavBar";
 import Foruskey from "./Foruskey";
 import Instruction from "./Instruction";
-import Trx from "./Trx";
+import Transactions from "./Transactions";
 import React, { createContext, useState, useEffect } from "react";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
@@ -11,7 +11,7 @@ import { chainOptions } from "../helper/ChainOptions";
 import {
   apothemcontractAddress,
   fantomcontractAddress,
-  contractAddress,
+  sepoliacontractAddress,
 } from "../helper/contractAddresses";
 
 type Props = {};
@@ -35,12 +35,15 @@ interface ContextValue {
 
 export const AppContext = createContext<ContextValue | any>(null);
 const Forus = (props: Props) => {
+
+  //start
   const notyf = new Notyf();
 
   const [show, setShow] = useState<boolean>(true);
   const [, setwallet] = useState<boolean>(false);
   const [sumof, setsumof] = useState<string | any>("");
   const [sumofAddress, setsumofAddress] = useState<string | any>("");
+  const [contractAddress, setcontractAddress] = useState<string | any>("");
 
   const { ethereum }: any = window;
 
@@ -48,7 +51,24 @@ const Forus = (props: Props) => {
     sessionStorage.getItem("chain")
   );
 
-  const handleChainChange = async (chainId: any) => {
+  let contract: any
+
+  if (ethereum) {
+    const provider = new ethers.providers.Web3Provider(ethereum);
+    contract = new ethers.Contract(contractAddress, abi.abi, provider);
+  }
+
+
+
+
+  //helper 
+
+  const addingChain = async (customChain: any, chainId: string | '') => {
+
+    await ethereum.request({ method: 'wallet_addEthereumChain', params: [customChain] });
+
+    // Now, switching to the custom chain
+
     try {
       if (ethereum) {
         await ethereum.request({
@@ -61,47 +81,58 @@ const Forus = (props: Props) => {
     } catch (error) {
       console.error("Error switching Ethereum chain:", error);
     }
-  };
+  }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const provider = new ethers.providers.Web3Provider(ethereum);
-      let contract: any;
-      switch (selectedChain) {
-        case "Sepolia":
-          contract = new ethers.Contract(contractAddress, abi.abi, provider);
-          break;
-        case "Apothem":
-          contract = new ethers.Contract(
-            apothemcontractAddress,
-            abi.abi,
-            provider
-          );
-          break;
-        case "fantom testnet":
-          contract = new ethers.Contract(
-            fantomcontractAddress,
-            abi.abi,
-            provider
-          );
-          break;
-        default:
-          break;
+
+
+
+  //wallet connect logic
+
+  const handleChainChange = async (chainId: any) => {
+
+
+    chainOptions.map(chain => {
+
+      if (sessionStorage.getItem("chain") !== chain.name) {
+        return
       }
-      const limit = await contract.getTotalAddresses();
-      const totalFunds = await contract.getTotalVolume();
-      setsumof(limit.toString());
-      setsumofAddress(totalFunds / 10 ** 18);
-    };
-    fetchData();
-  }, [show]);
 
-  const accountChecker = async () => {
-    const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-    sessionStorage.setItem("address", accounts[0]);
-  };
+      else {
+
+        const customChain = {
+          chainId: chain.chainId, // Replace with your custom chain's ID
+          chainName: chain.name, // Replace with your chain's name
+          nativeCurrency: {
+            name: chain.name, // Replace with your native currency name
+            symbol: chain.currency.symbol, // Replace with your native currency symbol
+            decimals: chain.currency.decimals,
+          },
+          rpcUrls: chain.rpcs, // Replace with your chain's RPC URL
+        };
+
+        console.log(customChain)
+
+        // Add the custom chain to MetaMask
+
+        addingChain(customChain, chain.chainId)
+
+
+
+
+
+
+
+
+      }
+
+
+    });
+  }
+
 
   const validateChain = async () => {
+
+
     const chainId = await ethereum.request({ method: "eth_chainId" });
 
     switch (chainId) {
@@ -127,8 +158,42 @@ const Forus = (props: Props) => {
     }
   };
 
+
+  useEffect(() => {
+    const fetchData = async () => {
+
+      switch (selectedChain) {
+        case "Sepolia":
+          setcontractAddress(sepoliacontractAddress);
+          break;
+        case "Apothem":
+          setcontractAddress(apothemcontractAddress);
+          break;
+        case "fantom testnet":
+          setcontractAddress(fantomcontractAddress);
+          break;
+        default:
+          break;
+      }
+      const limit = await contract.getTotalAddresses();
+      const totalFunds = await contract.getTotalVolume();
+      setsumof(limit.toString());
+      setsumofAddress(totalFunds / 10 ** 18);
+    };
+
+    fetchData();
+
+  }, [show, []]);
+
+  const accountChecker = async () => {
+    const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+    sessionStorage.setItem("address", accounts[0]);
+  };
+
+
   useEffect(() => {
     validateChain();
+
   }, []);
 
   if (ethereum) {
@@ -157,6 +222,7 @@ const Forus = (props: Props) => {
       validateChain();
 
       setwallet(true);
+
     } catch (e: any) {
       notyf.error(e);
     }
@@ -191,7 +257,7 @@ const Forus = (props: Props) => {
           <Foruskey />
           <div className="flex flex-row-reverse sm:flex-row justify-between p-3 py-16 ">
             <Instruction />
-            <Trx />
+            <Transactions />
           </div>
         </div>
       </div>

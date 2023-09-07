@@ -49,36 +49,27 @@ const Accept = () => {
       seterr(err.message);
     }
 
-    var ephPubKey: EC.KeyPair | any;
-    var sharedsignature;
-    var hashedsignature;
-    var _sharedsignature: string | any;
+
+    //declaaring variables type here
+
+    let ephPubKey: EC.KeyPair | any;
+    let sharedSecret;
+    let hashedSecret;
+    let prefix: string | any;
 
     logs.forEach((z: any, index: number) => {
-      ephPubKey = ec.keyFromPublic(z.Keys.slice(9), "hex");
-      sharedsignature = signaturekey.derive(ephPubKey.getPublic()); //
-      hashedsignature = ec.keyFromPrivate(keccak256(sharedsignature.toArray()));
+      ephPubKey = ec.keyFromPublic(z.Keys.slice(4), "hex");
+      sharedSecret = signaturekey.derive(ephPubKey.getPublic()); //
+      hashedSecret = ec.keyFromPrivate(keccak256(sharedSecret.toArray()));
 
-      const suffix: string | any = hashedsignature
-        .getPublic()
-        .encode("hex", false)
-        .toString()
-        .slice(-6);
-      _sharedsignature =
-        "0x" +
-        sharedsignature.toArray()[0].toString(16).padStart(2, "0") +
-        suffix;
+
+      prefix =sharedSecret.toArray()[0].toString(16).padStart(2, "0") + sharedSecret.toArray()[1].toString(16)
 
       try {
-        if (
-          _sharedsignature.toString().slice(2, 10) ===
-          z.Keys.slice(1, 9).toString()
-        ) {
+        if (prefix.toString() === z.Keys.slice(0, 4).toString() ) {
           setId(z.id);
           setisfounded("founded");
-          const _key = signaturekey
-            .getPrivate()
-            .add(hashedsignature.getPrivate());
+          const _key = signaturekey.getPrivate().add(hashedSecret.getPrivate());
           const privateKey = _key.mod(ec.curve.n);
           setprivatekey(privateKey.toString(16, 32));
 
@@ -154,7 +145,7 @@ const Accept = () => {
       <div className="flex px-5 justify-between items-center">
         <h2 className="text-bgGray text-[1.3rem] text-left mb-3">Signature </h2>
         <h2 className="flex cursor-pointer hover:text-white text-gray-400 text-[1rem] text-left mb-3"
-        onClick={()=>settemp(!temp)}>
+          onClick={() => settemp(!temp)}>
           <span>
             <MdHistory className="text-[1.3rem] text-gray-400" />
           </span>{`\t`}_
@@ -164,94 +155,94 @@ const Accept = () => {
       {temp ? (
         <div>
           <h1 className="text-3xl text-white">Transactions !!!</h1>
-        </div> 
+        </div>
       ) : (
-          <div>
-        <div className="py-2 flex space-x-1 justify-center mx-2">
-        {hide !== true && (
-          <input
-            type="text"
-            className="text-[0.9rem] font-semibold text-gray-100 placeholder:text-gray-500
+        <div>
+          <div className="py-2 flex space-x-1 justify-center mx-2">
+            {hide !== true && (
+              <input
+                type="text"
+                className="text-[0.9rem] font-semibold text-gray-100 placeholder:text-gray-500
             montserrat-subtitle outline-none px-3 py-3 h-[100%] rounded-md
             hover:border-cyan-900 w-[100%] bg-black/40 border-2 border-gray-500"
-            // className="text-[0.9rem] tect font-semibold text-gray-700 placeholder:text-gray-700
-            // montserrat-subtitle outline-none px-3 py-3 h-[100%] hover:shadow-sm
-            //  rounded-md hover:shadow-gray-400 w-[100%] bg-bgGray"
-            // className="bg-[#ebf3f7] font-semibold text-gray-700 montserrat-subtitle outline-none border rounded-md p-1 px-2 border-1 border-gray-400 w-[340px]"
-            value={savedSignaturekey}
-            onChange={(e) => {
-              setsavedSignaturekey(e.target.value);
-            }}
-            placeholder="Signature (optional)"
-          />
-        )}
-        {hide && (
-          <p className="text-gray-400 p-1 font-semibold montserrat-small ">
-            Expand to enter the signatureKey (optional)
-          </p>
-        )}
-        {/* expand icon (toggle of input button) */}
-        <div className="flex items-center">
-          {hide ? (
-            <AiOutlineArrowsAlt
-              className=" cursor-pointer  text-[#a7acb3]"
-              size={34}
-              onClick={() => sethide(!hide)}
-            />
-          ) : (
-            <AiOutlineShrink
-              className="cursor-pointer  text-[#a7acb3]"
-              size={34}
-              onClick={() => sethide(!hide)}
-            />
-          )}
-        </div>
-      </div>
+                // className="text-[0.9rem] tect font-semibold text-gray-700 placeholder:text-gray-700
+                // montserrat-subtitle outline-none px-3 py-3 h-[100%] hover:shadow-sm
+                //  rounded-md hover:shadow-gray-400 w-[100%] bg-bgGray"
+                // className="bg-[#ebf3f7] font-semibold text-gray-700 montserrat-subtitle outline-none border rounded-md p-1 px-2 border-1 border-gray-400 w-[340px]"
+                value={savedSignaturekey}
+                onChange={(e) => {
+                  setsavedSignaturekey(e.target.value);
+                }}
+                placeholder="Signature (optional)"
+              />
+            )}
+            {hide && (
+              <p className="text-gray-400 p-1 font-semibold montserrat-small ">
+                Expand to enter the signatureKey (optional)
+              </p>
+            )}
+            {/* expand icon (toggle of input button) */}
+            <div className="flex items-center">
+              {hide ? (
+                <AiOutlineArrowsAlt
+                  className=" cursor-pointer  text-[#a7acb3]"
+                  size={34}
+                  onClick={() => sethide(!hide)}
+                />
+              ) : (
+                <AiOutlineShrink
+                  className="cursor-pointer  text-[#a7acb3]"
+                  size={34}
+                  onClick={() => sethide(!hide)}
+                />
+              )}
+            </div>
+          </div>
 
-      {/* Match key */}
-      <div className="cursor-pointer flex justify-center pt-2 mr-4">
-        <div
-          className="w-[95%] mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
+          {/* Match key */}
+          <div className="cursor-pointer flex justify-center pt-2 mr-4">
+            <div
+              className="w-[95%] mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
           hover:shadow-xl px-6 text-center text-black highlight border border-black
           rounded-md font-bold hover:border-highlight hover:text-highlight transition-all ease-linear"
-          onClick={generateprivatekey}
-        >
-          {/* <GiKangaroo size={26} /> */}
-          <h2 className="montserrat-small">Accept</h2>
-        </div>
-      </div>
-
-      {/* message */}
-      <div className="p-4  text-bgGray  font-semibold">
-        {/* {matching === true ? <p>Running.....</p> : false} */}
-        {reveal === true ? (
-          <div className="flex ml-60  justify-center items-center space-x-3 ">
-            <p className="text-bgGray montserrat-subtitle text-[0.9rem] ">
-              {iscopied}
-            </p>
-            <img
-              height={30}
-              width={30}
-              src={copy}
-              onClick={copykey}
-              className="cursor-pointer"
-              alt=""
-            />
+              onClick={generateprivatekey}
+            >
+              {/* <GiKangaroo size={26} /> */}
+              <h2 className="montserrat-small">Accept</h2>
+            </div>
           </div>
-        ) : (
-          <>
-            {/* <p>{founded !== "founded" && "Key doesnt exist"}</p> */}
-            <p className="montserrat-subtitle text-red-400 font-semibold ">
-              {err && "Unfortunate : " + err}
-            </p>
-          </>
-        )}
-            </div>
-            
-            </div>
+
+          {/* message */}
+          <div className="p-4  text-bgGray  font-semibold">
+            {/* {matching === true ? <p>Running.....</p> : false} */}
+            {reveal === true ? (
+              <div className="flex ml-60  justify-center items-center space-x-3 ">
+                <p className="text-bgGray montserrat-subtitle text-[0.9rem] ">
+                  {iscopied}
+                </p>
+                <img
+                  height={30}
+                  width={30}
+                  src={copy}
+                  onClick={copykey}
+                  className="cursor-pointer"
+                  alt=""
+                />
+              </div>
+            ) : (
+              <>
+                {/* <p>{founded !== "founded" && "Key doesnt exist"}</p> */}
+                <p className="montserrat-subtitle text-red-400 font-semibold ">
+                  {err && "Unfortunate : " + err}
+                </p>
+              </>
+            )}
+          </div>
+
+        </div>
 
       )}
-     
+
     </>
   );
 };

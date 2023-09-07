@@ -60,8 +60,7 @@ const Qna = (props: Props) => {
         lg:text-lg cursor-pointer flex items-center
          montserrat-subheading py-4 text-gray-600 gap-16`}
         >
-          2: What is a "stealth address" in forus, and how does it enhance
-          privacy?
+          2: What is signature in forus?
           <span>
             {showAnswers[1] ? (
               <IoAddSharp
@@ -78,17 +77,15 @@ const Qna = (props: Props) => {
         </h4>
         {showAnswers[1] && (
           <p className="dark:text-gray-300 w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
-            A "stealth address" is a unique and anonymous address exclusively
-            linked to the intended recipient. It guarantees utmost privacy by
-            making it difficult for anyone else to trace the recipient or
-            monitor their transactions.
+            "Signature" is the 32 bytes random number works as a private key of your forus key
+            Its a key to unlock funds on the stealth address generated from your forus key . So when you share your forus key
+            with the sender always save its corresponding signature in a secure place
           </p>
         )}
         <h4
           onClick={() => toggleAnswer(2)}
-          className={`${
-            showAnswers[2] && "dark:text-[#09d8a1]"
-          } text-left justify-between w-full dark:text-gray-300 dark:hover:text-[white] dark:hover:shadow-lg hover:text-gray-700
+          className={`${showAnswers[2] && "dark:text-[#09d8a1]"
+            } text-left justify-between w-full dark:text-gray-300 dark:hover:text-[white] dark:hover:shadow-lg hover:text-gray-700
         lg:text-lg cursor-pointer flex items-center
          montserrat-subheading py-4 text-gray-600 gap-16`}
         >
@@ -145,9 +142,8 @@ const Qna = (props: Props) => {
         )}
         <h4
           onClick={() => toggleAnswer(4)}
-          className={`${
-            showAnswers[4] && "dark:text-[#09d8a1]"
-          } text-left justify-between w-full dark:text-gray-300 dark:hover:text-[white] dark:hover:shadow-lg hover:text-gray-700
+          className={`${showAnswers[4] && "dark:text-[#09d8a1]"
+            } text-left justify-between w-full dark:text-gray-300 dark:hover:text-[white] dark:hover:shadow-lg hover:text-gray-700
         lg:text-lg cursor-pointer flex items-center
          montserrat-subheading py-4 text-gray-600 gap-16`}
         >

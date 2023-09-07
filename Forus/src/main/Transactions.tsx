@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Transfer from "./Transfer";
-import Accept from "./Accept";
+import Receive from "./Receive";
 
 import { useContext } from "react";
 import { AppContext } from "./Forus";
@@ -8,26 +8,26 @@ import Withdraw from "./Withdraw";
 
 type Props = {};
 
-const Trx = (props: Props) => {
+const Transactions = (props: Props) => {
   const { setShow } = useContext(AppContext);
   const [buttonStatus, setButtonStatus] = useState({
     transfer: true,
-    accept: false,
+    Receive: false,
     withdraw: false,
   });
 
   const handleTransferClick = () => {
     setButtonStatus({
-      accept: false,
+      Receive: false,
       withdraw: false,
       transfer: true,
     });
     setShow(true);
   };
 
-  const handleAcceptClick = () => {
+  const handleReceiveClick = () => {
     setButtonStatus({
-      accept: true,
+      Receive: true,
       withdraw: false,
       transfer: false,
     });
@@ -37,7 +37,7 @@ const Trx = (props: Props) => {
   const handleWithdrawClick = () => {
     setButtonStatus({
       withdraw: true,
-      accept: false,
+      Receive: false,
       transfer: false,
     });
     setShow(false);
@@ -59,11 +59,11 @@ const Trx = (props: Props) => {
           Transfer
         </button>
         <button
-          onClick={handleAcceptClick}
+          onClick={handleReceiveClick}
           className={`px-6 py-1 border-b-2 border-black
-          ${buttonStatus.accept ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700" : "text-gray-700"}`}
+          ${buttonStatus.Receive ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700" : "text-gray-700"}`}
         >
-          Accept
+          Receive
         </button>
         <button
           onClick={handleWithdrawClick}
@@ -77,8 +77,8 @@ const Trx = (props: Props) => {
       <div className="py-1 xl:w-[400px] w-full">
         {buttonStatus.transfer ? (
           <Transfer />
-        ) : buttonStatus.accept ? (
-          <Accept />
+        ) : buttonStatus.Receive ? (
+          <Receive />
         ) : (
           <Withdraw />
         )}
@@ -87,4 +87,4 @@ const Trx = (props: Props) => {
   );
 };
 
-export default Trx;
+export default Transactions;

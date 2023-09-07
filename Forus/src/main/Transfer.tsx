@@ -16,7 +16,7 @@ import { collection, addDoc } from "firebase/firestore";
 import {
   apothemcontractAddress,
   fantomcontractAddress,
-  contractAddress,
+  sepoliacontractAddress,
 } from "../helper/contractAddresses";
 import "notyf/notyf.min.css";
 
@@ -55,8 +55,8 @@ const Transfer = () => {
     currentNetwork === "Apothem"
       ? "XDC"
       : currentNetwork === "fantom testnet"
-      ? "FTM"
-      : "ETH"
+        ? "FTM"
+        : "ETH"
   );
   const [trxid, settrxid] = useState<string>("");
   const [waiting, setwaiting] = useState<boolean>(false);
@@ -83,12 +83,13 @@ const Transfer = () => {
   };
 
   const setUpStealthAddress = async () => {
-    let key: EC.KeyPair | any;
-    let ephemeralPublic: EC.KeyPair | any;
-    // let receipentAddress: string | null;
 
-    const ephemeralPrivateKey = ec.genKeyPair();
-    ephemeralPublic = ephemeralPrivateKey.getPublic();
+
+    let key: EC.KeyPair | any;
+
+
+    const randomKey = ec.genKeyPair();
+    let ephemeralPublic: EC.KeyPair | any = randomKey.getPublic();
 
     /*
          removing the prefix "fk" of the forus key then decoding it to generate an stealth address
@@ -97,9 +98,10 @@ const Transfer = () => {
     try {
       if (forusKey.slice(0, 2).toLowerCase() === "fk") {
         const _forusKey = forusKey.slice(2);
-        const decoded = base58.decode(_forusKey);
-        const decodedId = decoded.subarray(0, 33);
+        const decodedForusKey = base58.decode(_forusKey);
+        const decodedId = decodedForusKey.subarray(0, 33);
         key = ec.keyFromPublic(decodedId, "hex");
+        console.log('key', key);
       } else {
         seterror("Plz enter the valid forus key");
       }
@@ -111,28 +113,22 @@ const Transfer = () => {
          Now generating the stealth address by doing some elliptic curve calculation here
       */
     try {
-      const sharedsecret = ephemeralPrivateKey.derive(key.getPublic());
+      const sharedsecret = randomKey.derive(key.getPublic());
       const hashedSecret = ec.keyFromPrivate(keccak256(sharedsecret.toArray()));
-      const suffix: string | any = hashedSecret
-        .getPublic()
-        .encode("hex", false)
-        .toString()
-        .slice(-6);
-      const publicKey =
-        key
-          ?.getPublic()
-          ?.add(hashedSecret.getPublic())
-          ?.encode("array", false)
-          ?.splice(1) || [];
+      const publicKey = key?.getPublic()?.add(hashedSecret.getPublic())?.encode("array", false)?.splice(1) || [];
+      // console.log('public key', publicKey)
       const address = keccak256(publicKey);
-      const _HexString = address.substring(address.length - 40, address.length);
+      const _HexAddress = address.substring(address.length - 40, address.length);
 
-      receipentAddress = "0x" + _HexString;
+      receipentAddress = "0x" + _HexAddress;
 
       r = "0x" + ephemeralPublic?.getX().toString(16, 64) || "";
       s = "0x" + ephemeralPublic?.getY().toString(16, 64) || "";
-      v =
-        "0x" + sharedsecret.toArray()[0].toString(16).padStart(2, "0") + suffix;
+      v = "0x" + sharedsecret.toArray()[0].toString(16).padStart(2, "0")+sharedsecret.toArray()[1].toString(16)
+
+      console.log(v);
+      console.log(`${v.replace("0x", "")}04${r.slice(2)}${s.slice(2)}`)
+
     } catch (e) {
       console.log("error", e);
     }
@@ -147,7 +143,7 @@ const Transfer = () => {
  the keys  */
 
   const storing = async () => {
-    const stored = `T${v.replace("0x", "")}04${r.slice(2)}${s.slice(2)}`;
+    const stored = `${v.replace("0x", "")}04${r.slice(2)}${s.slice(2)}`;
     try {
       await addDoc(logs, {
         Keys: stored,
@@ -177,7 +173,7 @@ const Transfer = () => {
     const signer = provider.getSigner();
     let contract: any;
     if (currentNetwork === "Sepolia") {
-      contract = new ethers.Contract(contractAddress, Abi.abi, signer);
+      contract = new ethers.Contract(sepoliacontractAddress, Abi.abi, signer);
       console.log(sessionStorage.getItem("chain"));
     }
     if (currentNetwork === "Apothem") {
@@ -238,12 +234,12 @@ const Transfer = () => {
     const signer = provider.getSigner();
     let contract: any;
     if (connect.selectedChain === "Sepolia") {
-      contract = new ethers.Contract(connect.contractAddress, Abi.abi, signer);
+      contract = new ethers.Contract(connect.sepoliacontractAddress, Abi.abi, signer);
       console.log(connect.chainname);
     }
     if (connect.selectedChain === "Apothem") {
       contract = new ethers.Contract(
-        connect.apothemcontractAddress,
+        connect.apothemsepoliacontractAddress,
         Abi.abi,
         signer
       );
@@ -285,7 +281,7 @@ const Transfer = () => {
     const contract = new ethers.Contract(token, ERCABI, signer);
 
     try {
-      const res = await contract.allowance(msgSender, connect.contractAddress);
+      const res = await contract.allowance(msgSender, connect.sepoliacontractAddress);
       const bigNumber = new BigNumber(res._hex);
       const allowance: string | any = bigNumber.toNumber() / 10 ** 18;
       // console.log(allowance);
@@ -294,7 +290,7 @@ const Transfer = () => {
         setButtonState("approving..");
         const approvedAmount: any = ethers.utils.parseUnits(amount, 18);
         const approve = await contract.approve(
-          connect.contractAddress,
+          connect.sepoliacontractAddress,
           approvedAmount
         );
         const txResponse = await approve;
@@ -400,40 +396,39 @@ const Transfer = () => {
               </li>
               <div
                 className={`
-              ${
-                show &&
-                `transition-all ease-in bg-bgGray py-1 shadow-md flex flex-col w-[105%] max-h-28 rounded-b-md absolute mt-2
+              ${show &&
+                  `transition-all ease-in bg-bgGray py-1 shadow-md flex flex-col w-[105%] max-h-28 rounded-b-md absolute mt-2
                 scrollbar-thin scrollbar-thumb-bgGray scrollbar-track-[#dbe6eb] overflow-y-scroll 
                scrollbar-thumb-rounded scrollbar-rounded-full`
-              }
+                  }
             `}
               >
                 {show
                   ? currentNetwork === "Apothem"
                     ? XdcTokens.map((c) => (
-                        <div className="h-40 border-b border-gray-400 ">
-                          <li
-                            className="flex flex-row-reverse p-1 px-3 cursor-pointer
+                      <div className="h-40 border-b border-gray-400 ">
+                        <li
+                          className="flex flex-row-reverse p-1 px-3 cursor-pointer
                     text-gray-900 font-semibold border-l border-gray-100 
                     items-center gap-2 hover:text-gray-900 hover:bg-[#dbe6eb] 
                     montserrat-small text-[0.8rem]
                     justify-between"
-                            key={c.name}
-                            onClick={() => changedefault(c)}
-                          >
-                            <img
-                              className=" rounded-lg"
-                              src={c.symbol}
-                              alt=""
-                              height={14}
-                              width={18}
-                            />
-                            <p>{c.name}</p>
-                          </li>
-                        </div>
-                      ))
+                          key={c.name}
+                          onClick={() => changedefault(c)}
+                        >
+                          <img
+                            className=" rounded-lg"
+                            src={c.symbol}
+                            alt=""
+                            height={14}
+                            width={18}
+                          />
+                          <p>{c.name}</p>
+                        </li>
+                      </div>
+                    ))
                     : currentNetwork === "fantom testnet"
-                    ? ftmTokens.map((c) => (
+                      ? ftmTokens.map((c) => (
                         <div className="h-40 border-b border-gray-400 ">
                           <li
                             className="flex flex-row-reverse p-1 px-3 cursor-pointer
@@ -455,7 +450,7 @@ const Transfer = () => {
                           </li>
                         </div>
                       ))
-                    : EthTokens.map((c) => (
+                      : EthTokens.map((c) => (
                         <div className="h-40 border-b border-gray-400 ">
                           <li
                             className="flex flex-row-reverse p-1 px-3 cursor-pointer

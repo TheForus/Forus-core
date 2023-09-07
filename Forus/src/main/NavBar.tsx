@@ -75,7 +75,7 @@ const NavBar = (props: Props) => {
                 size={23}
                 className="md:self-start text-bgGray  "
               />
-              <p className="sm:inline-flex hidden">WhitePaper</p>
+              <p className="sm:inline-flex hidden">Raad</p>
             </div>
           </div>
         </div>
@@ -165,7 +165,7 @@ const NavBar = (props: Props) => {
             className=" montserrat-subtitle border-1 p-1 sm:text-[1rem] text-[0.8rem]
                     px-2 sm:px-4 rounded-md border border-black highlight
                     bg-highlight text-black font-extrabold hover:bg-clip-text hover:border 
-                    hover:border-highlight hover:text-highlight transition-all ease-linear
+                    hover:border-highlight hover:text-highlight transition-all ease-linear bg-gradient-to-r hover:from-teal-400 hover:to-cyan-500
                      "
           >
             {sessionStorage.getItem("address") === null || false

@@ -7,12 +7,21 @@ interface chain {
     name: string;
     chainId: string;
     symbol: string;
+    currency: {
+        symbol: string;
+        decimals: number;
+
+    }
+    | any;
+    rpcs: string[];
 }
 
 
 export const chainOptions: chain[] = [
-    { name: "Sepolia", chainId: "0xaa36a7", symbol: sepolia },
-    { name: "Apothem", chainId: "0x33", symbol: apothem },
-    { name: "goerli", chainId: "0x5", symbol: goerli },
-    { name: "fantom testnet", chainId: "0xfa2", symbol: fantom },
-  ];
+    { name: "Sepolia", chainId: "0xaa36a7", symbol: sepolia, currency: { symbol: "ETH", decimals: 18 }, rpcs: ['https://rpc2.sepolia.org'] },
+    { name: "Apothem", chainId: "0x33", symbol: apothem, currency: { symbol: "TXDC", decimals: 18 }, rpcs: ['https://apothem.xdcrpc.com'] },
+    { name: "goerli", chainId: "0x5", symbol: goerli, currency: { symbol: "ETH", decimals: 18 }, rpcs: ['https://ethereum-goerli.publicnode.com'] },
+    { name: "fantom testnet", chainId: "0xfa2", symbol: fantom, currency: { symbol: "FTM", decimals: 18 }, rpcs: ['https://rpc.testnet.fantom.network'] },
+];
+
+

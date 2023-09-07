@@ -17,19 +17,25 @@ const ForusKey = (props: Props) => {
   const notyf = new Notyf();
   const [ForusKey, setForusKey] = useState<string | any>("");
   const [, setstoredsignatureKey] = useState<string | any>("");
-  const [note, setnote] = useState<boolean>(false);
+
 
   //generating the cp address and secret key
   const Generate = () => {
     try {
+
+      //generating a random number 
       let key = ec.genKeyPair();
 
+
+      //conveting that random number in "32 bytes hex private key" (ie : signature key)
       const signature: void = sessionStorage.setItem(
         "signature",
         key.getPrivate().toString(16)
       );
       setstoredsignatureKey(signature);
 
+
+      //here we making public key (i.e forus key) from our private key (i.e signature key)
       const signatureKey = ec.keyFromPrivate(
         key.getPrivate().toString(16),
         "hex"
@@ -39,13 +45,17 @@ const ForusKey = (props: Props) => {
         signatureKey.getPublic().encodeCompressed("array")
       );
 
+      //adding 2 bytes suffix to the public key (i.e forus key)
       const crc = Crc(publicKey);
       const enc: Uint8Array = new Uint8Array(publicKey.length + 2);
       enc.set(publicKey);
       enc.set(crc, publicKey.length);
+
+      //adding a single byte prefix "fk" to the public key (i.e forus key)
       const fk: string = "Fk" + base58.encode(enc);
       sessionStorage.setItem("fk", fk);
       setForusKey(fk);
+
     } catch (e) {
       console.error(e);
     }
@@ -55,22 +65,16 @@ const ForusKey = (props: Props) => {
     Generate();
   }, []);
 
-  const reveal = () => {
-    setnote(true);
-    setTimeout(() => {
-      setnote(false);
-    }, 9000);
-  };
 
-  const copy = () => {
+  const copyForusKey = () => {
     navigator.clipboard.writeText(ForusKey);
     notyf.success("Copied");
   };
 
-  const load = () => {
+  const saveSignature = () => {
     navigator.clipboard.writeText(ForusKey);
     downloadTxt(sessionStorage.getItem("signature"), "Forus-signature.txt");
-    reveal();
+
   };
 
   return (
@@ -99,16 +103,9 @@ const ForusKey = (props: Props) => {
             With Forus
           </h1>
           <p className="text-gray-300 text-[0.8rem] sm:text-[1.1rem]">
-            Never reveal the signature. Share your forus key to recieve funds.
+            Never reveal the signature. Only Share your forus key to receive funds.
           </p>
 
-          {note === true && (
-            <p className="montserrat-small text-bgGray  mb-4 font-semibold font-mono w-[80%]">
-              Note : Guard the signature, unleash the Key. Never reveal the
-              'signature' , only share your 'ForusKey' for confidential
-              transactions.{" "}
-            </p>
-          )}
         </div>
         {/* Forus */}
         <div className="flex space-x-4">
@@ -129,7 +126,7 @@ const ForusKey = (props: Props) => {
           <div className="flex items-center text-white space-x-3">
             <AiOutlineCopy
               className="cursor-copy font-bold text-2xl text-[181b1f] hover:text-highlight"
-              onClick={copy}
+              onClick={copyForusKey}
             />
           </div>
         </div>
@@ -137,10 +134,10 @@ const ForusKey = (props: Props) => {
           <button
             className="mb-4 my-2 montserrat-subtitle border-1 p-1 montserrat-subtitle border border-black
          hover:text-highlight hover:border hover:border-highlight px-6 text-center  
-         highlight bg-black text-black rounded-md font-semibold transition-all ease-linear"
+         highlight text-black rounded-md font-semibold transition-all ease-linear"
             onClick={Generate}
           >
-            Generate
+            Generate Fk
           </button>
           <div
             className="flex cursor-pointer space-x-2 mb-4 my-2 montserrat-subtitle border-1 p-1 
@@ -153,9 +150,9 @@ const ForusKey = (props: Props) => {
           >
             <FaFileSignature
               className="font-bold text-2xl text-[181b1f]"
-              onClick={load}
+              onClick={saveSignature}
             />
-            <span>Save</span>
+            <span onClick={saveSignature}>Signature</span>
           </div>
         </div>
       </div>
