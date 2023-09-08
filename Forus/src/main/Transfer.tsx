@@ -110,13 +110,14 @@ const Transfer = () => {
     }
 
     /*
-         Now generating the stealth address by doing some elliptic curve calculation here
+         Generating the stealth address by doing some elliptic curve calculation here
       */
+
     try {
       const sharedsecret = randomKey.derive(key.getPublic());
       const hashedSecret = ec.keyFromPrivate(keccak256(sharedsecret.toArray()));
       const publicKey = key?.getPublic()?.add(hashedSecret.getPublic())?.encode("array", false)?.splice(1) || [];
-      // console.log('public key', publicKey)
+ 
       const address = keccak256(publicKey);
       const _HexAddress = address.substring(address.length - 40, address.length);
 
@@ -124,7 +125,7 @@ const Transfer = () => {
 
       r = "0x" + ephemeralPublic?.getX().toString(16, 64) || "";
       s = "0x" + ephemeralPublic?.getY().toString(16, 64) || "";
-      v = "0x" + sharedsecret.toArray()[0].toString(16).padStart(2, "0")+sharedsecret.toArray()[1].toString(16)
+      v = "0x" + sharedsecret.toArray()[0].toString(16)+sharedsecret.toArray()[1].toString(16)
 
       console.log(v);
       console.log(`${v.replace("0x", "")}04${r.slice(2)}${s.slice(2)}`)

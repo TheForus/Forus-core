@@ -102,7 +102,7 @@ const ForusKey = (props: Props) => {
             </span>{" "}
             With Forus
           </h1>
-          <p className="text-gray-300 text-[0.8rem] sm:text-[1.1rem]">
+          <p className="text-gray-600 text-[0.8rem] sm:text-[1.1rem]">
             Never reveal the signature. Only Share your forus key to receive funds.
           </p>
 

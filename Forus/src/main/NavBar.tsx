@@ -38,7 +38,7 @@ const NavBar = (props: Props) => {
             </h1>
           </div>
           {/* Navigation Buttons */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-8">
             <button
               onClick={() => navigate("/")}
               className="flex md:flex-row flex-col items-center transition-all ease-linear
@@ -75,7 +75,7 @@ const NavBar = (props: Props) => {
                 size={23}
                 className="md:self-start text-bgGray  "
               />
-              <p className="sm:inline-flex hidden">Raad</p>
+              <p className="sm:inline-flex hidden">Read</p>
             </div>
           </div>
         </div>
@@ -157,7 +157,7 @@ const NavBar = (props: Props) => {
 
           <p className="sm:text-[1.1rem] montserrat-small text-bgGray   font-semibold text-[1rem]">
             {sessionStorage.getItem("address") !== null || false
-              ? `${sessionStorage.getItem("address")?.slice(0, 19)}...`
+              ? `${sessionStorage.getItem("address")?.slice(0, 9)  }...${sessionStorage.getItem("address")?.slice(-5)  }`
               : ""}
           </p>
           <button

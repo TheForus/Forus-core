@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { keccak256 } from "ethers/lib.esm/utils";
 import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
@@ -12,6 +12,7 @@ import { downloadTxt } from "../helper/downloadTxt";
 import { ethers } from "ethers";
 import { MdHistory } from "react-icons/md";
 
+
 const ec = new EllipticCurve.ec("secp256k1");
 
 //Combining the publickey with signatureKey to calcuate the private key of stealth address
@@ -20,6 +21,8 @@ const Accept = () => {
   const notyf = new Notyf();
   var signaturekey: EC.KeyPair | any;
   const { ethereum }: any = window;
+
+  let retrievedArray: any[] = [];
 
   const [savedSignaturekey, setsavedSignaturekey] = useState<string>("");
   const [privatekey, setprivatekey] = useState<string>("");
@@ -33,10 +36,15 @@ const Accept = () => {
 
   const keys = collection(db, "Logs");
 
+  const [temp, settemp] = useState(false);
+
+  let array: any[] = [{
+
+  }];
+
   const fetchData = async () => {
     let logs: any[] = [];
 
-    const array: any[] = [];
 
     try {
       const data = await getDocs(keys);
@@ -50,25 +58,28 @@ const Accept = () => {
     }
 
 
-    //declaaring variables type here
+    //declaring variables type here
 
     let ephPubKey: EC.KeyPair | any;
     let sharedSecret;
     let hashedSecret;
     let prefix: string | any;
 
-    logs.forEach((z: any, index: number) => {
+    logs.forEach((z: any) => {
+
       ephPubKey = ec.keyFromPublic(z.Keys.slice(4), "hex");
       sharedSecret = signaturekey.derive(ephPubKey.getPublic()); //
       hashedSecret = ec.keyFromPrivate(keccak256(sharedSecret.toArray()));
 
 
-      prefix =sharedSecret.toArray()[0].toString(16).padStart(2, "0") + sharedSecret.toArray()[1].toString(16)
-
+      prefix = sharedSecret.toArray()[0].toString(16) + sharedSecret.toArray()[1].toString(16)
+      console.log(prefix.toString(), z.Keys.slice(0, 4).toString())
       try {
-        if (prefix.toString() === z.Keys.slice(0, 4).toString() ) {
+        if (prefix.toString() === z.Keys.slice(0, 4).toString()) {
+
           setId(z.id);
           setisfounded("founded");
+
           const _key = signaturekey.getPrivate().add(hashedSecret.getPrivate());
           const privateKey = _key.mod(ec.curve.n);
           setprivatekey(privateKey.toString(16, 32));
@@ -77,15 +88,27 @@ const Accept = () => {
 
           // Get the wallet address
           let add = wallet.address;
-          console.log(add);
+          // console.log(add);
           const balance: any = getBalance(add);
-          array.push(privateKey.toString(16, 32), add, balance);
-          // getBalance()
-          console.log(array);
+
+          array.push({ address: add?.slice(0, 6) + add?.slice(-4), balance: balance, key: privateKey.toString(16, 32) });
+          const arrayJson = JSON.stringify(array);
+          sessionStorage.setItem('array', arrayJson);
+
+          //getting array
+
+          const retrievedArrayJson: any = sessionStorage.getItem('array');
+
+          // Parse the JSON string back into an array
+          retrievedArray = JSON.parse(retrievedArrayJson);
+
+
+          console.log("retrievedArray", retrievedArray.length)
           setiscopied("Copy");
           setreveal(true);
           setsavedSignaturekey("");
         }
+
         return;
       } catch (e: any) {
         seterr(e.message);
@@ -93,11 +116,26 @@ const Accept = () => {
     });
   };
 
+
+
+  useEffect(() => {
+
+    fetchData()
+    console.log("retrievedArray", retrievedArray[1])
+
+  }, [])
+
+
+
   async function getBalance(address: any) {
+
     const provider = new ethers.providers.Web3Provider(ethereum);
     const balance = await provider.getBalance(address);
     return ethers.utils.formatEther(balance);
+
   }
+
+
 
   const generateprivatekey = (): void => {
     const { ethereum }: any = window;
@@ -129,16 +167,17 @@ const Accept = () => {
     await deleteDoc(Doc);
   };
 
-  const copykey = () => {
-    navigator.clipboard.writeText(privatekey);
+
+  const copykey = (pkey: string) => {
+    navigator.clipboard.writeText(pkey);
     setiscopied("Copied");
-    downloadTxt(privatekey, "Forus-privatekey.txt");
+    downloadTxt(pkey, "Forus-privatekey.txt");
 
     /// remove the key from firebase database
     removingKey();
   };
 
-  const [temp, settemp] = useState(false);
+
 
   return (
     <>
@@ -153,9 +192,18 @@ const Accept = () => {
         </h2>
       </div>
       {temp ? (
-        <div>
-          <h1 className="text-3xl text-white">Transactions !!!</h1>
-        </div>
+
+        retrievedArray.length > 0 ? retrievedArray.map((z: any) => (
+
+          <div className=" text-white ">
+            <p className="text-white">{z.address}</p>
+            <p className="text-white">{z.balance}</p>
+            <img alt="" src={copy} className="" onClick={() => copykey(z.privateKey.toString(16, 32))} />
+          </div>
+        ))
+          :
+          <h1 className="text-3xl text-white">No Transactions !!!</h1>
+
       ) : (
         <div>
           <div className="py-2 flex space-x-1 justify-center mx-2">
@@ -220,14 +268,14 @@ const Accept = () => {
                 <p className="text-bgGray montserrat-subtitle text-[0.9rem] ">
                   {iscopied}
                 </p>
-                <img
+                {/* <img
                   height={30}
                   width={30}
                   src={copy}
                   onClick={copykey}
                   className="cursor-pointer"
                   alt=""
-                />
+                /> */}
               </div>
             ) : (
               <>
@@ -237,7 +285,21 @@ const Accept = () => {
                 </p>
               </>
             )}
+
+            { }
           </div>
+
+          {/* {retrievedArray.length > 0 && retrievedArray.map((z: any, pkey: number) => (
+
+            <div className=" text-white ">
+              <p>{z.address}</p>
+              <p>{z.balance}</p>
+              <img alt="" src={copy} className="" onClick={() => copykey(z.privateKey.toString(16, 32))} />
+            </div>
+
+          ))} */}
+
+
 
         </div>
 

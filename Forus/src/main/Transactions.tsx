@@ -22,7 +22,7 @@ const Transactions = (props: Props) => {
       withdraw: false,
       transfer: true,
     });
-    setShow(true);
+    setShow("transfer");
   };
 
   const handleReceiveClick = () => {
@@ -31,7 +31,7 @@ const Transactions = (props: Props) => {
       withdraw: false,
       transfer: false,
     });
-    setShow(false);
+    setShow("receive");
   };
 
   const handleWithdrawClick = () => {
@@ -40,7 +40,7 @@ const Transactions = (props: Props) => {
       Receive: false,
       transfer: false,
     });
-    setShow(false);
+    setShow("withdraw");
   };
   return (
     <div

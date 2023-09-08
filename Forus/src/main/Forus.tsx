@@ -17,8 +17,8 @@ import {
 type Props = {};
 
 interface ContextValue {
-  show: boolean;
-  setShow: React.Dispatch<React.SetStateAction<boolean | any>>;
+  show: string;
+  setShow: React.Dispatch<React.SetStateAction<string | any>>;
   connectWallet(): void;
   contractAddress: string;
   apothemcontractAddress: string;
@@ -39,7 +39,7 @@ const Forus = (props: Props) => {
   //start
   const notyf = new Notyf();
 
-  const [show, setShow] = useState<boolean>(true);
+  const [show, setShow] = useState<string>("transfer");
   const [, setwallet] = useState<boolean>(false);
   const [sumof, setsumof] = useState<string | any>("");
   const [sumofAddress, setsumofAddress] = useState<string | any>("");
@@ -248,8 +248,10 @@ const Forus = (props: Props) => {
 
   return (
     <AppContext.Provider value={ContextValue}>
-      <div className="bg-[#000000]  min-h-[100vh] max-h-max">
+      <div className="bg-[#000000]  min-h-[95vh] max-h-max">
+        {/* <div className="flex items-center justify-between"> */}
         <NavBar />
+        {/* </div> */}
         <div
           className="md:w-[90%] max-w-[1220px] mx-auto
                   py-8 p-4"
