@@ -88,7 +88,7 @@ const Instruction = (props: Props) => {
             {" "}
             {/* on Accept */}
             <h1 className="montserrat-subheading text-bgGray font-semibold text-[1.5rem]">
-              Accept
+              Withdraw
             </h1>
             <div className="py-4 montserrat-heading  text-bgGray flex flex-col gap-4 items-center">
               <div className="flex space-x-2">
@@ -100,15 +100,15 @@ const Instruction = (props: Props) => {
               <div className="flex space-x-2">
                 <MdVerifiedUser color="#cdd4dc" size={29} />
                 <p className="flex-1">
-                Connect your current wallet or (load your " stealth address's private key
-                  key) 
+                  Connect your current wallet or (load your " stealth address's private key
+                  key)
                 </p>
               </div>
 
               <div className="flex space-x-2">
                 <MdVerifiedUser color="#cdd4dc" size={29} />
                 <p className="flex-1">
-                 Sign the mesage  ! Relayer would send the transaction on your behalf.
+                  Sign the mesage  ! Relayer would send the transaction on your behalf.
                 </p>
               </div>
             </div>

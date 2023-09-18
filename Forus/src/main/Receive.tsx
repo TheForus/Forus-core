@@ -67,11 +67,13 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
 
     // Get the wallet address
     let add = wallet.address;
-    console.log(add, privateKey);
+    // console.log(add, privateKey);
+    const provider = new ethers.providers.Web3Provider(ethereum);
+    const bal = await provider.getBalance(add);
+    const balance = ethers.utils.formatEther(bal);
 
-    const balance = await getBalance(add);
 
-
+    console.log(add, privateKey, balance);
     array.push({ address: add?.slice(0, 6) + add?.slice(-4), balance: balance, key: privateKey });
     const arrayJson = JSON.stringify(array);
     sessionStorage.setItem('array', arrayJson);
