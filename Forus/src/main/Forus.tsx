@@ -6,7 +6,7 @@ import React, { createContext, useState, useEffect } from "react";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import abi from "../artifacts/contracts/Logs.sol/Logs.json";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { chainOptions } from "../helper/ChainOptions";
 import {
   apothemcontractAddress,
@@ -56,6 +56,7 @@ const Forus = (props: Props) => {
   if (ethereum) {
     const provider = new ethers.providers.Web3Provider(ethereum);
     contract = new ethers.Contract(contractAddress, abi.abi, provider);
+
   }
 
 
@@ -188,11 +189,29 @@ const Forus = (props: Props) => {
   const accountChecker = async () => {
     const accounts = await ethereum.request({ method: "eth_requestAccounts" });
     sessionStorage.setItem("address", accounts[0]);
+    
+    const provider = new ethers.providers.Web3Provider(ethereum);
+
+    try {
+      const balance = await provider.getBalance(sessionStorage.getItem("address") || '');
+      console.log(ethers.utils.formatEther(balance).toString())
+      const bignumber = BigNumber.from(balance);
+      // console.log(Bignumber)
+  
+      // Convert the BigNumber to a JavaScript number
+      const convertedNumber = bignumber.toNumber()/ 10 ** 18;
+      
+      console.log(convertedNumber);
+    }
+    catch (e: any) {
+      console.log(e);
+    }
   };
 
 
   useEffect(() => {
     validateChain();
+
 
   }, []);
 

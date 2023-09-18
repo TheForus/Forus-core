@@ -8,6 +8,8 @@ import Withdraw from "./Withdraw";
 
 type Props = {};
 
+
+
 const Transactions = (props: Props) => {
   const { setShow } = useContext(AppContext);
   const [buttonStatus, setButtonStatus] = useState({
@@ -15,6 +17,8 @@ const Transactions = (props: Props) => {
     Receive: false,
     withdraw: false,
   });
+
+  const [masterkey, setmasterkey] = useState<string | any>("");
 
   const handleTransferClick = () => {
     setButtonStatus({
@@ -41,6 +45,7 @@ const Transactions = (props: Props) => {
       transfer: false,
     });
     setShow("withdraw");
+    console.log('hellow', buttonStatus);
   };
   return (
     <div
@@ -78,9 +83,9 @@ const Transactions = (props: Props) => {
         {buttonStatus.transfer ? (
           <Transfer />
         ) : buttonStatus.Receive ? (
-          <Receive />
+          <Receive setmasterkey={setmasterkey} withdrawFunction={handleWithdrawClick} />
         ) : (
-          <Withdraw />
+          <Withdraw masterkey={masterkey} setmasterkey={setmasterkey} />
         )}
       </div>
     </div>

@@ -5,10 +5,11 @@ import { AppContext } from "./Forus";
 import { FaDiscord, FaGithub, FaTwitter } from "react-icons/fa";
 import { IoMdHome } from "react-icons/io";
 import { HiQuestionMarkCircle } from "react-icons/hi";
-import { useState, useEffect } from "react";
+import { useState, } from "react";
 import { AiFillFilePdf } from "react-icons/ai";
 import { MdArrowDropDown } from "react-icons/md";
 import { MdArrowDropUp } from "react-icons/md";
+import { AiOutlineCopy } from "react-icons/ai";
 
 type Props = {};
 
@@ -22,6 +23,10 @@ const NavBar = (props: Props) => {
     sessionStorage.setItem("chain", c.name);
     await connect.handleChainChange(c.chainId);
   };
+
+  const copyAddress = async () => {
+    navigator.clipboard.writeText(sessionStorage.getItem("address") || "");
+  }
 
   return (
     <div className=" mx-auto pt-4 sm:pt-8 pb-12   ">
@@ -119,11 +124,10 @@ const NavBar = (props: Props) => {
                   </li>
                   <div
                     className={`
-              ${
-                show &&
-                `transition-all ease-in py-2 border-none  shadow-md flex flex-col
+              ${show &&
+                      `transition-all ease-in py-2 border-none  shadow-md flex flex-col
                  rounded-b-md absolute ml-1 mt-1 text-black bg-bgGray z-10 `
-              }
+                      }
             `}
                   >
                     {show &&
@@ -155,15 +159,20 @@ const NavBar = (props: Props) => {
             )}
           </div>
 
-          <p className="sm:text-[1.1rem] montserrat-small text-bgGray   font-semibold text-[1rem]">
+          <p onClick={copyAddress} className="sm:text-[1.1rem] montserrat-small text-bgGray   font-semibold text-[1rem]">
             {sessionStorage.getItem("address") !== null || false
-              ? `${sessionStorage.getItem("address")?.slice(0, 9)  }...${sessionStorage.getItem("address")?.slice(-5)  }`
+              ? `${sessionStorage.getItem("address")?.slice(0, 9)}...${sessionStorage.getItem("address")?.slice(-5)}`
               : ""}
           </p>
+
+          <AiOutlineCopy
+              className="cursor-pointer font-bold text-2xl text-[181b1f] text-highlight"
+              onClick={copyAddress}
+            />
           <button
             onClick={connect.connectWallet}
             className=" montserrat-subtitle border-1 p-1 sm:text-[1rem] text-[0.8rem]
-                    px-2 sm:px-4 rounded-md border border-black highlight
+                    px-2 sm:px-4 rounded-md  highlight
                     bg-highlight text-black font-extrabold hover:bg-clip-text hover:border 
                     hover:border-highlight hover:text-highlight transition-all ease-linear bg-gradient-to-r hover:from-teal-400 hover:to-cyan-500
                      "
