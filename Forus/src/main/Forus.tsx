@@ -41,8 +41,8 @@ const Forus = (props: Props) => {
 
   const [show, setShow] = useState<string>("transfer");
   const [, setwallet] = useState<boolean>(false);
-  const [sumof, setsumof] = useState<string | any>("");
-  const [sumofAddress, setsumofAddress] = useState<string | any>("");
+  const [sumof, setsumof] = useState<string | any>("0");
+  const [sumofAddress, setsumofAddress] = useState<string | any>("0");
   const [contractAddress, setcontractAddress] = useState<string | any>("");
 
   const { ethereum }: any = window;
@@ -121,9 +121,6 @@ const Forus = (props: Props) => {
 
 
 
-
-
-
       }
 
 
@@ -143,7 +140,7 @@ const Forus = (props: Props) => {
         break;
 
       case "0xaa36a7":
-        sessionStorage.setItem("chain", "Sepolia");
+        sessionStorage.setItem("chain", "Sepolia ");
 
         break;
 
@@ -164,7 +161,7 @@ const Forus = (props: Props) => {
     const fetchData = async () => {
 
       switch (selectedChain) {
-        case "Sepolia":
+        case "Sepolia ":
           setcontractAddress(sepoliacontractAddress);
           break;
         case "Apothem":
@@ -199,7 +196,7 @@ const Forus = (props: Props) => {
       // console.log(Bignumber)
   
       // Convert the BigNumber to a JavaScript number
-      const convertedNumber = bignumber.toNumber()/ 10 ** 18;
+      const convertedNumber = bignumber.toNumber() / 10 ** 18;
       
       console.log(convertedNumber);
     }
