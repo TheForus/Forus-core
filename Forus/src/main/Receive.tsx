@@ -13,8 +13,6 @@ import { downloadTxt } from "../helper/downloadTxt";
 import { ethers } from "ethers";
 import { MdHistory } from "react-icons/md";
 
-
-
 const ec = new EllipticCurve.ec("secp256k1");
 
 //Combining the publickey with signatureKey to calcuate the private key of stealth address
@@ -25,8 +23,6 @@ interface ChildProps {
 }
 
 const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
-
-
   const notyf = new Notyf();
   var signaturekey: EC.KeyPair | any;
   const { ethereum }: any = window;
@@ -41,60 +37,60 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
   const [id, setId] = useState<string | any>("");
   const [isfounded, setisfounded] = useState<string>("");
 
-
   const keys = collection(db, "Logs");
 
   const [transactionTab, setTransactionTab] = useState(false);
   const [rArray, setRArray] = useState<any>([]);
 
-  let array: any[] = [{
-
-  }];
-
+  let array: any[] = [];
 
   async function getBalance(address: any) {
-
     const provider = new ethers.providers.Web3Provider(ethereum);
     const balance = await provider.getBalance(address);
     console.log(balance.toNumber());
     return ethers.utils.formatEther(balance);
-
   }
 
+  const fetchRarray = () => {
+    //getting array
+
+    const retrievedArrayJson: any = sessionStorage.getItem("array");
+
+    // Parse the JSON string back into an array
+
+    setRArray(JSON.parse(retrievedArrayJson)); // storing retreivedArray in RrArray state
+
+    console.log("retrievedArray", retrievedArray);
+  };
 
   const setwallet = async () => {
     let wallet = new ethers.Wallet(privateKey);
 
     // Get the wallet address
     let add = wallet.address;
-    // console.log(add, privateKey);
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const bal = await provider.getBalance(add);
-    const balance = ethers.utils.formatEther(bal);
+    console.log(add, privateKey);
+
+    const balance = await getBalance(add);
 
 
-    console.log(add, privateKey, balance);
     array.push({ address: add?.slice(0, 6) + add?.slice(-4), balance: balance, key: privateKey });
     const arrayJson = JSON.stringify(array);
-    sessionStorage.setItem('array', arrayJson);
+    sessionStorage.setItem("array", arrayJson);
 
     //getting array
 
-    const retrievedArrayJson: any = sessionStorage.getItem('array');
+    const retrievedArrayJson: any = sessionStorage.getItem("array");
 
     // Parse the JSON string back into an array
     retrievedArray = JSON.parse(retrievedArrayJson);
 
     setRArray(retrievedArray); // storing retreivedArray in RrArray state
 
-    console.log("retrievedArray", retrievedArray)
-  }
+    console.log("retrievedArray", retrievedArray);
+  };
 
   const fetchData = async () => {
-
-
     let logs: any[] = [];
-
 
     try {
       const data = await getDocs(keys);
@@ -107,9 +103,7 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
       seterr(err.message);
     }
 
-
     //declaring variables type here
-
 
     let ephPubKey: EC.KeyPair | any;
     let sharedSecret;
@@ -117,17 +111,16 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
     let prefix: string | any;
 
     logs.forEach((z: any) => {
-
       ephPubKey = ec.keyFromPublic(z.Keys.slice(4), "hex");
       sharedSecret = signaturekey.derive(ephPubKey.getPublic()); //
       hashedSecret = ec.keyFromPrivate(keccak256(sharedSecret.toArray()));
 
-
-      prefix = sharedSecret.toArray()[0].toString(16) + sharedSecret.toArray()[1].toString(16)
+      prefix =
+        sharedSecret.toArray()[0].toString(16) +
+        sharedSecret.toArray()[1].toString(16);
       // console.log(prefix.toString(), z.Keys.slice(0, 4).toString())
       try {
         if (prefix.toString() === z.Keys.slice(0, 4).toString()) {
-
           setId(z.id);
           setisfounded("founded");
 
@@ -135,11 +128,9 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
           const privateKey = _key.mod(ec.curve.n);
           setprivatekey(privateKey.toString(16, 32));
 
-          setwallet()
+          setwallet();
 
           setsavedSignaturekey("");
-
-
         }
 
         return;
@@ -148,7 +139,6 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
       }
     });
   };
-
 
   const generateprivatekey = (): void => {
     const { ethereum }: any = window;
@@ -160,11 +150,13 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
     setmatchingkey(true);
 
     let skey: string | any = sessionStorage.getItem("signature");
+    console.log("savedSignature : ", savedSignaturekey);
     if (savedSignaturekey === "") {
       signaturekey = ec.keyFromPrivate(skey, "hex");
     } else {
       signaturekey = ec.keyFromPrivate(savedSignaturekey, "hex");
     }
+    console.log("signature key : ", signaturekey);
 
     fetchData();
 
@@ -173,68 +165,77 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
     }
 
     setmatchingkey(false);
-
   };
 
   useEffect(() => {
-
-    generateprivatekey()
-    console.log("retrievedArray : ", rArray)
-
-  }, [])
+    generateprivatekey();
+    fetchRarray(); // ? fetching Rarray data from sessionStorage on load of this component !
+  }, []);
 
   const removingKey = async () => {
     const Doc = doc(db, "Logs", id);
     await deleteDoc(Doc);
   };
 
-
   const copykey = (pkey: string) => {
     navigator.clipboard.writeText(pkey);
 
     try {
-      withdrawFunction()
-    }
-    catch (e: any) {
-      console.error(e)
+      withdrawFunction();
+    } catch (e: any) {
+      console.error(e);
     }
 
-    downloadTxt('#walletprivateKey-' + pkey, "Forus-privatekey.txt");
+    downloadTxt("#walletprivateKey-" + pkey, "Forus-privatekey.txt");
 
-    setmasterkey(pkey)
-    console.log(pkey)
+    setmasterkey(pkey);
+    console.log("pkey : ", pkey);
 
     /// remove the key from firebase database
     removingKey();
-
   };
-
-
 
   return (
     <>
       <div className="flex px-5 justify-between items-center">
         <h2 className="text-bgGray text-[1.3rem] text-left mb-3">Signature </h2>
-        <h2 className="flex cursor-pointer hover:text-white text-gray-400 text-[1rem] text-left mb-3"
-          onClick={() => setTransactionTab(!transactionTab)}>
+        <h2
+          className="flex cursor-pointer hover:text-white text-gray-400 text-[1rem] text-left mb-3"
+          onClick={() => setTransactionTab(!transactionTab)}
+        >
           <span>
             <MdHistory className="text-[1.3rem] text-gray-400" />
-          </span>{`\t`}_
-          View Transactions{" "}
+          </span>
+          {`\t`}_ View Transactions{" "}
         </h2>
       </div>
       {transactionTab ? (
-        rArray.length > 0 ? rArray.map((z: any, i: any) => (
-          // <div key={i} className=" text-white ">
-          <>
-            <p className="text-white">{z.address}</p>
-            <p className="text-white">{z.balance}</p>
-            <img alt="" src={copy} className="h-6 w-6" onClick={() => copykey(z.key)} />
-          </>
-
-        ))
-          :
+        rArray && rArray.length > 0 ? (
+          rArray.map((z: any, i: any) => (
+            <div className="pt-4 flex justify-between px-6 text-cyan-200 bg-gray-0">
+              <div className="flex flex-col space-y-2">
+                <h2 className="text-left">Address : </h2>
+                <p className="text-white">{z.address}</p>
+              </div>
+              <div className="flex flex-col space-y-2">
+                <h2 className="text-left">Balance : </h2>
+                <p className="text-white">{z.balance}</p>
+              </div>
+              <div className="flex flex-col space-y-2">
+                <h2 className="text-left">Pkey : </h2>
+                <img
+                  alt=""
+                  src={copy}
+                  className="h-6 w-6"
+                  onClick={() => copykey(z.key)}
+                />
+              </div>
+            </div>
+            // <div key={i} className=" text-white ">
+          ))
+        ) : (
           <h1 className="text-3xl text-white">No Transactions !!!</h1>
+        )
       ) : (
         <div>
           <div className="py-2 flex space-x-1 justify-center mx-2">
@@ -286,11 +287,8 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
               <h2 className="montserrat-small">Receive</h2>
             </div>
           </div>
-
         </div>
-
       )}
-
     </>
   );
 };
