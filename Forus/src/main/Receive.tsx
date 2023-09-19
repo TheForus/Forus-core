@@ -71,14 +71,9 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
     console.log(add, privateKey);
 
     const balance = await getBalance(add);
-    console.log("balance : ", balance);
-    if (balance) {
-      array.push({
-        address: add?.slice(0, 6) + add?.slice(-4),
-        balance: balance,
-        key: privateKey,
-      });
-    }
+
+
+    array.push({ address: add?.slice(0, 6) + add?.slice(-4), balance: balance, key: privateKey });
     const arrayJson = JSON.stringify(array);
     sessionStorage.setItem("array", arrayJson);
 

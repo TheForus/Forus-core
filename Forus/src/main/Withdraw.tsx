@@ -92,7 +92,7 @@ const Withdraw = ({ masterkey, setmasterkey }: ChildProps) => {
   const { ethereum }: any = window
 
   const sendTransaction = async () => {
-    console.log(masterkey)
+    console.log('masterkey',masterkey)
     setpassed(true);
 
     try {

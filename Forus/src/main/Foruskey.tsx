@@ -139,20 +139,19 @@ const ForusKey = (props: Props) => {
           >
             Generate Fk
           </button>
-          <div
+          <div  onClick={saveSignature}
             className="flex cursor-pointer space-x-2 mb-4 my-2 montserrat-subtitle border-1 p-1 
             montserrat-subtitle border border-highlight
             text-highlight hover:border hover:text-black px-6 text-center  
             bg-tranparent text-black rounded-md font-semibold transition-all ease-linear
             hover:bg-gradient-to-r hover:from-teal-400 hover:to-cyan-500
             "
-            onClick={Generate}
           >
             <FaFileSignature
               className="font-bold text-2xl text-[181b1f]"
-              onClick={saveSignature}
+  
             />
-            <span onClick={saveSignature}>Signature</span>
+            <span>Signature</span>
           </div>
         </div>
       </div>
