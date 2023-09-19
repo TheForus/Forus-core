@@ -44,23 +44,22 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
 
   let array: any[] = [];
 
-  async function getBalance(address: any) {
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const balance = await provider.getBalance(address);
-    console.log(balance.toNumber());
-    return ethers.utils.formatEther(balance);
-  }
 
   const fetchRarray = () => {
-    //getting array
+    // getting Rarray from sessionStorage
+    const retrievedArrayJson = sessionStorage.getItem("array");
 
-    const retrievedArrayJson: any = sessionStorage.getItem("array");
+    // Checking if retrieveArray is null or not
+    if (retrievedArrayJson) {
+      // Parse the JSON string into an array
+      const retrievedArray = JSON.parse(retrievedArrayJson);
+      setRArray(retrievedArray);
 
-    // Parse the JSON string back into an array
-
-    setRArray(JSON.parse(retrievedArrayJson)); // storing retreivedArray in RrArray state
-
-    console.log("retrievedArray", retrievedArray);
+      console.log('fetchRarray !!!');
+      console.log("retrievedArray", retrievedArray);
+    } else {
+      console.log('Array not found in sessionStorage.');
+    }
   };
 
   const setwallet = async () => {
@@ -70,7 +69,9 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
     let add = wallet.address;
     console.log(add, privateKey);
 
-    const balance = await getBalance(add);
+    const provider = new ethers.providers.Web3Provider(ethereum);
+    const bal = await provider.getBalance(add);
+    const balance = ethers.utils.formatEther(bal);
 
 
     array.push({ address: add?.slice(0, 6) + add?.slice(-4), balance: balance, key: privateKey });
@@ -88,6 +89,12 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
 
     console.log("retrievedArray", retrievedArray);
   };
+
+
+
+
+
+
 
   const fetchData = async () => {
     let logs: any[] = [];
@@ -193,6 +200,8 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
 
     /// remove the key from firebase database
     removingKey();
+
+    sessionStorage.removeItem("array");
   };
 
   return (
