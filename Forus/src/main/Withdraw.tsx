@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { BsDownload } from "react-icons/bs";
+import { BsBoxArrowInDown, BsDownload } from "react-icons/bs";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import { ethers } from "ethers";
 import ToolTip from "../helper/ToopTip";
-import { BsFillSendFill } from "react-icons/bs";
 import { MdOutlineDone } from "react-icons/md";
 import { TbArrowsExchange2 } from "react-icons/tb";
 
@@ -14,7 +13,11 @@ interface ChildProps {
   setmasterkey: React.Dispatch<React.SetStateAction<string | any>>;
 }
 
-const Withdraw = ({ masterkey, setmasterkey ,amountTowithdraw }: ChildProps) => {
+const Withdraw = ({
+  masterkey,
+  setmasterkey,
+  amountTowithdraw,
+}: ChildProps) => {
   const [hideInput, sethideInput] = useState<boolean>(false);
   const notyf = new Notyf();
 
@@ -76,7 +79,6 @@ const Withdraw = ({ masterkey, setmasterkey ,amountTowithdraw }: ChildProps) => 
   const { ethereum }: any = window;
 
   const sendTransaction = async () => {
-
     setpassed(true);
 
     try {
@@ -95,75 +97,68 @@ const Withdraw = ({ masterkey, setmasterkey ,amountTowithdraw }: ChildProps) => 
       console.log("Transaction sent:", txResponse, tx);
 
       setpassed(false);
-
-
     } catch (error) {
       console.error("Error sending transaction:", error);
     }
   };
 
-
   const toggle = () => {
-
-    sethideInput(!hideInput)
-    setrec(sessionStorage.getItem("address"))
-    
-  }
-
+    sethideInput(!hideInput);
+    setrec(sessionStorage.getItem("address"));
+  };
 
   return (
-    <div className="pl-2 w-[90%] mx-auto">
-      <h2 className="pl-2 text-bgGray text-[1.3rem] text-left mb-3">
+    <div className="pt-2 mx-auto">
+      {/* <h2 className="text-bgGray text-[1.3rem] text-left mb-3">
         Recipient Address
-      </h2>
-      <div className="py-2 flex space-x-4 justify-between">
-        <div className="flex-1 flex space-x-2 items-center">
-          {hideInput === false ?
-
+      </h2> */}
+      <div className="py-2 flex space-x-4 items-center justify-between">
+        <div className={`flex-1 ${hideInput && 'justify-end'} flex space-x-2 justify-between items-center`}>
+          {hideInput === false ? (
             <input
               type="text"
               className="flex-1 text-[0.9rem] font-semibold text-gray-100 placeholder:text-gray-500
-          montserrat-subtitle outline-none px-3 py-3 h-[100%] rounded-md
+          montserrat-subtitle outline-none px-4 py-3 rounded-md
           hover:border-cyan-900 w-[100%] bg-black/40 border-2 border-gray-500"
-
               onChange={(e) => {
                 setrec(e.target.value);
               }}
               placeholder="Enter Recipient Address"
             />
-
-            :
-            <h3 className="text-[1rem] text-gray-400">Withdraw funds to connected wallet !</h3>
-
-          }
-
+          ) : (
+            <h3 className="text-[1rem] text-gray-400">
+              Withdraw funds to connected wallet !
+            </h3>
+          )}
           <>
             <ToolTip tooltip="Load Private Key">
               <button
                 onClick={handleFileUpload}
                 className="text-[0.9rem] text-gray-400 p-1 font-semibold montserrat-small"
               >
-                {masterkey === '' ?
+                {masterkey === "" ? (
                   <BsDownload
                     className="cursor-pointer  text-[#bbc1c9]"
                     size={24}
-
-                  /> : <MdOutlineDone className="cursor-pointer  text-highlight"
-                    size={28} />
-                }
+                  />
+                ) : (
+                  <MdOutlineDone
+                    className="cursor-pointer  text-highlight"
+                    size={28}
+                  />
+                )}
               </button>
             </ToolTip>
           </>
-
-
-
         </div>
         {/* Download Icon */}
         <div className="pl-4 text-gray-200 border-l border-gray-800 flex space-x-1 items-center">
           <ToolTip tooltip="Receive funds in your own connected wallet !">
-            <TbArrowsExchange2 onClick={toggle} className="text-[1.8rem] text-highlight cursor-pointer" />
+            <TbArrowsExchange2
+              onClick={toggle}
+              className="text-[1.8rem] text-highlight cursor-pointer"
+            />
           </ToolTip>
-
         </div>
       </div>
 
@@ -171,22 +166,18 @@ const Withdraw = ({ masterkey, setmasterkey ,amountTowithdraw }: ChildProps) => 
       <div className="w-full flex justify-center pt-2 mr-4">
         <button
           onClick={sendTransaction}
-          className="w-[97%] mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
+          className="flex space-x-2 justify-center w-[100%] mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
           hover:shadow-xl px-6 text-center text-black highlight border border-black 
           rounded-md font-bold hover:border-highlight hover:text-highlight transition-all ease-linear"
-
         >
-
-          Withdraw
-
-          <BsFillSendFill className="text-[1.3rem] text-black" />
+          <BsBoxArrowInDown className="text-[1.3rem] text-inherit" />
+          <p>Withdraw</p>
         </button>
       </div>
 
       <p className="text-[0.9rem] text-white">
         {passed === true ? "passing " : passed === false ? "passed" : ""}
       </p>
-
     </div>
   );
 };

@@ -19,6 +19,7 @@ const NavBar = (props: Props) => {
   const [show, setshow] = useState<boolean>(false);
   const [isAddrHovered, setIsAddrHovered] = useState<boolean>(false);
   const [addressCopied, setAddressCopied] = useState<boolean>(false);
+  console.log("connect : ", connect.userBalance);
 
   const changeChains = async (c: any) => {
     setshow(!show);
@@ -68,7 +69,7 @@ const NavBar = (props: Props) => {
                md:items-end space-x-1 sm:ml-14 ml-9  text-bgGray 
                 montserrat-subtitle underline-offset-8 font-bold hover:underline decoration-bgGray  sm:text-[1.1rem] text-[0.8rem]"
             >
-              <IoMdHome size={23} className="md:self-start text-highlight  " />
+              <IoMdHome size={23} className="md:self-start text-highlight" />
               <p className="sm:inline-flex hidden">Home</p>
             </button>
             <div
@@ -107,21 +108,21 @@ const NavBar = (props: Props) => {
         <div className="sm:flex-row flex space-x-3 items-center">
           {/* Social Links */}
           <div className="lg:flex space-x-3 items-center hidden">
-            <p className=" text-bgGray ">
-              <a href="https://discord.gg/keQnv2K8HP">
-                <FaDiscord size={22} />
-              </a>
-            </p>
-            <p className=" text-bgGray  ">
-              <a href="https://github.com/TheForus">
-                <FaGithub size={22} />
-              </a>
-            </p>
-            <p className=" text-bgGray  ">
-              <a href="https://twitter.com/The_Forus">
-                <FaTwitter size={22} />
-              </a>
-            </p>
+              <p className=" text-bgGray ">
+                <a href="https://discord.gg/keQnv2K8HP">
+                  <FaDiscord size={22} />
+                </a>
+              </p>
+              <p className=" text-bgGray  ">
+                <a href="https://github.com/TheForus">
+                  <FaGithub size={22} />
+                </a>
+              </p>
+              <p className=" text-bgGray  ">
+                <a href="https://twitter.com/The_Forus">
+                  <FaTwitter size={22} />
+                </a>
+              </p>
 
             {sessionStorage.getItem("address") !== null && (
               <div
@@ -142,10 +143,11 @@ const NavBar = (props: Props) => {
                   </li>
                   <div
                     className={`
-              ${show &&
-                      `transition-all ease-in py-2 border-none  shadow-md flex flex-col
+              ${
+                show &&
+                `transition-all ease-in py-2 border-none  shadow-md flex flex-col
                  rounded-b-md absolute ml-1 mt-1 text-black bg-bgGray z-10 `
-                      }
+              }
             `}
                   >
                     {show &&
@@ -178,34 +180,35 @@ const NavBar = (props: Props) => {
           </div>
           {/* Address Bar */}
           <div
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            onClick={copyAddress}
-            className="flex items-center space-x-1 relative cursor-pointer transition-all ease-in-out"
+            // onClick={copyAddress}
+            className="flex items-center space-x-1 relative transition-all ease-in-out"
           >
-
-            <div className="sm:flex-row flex space-x-3 items-center">
+            <div
+              className="flex sm:flex-row sm:items-center 
+            flex-col-reverse items-end space-x-3"
+            >
               <p
-                onClick={copyAddress}
-                className={`sm:text-[.9rem] montserrat-small text-highlight font-semibold text-[.8rem]`}
+                // onClick={copyAddress}
+                className={`sm:text-[1rem] md:text-[0.9rem] montserrat-small text-highlight font-semibold text-[0.8rem]`}
               >
                 {sessionStorage.getItem("address") !== null || false
                   ? connect.userBalance
                   : ""}
               </p>
               <p
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
                 onClick={copyAddress}
-                className={`sm:text-[1.1rem] montserrat-small text-bgGray font-semibold text-[1rem]`}
+                className={`sm:text-[1.3rem] md:text-[1rem] cursor-pointer montserrat-small text-bgGray font-semibold text-[1rem]`}
               >
                 {sessionStorage.getItem("address") !== null || false
                   ? `${sessionStorage
-                    .getItem("address")
-                    ?.slice(0, 9)}...${sessionStorage
+                      .getItem("address")
+                      ?.slice(0, 9)}...${sessionStorage
                       .getItem("address")
                       ?.slice(-5)}`
                   : ""}
               </p>
-
             </div>
             {addressCopied ? (
               <MdOutlineDone
@@ -213,13 +216,13 @@ const NavBar = (props: Props) => {
               />
             ) : (
               <AiOutlineCopy
-                className={`${isAddrHovered ? "inline-flex" : "hidden"
-                  } text-gray-300 font-bold text-[1.1rem] text-highlight`}
+                className={`${
+                  isAddrHovered ? "inline-flex" : "hidden"
+                } text-gray-300 font-bold text-[1.1rem] text-highlight`}
               />
             )}
-
           </div>
-          {sessionStorage.getItem("address") === null || false ?
+          {sessionStorage.getItem("address") === null || false ? (
             <button
               onClick={connect.connectWallet}
               className=" montserrat-subtitle border-1 p-1 sm:text-[1rem] text-[0.8rem]
@@ -227,10 +230,10 @@ const NavBar = (props: Props) => {
                     bg-highlight text-black font-extrabold hover:bg-clip-text hover:border 
                     hover:border-highlight hover:text-highlight transition-all ease-linear bg-gradient-to-r hover:from-teal-400 hover:to-cyan-500
                      "
-            >
-            </button>
-
-            : ""}
+            ></button>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </div>
