@@ -208,6 +208,13 @@ const Transfer = () => {
             "https://explorer.testnet.fantom.network/transactions/" + txId.hash
           );
           break;
+
+
+          case "arbitrum sepolia":
+            settrxid(
+              "https://arbitrum-sepolia.etherscan.io/tx/" + txId.hash
+            );
+            break;
         default:
           break;
       }
@@ -260,8 +267,27 @@ const Transfer = () => {
           receipentAddress,
           amountParams
         );
-        const txResponse = await transferERC20;
-        settrxid("https://sepolia.etherscan.io/tx/" + txResponse.hash);
+        const txId = await transferERC20;
+        switch (currentNetwork) {
+          case "Sepolia":
+            settrxid("https://sepolia.etherscan.io/tx/" + txId.hash);
+            break;
+          case "Apothem":
+            settrxid("https://explorer.apothem.network/txs/" + txId.hash);
+            break;
+          case "fantom testnet":
+            settrxid(
+              "https://explorer.testnet.fantom.network/transactions/" + txId.hash
+            );
+            break;
+           case "arbitrum sepolia":
+              settrxid(
+                "https://arbitrum-sepolia.etherscan.io/tx/" + txId.hash
+              );
+              break;
+          default:
+            break;
+        }
       } catch (err: any) {
         console.log(err.message);
         seterror(err.message);
