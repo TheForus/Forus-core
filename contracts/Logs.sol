@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.16;
 
+
 import "./IERC20.sol";
 import "./IERC721.sol";
 
@@ -32,7 +33,7 @@ contract Logs {
     event publicKeys(
         bytes32 r,
         bytes32 s,
-        bytes2 secret,
+        bytes2 v,
         uint256 indexed timestamp
     );
 
@@ -60,13 +61,15 @@ contract Logs {
     function Transfer(
         bytes32 r,
         bytes32 s,
-        bytes2 secret,
+        bytes2 v,
         address payable target
+        
     ) public payable {
+
         require(msg.value > 0, "amount should be more than 0");
         require(target != address(0x0), " Target address required");
 
-        publishEphkeys(r, s, secret);
+        publishEphkeys(r, s, v);
 
         (bool sent, ) = target.call{value: msg.value}("");
         require(sent, " Failed to send ");
@@ -80,7 +83,8 @@ contract Logs {
         
         totalFunds = updatedTotalFunds;
         limit = updatedLimit;
-        emit publicKeys(r, s, secret, block.timestamp);
+        emit publicKeys(r, s, v, block.timestamp);
+
     }
 
 
@@ -88,16 +92,18 @@ contract Logs {
 
         bytes32 r,
         bytes32 s,
-        bytes2 secret,
+        bytes2 v,
         address token,
         address target,
         uint256 amount
+
     ) external {
+
         require(amount > 0, "Amount should be more than 0");
         require(token != address(0x0), " Enter the token address");
         require(target != address(0x0), " Enter the receipent address");
 
-        publishEphkeys(r, s, secret);
+        publishEphkeys(r, s, v);
 
 
         IERC20(token).transferFrom(msg.sender, target, amount);
@@ -111,22 +117,25 @@ contract Logs {
 
         totalFunds = updatedTotalFunds;
         limit = updatedLimit;
-        emit publicKeys(r, s, secret, block.timestamp);
+        emit publicKeys(r, s, v, block.timestamp);
+
     }
 
     function TransferNft(
 
         bytes32 r,
         bytes32 s,
-        bytes2 secret,
+        bytes2 v,
         address NftToken,
         address target,
         uint256 tokenId
+
     ) external {
+
         require(NftToken != address(0x0), " Enter the token address");
         require(target != address(0x0), " Target address required");
 
-        publishEphkeys(r, s, secret);
+        publishEphkeys(r, s, v);
 
 
         IERC721(NftToken).transferFrom(msg.sender, target, tokenId);
@@ -139,7 +148,10 @@ contract Logs {
         // Update storage variables with the updated values
 
         totalFunds = updatedTotalFunds;
+
         limit = updatedLimit;
-        emit publicKeys(r, s, secret, block.timestamp);
+
+        emit publicKeys(r, s, v, block.timestamp);
+
     }
 }

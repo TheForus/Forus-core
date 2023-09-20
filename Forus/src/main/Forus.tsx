@@ -12,6 +12,7 @@ import {
   apothemcontractAddress,
   fantomcontractAddress,
   sepoliacontractAddress,
+  arbitrumcontractaddress
 } from "../helper/contractAddresses";
 
 type Props = {};
@@ -155,6 +156,10 @@ const Forus = (props: Props) => {
           setcontractAddress(fantomcontractAddress);
           break;
 
+        case "arbitrum sepolia":
+          setcontractAddress(fantomcontractAddress);
+          break;
+
         default:
           break;
       }
@@ -181,7 +186,7 @@ const Forus = (props: Props) => {
       setUserBalance(ethers.utils.formatEther(balance).toString().slice(0, 5) + sessionStorage.getItem("symbol"));
 
 
-    } 
+    }
     catch (e: any) {
       console.log(e);
     }
