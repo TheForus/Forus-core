@@ -18,9 +18,6 @@ import { ethers } from "ethers";
 import { MdHistory, MdOutlineDone } from "react-icons/md";
 import ToolTip from "../helper/ToopTip";
 
-
-
-
 const ec = new EllipticCurve.ec("secp256k1");
 
 //Combining the publickey with signatureKey to calcuate the private key of stealth address
@@ -31,8 +28,11 @@ interface ChildProps {
   setamountTowithdraw: React.Dispatch<React.SetStateAction<string | any>>;
 }
 
-const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey, setamountTowithdraw }) => {
-  
+const Receive: React.FC<ChildProps> = ({
+  withdrawFunction,
+  setmasterkey,
+  setamountTowithdraw,
+}) => {
   const notyf = new Notyf();
   var signaturekey: EC.KeyPair | any;
   const { ethereum }: any = window;
@@ -55,10 +55,7 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey, setamou
 
   let array: any[] = [];
 
-
-
   const setwallet = async (key: string) => {
-
     const provider = new ethers.providers.Web3Provider(ethereum);
 
     let wallet = new ethers.Wallet(key);
@@ -68,14 +65,14 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey, setamou
 
     const getbal = await provider.getBalance(add);
     const balance = ethers.utils.formatEther(getbal);
-    setamountTowithdraw(balance)
+    setamountTowithdraw(balance);
 
     array.push({
-      address: add?.slice(0, 6) + '...' + add?.slice(-4),
+      address: add?.slice(0, 6) + "..." + add?.slice(-4),
       balance: balance,
       key: key,
     });
-    console.log('array', array)
+    console.log("array", array);
     const arrayJson = JSON.stringify(array);
     sessionStorage.setItem("array", arrayJson);
 
@@ -118,7 +115,8 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey, setamou
       hashedSecret = ec.keyFromPrivate(keccak256(sharedSecret.toArray()));
 
       prefix =
-        sharedSecret.toArray()[0].toString(16) + sharedSecret.toArray()[1].toString(16);
+        sharedSecret.toArray()[0].toString(16) +
+        sharedSecret.toArray()[1].toString(16);
       // console.log(prefix.toString(), z.Keys.slice(0, 4).toString())
       try {
         if (prefix.toString() === z.Keys.slice(0, 4).toString()) {
@@ -130,8 +128,6 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey, setamou
           setprivatekey(privateKey.toString(16, 32));
 
           setwallet(privateKey.toString(16, 32));
-
-
         }
 
         return;
@@ -140,7 +136,6 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey, setamou
       }
     });
   };
-
 
   const generateprivatekey = (): void => {
     const { ethereum }: any = window;
@@ -169,22 +164,16 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey, setamou
     setmatchingkey(false);
   };
 
-
   useEffect(() => {
     fetchData();
   }, []);
-
-
 
   const removingKey = async () => {
     const Doc = doc(db, "Logs", id);
     await deleteDoc(Doc);
   };
 
-
-
   const copykey = (pkey: string) => {
-
     navigator.clipboard.writeText(pkey);
 
     setPkCopied(true);
@@ -200,7 +189,7 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey, setamou
     setmasterkey(pkey);
 
     /// remove the key from firebase database
-    
+
     removingKey();
 
     sessionStorage.removeItem("array");
@@ -208,24 +197,31 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey, setamou
 
   return (
     <>
-      <div className="flex w-[90%] mx-auto justify-center items-center">
-        <div className="flex justify-between w-full">
-          <h2
+      <div className="flex mx-auto justify-center items-center">
+        <div className="flex justify-end w-full">
+          {/* <h2
             className="text-bgGray text-[1.3rem] text-left mb-3 cursor-default"
             onClick={() => setTransactionTab(!transactionTab)}
           >
             Signature{" "}
-          </h2>
-          <div
-            className="flex items-center space-x-1 cursor-pointer hover:text-white
-             text-gray-400 border-b border-dashed border-gray-600 text-[1rem] text-left mb-3"
-            onClick={() => setTransactionTab(!transactionTab)}
-          >
-            <span>
-              <MdHistory className="text-[1.3rem] text-inherit" />
-            </span>
-            <p>View Transactions </p>
-          </div>
+          </h2> */}
+          {trxList && trxList.length > 0 && (
+            <div className="py-2 flex justify-start space-x-5 items-center w-full">
+              <h1 className="animate-pulse-2s text-highlight font-semibold text-[0.9rem]">
+                <span>{trxList.length}</span> Transaction Found !{" "}
+              </h1>
+              <div
+                className="flex items-center space-x-1 cursor-pointer hover:text-white
+             text-gray-400 border-b border-dashed border-gray-600 text-[1rem] text-left"
+                onClick={() => setTransactionTab(!transactionTab)}
+              >
+                <span>
+                  <MdHistory className="text-[1.1rem] text-inherit" />
+                </span>
+                <p>View Transactions </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
       {transactionTab ? (
@@ -307,7 +303,7 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey, setamou
           {/* Match key */}
           <div className="cursor-pointer flex justify-center pt-2">
             <div
-              className="w-[95%] mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
+              className="w-full mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
           hover:shadow-xl px-6 text-center text-black highlight border border-black
           rounded-md font-bold hover:border-highlight hover:text-highlight transition-all ease-linear"
               onClick={generateprivatekey}

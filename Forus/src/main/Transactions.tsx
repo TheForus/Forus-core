@@ -8,8 +8,6 @@ import Withdraw from "./Withdraw";
 
 type Props = {};
 
-
-
 const Transactions = (props: Props) => {
   const { setShow } = useContext(AppContext);
   const [buttonStatus, setButtonStatus] = useState({
@@ -46,9 +44,8 @@ const Transactions = (props: Props) => {
       transfer: false,
     });
     setShow("withdraw");
-
   };
-  
+
   return (
     <div
       className="flex flex-col justify-start items-start sm:px-8 backdrop-blur-[50px]
@@ -60,34 +57,54 @@ const Transactions = (props: Props) => {
       >
         <button
           onClick={handleTransferClick}
-          className={`px-6 py-1 border-b-2 border-black
-        ${buttonStatus.transfer ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700" : "text-gray-700"}`}
+          className={`text-left px-6 py-1 border-b-2 border-black
+        ${
+          buttonStatus.transfer
+            ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700"
+            : "text-gray-700"
+        }`}
         >
           Transfer
         </button>
         <button
           onClick={handleReceiveClick}
           className={`px-6 py-1 border-b-2 border-black
-          ${buttonStatus.Receive ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700" : "text-gray-700"}`}
+          ${
+            buttonStatus.Receive
+              ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700"
+              : "text-gray-700"
+          }`}
         >
           Receive
         </button>
         <button
           onClick={handleWithdrawClick}
           className={`px-6 py-1 border-b-2 border-black
-          ${buttonStatus.withdraw ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700" : "text-gray-700"}`}
+          ${
+            buttonStatus.withdraw
+              ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700"
+              : "text-gray-700"
+          }`}
         >
           Withdraw
         </button>
       </div>
       {/* below buttons */}
-      <div className="py-1 xl:w-[400px] w-full">
+      <div className="py-1 xl:w-[400px] mx-auto w-[87%]">
         {buttonStatus.transfer ? (
           <Transfer />
         ) : buttonStatus.Receive ? (
-          <Receive setamountTowithdraw={setamountTowithdraw} setmasterkey={setmasterkey} withdrawFunction={handleWithdrawClick} />
+          <Receive
+            setamountTowithdraw={setamountTowithdraw}
+            setmasterkey={setmasterkey}
+            withdrawFunction={handleWithdrawClick}
+          />
         ) : (
-          <Withdraw amountTowithdraw={amountTowithdraw}  masterkey={masterkey} setmasterkey={setmasterkey} />
+          <Withdraw
+            amountTowithdraw={amountTowithdraw}
+            masterkey={masterkey}
+            setmasterkey={setmasterkey}
+          />
         )}
       </div>
     </div>
