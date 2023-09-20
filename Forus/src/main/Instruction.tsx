@@ -8,9 +8,9 @@ const Instruction = (props: Props) => {
   const { show, sumof, sumofAddress } = useContext(AppContext);
   return (
     <>
-      <div className="bg-cover">
+      <div className="w-[90%] h-full overflow-hidden">
         {show === "transfer" ? (
-          <div className="flex text-left flex-col gap-3 w-[90%]">
+          <div className="flex text-left flex-col gap-3">
             {" "}
             {/* on Transfer */}
             <h1 className="montserrat-subheading  text-bgGray font-semibold text-[1.5rem]">
@@ -47,13 +47,13 @@ const Instruction = (props: Props) => {
             </div>
           </div>
         ) : show === "receive" ? (
-          <div className="flex text-left flex-col gap-3 w-[90%]">
+          <div className="flex text-left flex-col gap-3">
             {" "}
             {/* on Accept */}
             <h1 className="montserrat-subheading text-bgGray font-semibold text-[1.5rem]">
-              Accept
+              Recieve
             </h1>
-            <div className="py-4 montserrat-heading  text-bgGray flex flex-col gap-4 items-center">
+            <div className="py-4 montserrat-heading text-bgGray flex flex-col gap-4 items-start">
               <div className="flex space-x-2">
                 <MdVerifiedUser color="#cdd4dc" size={29} />
                 <p className="flex-1">
@@ -84,13 +84,13 @@ const Instruction = (props: Props) => {
         )
           :
 
-          <div className="flex text-left flex-col gap-3 w-[90%]">
+          <div className="flex text-left flex-col gap-3">
             {" "}
             {/* on Accept */}
             <h1 className="montserrat-subheading text-bgGray font-semibold text-[1.5rem]">
               Withdraw
             </h1>
-            <div className="py-4 montserrat-heading  text-bgGray flex flex-col gap-4 items-center">
+            <div className="py-4 montserrat-heading  text-bgGray flex flex-col gap-4 items-start">
               <div className="flex space-x-2">
                 <MdVerifiedUser color="#cdd4dc" size={29} />
                 <p className="flex-1">

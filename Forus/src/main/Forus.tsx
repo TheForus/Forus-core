@@ -35,7 +35,6 @@ interface ContextValue {
 
 export const AppContext = createContext<ContextValue | any>(null);
 const Forus = (props: Props) => {
-
   //start
   const notyf = new Notyf();
 
@@ -51,22 +50,20 @@ const Forus = (props: Props) => {
     sessionStorage.getItem("chain")
   );
 
-  let contract: any
+  let contract: any;
 
   if (ethereum) {
     const provider = new ethers.providers.Web3Provider(ethereum);
     contract = new ethers.Contract(contractAddress, abi.abi, provider);
-
   }
 
+  //helper
 
-
-
-  //helper 
-
-  const addingChain = async (customChain: any, chainId: string | '') => {
-
-    await ethereum.request({ method: 'wallet_addEthereumChain', params: [customChain] });
+  const addingChain = async (customChain: any, chainId: string | "") => {
+    await ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [customChain],
+    });
 
     // Now, switching to the custom chain
 
@@ -82,24 +79,15 @@ const Forus = (props: Props) => {
     } catch (error) {
       console.error("Error switching Ethereum chain:", error);
     }
-  }
-
-
-
+  };
 
   //wallet connect logic
 
   const handleChainChange = async (chainId: any) => {
-
-
-    chainOptions.map(chain => {
-
+    chainOptions.map((chain) => {
       if (sessionStorage.getItem("chain") !== chain.name) {
-        return
-      }
-
-      else {
-
+        return;
+      } else {
         const customChain = {
           chainId: chain.chainId, // Replace with your custom chain's ID
           chainName: chain.name, // Replace with your chain's name
@@ -111,26 +99,16 @@ const Forus = (props: Props) => {
           rpcUrls: chain.rpcs, // Replace with your chain's RPC URL
         };
 
-        console.log(customChain)
+        console.log(customChain);
 
         // Add the custom chain to MetaMask
 
-        addingChain(customChain, chain.chainId)
-
-
-
-
-
+        addingChain(customChain, chain.chainId);
       }
-
-
     });
-  }
-
+  };
 
   const validateChain = async () => {
-
-
     const chainId = await ethereum.request({ method: "eth_chainId" });
 
     switch (chainId) {
@@ -156,10 +134,8 @@ const Forus = (props: Props) => {
     }
   };
 
-
   useEffect(() => {
     const fetchData = async () => {
-
       switch (selectedChain) {
         case "Sepolia ":
           setcontractAddress(sepoliacontractAddress);
@@ -180,36 +156,33 @@ const Forus = (props: Props) => {
     };
 
     fetchData();
-
   }, [show, []]);
 
   const accountChecker = async () => {
     const accounts = await ethereum.request({ method: "eth_requestAccounts" });
     sessionStorage.setItem("address", accounts[0]);
-    
+
     const provider = new ethers.providers.Web3Provider(ethereum);
 
     try {
-      const balance = await provider.getBalance(sessionStorage.getItem("address") || '');
-      console.log(ethers.utils.formatEther(balance).toString())
+      const balance = await provider.getBalance(
+        sessionStorage.getItem("address") || ""
+      );
+      console.log(ethers.utils.formatEther(balance).toString());
       const bignumber = BigNumber.from(balance);
       // console.log(Bignumber)
-  
+
       // Convert the BigNumber to a JavaScript number
       const convertedNumber = bignumber.toNumber() / 10 ** 18;
-      
+
       console.log(convertedNumber);
-    }
-    catch (e: any) {
+    } catch (e: any) {
       console.log(e);
     }
   };
 
-
   useEffect(() => {
     validateChain();
-
-
   }, []);
 
   if (ethereum) {
@@ -238,7 +211,6 @@ const Forus = (props: Props) => {
       validateChain();
 
       setwallet(true);
-
     } catch (e: any) {
       notyf.error(e);
     }
@@ -264,7 +236,7 @@ const Forus = (props: Props) => {
 
   return (
     <AppContext.Provider value={ContextValue}>
-      <div className="bg-[#000000]  min-h-[95vh] max-h-max">
+      <div className="bg-[#000000] max-h-max min-h-[100vh] lg:overflow-hidden">
         {/* <div className="flex items-center justify-between"> */}
         <NavBar />
         {/* </div> */}
@@ -273,7 +245,10 @@ const Forus = (props: Props) => {
                   py-8 p-4"
         >
           <Foruskey />
-          <div className="flex flex-row-reverse sm:flex-row justify-between p-3 py-16 ">
+          <div
+            className="flex lg:flex-row lg:justify-between lg:py-16 p-3
+          flex-col-reverse items-start pt-16 pb-6"
+          >
             <Instruction />
             <Transactions />
           </div>
