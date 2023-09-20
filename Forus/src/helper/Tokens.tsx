@@ -52,7 +52,8 @@ export const arbTokens: Token[] = [
     { name: "LINK", address: "0xfafedb041c0dd4fa2dc0d87a6b0979ee6fa7af5f", symbol: link },
     { name: "USDT", address: "0x211554151f2f00305f33530fdd3a5d0354927a65", symbol: USDT },
     { name: "DAI", address: "0x9440c3bb6adb5f0d5b8a460d8a8c010690dac2e8", symbol: dai },
-    { name: "ARB", address: "", symbol: arb },
+    { name: "ARB", address: "0x9440c3bb6adb5f0d5b8a460d8a8c010690dac2e8", symbol: arb },
+    { name: "ETH", address: "", symbol: arb },
 
 ];
 

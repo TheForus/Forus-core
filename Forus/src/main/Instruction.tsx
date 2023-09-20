@@ -100,15 +100,14 @@ const Instruction = (props: Props) => {
               <div className="flex space-x-2">
                 <MdVerifiedUser color="#cdd4dc" size={29} />
                 <p className="flex-1">
-                  Connect your current wallet or (load your " stealth address's private key
-                  key)
+                  Connect your current wallet or (load your " stealth address's private key)
                 </p>
               </div>
 
               <div className="flex space-x-2">
                 <MdVerifiedUser color="#cdd4dc" size={29} />
                 <p className="flex-1">
-                  Sign the mesage  ! Relayer would send the transaction on your behalf.
+                  Sign the mesage  ! Relayer would pay fee on behalf of you.
                 </p>
               </div>
             </div>

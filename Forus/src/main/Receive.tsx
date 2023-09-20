@@ -199,14 +199,9 @@ const Receive: React.FC<ChildProps> = ({
     <>
       <div className="flex mx-auto justify-center items-center">
         <div className="flex justify-end w-full">
-          {/* <h2
-            className="text-bgGray text-[1.3rem] text-left mb-3 cursor-default"
-            onClick={() => setTransactionTab(!transactionTab)}
-          >
-            Signature{" "}
-          </h2> */}
+
           {trxList && trxList.length > 0 && (
-            <div className="py-2 flex justify-start space-x-5 items-center w-full">
+            <div className="py-2 px-2 flex justify-between space-x-1 items-center w-full">
               <h1 className="animate-pulse-2s text-highlight font-semibold text-[0.9rem]">
                 <span>{trxList.length}</span> Transaction Found !{" "}
               </h1>

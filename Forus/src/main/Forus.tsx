@@ -149,7 +149,7 @@ const Forus = (props: Props) => {
           break;
 
         case "arbitrum sepolia":
-          setcontractAddress(fantomcontractAddress);
+          setcontractAddress(arbitrumcontractaddress);
           break;
 
         default:

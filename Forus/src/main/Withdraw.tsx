@@ -18,6 +18,7 @@ const Withdraw = ({
   setmasterkey,
   amountTowithdraw,
 }: ChildProps) => {
+
   const [hideInput, sethideInput] = useState<boolean>(false);
   const notyf = new Notyf();
 
@@ -26,9 +27,12 @@ const Withdraw = ({
     sethideInput(true);
   };
 
+  const [isSuccessfull, setisSuccessfull] = useState<string>('withdraw');
+
   // Function to handle file selection and reading its contents
   const handleFileUpload = async () => {
     const fileInput = document.createElement("input");
+
     fileInput.type = "file";
 
     // Listen for the change event when a file is selected
@@ -74,12 +78,13 @@ const Withdraw = ({
   };
 
   const [rec, setrec] = useState<string | any>("");
-  const [passed, setpassed] = useState<boolean | any>();
+  const [error, seterror] = useState<string | ''>('');
 
   const { ethereum }: any = window;
 
   const sendTransaction = async () => {
-    setpassed(true);
+
+    setisSuccessfull('withdrawing!!')
 
     try {
       const provider = new ethers.providers.Web3Provider(ethereum);
@@ -96,9 +101,10 @@ const Withdraw = ({
 
       console.log("Transaction sent:", txResponse, tx);
 
-      setpassed(false);
-    } catch (error) {
-      console.error("Error sending transaction:", error);
+
+      setisSuccessfull('withdraw')
+    } catch (error : any) {
+      seterror(error.message);
     }
   };
 
@@ -171,12 +177,12 @@ const Withdraw = ({
           rounded-md font-bold hover:border-highlight hover:text-highlight transition-all ease-linear"
         >
           <BsBoxArrowInDown className="text-[1.3rem] text-inherit" />
-          <p>Withdraw</p>
+          <p>{isSuccessfull}</p>
         </button>
       </div>
 
       <p className="text-[0.9rem] text-white">
-        {passed === true ? "passing " : passed === false ? "passed" : ""}
+        {error}
       </p>
     </div>
   );

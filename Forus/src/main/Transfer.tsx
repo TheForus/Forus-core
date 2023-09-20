@@ -5,7 +5,7 @@ import { ec as EC } from "elliptic";
 import { useContext } from "react";
 import { AppContext } from "./Forus";
 import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
-import { EthTokens, XdcTokens, ftmTokens } from "../helper/Tokens";
+import { EthTokens, XdcTokens, arbTokens, ftmTokens } from "../helper/Tokens";
 import { BsChevronDown } from "react-icons/bs";
 import { ethers } from "ethers";
 import sending from "../Logos/sending.gif";
@@ -15,6 +15,7 @@ import { db } from "../config/firebase.js";
 import { collection, addDoc } from "firebase/firestore";
 import {
   apothemcontractAddress,
+  arbitrumcontractaddress,
   fantomcontractAddress,
   sepoliacontractAddress,
 } from "../helper/contractAddresses";
@@ -55,8 +56,9 @@ const Transfer = () => {
     currentNetwork === "Apothem"
       ? "XDC"
       : currentNetwork === "fantom testnet"
-        ? "FTM"
-        : "ETH"
+        ? "FTM" : currentNetwork === "arbitrum sepolia"
+          ? "ETH"
+          : "ETH"
   );
   const [trxid, settrxid] = useState<string>("");
   const [waiting, setwaiting] = useState<boolean>(false);
@@ -117,7 +119,7 @@ const Transfer = () => {
       const sharedsecret = randomKey.derive(key.getPublic());
       const hashedSecret = ec.keyFromPrivate(keccak256(sharedsecret.toArray()));
       const publicKey = key?.getPublic()?.add(hashedSecret.getPublic())?.encode("array", false)?.splice(1) || [];
- 
+
       const address = keccak256(publicKey);
       const _HexAddress = address.substring(address.length - 40, address.length);
 
@@ -125,7 +127,7 @@ const Transfer = () => {
 
       r = "0x" + ephemeralPublic?.getX().toString(16, 64) || "";
       s = "0x" + ephemeralPublic?.getY().toString(16, 64) || "";
-      v = "0x" + sharedsecret.toArray()[0].toString(16)+sharedsecret.toArray()[1].toString(16)
+      v = "0x" + sharedsecret.toArray()[0].toString(16) + sharedsecret.toArray()[1].toString(16)
 
       console.log(v);
       console.log(`${v.replace("0x", "")}04${r.slice(2)}${s.slice(2)}`)
@@ -183,6 +185,10 @@ const Transfer = () => {
     if (currentNetwork === "fantom testnet") {
       contract = new ethers.Contract(fantomcontractAddress, Abi.abi, signer);
     }
+
+    if (currentNetwork === "arbitrum sepolia") {
+      contract = new ethers.Contract(arbitrumcontractaddress, Abi.abi, signer);
+    }
     try {
       const valueToSend = ethers.utils.parseEther(amount);
       const transactionParameters = {
@@ -210,11 +216,11 @@ const Transfer = () => {
           break;
 
 
-          case "arbitrum sepolia":
-            settrxid(
-              "https://arbitrum-sepolia.etherscan.io/tx/" + txId.hash
-            );
-            break;
+        case "arbitrum sepolia":
+          settrxid(
+            "https://sepolia-explorer.arbitrum.io/tx/" + txId.hash
+          );
+          break;
         default:
           break;
       }
@@ -253,6 +259,8 @@ const Transfer = () => {
       );
       console.log(connect.chainname);
     }
+
+    
     try {
       //to send exact amount of tokens are always counted as  amount**18
       const amountParams: any = ethers.utils.parseUnits(amount, 18);
@@ -280,11 +288,11 @@ const Transfer = () => {
               "https://explorer.testnet.fantom.network/transactions/" + txId.hash
             );
             break;
-           case "arbitrum sepolia":
-              settrxid(
-                "https://arbitrum-sepolia.etherscan.io/tx/" + txId.hash
-              );
-              break;
+          case "arbitrum sepolia":
+            settrxid(
+              "https://arbitrum-sepolia.etherscan.io/tx/" + txId.hash
+            );
+            break;
           default:
             break;
         }
@@ -476,7 +484,30 @@ const Transfer = () => {
                             <p>{c.name}</p>
                           </li>
                         </div>
+                      ))  : currentNetwork === "arbitrum sepolia"
+                      ? arbTokens.map((c) => (
+                        <div className="h-40 border-b border-gray-400 ">
+                          <li
+                            className="flex flex-row-reverse p-1 px-3 cursor-pointer
+                    text-gray-900 font-semibold border-l border-gray-100 
+                    items-center gap-2 hover:text-gray-900 hover:bg-[#dbe6eb] 
+                    montserrat-small text-[0.8rem]
+                    justify-between"
+                            key={c.name}
+                            onClick={() => changedefault(c)}
+                          >
+                            <img
+                              className=" rounded-lg"
+                              src={c.symbol}
+                              alt=""
+                              height={14}
+                              width={18}
+                            />
+                            <p>{c.name}</p>
+                          </li>
+                        </div>
                       ))
+                      
                       : EthTokens.map((c) => (
                         <div className="h-40 border-b border-gray-400 ">
                           <li
