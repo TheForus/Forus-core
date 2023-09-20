@@ -7,24 +7,27 @@ dotenv.config();
 const config: HardhatUserConfig = {
   solidity: "0.8.16",
   networks: {
-
-    sepolia: {
-      url: process.env.ALCHEMY_API_URL,
+    ArbitrumSepolia: {
+      url: process.env.ARBITRUM_API_URL,
       accounts: [process.env.PRIVATE_KEY!]
     },
-    goerli: {
-      url: process.env.ALCHEMY_API_URL,
-      accounts: [process.env.PRIVATE_KEY!]
-    }
-    ,
-    apothem: {
-      url: process.env.APOTHEM_API_URL,
-      accounts: [process.env.PRIVATE_KEY!]
-    },
-    fantomtestnet: {
-      url: process.env.FANTOM_API_URL,
-      accounts: [process.env.PRIVATE_KEY!]
-    }
+    // sepolia: {
+    //   url: process.env.ALCHEMY_API_URL,
+    //   accounts: [process.env.PRIVATE_KEY!]
+    // },
+    // goerli: {
+    //   url: process.env.ALCHEMY_API_URL,
+    //   accounts: [process.env.PRIVATE_KEY!]
+    // }
+    // ,
+    // apothem: {
+    //   url: process.env.APOTHEM_API_URL,
+    //   accounts: [process.env.PRIVATE_KEY!]
+    // },
+    // fantomtestnet: {
+    //   url: process.env.FANTOM_API_URL,
+    //   accounts: [process.env.PRIVATE_KEY!]
+    // }
 
   }
 };

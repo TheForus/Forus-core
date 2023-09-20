@@ -12,6 +12,7 @@ import {
   apothemcontractAddress,
   fantomcontractAddress,
   sepoliacontractAddress,
+  arbitrumcontractaddress
 } from "../helper/contractAddresses";
 
 type Props = {};
@@ -144,6 +145,10 @@ const Forus = (props: Props) => {
           setcontractAddress(apothemcontractAddress);
           break;
         case "fantom testnet":
+          setcontractAddress(fantomcontractAddress);
+          break;
+
+        case "arbitrum sepolia":
           setcontractAddress(fantomcontractAddress);
           break;
 
