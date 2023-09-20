@@ -3,7 +3,11 @@ import { keccak256 } from "ethers/lib.esm/utils";
 import { useNavigate } from "react-router-dom";
 import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
-import { AiOutlineArrowsAlt, AiOutlineShrink } from "react-icons/ai";
+import {
+  AiOutlineArrowsAlt,
+  AiOutlineCopy,
+  AiOutlineShrink,
+} from "react-icons/ai";
 import copy from "../Logos/copy.jpg";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
@@ -11,7 +15,8 @@ import { db } from "../config/firebase.js";
 import { getDocs, collection, deleteDoc, doc } from "firebase/firestore";
 import { downloadTxt } from "../helper/downloadTxt";
 import { ethers } from "ethers";
-import { MdHistory } from "react-icons/md";
+import { MdHistory, MdOutlineDone } from "react-icons/md";
+import ToolTip from "../helper/ToopTip";
 
 const ec = new EllipticCurve.ec("secp256k1");
 
@@ -36,6 +41,7 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
   const [err, seterr] = useState<any>(false);
   const [id, setId] = useState<string | any>("");
   const [isfounded, setisfounded] = useState<string>("");
+  const [pkCopied, setPkCopied] = useState<boolean>(false);
 
   const keys = collection(db, "Logs");
 
@@ -43,7 +49,6 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
   const [rArray, setRArray] = useState<any>([]);
 
   let array: any[] = [];
-
 
   const fetchRarray = () => {
     // getting Rarray from sessionStorage
@@ -55,10 +60,10 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
       const retrievedArray = JSON.parse(retrievedArrayJson);
       setRArray(retrievedArray);
 
-      console.log('fetchRarray !!!');
+      console.log("fetchRarray !!!");
       console.log("retrievedArray", retrievedArray);
     } else {
-      console.log('Array not found in sessionStorage.');
+      console.log("Array not found in sessionStorage.");
     }
   };
 
@@ -73,8 +78,11 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
     const bal = await provider.getBalance(add);
     const balance = ethers.utils.formatEther(bal);
 
-
-    array.push({ address: add?.slice(0, 6) + add?.slice(-4), balance: balance, key: privateKey });
+    array.push({
+      address: add?.slice(0, 6) + add?.slice(-4),
+      balance: balance,
+      key: privateKey,
+    });
     const arrayJson = JSON.stringify(array);
     sessionStorage.setItem("array", arrayJson);
 
@@ -89,12 +97,6 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
 
     console.log("retrievedArray", retrievedArray);
   };
-
-
-
-
-
-
 
   const fetchData = async () => {
     let logs: any[] = [];
@@ -186,7 +188,7 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
 
   const copykey = (pkey: string) => {
     navigator.clipboard.writeText(pkey);
-
+    setPkCopied(true);
     try {
       withdrawFunction();
     } catch (e: any) {
@@ -206,44 +208,62 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
 
   return (
     <>
-      <div className="flex px-5 justify-between items-center">
-        <h2 className="text-bgGray text-[1.3rem] text-left mb-3">Signature </h2>
-        <h2
-          className="flex cursor-pointer hover:text-white text-gray-400 text-[1rem] text-left mb-3"
-          onClick={() => setTransactionTab(!transactionTab)}
-        >
-          <span>
-            <MdHistory className="text-[1.3rem] text-gray-400" />
-          </span>
-          {`\t`}_ View Transactions{" "}
-        </h2>
+      <div className="flex w-[90%] mx-auto justify-center items-center">
+        <div className="flex justify-between w-full">
+          <h2
+            className="text-bgGray text-[1.3rem] text-left mb-3 cursor-default"
+            onClick={() => setTransactionTab(!transactionTab)}
+          >
+            Signature{" "}
+          </h2>
+          <div
+            className="flex items-center space-x-1 cursor-pointer hover:text-white
+             text-gray-400 border-b border-dashed border-gray-600 text-[1rem] text-left mb-3"
+            onClick={() => setTransactionTab(!transactionTab)}
+          >
+            <span>
+              <MdHistory className="text-[1.3rem] text-inherit" />
+            </span>
+            <p>View Transactions </p>
+          </div>
+        </div>
       </div>
       {transactionTab ? (
         rArray && rArray.length > 0 ? (
           rArray.map((z: any, i: any) => (
-            <div className="pt-4 flex justify-between px-6 text-cyan-200 bg-gray-0">
+            <div className="pt-4 flex justify-between px-6 text-highlight bg-gray-0">
               <div className="flex flex-col space-y-2">
-                <h2 className="text-left">Address : </h2>
-                <p className="text-white">{z.address}</p>
+                <h2 className="text-left">Address </h2>
+                <p className="text-gray-300">{z.address}</p>
               </div>
               <div className="flex flex-col space-y-2">
-                <h2 className="text-left">Balance : </h2>
-                <p className="text-white">{z.balance}</p>
+                <h2 className="text-left">Balance </h2>
+                <p className="text-gray-300">{z.balance}</p>
               </div>
-              <div className="flex flex-col space-y-2">
-                <h2 className="text-left">Pkey : </h2>
-                <img
-                  alt=""
-                  src={copy}
-                  className="h-6 w-6"
-                  onClick={() => copykey(z.key)}
-                />
+              <div className="flex flex-col justify-center items-end space-y-2">
+                <h2 className="text-left">Private key </h2>
+                {!pkCopied ? (
+                  <ToolTip tooltip="Copy Private key">
+                    <AiOutlineCopy
+                      onClick={() => copykey(z.key)}
+                      className={`text-gray-300 hover:text-green-400 font-bold cursor-pointer text-[1.2rem]`}
+                    />
+                  </ToolTip>
+                ) : (
+                  <MdOutlineDone
+                    // onClick={() => copykey(z.key)}
+                    className={`text-green-500 font-bold text-[1.2rem] text-highlight`}
+                  />
+                )}
+                {/* <img alt="" src={copy} className="h-6 w-6 cursor-pointer" /> */}
               </div>
             </div>
             // <div key={i} className=" text-white ">
           ))
         ) : (
-          <h1 className="text-3xl text-white">No Transactions !!!</h1>
+          <h1 className="text-center relative top-5 text-xl text-gray-500">
+            No Transactions Recorded !
+          </h1>
         )
       ) : (
         <div>
@@ -262,7 +282,7 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
               />
             )}
             {hide && (
-              <p className="text-gray-400 p-1 font-semibold montserrat-small ">
+              <p className="text-gray-400 p-1 py-2 font-semibold montserrat-small ">
                 Expand to enter the signatureKey (optional)
               </p>
             )}
@@ -271,13 +291,13 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
               {hide ? (
                 <AiOutlineArrowsAlt
                   className=" cursor-pointer  text-[#a7acb3]"
-                  size={34}
+                  size={25}
                   onClick={() => sethide(!hide)}
                 />
               ) : (
                 <AiOutlineShrink
                   className="cursor-pointer  text-[#a7acb3]"
-                  size={34}
+                  size={29}
                   onClick={() => sethide(!hide)}
                 />
               )}
@@ -285,7 +305,7 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
           </div>
 
           {/* Match key */}
-          <div className="cursor-pointer flex justify-center pt-2 mr-4">
+          <div className="cursor-pointer flex justify-center pt-2">
             <div
               className="w-[95%] mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
           hover:shadow-xl px-6 text-center text-black highlight border border-black

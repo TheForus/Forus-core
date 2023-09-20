@@ -49,7 +49,7 @@ const Transactions = (props: Props) => {
   };
   return (
     <div
-      className="flex flex-col sm:px-8 backdrop-blur-[50px]
+      className="flex flex-col justify-start items-start sm:px-8 backdrop-blur-[50px]
       max-w-[500px] hover:backdrop-blur-lg"
     >
       <div
