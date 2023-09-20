@@ -2,6 +2,7 @@ import apothem from "../assets/chains/apothem.png";
 import goerli from "../assets/chains/goerli.png";
 import sepolia from "../assets/chains/sepolia.jpeg";
 import fantom from "../assets/chains/fantomTestnet.png";
+import arb from "../assets/chains/ARB.png"
 
 interface chain {
     name: string;
