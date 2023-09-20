@@ -230,7 +230,7 @@ const NavBar = (props: Props) => {
                     bg-highlight text-black font-extrabold hover:bg-clip-text hover:border 
                     hover:border-highlight hover:text-highlight transition-all ease-linear bg-gradient-to-r hover:from-teal-400 hover:to-cyan-500
                      "
-            ></button>
+            > connect wallet</button>
           ) : (
             ""
           )}

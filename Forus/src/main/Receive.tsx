@@ -200,23 +200,25 @@ const Receive: React.FC<ChildProps> = ({
       <div className="flex mx-auto justify-center items-center">
         <div className="flex justify-end w-full">
 
-          {trxList && trxList.length > 0 && (
-            <div className="py-2 px-2 flex justify-between space-x-1 items-center w-full">
+
+          <div className="py-2 px-2 flex justify-between space-x-1 items-center w-full">
+            {trxList && trxList.length > 0 && (
               <h1 className="animate-pulse-2s text-highlight font-semibold text-[0.9rem]">
                 <span>{trxList.length}</span> Transaction Found !{" "}
               </h1>
-              <div
-                className="flex items-center space-x-1 cursor-pointer hover:text-white
+            )}
+            <div
+              className="flex items-center space-x-1 cursor-pointer hover:text-white
              text-gray-400 border-b border-dashed border-gray-600 text-[1rem] text-left"
-                onClick={() => setTransactionTab(!transactionTab)}
-              >
-                <span>
-                  <MdHistory className="text-[1.1rem] text-inherit" />
-                </span>
-                <p>View Transactions </p>
-              </div>
+              onClick={() => setTransactionTab(!transactionTab)}
+            >
+              <span>
+                <MdHistory className="text-[1.1rem] text-inherit" />
+              </span>
+              <p>View Transactions </p>
             </div>
-          )}
+          </div>
+
         </div>
       </div>
       {transactionTab ? (
