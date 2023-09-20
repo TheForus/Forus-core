@@ -52,7 +52,7 @@ const Forus = (props: Props) => {
   );
 
   let contract: any;
-  let provider: any
+  let provider: any;
 
   if (ethereum) {
     provider = new ethers.providers.Web3Provider(ethereum);
@@ -66,7 +66,7 @@ const Forus = (props: Props) => {
       notyf.error("Plz install metamask");
       return;
     }
-  }
+  };
 
   const addingChain = async (customChain: any, chainId: string | "") => {
     await ethereum.request({
@@ -115,31 +115,23 @@ const Forus = (props: Props) => {
     });
   };
 
-
-  let network = 'invalid'
+  let network = "invalid";
   const validateChain = async () => {
     const chainId = await ethereum.request({ method: "eth_chainId" });
 
     chainOptions.map((chain) => {
-
       if (chain.chainId === chainId) {
-        sessionStorage.setItem("chain", chain.name)
-        sessionStorage.setItem("symbol", chain.currency.symbol)
-        network = 'valid'
+        sessionStorage.setItem("chain", chain.name);
+        sessionStorage.setItem("symbol", chain.currency.symbol);
+        network = "valid";
+      } else {
+        return;
       }
+    });
 
-      else {
-        return
-      }
-
-    })
-
-    if (network === 'invalid') {
-      sessionStorage.setItem("chain", 'unknown')
+    if (network === "invalid") {
+      sessionStorage.setItem("chain", "unknown");
     }
-
-
-
   };
 
   useEffect(() => {
@@ -166,11 +158,9 @@ const Forus = (props: Props) => {
     };
 
     fetchCurrentChainData();
-
   }, [show, []]);
 
-
-  const [userBalance, setUserBalance] = useState<string>('');
+  const [userBalance, setUserBalance] = useState<string>("");
 
   const accountChecker = async () => {
     const accounts = await ethereum.request({ method: "eth_requestAccounts" });
@@ -178,24 +168,20 @@ const Forus = (props: Props) => {
 
     try {
       const balance = await provider.getBalance(accounts[0]);
-      setUserBalance(ethers.utils.formatEther(balance).toString().slice(0, 5) + sessionStorage.getItem("symbol"));
-
-
-    } 
-    catch (e: any) {
+      setUserBalance(
+        ethers.utils.formatEther(balance).toString().slice(0, 5) +
+          " " +
+          sessionStorage.getItem("symbol")
+      );
+    } catch (e: any) {
       console.log(e);
     }
-
   };
-
-
 
   useEffect(() => {
     validateChain();
-    accountChecker()
-
+    accountChecker();
   }, []);
-
 
   if (ethereum) {
     ethereum.on("accountsChanged", (address: any) => {
@@ -208,15 +194,12 @@ const Forus = (props: Props) => {
       window.location.reload();
       validateChain();
     });
-
   } else {
-
     notyf.error("Plz install metamask");
   }
 
   const connectWallet = async (): Promise<void> => {
-
-    isWallet()
+    isWallet();
 
     try {
       await accountChecker();

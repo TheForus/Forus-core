@@ -5,6 +5,9 @@ module.exports = {
   darkMode: "class",
   theme: {
     extend: {
+      animation: {
+        'pulse-2s': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
       colors: {
         bgBlack: "#080808",
         bgGray: "#CDD4DC",
