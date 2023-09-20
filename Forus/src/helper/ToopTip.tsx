@@ -18,7 +18,7 @@ const ToolTip: FC<Props> = ({ children, tooltip }): JSX.Element => {
 
         tooltipRef.current.style.left = clientX - left + "px";
       }}
-      className="group relative inline-block"
+      className="z-10 group relative inline-block"
     >
       {children}
       {tooltip ? (

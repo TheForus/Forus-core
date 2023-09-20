@@ -3,6 +3,8 @@ import { BsDownload } from "react-icons/bs";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import { ethers } from "ethers";
+import ToolTip from "../helper/ToopTip";
+import { HiWallet } from "react-icons/hi2";
 
 interface ChildProps {
   masterkey: string | any;
@@ -10,10 +12,12 @@ interface ChildProps {
 }
 
 const Withdraw = ({ masterkey, setmasterkey }: ChildProps) => {
+  const [hideInput, sethideInput] = useState<boolean>(false);
   const notyf = new Notyf();
 
   const useConnect = () => {
     setmasterkey("");
+    sethideInput(true);
   };
 
   // Function to handle file selection and reading its contents
@@ -141,40 +145,52 @@ const Withdraw = ({ masterkey, setmasterkey }: ChildProps) => {
       <h2 className="pl-2 text-bgGray text-[1.3rem] text-left mb-3">
         Recipient Address
       </h2>
-      <div className="py-2 flex space-x-4 justify-center ml-1">
-        <input
-          type="text"
-          className="text-[0.9rem] font-semibold text-gray-100 placeholder:text-gray-500
+      <div className="py-2 flex space-x-4 justify-between">
+        <div className="flex-1 flex space-x-2 items-center">
+          {!hideInput ? (
+            <>
+              <input
+                type="text"
+                className="flex-1 text-[0.9rem] font-semibold text-gray-100 placeholder:text-gray-500
           montserrat-subtitle outline-none px-3 py-3 h-[100%] rounded-md
           hover:border-cyan-900 w-[100%] bg-black/40 border-2 border-gray-500"
-          // className=" text-[0.9rem] tect font-semibold text-gray-700 placeholder:text-gray-700
-          //   montserrat-subtitle outline-none px-3 py-3 h-[100%] hover:shadow-sm rounded-md hover:shadow-gray-400 w-[100%] bg-bgGray"
-          // value={savedSignaturekey}
-          onChange={(e) => {
-            setrec(e.target.value);
-          }}
-          placeholder="Enter Recipient Address"
-        />
+                // className=" text-[0.9rem] tect font-semibold text-gray-700 placeholder:text-gray-700
+                //   montserrat-subtitle outline-none px-3 py-3 h-[100%] hover:shadow-sm rounded-md hover:shadow-gray-400 w-[100%] bg-bgGray"
+                // value={savedSignaturekey}
+                onChange={(e) => {
+                  setrec(e.target.value);
+                }}
+                placeholder="Enter Recipient Address"
+              />
+              <ToolTip tooltip="Load Private Key">
+                <button
+                  onClick={handleFileUpload}
+                  className="text-[0.9rem] text-gray-400 p-1 font-semibold montserrat-small"
+                >
+                  <BsDownload
+                    className="cursor-pointer  text-[#bbc1c9]"
+                    size={28}
+                  />
+                </button>
+                {/* {masterkey === "" ? "load" : " ✅"} */}
+              </ToolTip>
+            </>
+          ) : (
+          <h3 className="text-[1rem] text-gray-400">using connectWallet to receive funds !</h3>
+          )}
+        </div>
         {/* Download Icon */}
-        <div className="flex items-center">
-          <BsDownload
-            className=" cursor-pointer  text-[#bbc1c9]"
-            size={28}
-            // onClick={() => sethide(!hide)}
-          />
-
-          <button
-            onClick={handleFileUpload}
-            className="text-[0.9rem] text-gray-400 p-1 font-semibold montserrat-small"
-          >
-            {masterkey === "" ? "load" : " ✅"}
-          </button>
-          <button
-            onClick={useConnect}
-            className="text-[0.9rem] text-gray-400 p-1 font-semibold montserrat-small"
-          >
-            use connectedWallet
-          </button>
+        <div className="pl-4 text-gray-200 border-l border-gray-800 flex space-x-1 items-center">
+          <HiWallet className="text-[1.3rem] text-highlight" />
+          <ToolTip tooltip="Receive funds in your own connected wallet !">
+            <input
+              type="checkbox"
+              checked={hideInput} // Bind the checkbox to the state value
+              onChange={() => sethideInput(!hideInput)} // Call the handler on checkbox change
+              className="text-gray-400 px-10 font-semibold montserrat-small"
+            />
+          </ToolTip>
+          {/* use connectedWallet */}
         </div>
       </div>
 
