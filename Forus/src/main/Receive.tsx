@@ -18,6 +18,9 @@ import { ethers } from "ethers";
 import { MdHistory, MdOutlineDone } from "react-icons/md";
 import ToolTip from "../helper/ToopTip";
 
+
+
+
 const ec = new EllipticCurve.ec("secp256k1");
 
 //Combining the publickey with signatureKey to calcuate the private key of stealth address
@@ -25,9 +28,11 @@ const ec = new EllipticCurve.ec("secp256k1");
 interface ChildProps {
   withdrawFunction: () => void;
   setmasterkey: React.Dispatch<React.SetStateAction<string | any>>;
+  setamountTowithdraw: React.Dispatch<React.SetStateAction<string | any>>;
 }
 
-const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
+const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey, setamountTowithdraw }) => {
+  
   const notyf = new Notyf();
   var signaturekey: EC.KeyPair | any;
   const { ethereum }: any = window;
@@ -35,7 +40,7 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
   let retrievedArray: any[] = [];
 
   const [savedSignaturekey, setsavedSignaturekey] = useState<string>("");
-  const [privateKey, setprivatekey] = useState<string>("");
+  const [, setprivatekey] = useState<string>("");
   const [hide, sethide] = useState<boolean>(true);
   const [, setmatchingkey] = useState<boolean>(false);
   const [err, seterr] = useState<any>(false);
@@ -46,43 +51,31 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
   const keys = collection(db, "Logs");
 
   const [transactionTab, setTransactionTab] = useState(false);
-  const [rArray, setRArray] = useState<any>([]);
+  const [trxList, settrxList] = useState<any>([]);
 
   let array: any[] = [];
 
-  const fetchRarray = () => {
-    // getting Rarray from sessionStorage
-    const retrievedArrayJson = sessionStorage.getItem("array");
 
-    // Checking if retrieveArray is null or not
-    if (retrievedArrayJson) {
-      // Parse the JSON string into an array
-      const retrievedArray = JSON.parse(retrievedArrayJson);
-      setRArray(retrievedArray);
 
-      console.log("fetchRarray !!!");
-      console.log("retrievedArray", retrievedArray);
-    } else {
-      console.log("Array not found in sessionStorage.");
-    }
-  };
+  const setwallet = async (key: string) => {
 
-  const setwallet = async () => {
-    let wallet = new ethers.Wallet(privateKey);
+    const provider = new ethers.providers.Web3Provider(ethereum);
+
+    let wallet = new ethers.Wallet(key);
 
     // Get the wallet address
     let add = wallet.address;
-    console.log(add, privateKey);
 
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const bal = await provider.getBalance(add);
-    const balance = ethers.utils.formatEther(bal);
+    const getbal = await provider.getBalance(add);
+    const balance = ethers.utils.formatEther(getbal);
+    setamountTowithdraw(balance)
 
     array.push({
-      address: add?.slice(0, 6) + add?.slice(-4),
+      address: add?.slice(0, 6) + '...' + add?.slice(-4),
       balance: balance,
-      key: privateKey,
+      key: key,
     });
+    console.log('array', array)
     const arrayJson = JSON.stringify(array);
     sessionStorage.setItem("array", arrayJson);
 
@@ -93,7 +86,7 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
     // Parse the JSON string back into an array
     retrievedArray = JSON.parse(retrievedArrayJson);
 
-    setRArray(retrievedArray); // storing retreivedArray in RrArray state
+    settrxList(retrievedArray); // storing retreivedArray in RtrxList state
 
     console.log("retrievedArray", retrievedArray);
   };
@@ -125,8 +118,7 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
       hashedSecret = ec.keyFromPrivate(keccak256(sharedSecret.toArray()));
 
       prefix =
-        sharedSecret.toArray()[0].toString(16) +
-        sharedSecret.toArray()[1].toString(16);
+        sharedSecret.toArray()[0].toString(16) + sharedSecret.toArray()[1].toString(16);
       // console.log(prefix.toString(), z.Keys.slice(0, 4).toString())
       try {
         if (prefix.toString() === z.Keys.slice(0, 4).toString()) {
@@ -137,9 +129,9 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
           const privateKey = _key.mod(ec.curve.n);
           setprivatekey(privateKey.toString(16, 32));
 
-          setwallet();
+          setwallet(privateKey.toString(16, 32));
 
-          setsavedSignaturekey("");
+
         }
 
         return;
@@ -148,6 +140,7 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
       }
     });
   };
+
 
   const generateprivatekey = (): void => {
     const { ethereum }: any = window;
@@ -176,19 +169,26 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
     setmatchingkey(false);
   };
 
+
   useEffect(() => {
-    generateprivatekey();
-    fetchRarray(); // ? fetching Rarray data from sessionStorage on load of this component !
+    fetchData();
   }, []);
+
+
 
   const removingKey = async () => {
     const Doc = doc(db, "Logs", id);
     await deleteDoc(Doc);
   };
 
+
+
   const copykey = (pkey: string) => {
+
     navigator.clipboard.writeText(pkey);
+
     setPkCopied(true);
+
     try {
       withdrawFunction();
     } catch (e: any) {
@@ -198,9 +198,9 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
     downloadTxt("#walletprivateKey-" + pkey, "Forus-privatekey.txt");
 
     setmasterkey(pkey);
-    console.log("pkey : ", pkey);
 
     /// remove the key from firebase database
+    
     removingKey();
 
     sessionStorage.removeItem("array");
@@ -229,8 +229,8 @@ const Receive: React.FC<ChildProps> = ({ withdrawFunction, setmasterkey }) => {
         </div>
       </div>
       {transactionTab ? (
-        rArray && rArray.length > 0 ? (
-          rArray.map((z: any, i: any) => (
+        trxList && trxList.length > 0 ? (
+          trxList.map((z: any, i: any) => (
             <div className="pt-4 flex justify-between px-6 text-highlight bg-gray-0">
               <div className="flex flex-col space-y-2">
                 <h2 className="text-left">Address </h2>

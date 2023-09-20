@@ -19,6 +19,7 @@ const Transactions = (props: Props) => {
   });
 
   const [masterkey, setmasterkey] = useState<string | any>("");
+  const [amountTowithdraw, setamountTowithdraw] = useState<string | any>("");
 
   const handleTransferClick = () => {
     setButtonStatus({
@@ -45,8 +46,9 @@ const Transactions = (props: Props) => {
       transfer: false,
     });
     setShow("withdraw");
-    console.log('hellow', buttonStatus);
+
   };
+  
   return (
     <div
       className="flex flex-col justify-start items-start sm:px-8 backdrop-blur-[50px]
@@ -83,9 +85,9 @@ const Transactions = (props: Props) => {
         {buttonStatus.transfer ? (
           <Transfer />
         ) : buttonStatus.Receive ? (
-          <Receive setmasterkey={setmasterkey} withdrawFunction={handleWithdrawClick} />
+          <Receive setamountTowithdraw={setamountTowithdraw} setmasterkey={setmasterkey} withdrawFunction={handleWithdrawClick} />
         ) : (
-          <Withdraw masterkey={masterkey} setmasterkey={setmasterkey} />
+          <Withdraw amountTowithdraw={amountTowithdraw}  masterkey={masterkey} setmasterkey={setmasterkey} />
         )}
       </div>
     </div>

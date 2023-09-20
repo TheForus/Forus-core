@@ -68,7 +68,7 @@ const NavBar = (props: Props) => {
                md:items-end space-x-1 sm:ml-14 ml-9  text-bgGray 
                 montserrat-subtitle underline-offset-8 font-bold hover:underline decoration-bgGray  sm:text-[1.1rem] text-[0.8rem]"
             >
-              <IoMdHome size={23} className="md:self-start text-bgGray " />
+              <IoMdHome size={23} className="md:self-start text-highlight  " />
               <p className="sm:inline-flex hidden">Home</p>
             </button>
             <div
@@ -81,7 +81,7 @@ const NavBar = (props: Props) => {
             >
               <HiQuestionMarkCircle
                 size={23}
-                className="md:self-start text-bgGray  "
+                className="md:self-start text-highlight  "
               />
               <p className="sm:inline-flex hidden">QnA</p>
             </div>
@@ -96,7 +96,7 @@ const NavBar = (props: Props) => {
             >
               <AiFillFilePdf
                 size={23}
-                className="md:self-start text-bgGray  "
+                className="md:self-start text-highlight  "
               />
               <p className="sm:inline-flex hidden">Read</p>
             </div>
@@ -142,11 +142,10 @@ const NavBar = (props: Props) => {
                   </li>
                   <div
                     className={`
-              ${
-                show &&
-                `transition-all ease-in py-2 border-none  shadow-md flex flex-col
+              ${show &&
+                      `transition-all ease-in py-2 border-none  shadow-md flex flex-col
                  rounded-b-md absolute ml-1 mt-1 text-black bg-bgGray z-10 `
-              }
+                      }
             `}
                   >
                     {show &&
@@ -184,56 +183,54 @@ const NavBar = (props: Props) => {
             onClick={copyAddress}
             className="flex items-center space-x-1 relative cursor-pointer transition-all ease-in-out"
           >
-            <p
-              onClick={copyAddress}
-              className={`sm:text-[1.1rem] montserrat-small text-bgGray font-semibold text-[1rem]`}
-            >
-              {sessionStorage.getItem("address") !== null || false
-                ? `${sessionStorage
+
+            <div className="sm:flex-row flex space-x-3 items-center">
+              <p
+                onClick={copyAddress}
+                className={`sm:text-[.9rem] montserrat-small text-highlight font-semibold text-[.8rem]`}
+              >
+                {sessionStorage.getItem("address") !== null || false
+                  ? connect.userBalance
+                  : ""}
+              </p>
+              <p
+                onClick={copyAddress}
+                className={`sm:text-[1.1rem] montserrat-small text-bgGray font-semibold text-[1rem]`}
+              >
+                {sessionStorage.getItem("address") !== null || false
+                  ? `${sessionStorage
                     .getItem("address")
                     ?.slice(0, 9)}...${sessionStorage
-                    .getItem("address")
-                    ?.slice(-5)}`
-                : ""}
-            </p>
+                      .getItem("address")
+                      ?.slice(-5)}`
+                  : ""}
+              </p>
+
+            </div>
             {addressCopied ? (
               <MdOutlineDone
                 className={` text-gray-300 font-bold text-[1.1rem] text-highlight`}
               />
             ) : (
               <AiOutlineCopy
-                className={`${
-                  isAddrHovered ? "inline-flex" : "hidden"
-                } text-gray-300 font-bold text-[1.1rem] text-highlight`}
+                className={`${isAddrHovered ? "inline-flex" : "hidden"
+                  } text-gray-300 font-bold text-[1.1rem] text-highlight`}
               />
             )}
 
-            {/* {isAddrHovered && (
-              <div
-                onClick={copyAddress}
-                className="absolute top-1 left-10 w-full text-center space-x-1 items-center flex text-gray-200 font-semibold"
-              >
-                <p>{addressCopied ? "Copied !" : "Copy"}</p>
-                <AiOutlineCopy
-                  className={`${
-                    addressCopied && "hidden"
-                  } cursor-pointer font-bold text-2xl text-[181b1f] text-highlight`}
-                />
-              </div>
-            )} */}
           </div>
-          <button
-            onClick={connect.connectWallet}
-            className=" montserrat-subtitle border-1 p-1 sm:text-[1rem] text-[0.8rem]
+          {sessionStorage.getItem("address") === null || false ?
+            <button
+              onClick={connect.connectWallet}
+              className=" montserrat-subtitle border-1 p-1 sm:text-[1rem] text-[0.8rem]
                     px-2 sm:px-4 rounded-md  highlight
                     bg-highlight text-black font-extrabold hover:bg-clip-text hover:border 
                     hover:border-highlight hover:text-highlight transition-all ease-linear bg-gradient-to-r hover:from-teal-400 hover:to-cyan-500
                      "
-          >
-            {sessionStorage.getItem("address") === null || false
-              ? "connect wallet"
-              : "Connected"}
-          </button>
+            >
+            </button>
+
+            : ""}
         </div>
       </div>
     </div>

@@ -22,6 +22,7 @@ interface ContextValue {
   connectWallet(): void;
   contractAddress: string;
   apothemcontractAddress: string;
+  userBalance: string;
   selectedChain: string;
   setSelectedChain: React.Dispatch<React.SetStateAction<string | any>>;
   sumof: string | any;
@@ -51,13 +52,21 @@ const Forus = (props: Props) => {
   );
 
   let contract: any;
+  let provider: any
 
   if (ethereum) {
-    const provider = new ethers.providers.Web3Provider(ethereum);
+    provider = new ethers.providers.Web3Provider(ethereum);
     contract = new ethers.Contract(contractAddress, abi.abi, provider);
   }
 
   //helper
+
+  const isWallet = async () => {
+    if (ethereum === undefined) {
+      notyf.error("Plz install metamask");
+      return;
+    }
+  }
 
   const addingChain = async (customChain: any, chainId: string | "") => {
     await ethereum.request({
@@ -99,8 +108,6 @@ const Forus = (props: Props) => {
           rpcUrls: chain.rpcs, // Replace with your chain's RPC URL
         };
 
-        console.log(customChain);
-
         // Add the custom chain to MetaMask
 
         addingChain(customChain, chain.chainId);
@@ -108,34 +115,35 @@ const Forus = (props: Props) => {
     });
   };
 
+
+  let network = 'invalid'
   const validateChain = async () => {
     const chainId = await ethereum.request({ method: "eth_chainId" });
 
-    switch (chainId) {
-      case "0x33":
-        sessionStorage.setItem("chain", "Apothem");
+    chainOptions.map((chain) => {
 
-        break;
+      if (chain.chainId === chainId) {
+        sessionStorage.setItem("chain", chain.name)
+        sessionStorage.setItem("symbol", chain.currency.symbol)
+        network = 'valid'
+      }
 
-      case "0xaa36a7":
-        sessionStorage.setItem("chain", "Sepolia ");
+      else {
+        return
+      }
 
-        break;
+    })
 
-      case "0xfa2":
-        sessionStorage.setItem("chain", "fantom testnet");
-
-        break;
-
-      default:
-        sessionStorage.setItem("chain", "Unsupported");
-
-        break;
+    if (network === 'invalid') {
+      sessionStorage.setItem("chain", 'unknown')
     }
+
+
+
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCurrentChainData = async () => {
       switch (selectedChain) {
         case "Sepolia ":
           setcontractAddress(sepoliacontractAddress);
@@ -146,44 +154,48 @@ const Forus = (props: Props) => {
         case "fantom testnet":
           setcontractAddress(fantomcontractAddress);
           break;
+
         default:
           break;
       }
       const limit = await contract.getTotalAddresses();
       const totalFunds = await contract.getTotalVolume();
+
       setsumof(limit.toString());
       setsumofAddress(totalFunds / 10 ** 18);
     };
 
-    fetchData();
+    fetchCurrentChainData();
+
   }, [show, []]);
+
+
+  const [userBalance, setUserBalance] = useState<string>('');
 
   const accountChecker = async () => {
     const accounts = await ethereum.request({ method: "eth_requestAccounts" });
     sessionStorage.setItem("address", accounts[0]);
 
-    const provider = new ethers.providers.Web3Provider(ethereum);
-
     try {
-      const balance = await provider.getBalance(
-        sessionStorage.getItem("address") || ""
-      );
-      console.log(ethers.utils.formatEther(balance).toString());
-      const bignumber = BigNumber.from(balance);
-      // console.log(Bignumber)
+      const balance = await provider.getBalance(accounts[0]);
+      setUserBalance(ethers.utils.formatEther(balance).toString().slice(0, 5) + sessionStorage.getItem("symbol"));
 
-      // Convert the BigNumber to a JavaScript number
-      const convertedNumber = bignumber.toNumber() / 10 ** 18;
 
-      console.log(convertedNumber);
-    } catch (e: any) {
+    } 
+    catch (e: any) {
       console.log(e);
     }
+
   };
+
+
 
   useEffect(() => {
     validateChain();
+    accountChecker()
+
   }, []);
+
 
   if (ethereum) {
     ethereum.on("accountsChanged", (address: any) => {
@@ -196,15 +208,15 @@ const Forus = (props: Props) => {
       window.location.reload();
       validateChain();
     });
+
   } else {
+
     notyf.error("Plz install metamask");
   }
 
   const connectWallet = async (): Promise<void> => {
-    if (ethereum === undefined) {
-      notyf.error("Plz install metamask");
-      return;
-    }
+
+    isWallet()
 
     try {
       await accountChecker();
@@ -223,6 +235,7 @@ const Forus = (props: Props) => {
     connectWallet,
     contractAddress,
     sumof,
+    userBalance,
     setsumof,
     sumofAddress,
     setsumofAddress,
