@@ -62,7 +62,7 @@ const Transfer = () => {
   const [chainList, setchainList] = useState<any>();
 
 
-  useEffect(() => {
+  if (ethereum) {
     chainOptions.map((chain) => {
       if (currentNetwork === chain.name) {
         setbyDefault(chain.currency.symbol)
@@ -71,28 +71,28 @@ const Transfer = () => {
 
         case 'Sepolia':
           setchainList(SepoliaTokens);
-          setiscontract(sepoliacontractAddress);
+
           break;
 
         case 'fantomtestnet':
           setchainList(fantomtestnetTokens);
-          setiscontract(fantomcontractAddress);
+
           break;
 
         case 'Apothem':
           setchainList(ApothemTokens);
-          setiscontract(apothemcontractAddress);
+
           break;
 
         case 'arbitrumsepolia':
           setchainList(arbitrumsepoliaTokens);
-          setiscontract(arbitrumcontractaddress);
+
           break;
 
 
-        case 'EOS EVM Network Testnet':
+        case 'EosTestnet':
           setchainList(eosevmTokens);
-          setiscontract(eosevmcontractaddress);
+
           break
 
 
@@ -102,10 +102,9 @@ const Transfer = () => {
 
 
     })
+  }
 
 
-    console.log('chainList', chainList)
-  }, [])
 
 
   const [trxid, settrxid] = useState<string>("");
@@ -239,7 +238,8 @@ const Transfer = () => {
 
     provider = new ethers.providers.Web3Provider(ethereum);
     signer = provider.getSigner();
-    contract = new ethers.Contract(iscontract, Abi.abi, signer);
+    contract = new ethers.Contract(connect.contractAddress, Abi.abi, signer);
+    console.log(connect.contractAddress);
 
 
     try {
@@ -264,13 +264,13 @@ const Transfer = () => {
         case "Apothem":
           settrxid("https://explorer.apothem.network/txs/" + txId.hash);
           break;
-        case "fantom testnet":
+        case "fantomtestnet":
           settrxid(
             "https://explorer.testnet.fantom.network/transactions/" + txId.hash
           );
           break;
 
-        case "arbitrum sepolia":
+        case "arbitrumsepolia":
           settrxid(
             "https://sepolia-explorer.arbitrum.io/tx/" + txId.hash
           );
@@ -337,12 +337,12 @@ const Transfer = () => {
           case "Apothem":
             settrxid("https://explorer.apothem.network/txs/" + txId.hash);
             break;
-          case "fantom testnet":
+          case "fantomtestnet":
             settrxid(
               "https://explorer.testnet.fantom.network/transactions/" + txId.hash
             );
             break;
-          case "arbitrum sepolia":
+          case "arbitrumsepolia":
             settrxid(
               "https://arbitrum-sepolia.etherscan.io/tx/" + txId.hash
             );

@@ -6,7 +6,7 @@ import React, { createContext, useState, useEffect } from "react";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import abi from "../artifacts/contracts/Logs.sol/Logs.json";
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 import { chainOptions } from "../helper/ChainOptions";
 import {
   apothemcontractAddress,
@@ -132,7 +132,7 @@ const Forus = (props: Props) => {
     });
 
     if (network === "invalid") {
-      sessionStorage.setItem("chain", "unknown");
+      sessionStorage.setItem("chain", "unSupported");
     }
   };
 
@@ -153,7 +153,7 @@ const Forus = (props: Props) => {
           setcontractAddress(arbitrumcontractaddress);
           break;
 
-        case "EOS EVM Network Testnet":
+        case "EosTestnet":
           setcontractAddress(eosevmcontractaddress);
           break;
 
@@ -168,7 +168,7 @@ const Forus = (props: Props) => {
     };
 
     fetchCurrentChainData();
-  }, [show, []]);
+  }, []);
 
   const [userBalance, setUserBalance] = useState<string>("");
 
