@@ -24,14 +24,6 @@ export const chainOptions: chain[] = [
     { name: "goerli", chainId: "0x5", symbol: goerli, currency: { symbol: "ETH", decimals: 18 }, rpcs: ['https://ethereum-goerli.publicnode.com'] },
     { name: "fantomtestnet", chainId: "0xfa2", symbol: fantom, currency: { symbol: "FTM", decimals: 18 }, rpcs: ['https://rpc.testnet.fantom.network'] },
     { name: "arbitrumsepolia", chainId: "0x66eee", symbol: goerli, currency: { symbol: "ETH", decimals: 18 }, rpcs: ['https://sepolia-rollup.arbitrum.io/rpc'] },
+    { name: "EOS EVM Network Testnet", chainId: "0x3cc5", symbol: goerli, currency: { symbol: "EOS", decimals: 18 }, rpcs: ['https://api.testnet.evm.eosnetwork.com'] },
 ];
 
-
-// Network name
-// Arbitrum Sepolia
-// Network URL
-// https://sepolia-rollup.arbitrum.io/rpc
-// Chain ID
-// 421614
-// Currency symbol
-// ETH

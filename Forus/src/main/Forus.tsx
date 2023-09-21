@@ -12,7 +12,8 @@ import {
   apothemcontractAddress,
   fantomcontractAddress,
   sepoliacontractAddress,
-  arbitrumcontractaddress
+  arbitrumcontractaddress,
+  eosevmcontractaddress
 } from "../helper/contractAddresses";
 
 type Props = {};
@@ -152,6 +153,10 @@ const Forus = (props: Props) => {
           setcontractAddress(arbitrumcontractaddress);
           break;
 
+        case "EOS EVM Network Testnet":
+          setcontractAddress(eosevmcontractaddress);
+          break;
+
         default:
           break;
       }
@@ -175,8 +180,8 @@ const Forus = (props: Props) => {
       const balance = await provider.getBalance(accounts[0]);
       setUserBalance(
         ethers.utils.formatEther(balance).toString().slice(0, 5) +
-          " " +
-          sessionStorage.getItem("symbol")
+        " " +
+        sessionStorage.getItem("symbol")
       );
     } catch (e: any) {
       console.log(e);
