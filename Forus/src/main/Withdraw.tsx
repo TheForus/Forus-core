@@ -91,18 +91,43 @@ const Withdraw = ({
 
       const wallet = new ethers.Wallet(masterkey, provider);
 
+
+      // Get the Ethereum address associated with the private key
+      const address = wallet.address;
+
+      const balanceWei = await provider.getBalance(address);
+
+      const balanceEther = ethers.utils.formatEther(balanceWei);
+
+      // Convert the balance to a JavaScript number
+      const balance = parseFloat(balanceEther);
+
+      // Get the gas price
+      const gasPrice: any = await provider.getGasPrice();
+
+      // Estimate the gas cost for the transaction
+      const gasLimit: number = 21000; // Typical gas limit for a simple transfer
+      const gasCost: number = gasPrice * gasLimit;
+      const amountToSend = balance - parseFloat(ethers.utils.formatEther(gasCost));
+      console.log(amountToSend, gasCost , balance ,);
+
       const tx = {
-        to: hideInput === false ? rec : sessionStorage.getItem("address"), // Replace with the recipient's Ethereum address
-        value: ethers.utils.parseEther(amountTowithdraw), // Amount in Ether to send
+        to: hideInput === false ? rec : sessionStorage.getItem("address"),
+        value: ethers.utils.parseEther(amountToSend.toString()),
+        gasPrice: gasPrice,
+        gasLimit: gasLimit,
+  
       };
+
+
       console.log(tx);
 
       const txResponse = await wallet.sendTransaction(tx);
 
-      console.log("Transaction sent:", txResponse, tx);
+      console.log("Transaction sent:", txResponse);
 
 
-      setisSuccessfull('withdraw')
+      setisSuccessfull('Withdraw')
     } catch (error: any) {
       seterror(error.message);
     }
@@ -177,7 +202,7 @@ const Withdraw = ({
           rounded-md font-bold hover:border-highlight hover:text-highlight transition-all ease-linear"
         >
           <BsBoxArrowInDown className="text-[1.3rem] text-inherit" />
-          <p>{isSuccessfull}</p>
+          <span>{isSuccessfull}</span>
         </button>
       </div>
 

@@ -16,14 +16,13 @@ import {
   eosevmcontractaddress
 } from "../helper/contractAddresses";
 
+
 type Props = {};
 
 interface ContextValue {
   show: string;
   setShow: React.Dispatch<React.SetStateAction<string | any>>;
   connectWallet(): void;
-  contractAddress: string;
-  apothemcontractAddress: string;
   userBalance: string;
   selectedChain: string;
   setSelectedChain: React.Dispatch<React.SetStateAction<string | any>>;
@@ -138,6 +137,7 @@ const Forus = (props: Props) => {
 
   useEffect(() => {
     const fetchCurrentChainData = async () => {
+
       switch (selectedChain) {
         case "Sepolia ":
           setcontractAddress(sepoliacontractAddress);
@@ -153,13 +153,15 @@ const Forus = (props: Props) => {
           setcontractAddress(arbitrumcontractaddress);
           break;
 
-        case "EosTestnet":
+        case "EOS EVM Network Testnet":
           setcontractAddress(eosevmcontractaddress);
           break;
 
         default:
           break;
       }
+
+
       const limit = await contract.getTotalAddresses();
       const totalFunds = await contract.getTotalVolume();
 
@@ -168,7 +170,8 @@ const Forus = (props: Props) => {
     };
 
     fetchCurrentChainData();
-  }, []);
+    
+  }, [show, []]);
 
   const [userBalance, setUserBalance] = useState<string>("");
 
@@ -226,15 +229,12 @@ const Forus = (props: Props) => {
     setShow,
     chainOptions,
     connectWallet,
-    contractAddress,
     sumof,
     userBalance,
     setsumof,
     sumofAddress,
     setsumofAddress,
     validateChain,
-
-    apothemcontractAddress,
     handleChainChange,
     selectedChain,
     setSelectedChain,

@@ -5,7 +5,13 @@ import { ec as EC } from "elliptic";
 import { useContext } from "react";
 import { AppContext } from "./Forus";
 import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
-import { SepoliaTokens, ApothemTokens, arbitrumsepoliaTokens, fantomtestnetTokens, eosevmTokens } from "../helper/Tokens";
+import {
+  SepoliaTokens,
+  ApothemTokens,
+  arbitrumsepoliaTokens,
+  fantomtestnetTokens,
+  eosevmTokens,
+} from "../helper/Tokens";
 import { BsChevronDown } from "react-icons/bs";
 import { ethers } from "ethers";
 import sending from "../Logos/sending.gif";
@@ -14,22 +20,26 @@ import BigNumber from "bignumber.js";
 import { db } from "../config/firebase.js";
 import { collection, addDoc } from "firebase/firestore";
 import { chainOptions } from "../helper/ChainOptions";
+import "notyf/notyf.min.css";
+import { BiTransfer } from "react-icons/bi";
 import {
   apothemcontractAddress,
-  arbitrumcontractaddress,
   fantomcontractAddress,
   sepoliacontractAddress,
-  eosevmcontractaddress,
+  arbitrumcontractaddress,
+  eosevmcontractaddress
 } from "../helper/contractAddresses";
-import "notyf/notyf.min.css";
 
 const ec = new EllipticCurve.ec("secp256k1");
 
 const Transfer = () => {
   const notyf = new Notyf();
   let currentNetwork: string | any = sessionStorage.getItem("chain");
+  console.log(currentNetwork)
 
-  const connect = useContext(AppContext);
+  const { validateChain } = useContext(AppContext);
+  const [contractAddress, setcontractAddress] = useState<string | any>("");
+
 
   const ERCABI = [
     "function balanceOf(address) view returns (uint)",
@@ -43,15 +53,9 @@ const Transfer = () => {
 
   const { ethereum }: any = window;
 
-
-
   let r: string | any;
   let s: string | any;
   let v: string | any;
-
-
-
-
 
   const [token, settoken] = useState<string | "">("");
   const [forusKey, setforusKey] = useState<string | "">("");
@@ -59,70 +63,70 @@ const Transfer = () => {
   const [amount, setamount] = useState<string | "">("");
   const [show, setshow] = useState<boolean>(false);
   const [byDefault, setbyDefault] = useState<string>("");
-  const [chainList, setchainList] = useState<any>();
+  const [chainList ,setchainList ] =useState<any>([])
+  const [txId, settxID] = useState<string | "">("");
 
 
-  if (ethereum) {
+  useEffect(() => {
     chainOptions.map((chain) => {
+
       if (currentNetwork === chain.name) {
-        setbyDefault(chain.currency.symbol)
+        setbyDefault(chain.currency.symbol);
       }
-      switch (chain.name) {
+      
 
-        case 'Sepolia':
-          setchainList(SepoliaTokens);
+    });
 
-          break;
+    switch (currentNetwork) {
+      case "Sepolia":
+        setchainList(SepoliaTokens);
+        settxID("https://sepolia.etherscan.io/tx/")
+        setcontractAddress(sepoliacontractAddress)
+ 
+        break;
 
-        case 'fantomtestnet':
-          setchainList(fantomtestnetTokens);
+      case "fantomtestnet":
+        setchainList(fantomtestnetTokens);
+        settxID("https://explorer.testnet.fantom.network/transactions/")
+        setcontractAddress(fantomcontractAddress)
 
-          break;
+        break;
 
-        case 'Apothem':
-          setchainList(ApothemTokens);
+      case "Apothem":
+        setchainList(ApothemTokens);
+        settxID("https://explorer.testnet.fantom.network/transactions/")
+        setcontractAddress(apothemcontractAddress)
 
-          break;
+        break;
 
-        case 'arbitrumsepolia':
-          setchainList(arbitrumsepoliaTokens);
+      case "arbitrumsepolia":
+        setchainList(arbitrumsepoliaTokens);
+        settxID("https://arbitrum-sepolia.etherscan.io/tx/")
+        setcontractAddress(arbitrumcontractaddress)
 
-          break;
+        break;
 
+      case "EosTestnet":
+        setchainList(eosevmTokens);
+        settxID("https://explorer.testnet.fantom.network/transactions/")
+        setcontractAddress(eosevmcontractaddress)
 
-        case 'EosTestnet':
-          setchainList(eosevmTokens);
+        break;
 
-          break
+      default:
+        break;
+    }
 
+    console.log("chainList", chainList);
 
-        default: break
-
-      }
-
-
-    })
-  }
-
-
-
+  }, []);
 
   const [trxid, settrxid] = useState<string>("");
   const [waiting, setwaiting] = useState<boolean>(false);
-  const [buttonState, setButtonState] = useState<string>("Transfer");
-
-  const [iscontract, setiscontract] = useState<any>('');
-  console.log('iscontract', iscontract);
+  const [, setButtonState] = useState<string>("Transfer");
 
 
-  let contract: any;
-  let provider: any;
-  let signer: any;
-
-  if (ethereum) {
-    provider = new ethers.providers.Web3Provider(ethereum);
-
-  }
+  console.log("contract", contractAddress);
 
 
   const msgSender: string | any = sessionStorage.getItem("address");
@@ -146,10 +150,7 @@ const Transfer = () => {
   };
 
   const setUpStealthAddress = async () => {
-
-
     let key: EC.KeyPair | any;
-
 
     const randomKey = ec.genKeyPair();
     let ephemeralPublic: EC.KeyPair | any = randomKey.getPublic();
@@ -178,20 +179,30 @@ const Transfer = () => {
     try {
       const sharedsecret = randomKey.derive(key.getPublic());
       const hashedSecret = ec.keyFromPrivate(keccak256(sharedsecret.toArray()));
-      const publicKey = key?.getPublic()?.add(hashedSecret.getPublic())?.encode("array", false)?.splice(1) || [];
+      const publicKey =
+        key
+          ?.getPublic()
+          ?.add(hashedSecret.getPublic())
+          ?.encode("array", false)
+          ?.splice(1) || [];
 
       const address = keccak256(publicKey);
-      const _HexAddress = address.substring(address.length - 40, address.length);
+      const _HexAddress = address.substring(
+        address.length - 40,
+        address.length
+      );
 
       receipentAddress = "0x" + _HexAddress;
 
       r = "0x" + ephemeralPublic?.getX().toString(16, 64) || "";
       s = "0x" + ephemeralPublic?.getY().toString(16, 64) || "";
-      v = "0x" + sharedsecret.toArray()[0].toString(16) + sharedsecret.toArray()[1].toString(16)
+      v =
+        "0x" +
+        sharedsecret.toArray()[0].toString(16) +
+        sharedsecret.toArray()[1].toString(16);
 
       console.log(v);
-      console.log(`${v.replace("0x", "")}04${r.slice(2)}${s.slice(2)}`)
-
+      console.log(`${v.replace("0x", "")}04${r.slice(2)}${s.slice(2)}`);
     } catch (e) {
       console.log("error", e);
     }
@@ -217,15 +228,14 @@ const Transfer = () => {
     console.log("storing...");
   };
 
-
-
   const Transfer = async () => {
     setUpStealthAddress();
     if (!ethereum) {
       notyf.error("Please initialize MetaMask");
       return;
     }
-    connect.validateChain();
+    validateChain();
+
     if (forusKey === "" || amount === "") {
       seterror("Please enter the forus key");
       setTimeout(() => {
@@ -235,12 +245,9 @@ const Transfer = () => {
     }
     setwaiting(true);
 
-
-    provider = new ethers.providers.Web3Provider(ethereum);
-    signer = provider.getSigner();
-    contract = new ethers.Contract(connect.contractAddress, Abi.abi, signer);
-    console.log(connect.contractAddress);
-
+    const provider = new ethers.providers.Web3Provider(ethereum);
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(contractAddress, Abi.abi, signer);
 
     try {
       const valueToSend = ethers.utils.parseEther(amount);
@@ -256,31 +263,12 @@ const Transfer = () => {
         transactionParameters
       );
 
-      const txId = await transferCoin;
-      switch (currentNetwork) {
-        case "Sepolia":
-          settrxid("https://sepolia.etherscan.io/tx/" + txId.hash);
-          break;
-        case "Apothem":
-          settrxid("https://explorer.apothem.network/txs/" + txId.hash);
-          break;
-        case "fantomtestnet":
-          settrxid(
-            "https://explorer.testnet.fantom.network/transactions/" + txId.hash
-          );
-          break;
+      const trx = await transferCoin;
+      settrxid(txId + trx.hash);
 
-        case "arbitrumsepolia":
-          settrxid(
-            "https://sepolia-explorer.arbitrum.io/tx/" + txId.hash
-          );
-          break;
-        default:
-          break;
-      }
       storing();
-      setforusKey("");
       setamount("");
+
     } catch (e: any) {
       console.log(e);
       seterror(e.message);
@@ -301,25 +289,13 @@ const Transfer = () => {
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
     let contract: any;
-    if (connect.selectedChain === "Sepolia") {
-      contract = new ethers.Contract(connect.sepoliacontractAddress, Abi.abi, signer);
-      console.log(connect.chainname);
-    }
-    if (connect.selectedChain === "Apothem") {
-      contract = new ethers.Contract(
-        connect.apothemsepoliacontractAddress,
-        Abi.abi,
-        signer
-      );
-      console.log(connect.chainname);
-    }
 
 
     try {
       //to send exact amount of tokens are always counted as  amount**18
       const amountParams: any = ethers.utils.parseUnits(amount, 18);
       try {
-        console.log(receipentAddress, amountParams);
+
         // const transferCoin=await contract.transfer(receipentAddress, amountParams);
         const transferERC20 = await contract.TransferERC20(
           r,
@@ -337,19 +313,19 @@ const Transfer = () => {
           case "Apothem":
             settrxid("https://explorer.apothem.network/txs/" + txId.hash);
             break;
-          case "fantomtestnet":
+          case "fantom testnet":
             settrxid(
-              "https://explorer.testnet.fantom.network/transactions/" + txId.hash
+              "https://explorer.testnet.fantom.network/transactions/" +
+              txId.hash
             );
             break;
-          case "arbitrumsepolia":
-            settrxid(
-              "https://arbitrum-sepolia.etherscan.io/tx/" + txId.hash
-            );
+          case "arbitrum sepolia":
+            settrxid("https://arbitrum-sepolia.etherscan.io/tx/" + txId.hash);
             break;
           default:
             break;
         }
+
       } catch (err: any) {
         console.log(err.message);
         seterror(err.message);
@@ -370,7 +346,10 @@ const Transfer = () => {
     const contract = new ethers.Contract(token, ERCABI, signer);
 
     try {
-      const res = await contract.allowance(msgSender, connect.sepoliacontractAddress);
+      const res = await contract.allowance(
+        msgSender,
+
+      );
       const bigNumber = new BigNumber(res._hex);
       const allowance: string | any = bigNumber.toNumber() / 10 ** 18;
       // console.log(allowance);
@@ -379,7 +358,7 @@ const Transfer = () => {
         setButtonState("approving..");
         const approvedAmount: any = ethers.utils.parseUnits(amount, 18);
         const approve = await contract.approve(
-          connect.sepoliacontractAddress,
+
           approvedAmount
         );
         const txResponse = await approve;
@@ -405,7 +384,7 @@ const Transfer = () => {
       return;
     }
 
-    connect.validateChain();
+    validateChain();
 
     const provider = new ethers.providers.Web3Provider(ethereum); //
     const contract = new ethers.Contract(token, ERCABI, provider);
@@ -492,51 +471,55 @@ const Transfer = () => {
                   }
             `}
               >
-                {show && chainList.map((c: any) => (
-                  <div className="h-40 border-b border-gray-400 ">
-                    <li
-                      className="flex flex-row-reverse p-1 px-3 cursor-pointer
+                {show &&
+                  chainList.map((c: any) => (
+                    <div className="h-40 border-b border-gray-400 ">
+                      <li
+                        className="flex flex-row-reverse p-1 px-3 cursor-pointer
                     text-gray-900 font-semibold border-l border-gray-100 
                     items-center gap-2 hover:text-gray-900 hover:bg-[#dbe6eb] 
                     montserrat-small text-[0.8rem]
                     justify-between"
-                      key={c.name}
-                      onClick={() => changedefault(c)}
-                    >
-                      <img
-                        className=" rounded-lg"
-                        src={c.symbol}
-                        alt=""
-                        height={14}
-                        width={18}
-                      />
-                      <p>{c.name}</p>
-                    </li>
-                  </div>
-                ))
-                }
-
+                        key={c.name}
+                        onClick={() => changedefault(c)}
+                      >
+                        <img
+                          className=" rounded-lg"
+                          src={c.symbol}
+                          alt=""
+                          height={14}
+                          width={18}
+                        />
+                        <p>{c.name}</p>
+                      </li>
+                    </div>
+                  ))}
               </div>
             </ul>
           </div>
         </div>
       </div>
-      <button
-        className="flex justify-center w-[98%] mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
-        px-6 text-center text-black  border border-black highlight
-        rounded-md font-bold hover:border-highlight hover:text-highlight transition-all ease-linear "
-        onClick={
-          byDefault === "ETH" || byDefault === "XDC" || byDefault === "FTM"
-            ? Transfer
-            : proceed
-        }
-      >
-        {waiting === false ? (
-          buttonState
-        ) : (
-          <img height={30} width={30} src={sending} alt="" />
-        )}
-      </button>
+      <div className="w-full flex justify-center pt-2 mr-4">
+        <button
+          onClick={
+            byDefault === "ETH" || byDefault === "XDC" || byDefault === "FTM"
+              ? Transfer
+              : proceed
+          }
+          className="flex space-x-2 justify-center w-[100%] mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
+          hover:shadow-xl px-6 text-center text-black highlight border border-black 
+          rounded-md font-bold hover:border-highlight hover:text-highlight transition-all ease-linear"
+        >
+          {waiting === false ? (
+            <>
+              <BiTransfer className="text-[1.3rem] text-inherit" />
+              <span>Transfer</span>
+            </>
+          ) : (
+            <img height={30} width={30} src={sending} alt="" />
+          )}
+        </button>
+      </div>
 
       <p
         onClick={viewtrx}
