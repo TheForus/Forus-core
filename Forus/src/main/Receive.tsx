@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { keccak256 } from "ethers/lib.esm/utils";
-import { useNavigate } from "react-router-dom";
+import { generatePath, useNavigate } from "react-router-dom";
 import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
 import {
   AiOutlineArrowsAlt,
   AiOutlineCopy,
+  AiOutlineScan,
   AiOutlineShrink,
 } from "react-icons/ai";
 import copy from "../Logos/copy.jpg";
@@ -199,9 +200,7 @@ const Receive: React.FC<ChildProps> = ({
     <>
       <div className="flex mx-auto justify-center items-center">
         <div className="flex justify-end w-full">
-
-
-          <div className="py-2 px-2 flex justify-between space-x-1 items-center w-full">
+          <div className="py-2 flex justify-between space-x-1 items-center w-full">
             {trxList && trxList.length > 0 && (
               <h1 className="animate-pulse-2s text-highlight font-semibold text-[0.9rem]">
                 <span>{trxList.length}</span> Transaction Found !{" "}
@@ -218,7 +217,6 @@ const Receive: React.FC<ChildProps> = ({
               <p>View Transactions </p>
             </div>
           </div>
-
         </div>
       </div>
       {transactionTab ? (
@@ -260,7 +258,7 @@ const Receive: React.FC<ChildProps> = ({
         )
       ) : (
         <div>
-          <div className="py-2 flex space-x-1 justify-center mx-2">
+          <div className="py-2 flex space-x-1 justify-between">
             {hide !== true && (
               <input
                 type="text"
@@ -298,16 +296,16 @@ const Receive: React.FC<ChildProps> = ({
           </div>
 
           {/* Match key */}
-          <div className="cursor-pointer flex justify-center pt-2">
-            <div
-              className="w-full mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
-          hover:shadow-xl px-6 text-center text-black highlight border border-black
-          rounded-md font-bold hover:border-highlight hover:text-highlight transition-all ease-linear"
+          <div className="w-full flex justify-center pt-2 mr-4">
+            <button
               onClick={generateprivatekey}
+              className="flex space-x-2 justify-center w-[100%] mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
+          hover:shadow-xl px-6 text-center text-black highlight border border-black 
+          rounded-md font-bold hover:border-highlight hover:text-highlight transition-all ease-linear"
             >
-              {/* <GiKangaroo size={26} /> */}
-              <h2 className="montserrat-small">Scan</h2>
-            </div>
+                <AiOutlineScan className="text-[1.3rem] text-inherit" />
+                 <span>Scan</span>
+            </button>
           </div>
         </div>
       )}

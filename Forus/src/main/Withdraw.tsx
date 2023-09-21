@@ -102,7 +102,7 @@ const Withdraw = ({
       console.log("Transaction sent:", txResponse, tx);
 
 
-      setisSuccessfull('withdraw')
+      setisSuccessfull('Withdraw')
     } catch (error: any) {
       seterror(error.message);
     }
@@ -177,7 +177,7 @@ const Withdraw = ({
           rounded-md font-bold hover:border-highlight hover:text-highlight transition-all ease-linear"
         >
           <BsBoxArrowInDown className="text-[1.3rem] text-inherit" />
-          <p>{isSuccessfull}</p>
+          <span>{isSuccessfull}</span>
         </button>
       </div>
 
