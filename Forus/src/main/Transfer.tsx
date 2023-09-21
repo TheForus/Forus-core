@@ -5,7 +5,7 @@ import { ec as EC } from "elliptic";
 import { useContext } from "react";
 import { AppContext } from "./Forus";
 import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
-import { SepoliaTokens, ApothemTokens, arbitrumsepoliaTokens, fantomtestnetTokens } from "../helper/Tokens";
+import { SepoliaTokens, ApothemTokens, arbitrumsepoliaTokens, fantomtestnetTokens, eosevmTokens } from "../helper/Tokens";
 import { BsChevronDown } from "react-icons/bs";
 import { ethers } from "ethers";
 import sending from "../Logos/sending.gif";
@@ -19,6 +19,7 @@ import {
   arbitrumcontractaddress,
   fantomcontractAddress,
   sepoliacontractAddress,
+  eosevmcontractaddress,
 } from "../helper/contractAddresses";
 import "notyf/notyf.min.css";
 
@@ -87,6 +88,13 @@ const Transfer = () => {
           setchainList(arbitrumsepoliaTokens);
           setiscontract(arbitrumcontractaddress);
           break;
+
+
+        case 'EOS EVM Network Testnet':
+          setchainList(eosevmTokens);
+          setiscontract(eosevmcontractaddress);
+          break
+
 
         default: break
 
@@ -228,7 +236,7 @@ const Transfer = () => {
     }
     setwaiting(true);
 
-    
+
     provider = new ethers.providers.Web3Provider(ethereum);
     signer = provider.getSigner();
     contract = new ethers.Contract(iscontract, Abi.abi, signer);

@@ -18,7 +18,7 @@ interface Token {
 
 
 
-export const SepoliaTokens : Token[] = [
+export const SepoliaTokens: Token[] = [
 
     { name: "ETH", address: "", symbol: eth },
     { name: "PEPE", address: "0x98b173f9f3a6c2c5d3494c5babf007ed1590e84e", symbol: pepe },
@@ -53,6 +53,18 @@ export const fantomtestnetTokens: Token[] = [
 export const arbitrumsepoliaTokens: Token[] = [
 
     { name: "ETH", address: "", symbol: arb },
+    { name: "LINK", address: "0xfafedb041c0dd4fa2dc0d87a6b0979ee6fa7af5f", symbol: link },
+    { name: "USDT", address: "0x211554151f2f00305f33530fdd3a5d0354927a65", symbol: USDT },
+    { name: "DAI", address: "0x9440c3bb6adb5f0d5b8a460d8a8c010690dac2e8", symbol: dai },
+    { name: "ARB", address: "0x9440c3bb6adb5f0d5b8a460d8a8c010690dac2e8", symbol: arb },
+
+
+];
+
+
+export const eosevmTokens: Token[] = [
+
+    { name: "EOS", address: "", symbol: eth },
     { name: "LINK", address: "0xfafedb041c0dd4fa2dc0d87a6b0979ee6fa7af5f", symbol: link },
     { name: "USDT", address: "0x211554151f2f00305f33530fdd3a5d0354927a65", symbol: USDT },
     { name: "DAI", address: "0x9440c3bb6adb5f0d5b8a460d8a8c010690dac2e8", symbol: dai },

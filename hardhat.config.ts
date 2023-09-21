@@ -7,10 +7,15 @@ dotenv.config();
 const config: HardhatUserConfig = {
   solidity: "0.8.16",
   networks: {
-    ArbitrumSepolia: {
-      url: process.env.ARBITRUM_API_URL,
+
+    EosEvmTestnet: {
+      url: process.env.EOS_API_URL,
       accounts: [process.env.PRIVATE_KEY!]
     },
+    // ArbitrumSepolia: {
+    //   url: process.env.ARBITRUM_API_URL,
+    //   accounts: [process.env.PRIVATE_KEY!]
+    // },
     // sepolia: {
     //   url: process.env.ALCHEMY_API_URL,
     //   accounts: [process.env.PRIVATE_KEY!]
