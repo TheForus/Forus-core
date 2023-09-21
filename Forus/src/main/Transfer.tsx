@@ -514,7 +514,7 @@ const Transfer = () => {
         </div>
       </div>
       <button
-        className="flex justify-center w-[98%] mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
+        className="flex justify-center w-[100%] mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
         px-6 text-center text-black  border border-black highlight
         rounded-md font-bold hover:border-highlight hover:text-highlight transition-all ease-linear "
         onClick={

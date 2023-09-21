@@ -199,9 +199,7 @@ const Receive: React.FC<ChildProps> = ({
     <>
       <div className="flex mx-auto justify-center items-center">
         <div className="flex justify-end w-full">
-
-
-          <div className="py-2 px-2 flex justify-between space-x-1 items-center w-full">
+          <div className="py-2 flex justify-between space-x-1 items-center w-full">
             {trxList && trxList.length > 0 && (
               <h1 className="animate-pulse-2s text-highlight font-semibold text-[0.9rem]">
                 <span>{trxList.length}</span> Transaction Found !{" "}
@@ -260,7 +258,7 @@ const Receive: React.FC<ChildProps> = ({
         )
       ) : (
         <div>
-          <div className="py-2 flex space-x-1 justify-center mx-2">
+          <div className="py-2 flex space-x-1 justify-between">
             {hide !== true && (
               <input
                 type="text"
