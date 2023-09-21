@@ -306,7 +306,7 @@ const Receive: React.FC<ChildProps> = ({
               onClick={generateprivatekey}
             >
               {/* <GiKangaroo size={26} /> */}
-              <h2 className="montserrat-small">Receive</h2>
+              <h2 className="montserrat-small">Scan</h2>
             </div>
           </div>
         </div>

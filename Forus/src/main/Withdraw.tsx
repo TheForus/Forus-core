@@ -103,7 +103,7 @@ const Withdraw = ({
 
 
       setisSuccessfull('withdraw')
-    } catch (error : any) {
+    } catch (error: any) {
       seterror(error.message);
     }
   };
@@ -137,7 +137,7 @@ const Withdraw = ({
             </h3>
           )}
           <>
-            <ToolTip tooltip="Load Private Key">
+            <ToolTip tooltip={(masterkey == "") ? "Load Private Key" : "Private Key Loaded !"}>
               <button
                 onClick={handleFileUpload}
                 className="text-[0.9rem] text-gray-400 p-1 font-semibold montserrat-small"

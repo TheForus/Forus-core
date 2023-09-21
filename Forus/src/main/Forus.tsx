@@ -144,11 +144,11 @@ const Forus = (props: Props) => {
         case "Apothem":
           setcontractAddress(apothemcontractAddress);
           break;
-        case "fantom testnet":
+        case "fantomtestnet":
           setcontractAddress(fantomcontractAddress);
           break;
 
-        case "arbitrum sepolia":
+        case "arbitrumsepolia":
           setcontractAddress(arbitrumcontractaddress);
           break;
 

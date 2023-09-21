@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { base58, keccak256 } from "ethers/lib/utils.js";
 import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
 import { useContext } from "react";
 import { AppContext } from "./Forus";
 import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
-import { EthTokens, XdcTokens, arbTokens, ftmTokens } from "../helper/Tokens";
+import { SepoliaTokens, ApothemTokens, arbitrumsepoliaTokens, fantomtestnetTokens } from "../helper/Tokens";
 import { BsChevronDown } from "react-icons/bs";
 import { ethers } from "ethers";
 import sending from "../Logos/sending.gif";
@@ -13,6 +13,7 @@ import { Notyf } from "notyf";
 import BigNumber from "bignumber.js";
 import { db } from "../config/firebase.js";
 import { collection, addDoc } from "firebase/firestore";
+import { chainOptions } from "../helper/ChainOptions";
 import {
   apothemcontractAddress,
   arbitrumcontractaddress,
@@ -39,30 +40,83 @@ const Transfer = () => {
     "function allowance(address owner, address spender) view returns (uint)",
   ];
 
+  const { ethereum }: any = window;
+
+
+
   let r: string | any;
   let s: string | any;
   let v: string | any;
 
-  // let ethers: any;
 
-  const { ethereum }: any = window;
+
+
 
   const [token, settoken] = useState<string | "">("");
   const [forusKey, setforusKey] = useState<string | "">("");
   const [error, seterror] = useState<string | "">("");
   const [amount, setamount] = useState<string | "">("");
   const [show, setshow] = useState<boolean>(false);
-  const [byDefault, setbyDefault] = useState<string>(
-    currentNetwork === "Apothem"
-      ? "XDC"
-      : currentNetwork === "fantom testnet"
-        ? "FTM" : currentNetwork === "arbitrum sepolia"
-          ? "ETH"
-          : "ETH"
-  );
+  const [byDefault, setbyDefault] = useState<string>("");
+  const [chainList, setchainList] = useState<any>();
+
+
+  useEffect(() => {
+    chainOptions.map((chain) => {
+      if (currentNetwork === chain.name) {
+        setbyDefault(chain.currency.symbol)
+      }
+      switch (chain.name) {
+
+        case 'Sepolia':
+          setchainList(SepoliaTokens);
+          setiscontract(sepoliacontractAddress);
+          break;
+
+        case 'fantomtestnet':
+          setchainList(fantomtestnetTokens);
+          setiscontract(fantomcontractAddress);
+          break;
+
+        case 'Apothem':
+          setchainList(ApothemTokens);
+          setiscontract(apothemcontractAddress);
+          break;
+
+        case 'arbitrumsepolia':
+          setchainList(arbitrumsepoliaTokens);
+          setiscontract(arbitrumcontractaddress);
+          break;
+
+        default: break
+
+      }
+
+
+    })
+
+
+    console.log('chainList', chainList)
+  }, [])
+
+
   const [trxid, settrxid] = useState<string>("");
   const [waiting, setwaiting] = useState<boolean>(false);
   const [buttonState, setButtonState] = useState<string>("Transfer");
+
+  const [iscontract, setiscontract] = useState<any>('');
+  console.log('iscontract', iscontract);
+
+
+  let contract: any;
+  let provider: any;
+  let signer: any;
+
+  if (ethereum) {
+    provider = new ethers.providers.Web3Provider(ethereum);
+
+  }
+
 
   const msgSender: string | any = sessionStorage.getItem("address");
 
@@ -103,7 +157,6 @@ const Transfer = () => {
         const decodedForusKey = base58.decode(_forusKey);
         const decodedId = decodedForusKey.subarray(0, 33);
         key = ec.keyFromPublic(decodedId, "hex");
-        console.log('key', key);
       } else {
         seterror("Plz enter the valid forus key");
       }
@@ -157,6 +210,8 @@ const Transfer = () => {
     console.log("storing...");
   };
 
+
+
   const Transfer = async () => {
     setUpStealthAddress();
     if (!ethereum) {
@@ -172,28 +227,19 @@ const Transfer = () => {
       return;
     }
     setwaiting(true);
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const signer = provider.getSigner();
-    let contract: any;
-    if (currentNetwork === "Sepolia") {
-      contract = new ethers.Contract(sepoliacontractAddress, Abi.abi, signer);
-      console.log(sessionStorage.getItem("chain"));
-    }
-    if (currentNetwork === "Apothem") {
-      contract = new ethers.Contract(apothemcontractAddress, Abi.abi, signer);
-    }
-    if (currentNetwork === "fantom testnet") {
-      contract = new ethers.Contract(fantomcontractAddress, Abi.abi, signer);
-    }
 
-    if (currentNetwork === "arbitrum sepolia") {
-      contract = new ethers.Contract(arbitrumcontractaddress, Abi.abi, signer);
-    }
+    
+    provider = new ethers.providers.Web3Provider(ethereum);
+    signer = provider.getSigner();
+    contract = new ethers.Contract(iscontract, Abi.abi, signer);
+
+
     try {
       const valueToSend = ethers.utils.parseEther(amount);
       const transactionParameters = {
         value: valueToSend,
       };
+
       const transferCoin = await contract.Transfer(
         r,
         s,
@@ -201,6 +247,7 @@ const Transfer = () => {
         receipentAddress,
         transactionParameters
       );
+
       const txId = await transferCoin;
       switch (currentNetwork) {
         case "Sepolia":
@@ -214,7 +261,6 @@ const Transfer = () => {
             "https://explorer.testnet.fantom.network/transactions/" + txId.hash
           );
           break;
-
 
         case "arbitrum sepolia":
           settrxid(
@@ -260,7 +306,7 @@ const Transfer = () => {
       console.log(connect.chainname);
     }
 
-    
+
     try {
       //to send exact amount of tokens are always counted as  amount**18
       const amountParams: any = ethers.utils.parseUnits(amount, 18);
@@ -438,99 +484,30 @@ const Transfer = () => {
                   }
             `}
               >
-                {show
-                  ? currentNetwork === "Apothem"
-                    ? XdcTokens.map((c) => (
-                      <div className="h-40 border-b border-gray-400 ">
-                        <li
-                          className="flex flex-row-reverse p-1 px-3 cursor-pointer
+                {show && chainList.map((c: any) => (
+                  <div className="h-40 border-b border-gray-400 ">
+                    <li
+                      className="flex flex-row-reverse p-1 px-3 cursor-pointer
                     text-gray-900 font-semibold border-l border-gray-100 
                     items-center gap-2 hover:text-gray-900 hover:bg-[#dbe6eb] 
                     montserrat-small text-[0.8rem]
                     justify-between"
-                          key={c.name}
-                          onClick={() => changedefault(c)}
-                        >
-                          <img
-                            className=" rounded-lg"
-                            src={c.symbol}
-                            alt=""
-                            height={14}
-                            width={18}
-                          />
-                          <p>{c.name}</p>
-                        </li>
-                      </div>
-                    ))
-                    : currentNetwork === "fantom testnet"
-                      ? ftmTokens.map((c) => (
-                        <div className="h-40 border-b border-gray-400 ">
-                          <li
-                            className="flex flex-row-reverse p-1 px-3 cursor-pointer
-                    text-gray-900 font-semibold border-l border-gray-100 
-                    items-center gap-2 hover:text-gray-900 hover:bg-[#dbe6eb] 
-                    montserrat-small text-[0.8rem]
-                    justify-between"
-                            key={c.name}
-                            onClick={() => changedefault(c)}
-                          >
-                            <img
-                              className=" rounded-lg"
-                              src={c.symbol}
-                              alt=""
-                              height={14}
-                              width={18}
-                            />
-                            <p>{c.name}</p>
-                          </li>
-                        </div>
-                      ))  : currentNetwork === "arbitrum sepolia"
-                      ? arbTokens.map((c) => (
-                        <div className="h-40 border-b border-gray-400 ">
-                          <li
-                            className="flex flex-row-reverse p-1 px-3 cursor-pointer
-                    text-gray-900 font-semibold border-l border-gray-100 
-                    items-center gap-2 hover:text-gray-900 hover:bg-[#dbe6eb] 
-                    montserrat-small text-[0.8rem]
-                    justify-between"
-                            key={c.name}
-                            onClick={() => changedefault(c)}
-                          >
-                            <img
-                              className=" rounded-lg"
-                              src={c.symbol}
-                              alt=""
-                              height={14}
-                              width={18}
-                            />
-                            <p>{c.name}</p>
-                          </li>
-                        </div>
-                      ))
-                      
-                      : EthTokens.map((c) => (
-                        <div className="h-40 border-b border-gray-400 ">
-                          <li
-                            className="flex flex-row-reverse p-1 px-3 cursor-pointer
-                        text-gray-900 font-semibold border-l border-gray-100 
-                          items-center gap-2 hover:text-gray-900 hover:bg-[#dbe6eb] 
-                          montserrat-small text-[0.8rem]
-                          justify-between"
-                            key={c.name}
-                            onClick={() => changedefault(c)}
-                          >
-                            <img
-                              className=" rounded-lg"
-                              src={c.symbol}
-                              alt=""
-                              height={14}
-                              width={18}
-                            />
-                            <p>{c.name}</p>
-                          </li>
-                        </div>
-                      ))
-                  : ""}
+                      key={c.name}
+                      onClick={() => changedefault(c)}
+                    >
+                      <img
+                        className=" rounded-lg"
+                        src={c.symbol}
+                        alt=""
+                        height={14}
+                        width={18}
+                      />
+                      <p>{c.name}</p>
+                    </li>
+                  </div>
+                ))
+                }
+
               </div>
             </ul>
           </div>
