@@ -73,7 +73,8 @@ const Receive: React.FC<ChildProps> = ({
       balance: balance,
       key: key,
     });
-    console.log("array", array);
+
+    
     const uniqueArray = Array.from(new Set(array));
     const arrayJson = JSON.stringify(uniqueArray);
     sessionStorage.setItem("array", arrayJson);
@@ -85,7 +86,7 @@ const Receive: React.FC<ChildProps> = ({
     // Parse the JSON string back into an array
     retrievedArray = JSON.parse(retrievedArrayJson);
 
-    settrxList(retrievedArray); // storing retreivedArray in RtrxList state
+    settrxList(Array.from(new Set(retrievedArray))); // storing retreivedArray in RtrxList state
 
     console.log("retrievedArray", retrievedArray);
   };

@@ -62,7 +62,7 @@ const Transfer = () => {
   const [error, seterror] = useState<string | "">("");
   const [amount, setamount] = useState<string | "">("");
   const [show, setshow] = useState<boolean>(false);
-  const [byDefault, setbyDefault] = useState<string>("");
+  const [byDefault, setbyDefault] = useState<string>("ETH");
   const [chainList ,setchainList ] =useState<any>([])
   const [txId, settxID] = useState<string | "">("");
 
@@ -305,26 +305,8 @@ const Transfer = () => {
           receipentAddress,
           amountParams
         );
-        const txId = await transferERC20;
-        switch (currentNetwork) {
-          case "Sepolia":
-            settrxid("https://sepolia.etherscan.io/tx/" + txId.hash);
-            break;
-          case "Apothem":
-            settrxid("https://explorer.apothem.network/txs/" + txId.hash);
-            break;
-          case "fantom testnet":
-            settrxid(
-              "https://explorer.testnet.fantom.network/transactions/" +
-              txId.hash
-            );
-            break;
-          case "arbitrum sepolia":
-            settrxid("https://arbitrum-sepolia.etherscan.io/tx/" + txId.hash);
-            break;
-          default:
-            break;
-        }
+        const trx = await transferERC20;
+        settrxid(txId + trx.hash);
 
       } catch (err: any) {
         console.log(err.message);
@@ -362,7 +344,6 @@ const Transfer = () => {
           approvedAmount
         );
         const txResponse = await approve;
-        console.log("https://sepolia.etherscan.io/tx/" + txResponse.hash);
         setButtonState("Transfer");
         notyf.success("approved");
 

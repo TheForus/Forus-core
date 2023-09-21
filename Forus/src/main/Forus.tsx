@@ -131,7 +131,7 @@ const Forus = (props: Props) => {
     });
 
     if (network === "invalid") {
-      sessionStorage.setItem("chain", "unSupported");
+      sessionStorage.setItem("chain", "unSupported Chain");
     }
   };
 
@@ -153,7 +153,7 @@ const Forus = (props: Props) => {
           setcontractAddress(arbitrumcontractaddress);
           break;
 
-        case "EOS EVM Network Testnet":
+        case "EosTestnet":
           setcontractAddress(eosevmcontractaddress);
           break;
 

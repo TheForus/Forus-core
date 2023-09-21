@@ -109,7 +109,7 @@ const Withdraw = ({
       const gasLimit: number = 21000; // Typical gas limit for a simple transfer
       const gasCost: number = gasPrice * gasLimit;
       const amountToSend = balance - parseFloat(ethers.utils.formatEther(gasCost));
-      console.log(amountToSend, gasCost , balance ,);
+      console.log(amountToSend, gasCost ,);
 
       const tx = {
         to: hideInput === false ? rec : sessionStorage.getItem("address"),
