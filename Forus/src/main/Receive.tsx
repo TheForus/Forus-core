@@ -27,13 +27,18 @@ interface ChildProps {
   withdrawFunction: () => void;
   setmasterkey: React.Dispatch<React.SetStateAction<string | any>>;
   setamountTowithdraw: React.Dispatch<React.SetStateAction<string | any>>;
+  amountTowithdraw: string | any;
+
 }
 
 const Receive: React.FC<ChildProps> = ({
   withdrawFunction,
   setmasterkey,
   setamountTowithdraw,
+  amountTowithdraw,
+
 }) => {
+
   const notyf = new Notyf();
   var signaturekey: EC.KeyPair | any;
   const { ethereum }: any = window;
@@ -74,10 +79,46 @@ const Receive: React.FC<ChildProps> = ({
       key: key,
     });
 
-    
-    const uniqueArray = Array.from(new Set(array));
-    const arrayJson = JSON.stringify(uniqueArray);
-    sessionStorage.setItem("array", arrayJson);
+
+    // let array = {
+    //   address: add?.slice(0, 6) + "..." + add?.slice(-4),
+    //   balance: balance,
+    //   key: key,
+    // };
+
+    // // Retrieve the existing data from sessionStorage
+    // const retrievedArrayJson: string | null = sessionStorage.getItem("array");
+    // let retrievedArray: any[] = [];
+
+    // if (retrievedArrayJson) {
+    //   // Parse the JSON string back into an array
+    //   retrievedArray = JSON.parse(retrievedArrayJson);
+    // }
+
+    // const objectExists = retrievedArray.some((item) => item.address !== array.address);
+
+    // if (objectExists) {
+    //   // Add the new object to the array
+    //   retrievedArray.push(array);
+
+    //   // Store the updated array in sessionStorage without duplicates
+    //   const uniqueArray = Array.from(new Set(retrievedArray))
+    //   sessionStorage.setItem("array", JSON.stringify(uniqueArray));
+
+
+    //   settrxList(retrievedArray);
+
+    //   console.log("retrievedArray", retrievedArray);
+
+    // Convert the array to a Set to remove duplicates
+    const uniqueSet = new Set(array);
+
+    // Convert the Set back to an array if needed
+    const uniqueArray = Array.from(uniqueSet);
+
+    // Store the unique array in sessionStorage
+    sessionStorage.setItem("array", JSON.stringify(uniqueArray));
+
 
     //getting array
 
@@ -86,12 +127,15 @@ const Receive: React.FC<ChildProps> = ({
     // Parse the JSON string back into an array
     retrievedArray = JSON.parse(retrievedArrayJson);
 
-    settrxList(Array.from(new Set(retrievedArray))); // storing retreivedArray in RtrxList state
+
+    //Array.from(new Set(array))
+    settrxList(retrievedArray); // storing retreivedArray in RtrxList state
 
     console.log("retrievedArray", retrievedArray);
   };
 
   const fetchData = async () => {
+
     let logs: any[] = [];
 
     try {
@@ -117,10 +161,9 @@ const Receive: React.FC<ChildProps> = ({
       sharedSecret = signaturekey.derive(ephPubKey.getPublic()); //
       hashedSecret = ec.keyFromPrivate(keccak256(sharedSecret.toArray()));
 
-      prefix =
-        sharedSecret.toArray()[0].toString(16) +
-        sharedSecret.toArray()[1].toString(16);
-      // console.log(prefix.toString(), z.Keys.slice(0, 4).toString())
+      prefix = sharedSecret.toArray()[0].toString(16) + sharedSecret.toArray()[1].toString(16);
+
+
       try {
         if (prefix.toString() === z.Keys.slice(0, 4).toString()) {
           setId(z.id);
@@ -128,9 +171,10 @@ const Receive: React.FC<ChildProps> = ({
 
           const _key = signaturekey.getPrivate().add(hashedSecret.getPrivate());
           const privateKey = _key.mod(ec.curve.n);
-          setprivatekey(privateKey.toString(16, 32));
+          // setprivatekey(privateKey.toString(16, 32));
 
           setwallet(privateKey.toString(16, 32));
+          setsavedSignaturekey('')
         }
 
         return;
@@ -141,6 +185,7 @@ const Receive: React.FC<ChildProps> = ({
   };
 
   const generateprivatekey = (): void => {
+
     const { ethereum }: any = window;
     if (!ethereum) {
       notyf.error("plz initialize metamask");
@@ -156,7 +201,7 @@ const Receive: React.FC<ChildProps> = ({
     } else {
       signaturekey = ec.keyFromPrivate(savedSignaturekey, "hex");
     }
-    console.log("signature key : ", signaturekey);
+
 
     fetchData();
 
@@ -168,13 +213,18 @@ const Receive: React.FC<ChildProps> = ({
   };
 
   useEffect(() => {
-    fetchData();
+    if (amountTowithdraw > 0) {
+      generateprivatekey();
+    }
+
   }, []);
+
 
   const removingKey = async () => {
     const Doc = doc(db, "Logs", id);
     await deleteDoc(Doc);
   };
+
 
   const copykey = (pkey: string) => {
     navigator.clipboard.writeText(pkey);
@@ -191,8 +241,6 @@ const Receive: React.FC<ChildProps> = ({
 
     setmasterkey(pkey);
 
-    /// remove the key from firebase database
-
     removingKey();
 
     sessionStorage.removeItem("array");
@@ -200,23 +248,23 @@ const Receive: React.FC<ChildProps> = ({
 
   return (
     <>
-      <div className="flex mx-auto justify-center items-center">
+      <div className="flex mx-auto pt-4 justify-center items-center">
         <div className="flex justify-end w-full">
           <div className="py-2 flex justify-between space-x-1 items-center w-full">
             {trxList && trxList.length > 0 && (
-              <h1 className="animate-pulse-2s text-highlight font-semibold text-[0.9rem]">
+              <h1 className="animate-pulse-2s montserrat-small font-semibold  text-highlight  text-[1rem]">
                 <span>{trxList.length}</span> Transaction Found !{" "}
               </h1>
             )}
             <div
-              className="flex items-center space-x-1 cursor-pointer hover:text-white
-             text-gray-400 border-b border-dashed border-gray-600 text-[1rem] text-left"
+              className="flex items-center space-x-1 cursor-pointer 
+             text-gray-500 border-b border-dashed border-gray-400 text-[1rem] text-left"
               onClick={() => setTransactionTab(!transactionTab)}
             >
               <span>
-                <MdHistory className="text-[1.1rem] text-inherit" />
+                <MdHistory className="text-[1.2rem] text-inherit" />
               </span>
-              <p>View Transactions </p>
+              <p className="montserrat-small font-semibold  " >View Transactions </p>
             </div>
           </div>
         </div>
@@ -226,20 +274,20 @@ const Receive: React.FC<ChildProps> = ({
           trxList.map((z: any, i: any) => (
             <div className="pt-4 flex justify-between px-6 text-highlight bg-gray-0">
               <div className="flex flex-col space-y-2">
-                <h2 className="text-left">Address </h2>
-                <p className="text-gray-300">{z.address}</p>
+                <h2 className="text-left montserrat-small font-semibold">Address </h2>
+                <p className="text-gray-600">{z.address}</p>
               </div>
               <div className="flex flex-col space-y-2">
-                <h2 className="text-left">Balance </h2>
-                <p className="text-gray-300">{z.balance}</p>
+                <h2 className="text-left montserrat-small font-semibold">Balance </h2>
+                <p className="text-gray-600">{z.balance}</p>
               </div>
-              <div className="flex flex-col justify-center items-end space-y-2">
+              <div className="flex flex-col montserrat-small font-semibold justify-center items-end space-y-2">
                 <h2 className="text-left">Private key </h2>
                 {!pkCopied ? (
                   <ToolTip tooltip="Copy Private key">
                     <AiOutlineCopy
                       onClick={() => copykey(z.key)}
-                      className={`text-gray-300 hover:text-green-400 font-bold cursor-pointer text-[1.2rem]`}
+                      className={`text-gray-600 hover:text-green-400 font-bold cursor-pointer text-[1.2rem]`}
                     />
                   </ToolTip>
                 ) : (
@@ -254,7 +302,7 @@ const Receive: React.FC<ChildProps> = ({
             // <div key={i} className=" text-white ">
           ))
         ) : (
-          <h1 className="text-center relative top-5 text-xl text-gray-500">
+          <h1 className="text-center relative top-5 text-xl montserrat-small font-semibold  text-gray-500">
             No Transactions Recorded !
           </h1>
         )
@@ -264,9 +312,9 @@ const Receive: React.FC<ChildProps> = ({
             {hide !== true && (
               <input
                 type="text"
-                className="text-[0.9rem] font-semibold text-gray-100 placeholder:text-gray-500
+                className="text-[0.9rem] font-semibold text-gray-400  placeholder:text-gray-500
             montserrat-subtitle outline-none px-3 py-3 h-[100%] rounded-md
-            hover:border-cyan-900 w-[100%] bg-black/40 border-2 border-gray-500"
+            hover:border-cyan-900 w-[100%] bg-[#dedee9] border-2 border-gray-500"
                 value={savedSignaturekey}
                 onChange={(e) => {
                   setsavedSignaturekey(e.target.value);
@@ -275,7 +323,7 @@ const Receive: React.FC<ChildProps> = ({
               />
             )}
             {hide && (
-              <p className="text-gray-400 p-1 py-2 font-semibold montserrat-small ">
+              <p className="text-gray-600 p-1 py-2 font-semibold montserrat-small ">
                 Expand to enter the signatureKey (optional)
               </p>
             )}
@@ -303,10 +351,10 @@ const Receive: React.FC<ChildProps> = ({
               onClick={generateprivatekey}
               className="flex space-x-2 justify-center w-[100%] mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
           hover:shadow-xl px-6 text-center text-black highlight border border-black 
-          rounded-md font-bold hover:border-highlight hover:text-highlight transition-all ease-linear"
+          rounded-md font-bold  transition-all ease-linear"
             >
-                <AiOutlineScan className="text-[1.3rem] text-inherit" />
-                 <span>Scan</span>
+              <AiOutlineScan className="text-[1.3rem] text-inherit" />
+              <span>Scan</span>
             </button>
           </div>
         </div>

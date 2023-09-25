@@ -77,7 +77,7 @@ const Qna = (props: Props) => {
         </h4>
         {showAnswers[1] && (
           <p className="dark:text-gray-300 w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
-            "Signature" is the 32 bytes random number works as a private key of your forus key
+            "Signature" is the 32 bytes random key works as a private key of your forus key
             Its a key to unlock funds on the stealth address generated from your forus key . So when you share your forus key
             with the sender always save its corresponding signature in a secure place
           </p>
@@ -117,7 +117,7 @@ const Qna = (props: Props) => {
         lg:text-lg cursor-pointer flex items-center
          montserrat-subheading py-4 text-gray-600 gap-16`}
         >
-          4: Can I retrieve my private key after funds have been sent to my
+          4: How Can I retrieve the private key of that stealth address where the funds have been sent with my
           Forus key?
           <span>
             {showAnswers[3] ? (
@@ -135,9 +135,9 @@ const Qna = (props: Props) => {
         </h4>
         {showAnswers[3] && (
           <p className=" w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
-            Yes, you can retrieve your private key by clicking on the "scan"
-            button or by pasting your signature key (optional) . This will allow
-            you to access the specific address where the funds have been sent.
+            You can retrieve your private key by clicking on the "scan"
+            button and by pasting your signature key in the destinated input . This will allow
+            you to access the specific stealth address where the funds have been sent.
           </p>
         )}
         <h4
@@ -165,10 +165,64 @@ const Qna = (props: Props) => {
         </h4>
         {showAnswers[4] && (
           <p className="dark:text-gray-300 w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
-            Absolutely! forus has been designed with a user-friendly interface,
+            Absolutely! forus has been designed with a cheap .quick and user-friendly interface,
             making it accessible and easy to use for individuals with different
             levels of technical knowledge. Our app provides a seamless and
             intuitive experience for all users.
+          </p>
+        )}
+
+        <h4
+          onClick={() => toggleAnswer(0)}
+          className={`${showAnswers[0]} text-left justify-between w-full  hover:text-gray-700
+        lg:text-lg cursor-pointer flex items-center
+         montserrat-subheading py-4 text-gray-600 gap-16`}
+        >
+          6: What if i lost my Signature key ?
+          <span>
+            {showAnswers[0] ? (
+              <IoAddSharp
+                color="#131619"
+                className="lg:text-4xl text-3xl rotate-45 transition-all duration-100"
+              />
+            ) : (
+              <IoAddSharp
+                color="#131619"
+                className="lg:text-4xl text-3xl duration-100"
+              />
+            )}
+          </span>
+        </h4>
+        {showAnswers[0] && (
+          <p className=" w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
+            Signature key works like private key of forus key if u lost it you could never retreive the funds sent from your forus key . Well ! its crutial to always save the signature key of your forus key if u have lost the signature key you are done .One thing you can generate a new foruskey and save corresponding signature and ask the sender to use that forus key to send funds to get save from stolen funds in future.
+          </p>
+        )}
+
+<h4
+          onClick={() => toggleAnswer(0)}
+          className={`${showAnswers[0]} text-left justify-between w-full  hover:text-gray-700
+        lg:text-lg cursor-pointer flex items-center
+         montserrat-subheading py-4 text-gray-600 gap-16`}
+        >
+          7: What if i lost my Forus key?
+          <span>
+            {showAnswers[0] ? (
+              <IoAddSharp
+                color="#131619"
+                className="lg:text-4xl text-3xl rotate-45 transition-all duration-100"
+              />
+            ) : (
+              <IoAddSharp
+                color="#131619"
+                className="lg:text-4xl text-3xl duration-100"
+              />
+            )}
+          </span>
+        </h4>
+        {showAnswers[0] && (
+          <p className=" w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
+           Generate New ;) and save its corresponding signature
           </p>
         )}
       </div>

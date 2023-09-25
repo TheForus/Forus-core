@@ -8,6 +8,7 @@ import "notyf/notyf.min.css";
 import { downloadTxt } from "../helper/downloadTxt";
 import { FaFileSignature } from "react-icons/fa";
 import bg from "../assets/bg.png";
+import ToolTip from "../helper/ToopTip";
 
 const ec = new EllipticCurve.ec("secp256k1");
 
@@ -81,19 +82,19 @@ const ForusKey = (props: Props) => {
     <>
       <div
         style={{ backgroundImage: `url(${bg})` }}
-        className="bg-cover object-scale-down border border-black rounded-md backdrop-blur-lg bg-no-repeat flex flex-col items-center p-8 rounded-t-md"
+        className="bg-[#e9e9f3] object-scale-down border border-gray rounded-md backdrop-blur-lg bg-no-repeat flex flex-col items-center p-8 rounded-t-md"
       >
         <div className="pb-6 flex flex-col space-y-4 items-center border-black  w-full">
           <h1
             className="mx-auto montserrat-heading font-[1000]
-             sm:text-[2.1rem] xl:text-[2.7rem] bg-clip-text text-bgGray
+             sm:text-[2.1rem] xl:text-[2.7rem] bg-clip-text text-gray-700
               text-3xl"
           >
             {" "}
             Attain Funds
             <span
               className="hightlightText
-            text-transparent sm:text-[2.6rem] xl:text-[3.1rem] bg-clip-text 
+            text-transparent sm:text-[2.2rem] xl:text-[2.8rem] bg-clip-text 
             bg-gradient-to-r from-highlight to-cyan-600
             "
             >
@@ -102,7 +103,7 @@ const ForusKey = (props: Props) => {
             </span>{" "}
             With Forus
           </h1>
-          <p className="text-gray-600 text-[0.8rem] sm:text-[1.1rem]">
+          <p className="text-gray-400 text-[0.8rem] sm:text-[1.1rem] montserrat-small font-semibold">
             Never reveal the signature. Only Share your forus key to receive funds.
           </p>
 
@@ -110,27 +111,32 @@ const ForusKey = (props: Props) => {
         {/* Forus */}
         <div className="flex space-x-4">
           <div
-            className="my-4 flex sm:gap-4 items-center p-2 sm:px-3 sm:mx-0 mx-3 bg-gray-500 bg-opacity-60
+            className="my-2 flex sm:gap-4 items-center p-2 sm:px-3 sm:mx-0 mx-3 bg-gray-400 bg-opacity-60
            rounded-md hover:shadow-sm shadow-gray-300 px-2   "
           >
             <p
               className="sm:text-[1rem] text-[0.8rem] montserrat-small font-extrabold 
-            text-bgGray "
+            text-gray-700 "
             >
-              <span className="sm:text-[1.1rem] text-[0.9rem] text-white text-md font-extrabold">
+              <span className="sm:text-[1.1rem] text-[0.9rem] text-gray-800 text-md font-extrabold">
                 #Foruskey
               </span>{" "}
               - {ForusKey}
             </p>
           </div>
           <div className="flex items-center text-white space-x-3">
-            <AiOutlineCopy
-              className="cursor-copy font-bold text-2xl text-[181b1f] hover:text-highlight"
-              onClick={copyForusKey}
-            />
+            <ToolTip tooltip="Copy Forus Key">
+              <AiOutlineCopy
+                className="cursor-pointer font-bold text-2xl text-gray-700 hover:text-highlight"
+                onClick={copyForusKey}
+              />
+            </ToolTip>
           </div>
         </div>
         <div className="flex space-x-4">
+
+
+
           <button
             className="mb-4 my-2 montserrat-subtitle border-1 p-1 montserrat-subtitle border border-black
          hover:text-highlight hover:border hover:border-highlight px-6 text-center  
@@ -139,20 +145,25 @@ const ForusKey = (props: Props) => {
           >
             Generate Fk
           </button>
-          <div  onClick={saveSignature}
-            className="flex cursor-pointer space-x-2 mb-4 my-2 montserrat-subtitle border-1 p-1 
-            montserrat-subtitle border border-highlight
-            text-highlight hover:border hover:text-black px-6 text-center  
-            bg-tranparent text-black rounded-md font-semibold transition-all ease-linear
-            hover:bg-gradient-to-r hover:from-teal-400 hover:to-cyan-500
+
+
+
+          <div onClick={saveSignature}
+            className="flex cursor-pointer space-x-2 mb-4 my-2 montserrat-subtitle p-1 
+            montserrat-subtitle border border-black  px-6 text-center  
+           text-black rounded-md font-semibold bg-highlight
+      
             "
           >
             <FaFileSignature
               className="font-bold text-2xl text-[181b1f]"
-  
+
             />
-            <span>Signature</span>
+            <ToolTip tooltip="Save Signature Key">
+              <span>Signature</span>
+            </ToolTip>
           </div>
+
         </div>
       </div>
     </>

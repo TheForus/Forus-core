@@ -1,17 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { base58, keccak256 } from "ethers/lib/utils.js";
 import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
 import { useContext } from "react";
 import { AppContext } from "./Forus";
 import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
-import {
-  SepoliaTokens,
-  ApothemTokens,
-  arbitrumsepoliaTokens,
-  fantomtestnetTokens,
-  eosevmTokens,
-} from "../helper/Tokens";
 import { BsChevronDown } from "react-icons/bs";
 import { ethers } from "ethers";
 import sending from "../Logos/sending.gif";
@@ -22,23 +15,16 @@ import { collection, addDoc } from "firebase/firestore";
 import { chainOptions } from "../helper/ChainOptions";
 import "notyf/notyf.min.css";
 import { BiTransfer } from "react-icons/bi";
-import {
-  apothemcontractAddress,
-  fantomcontractAddress,
-  sepoliacontractAddress,
-  arbitrumcontractaddress,
-  eosevmcontractaddress
-} from "../helper/contractAddresses";
 
 const ec = new EllipticCurve.ec("secp256k1");
 
 const Transfer = () => {
   const notyf = new Notyf();
   let currentNetwork: string | any = sessionStorage.getItem("chain");
-  console.log(currentNetwork)
 
-  const { validateChain } = useContext(AppContext);
-  const [contractAddress, setcontractAddress] = useState<string | any>("");
+
+  const { validateChain, } = useContext(AppContext);
+  const [ContractAddress, setContractAddress] = useState<string | any>("");
 
 
   const ERCABI = [
@@ -63,70 +49,34 @@ const Transfer = () => {
   const [amount, setamount] = useState<string | "">("");
   const [show, setshow] = useState<boolean>(false);
   const [byDefault, setbyDefault] = useState<string>("ETH");
-  const [chainList ,setchainList ] =useState<any>([])
+  const [chainList, setchainList] = useState<any>([])
   const [txId, settxID] = useState<string | "">("");
 
 
-  useEffect(() => {
+  useMemo(() => {
+
     chainOptions.map((chain) => {
 
       if (currentNetwork === chain.name) {
         setbyDefault(chain.currency.symbol);
+        settxID(chain.url)
+        setContractAddress(chain.contract)
+        setchainList(chain.tokens)
       }
-      
+      return
 
     });
 
-    switch (currentNetwork) {
-      case "Sepolia":
-        setchainList(SepoliaTokens);
-        settxID("https://sepolia.etherscan.io/tx/")
-        setcontractAddress(sepoliacontractAddress)
- 
-        break;
-
-      case "fantomtestnet":
-        setchainList(fantomtestnetTokens);
-        settxID("https://explorer.testnet.fantom.network/transactions/")
-        setcontractAddress(fantomcontractAddress)
-
-        break;
-
-      case "Apothem":
-        setchainList(ApothemTokens);
-        settxID("https://explorer.testnet.fantom.network/transactions/")
-        setcontractAddress(apothemcontractAddress)
-
-        break;
-
-      case "arbitrumsepolia":
-        setchainList(arbitrumsepoliaTokens);
-        settxID("https://arbitrum-sepolia.etherscan.io/tx/")
-        setcontractAddress(arbitrumcontractaddress)
-
-        break;
-
-      case "EosTestnet":
-        setchainList(eosevmTokens);
-        settxID("https://explorer.testnet.fantom.network/transactions/")
-        setcontractAddress(eosevmcontractaddress)
-
-        break;
-
-      default:
-        break;
-    }
-
-    console.log("chainList", chainList);
 
   }, []);
+
+  // console.log(chainList, currentNetwork, ContractAddress, sessionStorage.getItem("contractAdd"), txId);
 
   const [trxid, settrxid] = useState<string>("");
   const [waiting, setwaiting] = useState<boolean>(false);
   const [, setButtonState] = useState<string>("Transfer");
 
 
-  console.log("contract", contractAddress);
 
 
   const msgSender: string | any = sessionStorage.getItem("address");
@@ -165,7 +115,7 @@ const Transfer = () => {
         const decodedForusKey = base58.decode(_forusKey);
         const decodedId = decodedForusKey.subarray(0, 33);
         key = ec.keyFromPublic(decodedId, "hex");
-      } else {
+      } else { 
         seterror("Plz enter the valid forus key");
       }
     } catch (e: any) {
@@ -247,13 +197,20 @@ const Transfer = () => {
 
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
-    const contract = new ethers.Contract(contractAddress, Abi.abi, signer);
+    const contract = new ethers.Contract(ContractAddress, Abi.abi, signer);
+    console.log(r,
+      s,
+      v,
+      receipentAddress,
+    )
 
     try {
       const valueToSend = ethers.utils.parseEther(amount);
       const transactionParameters = {
         value: valueToSend,
       };
+
+
 
       const transferCoin = await contract.Transfer(
         r,
@@ -263,7 +220,9 @@ const Transfer = () => {
         transactionParameters
       );
 
+
       const trx = await transferCoin;
+      trx.wait
       settrxid(txId + trx.hash);
 
       storing();
@@ -275,6 +234,18 @@ const Transfer = () => {
     }
     setwaiting(false);
   };
+
+
+
+
+
+
+
+
+
+
+
+
 
   const TransferToken = async () => {
     setUpStealthAddress();
@@ -408,9 +379,9 @@ const Transfer = () => {
       >
         {/* <h2 className="text-[1.3rem] text-left mb-1">Forus Key </h2> */}
         <input
-          className="my-4 text-[0.9rem] font-semibold text-gray-100 placeholder:text-gray-500
+          className="my-4 text-[0.9rem] font-semibold text-gray-400  placeholder:text-gray-500
           montserrat-subtitle outline-none px-3 py-3 h-[100%] rounded-md
-           hover:border-cyan-900 w-[100%] bg-black/40 border-2 border-gray-500"
+           hover:border-cyan-900 w-[100%] bg-[#dedee9] border-2 border-gray-500"
           type="text"
           onChange={validatingForuskey}
           placeholder="Enter Your Forus Key"
@@ -424,9 +395,9 @@ const Transfer = () => {
        "
         >
           <input
-            className="text-[0.9rem] font-semibold text-gray-100 placeholder:text-gray-500
+            className="text-[0.9rem] font-semibold text-gray-400  placeholder:text-gray-500
           montserrat-subtitle outline-none py-3 px-3 h-[100%] rounded-md
-          hover:border-cyan-900 w-[100%] bg-black/40 border-2 border-gray-500"
+          hover:border-cyan-900 w-[100%] bg-[#dedee9] border-2 border-gray-500"
             value={amount}
             type="text"
             placeholder="0.1"
@@ -437,8 +408,8 @@ const Transfer = () => {
             <ul className="" onClick={() => setshow(!show)}>
               <li
                 className="flex p-2 px-3 cursor-pointer rounded-md 
-            text-gray-300 font-semibold border-l border-gray-700
-            items-center gap-2 hover:text-cyan-500"
+ font-semibold border-l border-gray-700
+            items-center gap-2 text-cyan-500"
               >
                 <p>{byDefault}</p>
                 <BsChevronDown size={18} />
@@ -480,16 +451,19 @@ const Transfer = () => {
           </div>
         </div>
       </div>
-      <div className="w-full flex justify-center pt-2 mr-4">
+      <div className="w-full flex justify-center mr-4">
         <button
-          onClick={
-            byDefault === "ETH" || byDefault === "XDC" || byDefault === "FTM"
-              ? Transfer
-              : proceed
-          }
+          onClick={() => {
+            const selectedChain = chainOptions.find((chain: any) => chain.currency.symbol === byDefault);
+            if (selectedChain) {
+              Transfer(); // Call Transfer function if the condition is met
+            } else {
+              proceed(); // Call proceed function otherwise
+            }
+          }}
           className="flex space-x-2 justify-center w-[100%] mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
           hover:shadow-xl px-6 text-center text-black highlight border border-black 
-          rounded-md font-bold hover:border-highlight hover:text-highlight transition-all ease-linear"
+          rounded-md font-bold  transition-all ease-linear"
         >
           {waiting === false ? (
             <>
@@ -508,7 +482,7 @@ const Transfer = () => {
       >
         {trxid !== "" ? trxid.slice(8, 58) : ""}
       </p>
-      <p className="montserrat-subtitle text-bgGray font-semibold flex mx-auto items-center">
+      <p className="montserrat-subtitle text-gray-600 font-semibold flex mx-auto items-center">
         {error}
       </p>
     </div>

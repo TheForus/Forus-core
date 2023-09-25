@@ -8,13 +8,7 @@ import "notyf/notyf.min.css";
 import abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { ethers } from "ethers";
 import { chainOptions } from "../helper/ChainOptions";
-import {
-  apothemcontractAddress,
-  fantomcontractAddress,
-  sepoliacontractAddress,
-  arbitrumcontractaddress,
-  eosevmcontractaddress
-} from "../helper/contractAddresses";
+
 
 
 type Props = {};
@@ -25,7 +19,6 @@ interface ContextValue {
   connectWallet(): void;
   userBalance: string;
   selectedChain: string;
-  setSelectedChain: React.Dispatch<React.SetStateAction<string | any>>;
   sumof: string | any;
   setsumof: React.Dispatch<React.SetStateAction<string | any>>;
   sumofAddress: string | any;
@@ -44,23 +37,12 @@ const Forus = (props: Props) => {
   const [, setwallet] = useState<boolean>(false);
   const [sumof, setsumof] = useState<string | any>("0");
   const [sumofAddress, setsumofAddress] = useState<string | any>("0");
-  const [contractAddress, setcontractAddress] = useState<string | any>("");
+
 
   const { ethereum }: any = window;
 
-  const [selectedChain, setSelectedChain] = useState<string | any>(
-    sessionStorage.getItem("chain")
-  );
+  const selectedChain: string | any = sessionStorage.getItem("chain")
 
-  let contract: any;
-  let provider: any;
-
-  if (ethereum) {
-    provider = new ethers.providers.Web3Provider(ethereum);
-    contract = new ethers.Contract(contractAddress, abi.abi, provider);
-  }
-
-  //helper
 
   const isWallet = async () => {
     if (ethereum === undefined) {
@@ -91,7 +73,7 @@ const Forus = (props: Props) => {
     }
   };
 
-  //wallet connect logic
+
 
   const handleChainChange = async (chainId: any) => {
     chainOptions.map((chain) => {
@@ -99,14 +81,14 @@ const Forus = (props: Props) => {
         return;
       } else {
         const customChain = {
-          chainId: chain.chainId, // Replace with your custom chain's ID
-          chainName: chain.name, // Replace with your chain's name
+          chainId: chain.chainId,
+          chainName: chain.name,
           nativeCurrency: {
-            name: chain.name, // Replace with your native currency name
-            symbol: chain.currency.symbol, // Replace with your native currency symbol
+            name: chain.name,
+            symbol: chain.currency.symbol,
             decimals: chain.currency.decimals,
           },
-          rpcUrls: chain.rpcs, // Replace with your chain's RPC URL
+          rpcUrls: chain.rpcs,
         };
 
         // Add the custom chain to MetaMask
@@ -116,61 +98,43 @@ const Forus = (props: Props) => {
     });
   };
 
-  let network = "invalid";
+
+
+
   const validateChain = async () => {
     const chainId = await ethereum.request({ method: "eth_chainId" });
+    const matchingChain = chainOptions.find(chain => chain.chainId === chainId);
 
-    chainOptions.map((chain) => {
-      if (chain.chainId === chainId) {
-        sessionStorage.setItem("chain", chain.name);
-        sessionStorage.setItem("symbol", chain.currency.symbol);
-        network = "valid";
-      } else {
-        return;
-      }
-    });
+    sessionStorage.setItem("chain", matchingChain ? matchingChain.name : "unSupported Chain");
+    sessionStorage.setItem("symbol", matchingChain ? matchingChain.currency.symbol : "");
 
-    if (network === "invalid") {
-      sessionStorage.setItem("chain", "unSupported Chain");
-    }
   };
 
   useEffect(() => {
     const fetchCurrentChainData = async () => {
 
-      switch (selectedChain) {
-        case "Sepolia ":
-          setcontractAddress(sepoliacontractAddress);
-          break;
-        case "Apothem":
-          setcontractAddress(apothemcontractAddress);
-          break;
-        case "fantomtestnet":
-          setcontractAddress(fantomcontractAddress);
-          break;
+      try {
+        const chainId = await ethereum.request({ method: "eth_chainId" });
+        const chain = chainOptions.find(option => option.chainId === chainId);
 
-        case "arbitrumsepolia":
-          setcontractAddress(arbitrumcontractaddress);
-          break;
+        if (chain) {
+          const provider = new ethers.providers.Web3Provider(ethereum);
+          const theContract = new ethers.Contract(chain.contract, abi.abi, provider);
+          const [limit, totalFunds] = await Promise.all([
+            theContract.getTotalAddresses(),
+            theContract.getTotalVolume(),
+          ]);
 
-        case "EosTestnet":
-          setcontractAddress(eosevmcontractaddress);
-          break;
-
-        default:
-          break;
+          setsumof(limit.toString());
+          setsumofAddress(totalFunds / 10 ** 18);
+        }
+      } catch (error) {
+        console.error("Error fetching chain data:", error);
       }
+    }
 
+    fetchCurrentChainData()
 
-      const limit = await contract.getTotalAddresses();
-      const totalFunds = await contract.getTotalVolume();
-
-      setsumof(limit.toString());
-      setsumofAddress(totalFunds / 10 ** 18);
-    };
-
-    fetchCurrentChainData();
-    
   }, [show, []]);
 
   const [userBalance, setUserBalance] = useState<string>("");
@@ -180,9 +144,9 @@ const Forus = (props: Props) => {
     sessionStorage.setItem("address", accounts[0]);
 
     try {
+      const provider = new ethers.providers.Web3Provider(ethereum);
       const balance = await provider.getBalance(accounts[0]);
-      setUserBalance(
-        ethers.utils.formatEther(balance).toString().slice(0, 5) +
+      setUserBalance(ethers.utils.formatEther(balance).toString().slice(0, 5) +
         " " +
         sessionStorage.getItem("symbol")
       );
@@ -212,6 +176,7 @@ const Forus = (props: Props) => {
   }
 
   const connectWallet = async (): Promise<void> => {
+
     isWallet();
 
     try {
@@ -237,12 +202,11 @@ const Forus = (props: Props) => {
     validateChain,
     handleChainChange,
     selectedChain,
-    setSelectedChain,
   };
 
   return (
     <AppContext.Provider value={ContextValue}>
-      <div className="bg-[#000000] max-h-max min-h-[100vh] lg:overflow-hidden">
+      <div className="bg-[#e9e9f3] max-h-max min-h-[100vh] lg:overflow-hidden">
         {/* <div className="flex items-center justify-between"> */}
         <NavBar />
         {/* </div> */}

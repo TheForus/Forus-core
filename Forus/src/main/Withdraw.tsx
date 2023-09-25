@@ -2,10 +2,14 @@ import { useState } from "react";
 import { BsBoxArrowInDown, BsDownload } from "react-icons/bs";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
-import { ethers } from "ethers";
+import { Signer, ethers } from "ethers";
 import ToolTip from "../helper/ToopTip";
 import { MdOutlineDone } from "react-icons/md";
 import { TbArrowsExchange2 } from "react-icons/tb";
+import * as dotenv from "dotenv";
+
+
+import { Session } from '@0xsequence/auth'
 
 interface ChildProps {
   masterkey: string | any;
@@ -16,18 +20,24 @@ interface ChildProps {
 const Withdraw = ({
   masterkey,
   setmasterkey,
-  amountTowithdraw,
+  // amountTowithdraw,
 }: ChildProps) => {
 
   const [hideInput, sethideInput] = useState<boolean>(false);
   const notyf = new Notyf();
+
+
+  // dotenv.config();
 
   const useConnect = () => {
     setmasterkey("");
     sethideInput(true);
   };
 
+
+
   const [isSuccessfull, setisSuccessfull] = useState<string>('withdraw');
+  let amountTowithdraw = '0.01';
 
   // Function to handle file selection and reading its contents
   const handleFileUpload = async () => {
@@ -82,56 +92,64 @@ const Withdraw = ({
 
   const { ethereum }: any = window;
 
+
+
   const sendTransaction = async () => {
 
-    setisSuccessfull('withdrawing!!')
+    const provider = new ethers.providers.Web3Provider(ethereum);
+    const PRIVATE_KEY = 'ad3501a22e77249829096f4ede0285a1a0354ddc80f2d9a6415168ccee336bf6'
+
+    const walletEOA = new ethers.Wallet(PRIVATE_KEY, provider)
+    setisSuccessfull('withdrawing!!');
+
+    const session = await Session.singleSigner({
+      signer: walletEOA
+    })
+
+    // Get the Sequence wallet address
+    console.log(session.account.address)
+
+    // Get a signer for a specific network
+    // - 1:     Ethereum Mainnet
+    // - 137:   Polygon Mainnet
+    // - 42161: Arbitrum One
+    // See https://chainid.network/ for more
+
+    console.log('bal', ethers.utils.parseEther(amountTowithdraw.toString()))
+    const signer = session.account.getSigner(137)
+    console.log('signer', signer)
+
+
 
     try {
-      const provider = new ethers.providers.Web3Provider(ethereum);
-
-      const wallet = new ethers.Wallet(masterkey, provider);
-
-
-      // Get the Ethereum address associated with the private key
-      const address = wallet.address;
-
-      const balanceWei = await provider.getBalance(address);
-
-      const balanceEther = ethers.utils.formatEther(balanceWei);
-
-      // Convert the balance to a JavaScript number
-      const balance = parseFloat(balanceEther);
-
-      // Get the gas price
-      const gasPrice: any = await provider.getGasPrice();
-
-      // Estimate the gas cost for the transaction
-      const gasLimit: number = 21000; // Typical gas limit for a simple transfer
-      const gasCost: number = gasPrice * gasLimit;
-      const amountToSend = balance - parseFloat(ethers.utils.formatEther(gasCost));
-      console.log(amountToSend, gasCost ,);
 
       const tx = {
-        to: hideInput === false ? rec : sessionStorage.getItem("address"),
-        value: ethers.utils.parseEther(amountToSend.toString()),
-        gasPrice: gasPrice,
-        gasLimit: gasLimit,
-  
+        to: hideInput === false ? rec : sessionStorage.getItem("address")!,
+        value: ethers.utils.parseEther(amountTowithdraw.toString()),
+
+
       };
+      console.log(tx)
+
+      const txResponse = await signer.sendTransaction(tx);
+      const trx = await txResponse.wait()
+
+      console.log('Transaction sent:', trx);
 
 
-      console.log(tx);
 
-      const txResponse = await wallet.sendTransaction(tx);
+    } catch (err: any) {
 
-      console.log("Transaction sent:", txResponse);
-
-
-      setisSuccessfull('Withdraw')
-    } catch (error: any) {
-      seterror(error.message);
+      console.log(err.message);
+      seterror(err.message);
     }
+
+    setisSuccessfull('Withdraw');
+
   };
+
+
+
 
   const toggle = () => {
     sethideInput(!hideInput);
@@ -139,76 +157,78 @@ const Withdraw = ({
   };
 
   return (
-    <div className="pt-2 mx-auto">
-      {/* <h2 className="text-bgGray text-[1.3rem] text-left mb-3">
-        Recipient Address
-      </h2> */}
+    <div className="pt-5 mx-auto">
       <div className="py-2 flex space-x-4 items-center justify-between">
         <div className={`flex-1 ${hideInput && 'justify-end'} flex space-x-2 justify-between items-center`}>
           {hideInput === false ? (
             <input
               type="text"
-              className="flex-1 text-[0.9rem] font-semibold text-gray-100 placeholder:text-gray-500
+              className="flex-1 text-[0.9rem] font-semibold text-gray-400  placeholder:text-gray-500
           montserrat-subtitle outline-none px-4 py-3 rounded-md
-          hover:border-cyan-900 w-[100%] bg-black/40 border-2 border-gray-500"
+          hover:border-cyan-900 w-[100%] bg-[#dedee9] border-2 border-gray-500"
               onChange={(e) => {
                 setrec(e.target.value);
               }}
               placeholder="Enter Recipient Address"
             />
           ) : (
-            <h3 className="text-[1rem] text-gray-400">
-              Withdraw funds to connected wallet !
+            <h3 className="text-[0.9rem] text-gray-400 montserrat-subtitle font-semibold ">
+              Withdraw funds to Connected Wallet !
             </h3>
           )}
           <>
-            <ToolTip tooltip={(masterkey == "") ? "Load Private Key" : "Private Key Loaded !"}>
-              <button
-                onClick={handleFileUpload}
-                className="text-[0.9rem] text-gray-400 p-1 font-semibold montserrat-small"
-              >
-                {masterkey === "" ? (
-                  <BsDownload
-                    className="cursor-pointer  text-[#bbc1c9]"
-                    size={24}
-                  />
-                ) : (
-                  <MdOutlineDone
-                    className="cursor-pointer  text-highlight"
-                    size={28}
-                  />
-                )}
-              </button>
+
+            {/* Download Icon */}
+
+            <ToolTip tooltip="Get funds in the Connected wallet !">
+              <TbArrowsExchange2
+                onClick={toggle}
+                className="text-[1.8rem] text-highlight cursor-pointer"
+              />
             </ToolTip>
+
+
+            <div className="pl-2 text-gray-200  flex space-x-1 items-center border-l border-gray-800">
+              <ToolTip tooltip={(masterkey == "") ? "Load Private Key" : "Private Key Loaded !"}>
+                <button
+                  onClick={handleFileUpload}
+                  className="text-[0.9rem] text-gray-400 p-1 font-semibold montserrat-small"
+                >
+                  {masterkey === "" ? (
+                    <BsDownload
+                      className="cursor-pointer  text-[#65686b]"
+                      size={24}
+                    />
+                  ) : (
+                    <MdOutlineDone
+                      className="cursor-pointer  text-highlight"
+                      size={28}
+                    />
+                  )}
+                </button>
+              </ToolTip>
+            </div>
           </>
         </div>
-        {/* Download Icon */}
-        <div className="pl-4 text-gray-200 border-l border-gray-800 flex space-x-1 items-center">
-          <ToolTip tooltip="Receive funds in your own connected wallet !">
-            <TbArrowsExchange2
-              onClick={toggle}
-              className="text-[1.8rem] text-highlight cursor-pointer"
-            />
-          </ToolTip>
-        </div>
+
       </div>
 
       {/* Withdraw Button */}
-      <div className="w-full flex justify-center pt-2 mr-4">
+      <div className="w-full flex justify-center pt-3 mr-4">
         <button
           onClick={sendTransaction}
           className="flex space-x-2 justify-center w-[100%] mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
           hover:shadow-xl px-6 text-center text-black highlight border border-black 
-          rounded-md font-bold hover:border-highlight hover:text-highlight transition-all ease-linear"
+          rounded-md font-bold  transition-all ease-linear"
         >
           <BsBoxArrowInDown className="text-[1.3rem] text-inherit" />
           <span>{isSuccessfull}</span>
         </button>
       </div>
 
-      <p className="text-[0.9rem] text-white">
+      <p className="text-[0.9rem] font-semibold montserrat-small  text-[#e27e7e]">
         {error}
-      </p>
+      </p>      
     </div>
   );
 };

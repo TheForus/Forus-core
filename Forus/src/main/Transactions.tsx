@@ -9,7 +9,7 @@ import Withdraw from "./Withdraw";
 type Props = {};
 
 const Transactions = (props: Props) => {
-  const { setShow } = useContext(AppContext);
+  const { setShow} = useContext(AppContext);
   const [buttonStatus, setButtonStatus] = useState({
     transfer: true,
     Receive: false,
@@ -58,33 +58,30 @@ const Transactions = (props: Props) => {
         <button
           onClick={handleTransferClick}
           className={`text-left px-6 py-1 border-b-2 border-black
-        ${
-          buttonStatus.transfer
-            ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700"
-            : "text-gray-700"
-        }`}
+        ${buttonStatus.transfer
+              ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700"
+              : "text-gray-700"
+            }`}
         >
           Transfer
         </button>
         <button
           onClick={handleReceiveClick}
           className={`px-6 py-1 border-b-2 border-black
-          ${
-            buttonStatus.Receive
+          ${buttonStatus.Receive
               ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700"
               : "text-gray-700"
-          }`}
+            }`}
         >
           Receive
         </button>
         <button
           onClick={handleWithdrawClick}
           className={`px-6 py-1 border-b-2 border-black
-          ${
-            buttonStatus.withdraw
+          ${buttonStatus.withdraw
               ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700"
               : "text-gray-700"
-          }`}
+            }`}
         >
           Withdraw
         </button>
@@ -96,6 +93,7 @@ const Transactions = (props: Props) => {
         ) : buttonStatus.Receive ? (
           <Receive
             setamountTowithdraw={setamountTowithdraw}
+            amountTowithdraw={amountTowithdraw}
             setmasterkey={setmasterkey}
             withdrawFunction={handleWithdrawClick}
           />

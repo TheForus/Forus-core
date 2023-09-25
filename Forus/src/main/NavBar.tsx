@@ -1,4 +1,4 @@
-import logo from "../Logos/logo.jpg";
+import logo from "../Logos/logo.png";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AppContext } from "./Forus";
@@ -56,8 +56,8 @@ const NavBar = (props: Props) => {
           onClick={() => navigate("/")}
         >
           <div className="flex items-center logo-div">
-            <img src={logo} alt="" className="logo w-[49px] h-[47px]" />
-            <h1 className="-ml-1 montserrat-subtitle sm:text-[1.5rem] font-bold text-[1.4rem] text-bgGray">
+            <img src={logo} alt="" className="logo w-[56px] h-[51px]" />
+            <h1 className="-ml-1 montserrat-subtitle sm:text-[1.5rem] font-bold text-[1.4rem] text-gray-600">
               Forus
             </h1>
           </div>
@@ -66,40 +66,26 @@ const NavBar = (props: Props) => {
             <button
               onClick={() => navigate("/")}
               className="flex md:flex-row flex-col items-center transition-all ease-linear
-               md:items-end space-x-1 sm:ml-14 ml-9  text-bgGray 
+               md:items-end space-x-1 sm:ml-14 ml-9  text-gray-600 
                 montserrat-subtitle underline-offset-8 font-bold hover:underline decoration-bgGray  sm:text-[1.1rem] text-[0.8rem]"
             >
-              <IoMdHome size={23} className="md:self-start text-highlight" />
-              <p className="sm:inline-flex hidden">Home</p>
+              <IoMdHome size={23} className="md:self-start  text-gray-400 " />
+              <p className="sm:inline-flex hidde text-gray-800  n">Home</p>
             </button>
-            <div
-              onClick={() => navigate("/")}
-              className="flex md:flex-row flex-col items-center md:items-end space-x-1 sm:ml-14 
-               text-bgGray   ml-2
-                montserrat-subtitle underline-offset-8
-                 font-bold hover:underline decoration-bgGray 
-                 sm:text-[1.1rem] text-[0.8rem]"
-            >
-              <HiQuestionMarkCircle
-                size={23}
-                className="md:self-start text-highlight  "
-              />
-              <p className="sm:inline-flex hidden">QnA</p>
-            </div>
 
             <div
               onClick={() => navigate("/")}
               className="flex md:flex-row flex-col items-center md:items-end space-x-1 sm:ml-14 
-               text-bgGray   ml-2
+               text-gray-600   ml-2
                 montserrat-subtitle underline-offset-8
                  font-bold hover:underline decoration-bgGray 
                  sm:text-[1.1rem] text-[0.8rem]"
             >
               <AiFillFilePdf
                 size={23}
-                className="md:self-start text-highlight  "
+                className="md:self-start text-gray-400   "
               />
-              <p className="sm:inline-flex hidden">Read</p>
+              <p className="sm:inline-flex hidden text-gray-800 ">Read</p>
             </div>
           </div>
         </div>
@@ -108,17 +94,17 @@ const NavBar = (props: Props) => {
         <div className="sm:flex-row flex space-x-3 items-center">
           {/* Social Links */}
           <div className="lg:flex space-x-3 items-center hidden">
-              <p className=" text-bgGray ">
+              <p className=" text-gray-400 ">
                 <a href="https://discord.gg/keQnv2K8HP">
                   <FaDiscord size={22} />
                 </a>
               </p>
-              <p className=" text-bgGray  ">
+              <p className="  text-gray-400  ">
                 <a href="https://github.com/TheForus">
                   <FaGithub size={22} />
                 </a>
               </p>
-              <p className=" text-bgGray  ">
+              <p className="  text-gray-400  ">
                 <a href="https://twitter.com/The_Forus">
                   <FaTwitter size={22} />
                 </a>
@@ -127,12 +113,12 @@ const NavBar = (props: Props) => {
             {sessionStorage.getItem("address") !== null && (
               <div
                 className=" montserrat-subtitle border-1 sm:text-[1rem] text-[0.9rem] px-2 sm:px-4
-               rounded-full text-[#e9edf1] font-extrabold border border-gray-500 hover:border-white"
+               rounded-full text-[#e9edf1] font-extrabold border border-gray-500 hover:border-highlight"
               >
                 <ul className="" onClick={() => setshow(!show)}>
                   <li
-                    className="flex p-1 px-2 sm:px-4 cursor-pointer rounded-md
-                  items-center gap-2 w-full hover:text-white"
+                    className="flex p-1 px-2 sm:px-4 cursor-pointer rounded-md text-black
+                  items-center gap-2 w-full "
                   >
                     {sessionStorage.getItem("chain")}
                     {!show ? (
@@ -157,7 +143,7 @@ const NavBar = (props: Props) => {
                             className="flex flex-row-reverse p-1 px-4 cursor-pointer
                            font-semibold
                     items-center gap-2 hover:text-white
-                     montserrat-small text-[0.9rem]
+                     montserrat-small text-[0.9rem] 
                     justify-between"
                             key={chain.name}
                             onClick={() => changeChains(chain)}
@@ -189,7 +175,7 @@ const NavBar = (props: Props) => {
             >
               <p
                 // onClick={copyAddress}
-                className={`sm:text-[1rem] md:text-[0.9rem] montserrat-small text-highlight font-semibold text-[0.8rem]`}
+                className={`sm:text-[1rem] md:text-[0.9rem] montserrat-small text-cyan-500  font-semibold text-[0.8rem]`}
               >
                 {sessionStorage.getItem("address") !== null || false
                   ? connect.userBalance
@@ -199,7 +185,7 @@ const NavBar = (props: Props) => {
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
                 onClick={copyAddress}
-                className={`sm:text-[1.3rem] md:text-[1rem] cursor-pointer montserrat-small text-bgGray font-semibold text-[1rem]`}
+                className={`sm:text-[1.3rem] md:text-[1rem] cursor-pointer montserrat-small text-gray-600 font-semibold text-[1rem]`}
               >
                 {sessionStorage.getItem("address") !== null || false
                   ? `${sessionStorage
@@ -212,24 +198,22 @@ const NavBar = (props: Props) => {
             </div>
             {addressCopied ? (
               <MdOutlineDone
-                className={` text-gray-300 font-bold text-[1.1rem] text-highlight`}
+                className={` text-gray-300 font-bold text-[1.1rem] "text-gray-600 `}
               />
             ) : (
               <AiOutlineCopy
                 className={`${
                   isAddrHovered ? "inline-flex" : "hidden"
-                } text-gray-300 font-bold text-[1.1rem] text-highlight`}
+                } text-gray-300 font-bold text-[1.1rem] "text-gray-600 `}
               />
             )}
           </div>
           {sessionStorage.getItem("address") === null || false ? (
             <button
               onClick={connect.connectWallet}
-              className=" montserrat-subtitle border-1 p-1 sm:text-[1rem] text-[0.8rem]
-                    px-2 sm:px-4 rounded-md  highlight
-                    bg-highlight text-black font-extrabold hover:bg-clip-text hover:border 
-                    hover:border-highlight hover:text-highlight transition-all ease-linear bg-gradient-to-r hover:from-teal-400 hover:to-cyan-500
-                     "
+              className="flex space-x-1 justify-center w-[100%] mx-auto mb-4 my-2 py-1 montserrat-subtitle border-1  montserrat-subtitle  
+          hover:shadow-xl px-3 text-center text-black highlight border border-black 
+          rounded-md font-bold hover:border-highlight hover:text-highlight  transition-all ease-linear"
             > connect wallet</button>
           ) : (
             ""
