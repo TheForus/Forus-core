@@ -8,12 +8,12 @@ const Header = () => {
     <>
       <div
         className="bg-[#e9e9f3] xl:px-36 md:px-22 px-8 sm:py-27 py-16 flex
-          justify-between items-center md:flex-row flex-col space-y-1"
+          justify-between items-center md:flex-row flex-col space-y-1 text-gray-700"
       >
         {/* left side */}
         <div className="flex flex-col items-start space-y-4 ml-6  md:w-[100%]">
           {/* features  texts */}
-          <div className="flex space-x-4 items-center">
+          <div className="flex montserrat-heading font-semibold space-x-4 items-center">
             {/* inner boxes */}
             <span
               className="p-1 px-8 border-2
@@ -31,19 +31,19 @@ const Header = () => {
 
           <h2
             className="flex text-gray-700 space-y-1 xl:-space-y-2 flex-col montserrat-heading font-extrabold
-            text-left text-[1.4rem] md:text-[1.9rem] xl:text-[2.8rem]"
+            text-left text-[1.2rem] md:text-[1.5rem] xl:text-[2.4rem]"
           >
             {/* Receive Eth and tokens with forus confidentially !! */}
-            <span>Confidential & Secure</span>
+            <span>Anonymous & Secure</span>
             <span>transactions</span>
           </h2>
           <p
-            className="montserrat-small font-semibold pb-1 text-gray-600
+            className="montserrat-heading font-semibold pb-1 text-gray-600
            text-left break-words  max-w-[700px] sm:text-[1.2rem] text-[1rem]"
           >
             {/* Breaking the link between sender and receiver. Safeguard Your
             Financial Interactions with Cutting-edge Cryptography. */}
-            Bringing confidentiality while receiving funds !!!
+            Get funds confidentially without sharing wallet address !!
           </p>
           <button
             className="border-1 montserrat-subtitle  

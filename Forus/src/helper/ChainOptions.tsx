@@ -1,15 +1,13 @@
-import apothem from "../assets/chains/apothem.png";
+// import apothem from "../assets/chains/apothem.png";
 import goerli from "../assets/chains/goerli.png";
-import sepolia from "../assets/chains/sepolia.jpeg";
+// import sepolia from "../assets/chains/sepolia.jpeg";
 import fantom from "../assets/chains/fantomTestnet.png";
-
-
 import USDT from '../assets/usdt.png'
 import pego from "../assets/pego.png"
 import link from "../assets/link.png"
 import dai from "../assets/dai.png"
 import eth from "../assets/eth.png"
-import xdc from "../assets/chains/apothem.png"
+// import xdc from "../assets/chains/apothem.png"
 import ftm from "../assets/chains/fantomTestnet.png"
 import arb from "../assets/chains/ARB.png"
 import avax from "../assets/avax.png"
@@ -67,28 +65,6 @@ export const chainOptions: chain[] = [
         ]
     },
 
-
-    {
-        name: "Sepolia Testnet ", contract: '0x021CC9B8A9Cb9d677cC403cB81F44a689739E2Aa', chainId: "0xaa36a7", symbol: sepolia, currency: { symbol: "ETH", decimals: 18 }, rpcs: ['https://rpc2.sepolia.org'], url: "https://sepolia.etherscan.io/tx/", tokens: [
-
-            { name: "ETH", address: "", symbol: eth },
-            { name: "USDT", address: "0x36160274b0ed3673e67f2ca5923560a7a0c523aa", symbol: USDT },
-            { name: "DAI", address: "0x82fb927676b53b6ee07904780c7be9b4b50db80b", symbol: dai },
-
-
-        ]
-    },
-    {
-        name: "Apothem Testnet", contract: '0x3957018eC2835E8B969245291850575064eCe716', chainId: "0x33", symbol: apothem, currency: { symbol: "TXDC", decimals: 18 }, rpcs: ['https://apothem.xdcrpc.com'], url: "https://apothem.xdcrpc.com", tokens: [
-
-            { name: "XDC", address: "", symbol: xdc },
-            { name: "USDC", address: "0x499f9320079c3a5dd30af691ea1a88e8c75fda17", symbol: link },
-            { name: "USDT", address: "0xccdc0653935a251b6839f30359917977f994b5d9", symbol: USDT },
-            { name: "DAI", address: "0xe46554ad93a7046c85f2da0c20ebd68e41f11b36", symbol: dai },
-
-
-        ]
-    },
     {
         name: "Fantom Testnet", contract: '0x9c08ecf2B23C8d18dF2ec7e38c09e0C04649D7f4', chainId: "0xfa2", symbol: fantom, currency: { symbol: "FTM", decimals: 18 }, rpcs: ['https://rpc.testnet.fantom.network'], url: "https://explorer.testnet.fantom.network/transactions/", tokens: [
 

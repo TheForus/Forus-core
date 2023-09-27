@@ -138,7 +138,7 @@ const Withdraw = ({
         seterror('Successfully sent!');
       }
       else {
-        seterror('Insufficient funds to pay gas!!');
+        seterror('Insufficient funds to cover gas fee !');
       }
 
     } catch (err: any) {
@@ -226,7 +226,7 @@ const Withdraw = ({
         </button>
       </div>
 
-      <p className={`text-[0.9rem] font-bold montserrat-small ${error === ' Successfully sent! ' ? ' text-highlight ' : 'text-red-500'}`}>
+      <p className={`text-[1rem] font-bold montserrat-small ${error === ' Successfully sent! ' ? '  text-green-300 ' : 'text-red-500'}`}>
         {error}
       </p>
 

@@ -69,7 +69,7 @@ const NavBar = (props: Props) => {
                md:items-end space-x-1 sm:ml-14 ml-9  text-gray-600 
                 montserrat-subtitle underline-offset-8 font-bold hover:underline decoration-bgGray  sm:text-[1.1rem] text-[0.8rem]"
             >
-              <IoMdHome size={23} className="md:self-start  text-gray-400 " />
+              <IoMdHome size={23} className="md:self-start  text-gray-500 " />
               <p className="sm:inline-flex hidde text-gray-800  n">Home</p>
             </button>
 
@@ -83,7 +83,7 @@ const NavBar = (props: Props) => {
             >
               <AiFillFilePdf
                 size={23}
-                className="md:self-start text-gray-400   "
+                className="md:self-start text-gray-500   "
               />
               <p className="sm:inline-flex hidden text-gray-800 ">Read</p>
             </div>
@@ -94,21 +94,21 @@ const NavBar = (props: Props) => {
         <div className="sm:flex-row flex space-x-3 items-center">
           {/* Social Links */}
           <div className="lg:flex space-x-3 items-center hidden">
-              <p className=" text-gray-400 ">
-                <a href="https://discord.gg/keQnv2K8HP">
-                  <FaDiscord size={22} />
-                </a>
-              </p>
-              <p className="  text-gray-400  ">
-                <a href="https://github.com/TheForus">
-                  <FaGithub size={22} />
-                </a>
-              </p>
-              <p className="  text-gray-400  ">
-                <a href="https://twitter.com/The_Forus">
-                  <FaTwitter size={22} />
-                </a>
-              </p>
+            <p className=" text-gray-500 ">
+              <a href="https://discord.gg/keQnv2K8HP">
+                <FaDiscord size={22} />
+              </a>
+            </p>
+            <p className="  text-gray-500  ">
+              <a href="https://github.com/TheForus">
+                <FaGithub size={22} />
+              </a>
+            </p>
+            <p className="  text-gray-500  ">
+              <a href="https://twitter.com/The_Forus">
+                <FaTwitter size={22} />
+              </a>
+            </p>
 
             {sessionStorage.getItem("address") !== null && (
               <div
@@ -129,16 +129,16 @@ const NavBar = (props: Props) => {
                   </li>
                   <div
                     className={`
-              ${
-                show &&
-                `transition-all ease-in py-2 border-none  shadow-md flex flex-col
+              ${show &&
+                      `transition-all ease-in py-2 border-none  shadow-md flex flex-col
                  rounded-b-md absolute ml-1 mt-1 text-black bg-bgGray z-10 `
-              }
+                      }
             `}
                   >
                     {show &&
                       connect.chainOptions.map((chain: any) => (
                         <div className=" hover:bg-slate-500">
+                
                           <li
                             className="flex flex-row-reverse p-1 px-4 cursor-pointer
                            font-semibold
@@ -189,8 +189,8 @@ const NavBar = (props: Props) => {
               >
                 {sessionStorage.getItem("address") !== null || false
                   ? `${sessionStorage
-                      .getItem("address")
-                      ?.slice(0, 9)}...${sessionStorage
+                    .getItem("address")
+                    ?.slice(0, 9)}...${sessionStorage
                       .getItem("address")
                       ?.slice(-5)}`
                   : ""}
@@ -202,9 +202,8 @@ const NavBar = (props: Props) => {
               />
             ) : (
               <AiOutlineCopy
-                className={`${
-                  isAddrHovered ? "inline-flex" : "hidden"
-                } text-gray-600 font-bold text-[1.1rem] "text-gray-600 `}
+                className={`${isAddrHovered ? "inline-flex" : "hidden"
+                  } text-gray-600 font-bold text-[1.1rem] "text-gray-600 `}
               />
             )}
           </div>

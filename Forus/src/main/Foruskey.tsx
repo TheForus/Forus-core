@@ -138,8 +138,7 @@ const ForusKey = (props: Props) => {
 
 
           <button
-            className="mb-4 my-2 montserrat-subtitle border-1 p-1 montserrat-subtitle border border-black
-         hover:text-highlight hover:border hover:border-highlight px-6 text-center  
+            className="mb-4 my-2 montserrat-subtitle border-1 p-1 montserrat-subtitle border border-blackpx-6 text-center  
          highlight text-black rounded-md font-semibold transition-all ease-linear"
             onClick={Generate}
           >
