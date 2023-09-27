@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { keccak256 } from "ethers/lib.esm/utils";
 import { generatePath, useNavigate } from "react-router-dom";
+import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
 import {
@@ -15,7 +16,7 @@ import "notyf/notyf.min.css";
 import { db } from "../config/firebase.js";
 import { getDocs, collection, deleteDoc, doc } from "firebase/firestore";
 import { downloadTxt } from "../helper/downloadTxt";
-import { ethers } from "ethers";
+import { ethers, BigNumber } from "ethers";
 import { MdHistory, MdOutlineDone } from "react-icons/md";
 import ToolTip from "../helper/ToopTip";
 
@@ -28,6 +29,7 @@ interface ChildProps {
   setmasterkey: React.Dispatch<React.SetStateAction<string | any>>;
   setamountTowithdraw: React.Dispatch<React.SetStateAction<string | any>>;
   amountTowithdraw: string | any;
+  show: string | any
 
 }
 
@@ -35,6 +37,7 @@ const Receive: React.FC<ChildProps> = ({
   withdrawFunction,
   setmasterkey,
   setamountTowithdraw,
+  show,
   amountTowithdraw,
 
 }) => {
@@ -58,6 +61,7 @@ const Receive: React.FC<ChildProps> = ({
 
   const [transactionTab, setTransactionTab] = useState(false);
   const [trxList, settrxList] = useState<any>([]);
+  const [trx2List, settrx2List] = useState<any>([]);
 
   let array: any[] = [];
 
@@ -79,36 +83,6 @@ const Receive: React.FC<ChildProps> = ({
       key: key,
     });
 
-
-    // let array = {
-    //   address: add?.slice(0, 6) + "..." + add?.slice(-4),
-    //   balance: balance,
-    //   key: key,
-    // };
-
-    // // Retrieve the existing data from sessionStorage
-    // const retrievedArrayJson: string | null = sessionStorage.getItem("array");
-    // let retrievedArray: any[] = [];
-
-    // if (retrievedArrayJson) {
-    //   // Parse the JSON string back into an array
-    //   retrievedArray = JSON.parse(retrievedArrayJson);
-    // }
-
-    // const objectExists = retrievedArray.some((item) => item.address !== array.address);
-
-    // if (objectExists) {
-    //   // Add the new object to the array
-    //   retrievedArray.push(array);
-
-    //   // Store the updated array in sessionStorage without duplicates
-    //   const uniqueArray = Array.from(new Set(retrievedArray))
-    //   sessionStorage.setItem("array", JSON.stringify(uniqueArray));
-
-
-    //   settrxList(retrievedArray);
-
-    //   console.log("retrievedArray", retrievedArray);
 
     // Convert the array to a Set to remove duplicates
     const uniqueSet = new Set(array);
@@ -132,9 +106,71 @@ const Receive: React.FC<ChildProps> = ({
     settrxList(retrievedArray); // storing retreivedArray in RtrxList state
 
     console.log("retrievedArray", retrievedArray);
+
+
   };
 
+
+  const [index, setIndex] = useState<number>(0)
+  const [totalLength, setTotalLength] = useState<number>(0)
+
+
+  const fetch = async () => {
+    try {
+      const provider = new ethers.providers.Web3Provider(ethereum);
+      const contract = new ethers.Contract('0x9c08ecf2B23C8d18dF2ec7e38c09e0C04649D7f4', Abi.abi, provider);
+
+      const response = await contract.getEphKeys(BigNumber.from(index));
+      setTotalLength(await contract.ephKeysLength())
+      settrx2List(response)
+      console.log('response', response);
+
+
+
+      // Increment index by 10 but not greater than totalLength
+
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+
+  useEffect(() => {
+
+    // Fetch data initially and then every 750 ms
+    fetch();
+
+  }, []);
+
+
+  useEffect(() => {
+
+    if (totalLength > index) {
+
+      setTimeout(() => {
+
+        setIndex(Math.min(totalLength, index + 10));
+
+        // console.log(index, totalLength)
+
+      }, 750);
+
+      fetch()
+
+    }
+
+
+  }, [totalLength]);
+
+  console.log('trxlist', trx2List)
+
+
+
+
+
+
   const fetchData = async () => {
+
 
     let logs: any[] = [];
 

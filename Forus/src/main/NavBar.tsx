@@ -48,7 +48,7 @@ const NavBar = (props: Props) => {
   };
 
   return (
-    <div className=" mx-auto pt-4 sm:pt-8 pb-12   ">
+    <div className=" mx-auto max-w-[1300px] pb-12 pt-4 sm:pt-8   ">
       <div className="sm:px-7 px-4 flex justify-between">
         {/* leftside logo */}
         <div
@@ -198,13 +198,13 @@ const NavBar = (props: Props) => {
             </div>
             {addressCopied ? (
               <MdOutlineDone
-                className={` text-gray-300 font-bold text-[1.1rem] "text-gray-600 `}
+                className={` text-gray-600 font-bold text-[1.1rem] "text-gray-600 `}
               />
             ) : (
               <AiOutlineCopy
                 className={`${
                   isAddrHovered ? "inline-flex" : "hidden"
-                } text-gray-300 font-bold text-[1.1rem] "text-gray-600 `}
+                } text-gray-600 font-bold text-[1.1rem] "text-gray-600 `}
               />
             )}
           </div>

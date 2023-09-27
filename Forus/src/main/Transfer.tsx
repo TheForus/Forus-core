@@ -74,7 +74,7 @@ const Transfer = () => {
 
   const [trxid, settrxid] = useState<string>("");
   const [waiting, setwaiting] = useState<boolean>(false);
-  const [, setButtonState] = useState<string>("Transfer");
+  const [buttonState, setButtonState] = useState<string>("Transfer");
 
 
 
@@ -151,8 +151,8 @@ const Transfer = () => {
         sharedsecret.toArray()[0].toString(16) +
         sharedsecret.toArray()[1].toString(16);
 
-      console.log(v);
-      console.log(`${v.replace("0x", "")}04${r.slice(2)}${s.slice(2)}`);
+      // console.log(v);
+      // console.log(`${v.replace("0x", "")}04${r.slice(2)}${s.slice(2)}`);
     } catch (e) {
       console.log("error", e);
     }
@@ -259,16 +259,19 @@ const Transfer = () => {
     setwaiting(true);
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
-    let contract: any;
+    console.log(ContractAddress)
+    const contract = new ethers.Contract(ContractAddress, Abi.abi, signer);
 
 
     try {
       //to send exact amount of tokens are always counted as  amount**18
       const amountParams: any = ethers.utils.parseUnits(amount, 18);
+      console.log(amountParams.toString())
+      console.log(r,v)
       try {
 
         // const transferCoin=await contract.transfer(receipentAddress, amountParams);
-        const transferERC20 = await contract.TransferERC20(
+        const transferERC20 = await contract.TransferToken(
           r,
           s,
           v,
@@ -278,6 +281,7 @@ const Transfer = () => {
         );
         const trx = await transferERC20;
         settrxid(txId + trx.hash);
+        console.log(receipentAddress)
 
       } catch (err: any) {
         console.log(err.message);
@@ -296,31 +300,38 @@ const Transfer = () => {
   async function approve() {
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
+
     const contract = new ethers.Contract(token, ERCABI, signer);
+
 
     try {
       const res = await contract.allowance(
-        msgSender,
+        msgSender, ContractAddress
 
       );
+
       const bigNumber = new BigNumber(res._hex);
       const allowance: string | any = bigNumber.toNumber() / 10 ** 18;
-      // console.log(allowance);
+      console.log(res.toString())
 
-      if (allowance < amount) {
+      if (allowance < Number(amount)) {
         setButtonState("approving..");
+    
         const approvedAmount: any = ethers.utils.parseUnits(amount, 18);
         const approve = await contract.approve(
-
-          approvedAmount
+          ContractAddress,
+          approvedAmount 
+         
         );
         const txResponse = await approve;
+        const tx=txResponse.wait
+        console.log(tx)
         setButtonState("Transfer");
         notyf.success("approved");
 
         setTimeout(() => {
           TransferToken();
-        }, 2000);
+        }, 3000);
       } else {
         TransferToken();
       }
@@ -468,10 +479,10 @@ const Transfer = () => {
           {waiting === false ? (
             <>
               <BiTransfer className="text-[1.3rem] text-inherit" />
-              <span>Transfer</span>
+              <span>{buttonState}</span>
             </>
           ) : (
-            <img height={30} width={30} src={sending} alt="" />
+            'transfering...'
           )}
         </button>
       </div>

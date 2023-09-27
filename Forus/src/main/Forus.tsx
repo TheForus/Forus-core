@@ -207,9 +207,9 @@ const Forus = (props: Props) => {
   return (
     <AppContext.Provider value={ContextValue}>
       <div className="bg-[#e9e9f3] max-h-max min-h-[100vh] lg:overflow-hidden">
-        {/* <div className="flex items-center justify-between"> */}
+
         <NavBar />
-        {/* </div> */}
+
         <div
           className="md:w-[90%] max-w-[1220px] mx-auto
                   py-8 p-4"

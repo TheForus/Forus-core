@@ -2,14 +2,10 @@ import { useState } from "react";
 import { BsBoxArrowInDown, BsDownload } from "react-icons/bs";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
-import { Signer, ethers } from "ethers";
+import { ethers } from "ethers";
 import ToolTip from "../helper/ToopTip";
 import { MdOutlineDone } from "react-icons/md";
 import { TbArrowsExchange2 } from "react-icons/tb";
-import * as dotenv from "dotenv";
-
-
-import { Session } from '@0xsequence/auth'
 
 interface ChildProps {
   masterkey: string | any;
@@ -20,24 +16,18 @@ interface ChildProps {
 const Withdraw = ({
   masterkey,
   setmasterkey,
-  // amountTowithdraw,
+  amountTowithdraw,
 }: ChildProps) => {
 
   const [hideInput, sethideInput] = useState<boolean>(false);
   const notyf = new Notyf();
-
-
-  // dotenv.config();
 
   const useConnect = () => {
     setmasterkey("");
     sethideInput(true);
   };
 
-
-
   const [isSuccessfull, setisSuccessfull] = useState<string>('withdraw');
-  let amountTowithdraw = '0.01';
 
   // Function to handle file selection and reading its contents
   const handleFileUpload = async () => {
@@ -92,51 +82,64 @@ const Withdraw = ({
 
   const { ethereum }: any = window;
 
-
-
   const sendTransaction = async () => {
-
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const PRIVATE_KEY = 'ad3501a22e77249829096f4ede0285a1a0354ddc80f2d9a6415168ccee336bf6'
-
-    const walletEOA = new ethers.Wallet(PRIVATE_KEY, provider)
     setisSuccessfull('withdrawing!!');
 
-    const session = await Session.singleSigner({
-      signer: walletEOA
-    })
-
-    // Get the Sequence wallet address
-    console.log(session.account.address)
-
-    // Get a signer for a specific network
-    // - 1:     Ethereum Mainnet
-    // - 137:   Polygon Mainnet
-    // - 42161: Arbitrum One
-    // See https://chainid.network/ for more
-
-    console.log('bal', ethers.utils.parseEther(amountTowithdraw.toString()))
-    const signer = session.account.getSigner(137)
-    console.log('signer', signer)
-
-
-
     try {
+      const provider = new ethers.providers.Web3Provider(ethereum);
+      const wallet = new ethers.Wallet(masterkey, provider);
 
-      const tx = {
-        to: hideInput === false ? rec : sessionStorage.getItem("address")!,
-        value: ethers.utils.parseEther(amountTowithdraw.toString()),
+      // Get the Ethereum address associated with the private key
+      const address = wallet.address;
+
+      // Ensure balance is retrieved in Ether
+      const balance = await provider.getBalance(address);
+
+      // const balanceEther = ethers.utils.formatEther(balanceWei);
+      // const balance = parseFloat(balanceEther);
+      // console.log(balance);
+
+      // Get the gas price
+      const gasPrice: ethers.BigNumber = await provider.getGasPrice();
+      console.log(`Gas Price (Gwei): ${ethers.utils.formatUnits(gasPrice, 'gwei')}`);
+
+      // Get the current gas limit from the latest block
+      // const block = await provider.getBlock('latest');
+      // const block = await provider.getBlock('latest');
+      // const gasLimitAmount: any = block.gasLimit;
+      const gasLimit: ethers.BigNumber = ethers.BigNumber.from(21000);
+      console.log(`Gas Limit: ${gasLimit}`);
+
+      // Calculate the gas cost based on the gas limit and gas price
+      const gasCost: ethers.BigNumber = gasPrice.mul(gasLimit);
+      console.log(gasCost);
+
+      // Calculate the amount to send
+      // const balance: ethers.BigNumber = await provider.getBalance('YOUR_ADDRESS');
+      const gasCostInEther: number = parseFloat(ethers.utils.formatUnits(gasCost, 'ether'));
+      console.log(gasCostInEther, ethers.utils.formatUnits(balance));
+      const amountToSend: any = ethers.utils.formatUnits(balance.sub(gasCost));
+      console.log(amountToSend);
 
 
-      };
-      console.log(tx)
+      if (amountToSend > gasCostInEther) {
+        const tx = {
+          to: hideInput === false ? rec : sessionStorage.getItem("address"),
+          value: ethers.utils.parseEther(amountToSend),
+          gasPrice: gasPrice,
+          gasLimit: gasLimit,
 
-      const txResponse = await signer.sendTransaction(tx);
-      const trx = await txResponse.wait()
+        };
+        console.log(tx)
 
-      console.log('Transaction sent:', trx);
+        const txResponse = await wallet.sendTransaction(tx);
 
-
+        console.log('Transaction sent:', txResponse);
+        seterror('Successfully sent!');
+      }
+      else {
+        seterror('Insufficient funds to pay gas!!');
+      }
 
     } catch (err: any) {
 
@@ -172,44 +175,41 @@ const Withdraw = ({
               placeholder="Enter Recipient Address"
             />
           ) : (
-            <h3 className="text-[0.9rem] text-gray-400 montserrat-subtitle font-semibold ">
+            <h3 className="text-[0.95rem] text-gray-400 montserrat-subtitle font-semibold ">
               Withdraw funds to Connected Wallet !
             </h3>
           )}
+
           <>
-
-            {/* Download Icon */}
-
-            <ToolTip tooltip="Get funds in the Connected wallet !">
-              <TbArrowsExchange2
-                onClick={toggle}
-                className="text-[1.8rem] text-highlight cursor-pointer"
-              />
-            </ToolTip>
-
-
-            <div className="pl-2 text-gray-200  flex space-x-1 items-center border-l border-gray-800">
-              <ToolTip tooltip={(masterkey == "") ? "Load Private Key" : "Private Key Loaded !"}>
-                <button
-                  onClick={handleFileUpload}
-                  className="text-[0.9rem] text-gray-400 p-1 font-semibold montserrat-small"
-                >
-                  {masterkey === "" ? (
-                    <BsDownload
-                      className="cursor-pointer  text-[#65686b]"
-                      size={24}
-                    />
-                  ) : (
-                    <MdOutlineDone
-                      className="cursor-pointer  text-highlight"
-                      size={28}
-                    />
-                  )}
-                </button>
+            <div className=" pr-1 text-gray-200 flex space-x-1 items-center">
+              <ToolTip tooltip="Get funds in the Connected wallet !">
+                <TbArrowsExchange2
+                  onClick={toggle}
+                  className="text-[1.8rem] text-highlight cursor-pointer"
+                />
               </ToolTip>
             </div>
+            <ToolTip tooltip={(masterkey == "") ? "Load Private Key" : "Private Key Loaded !"}>
+              <button
+                onClick={handleFileUpload}
+                className="text-[0.9rem] pl-3  border-l border-gray-500 text-gray-400 p-1 font-semibold montserrat-small"
+              >
+                {masterkey === "" ? (
+                  <BsDownload
+                    className="cursor-pointer  text-[#65686b]"
+                    size={24}
+                  />
+                ) : (
+                  <MdOutlineDone
+                    className="cursor-pointer  text-highlight"
+                    size={28}
+                  />
+                )}
+              </button>
+            </ToolTip>
           </>
         </div>
+        {/* Download Icon */}
 
       </div>
 
@@ -226,9 +226,10 @@ const Withdraw = ({
         </button>
       </div>
 
-      <p className="text-[0.9rem] font-semibold montserrat-small  text-[#e27e7e]">
+      <p className={`text-[0.9rem] font-bold montserrat-small ${error === ' Successfully sent! ' ? ' text-highlight ' : 'text-red-500'}`}>
         {error}
-      </p>      
+      </p>
+
     </div>
   );
 };

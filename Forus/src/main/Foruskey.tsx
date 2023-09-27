@@ -46,7 +46,7 @@ const ForusKey = (props: Props) => {
         signatureKey.getPublic().encodeCompressed("array")
       );
 
-      //adding 2 bytes suffix to the public key (i.e forus key)
+      //adding 1 bytes suffix to the public key (i.e forus key)
       const crc = Crc(publicKey);
       const enc: Uint8Array = new Uint8Array(publicKey.length + 2);
       enc.set(publicKey);

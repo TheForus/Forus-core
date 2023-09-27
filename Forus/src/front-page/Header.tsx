@@ -7,7 +7,7 @@ const Header = () => {
   return (
     <>
       <div
-        className="bg-bgGray xl:px-36 md:px-22 px-8 sm:py-27 py-16 flex
+        className="bg-[#e9e9f3] xl:px-36 md:px-22 px-8 sm:py-27 py-16 flex
           justify-between items-center md:flex-row flex-col space-y-1"
       >
         {/* left side */}
@@ -30,7 +30,7 @@ const Header = () => {
           </div>
 
           <h2
-            className="flex -space-y-1 xl:-space-y-2 flex-col montserrat-heading font-extrabold
+            className="flex text-gray-700 space-y-1 xl:-space-y-2 flex-col montserrat-heading font-extrabold
             text-left text-[1.4rem] md:text-[1.9rem] xl:text-[2.8rem]"
           >
             {/* Receive Eth and tokens with forus confidentially !! */}
@@ -38,7 +38,7 @@ const Header = () => {
             <span>transactions</span>
           </h2>
           <p
-            className="montserrat-small font-semibold pb-1 text-gray-800
+            className="montserrat-small font-semibold pb-1 text-gray-600
            text-left break-words  max-w-[700px] sm:text-[1.2rem] text-[1rem]"
           >
             {/* Breaking the link between sender and receiver. Safeguard Your
@@ -47,8 +47,8 @@ const Header = () => {
           </p>
           <button
             className="border-1 montserrat-subtitle  
-            hover:scale-95 transition-all ease-linear p-1 px-10 rounded-full border-[#131619] 
-             montserrat-subtitle font-bold  text-xl bg-[#131619] text-gray-300"
+            hover:scale-95 transition-all ease-linear p-1 px-10 rounded-full border-[#48494b] 
+             montserrat-subtitle font-bold  text-xl bg-[#292a2c] text-gray-300"
             onClick={() => navigate("/forus")}
           >
             Launch
