@@ -15,13 +15,13 @@ const Qna = (props: Props) => {
   return (
     <div
       id="faq"
-      className="p-5 py-10 flex flex-col items-center justify-center bg-bgGray "
+      className="p-5 py-10 flex flex-col items-center justify-center bg-[#e9e9f3] "
     >
       <h1 className="montserrat-subheading text-4xl mb-6 text-[#131619]  pb-2 ">
         FAQ
       </h1>
       <div
-        className="xl:p-14 xl:px-20 bg-bgGray transition-all ease-linear md:w-[790px] lg:w-[900px] p-5 rounded-md
+        className="xl:p-14 xl:px-20 bg-[#e9e9f3] transition-all ease-linear md:w-[790px] lg:w-[900px] p-5 rounded-md
        shadow-lg flex flex-col items-start justify-center"
       >
         <h4

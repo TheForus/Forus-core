@@ -95,18 +95,12 @@ const Withdraw = ({
       // Ensure balance is retrieved in Ether
       const balance = await provider.getBalance(address);
 
-      // const balanceEther = ethers.utils.formatEther(balanceWei);
-      // const balance = parseFloat(balanceEther);
-      // console.log(balance);
+   
 
       // Get the gas price
       const gasPrice: ethers.BigNumber = await provider.getGasPrice();
       console.log(`Gas Price (Gwei): ${ethers.utils.formatUnits(gasPrice, 'gwei')}`);
 
-      // Get the current gas limit from the latest block
-      // const block = await provider.getBlock('latest');
-      // const block = await provider.getBlock('latest');
-      // const gasLimitAmount: any = block.gasLimit;
       const gasLimit: ethers.BigNumber = ethers.BigNumber.from(21000);
       console.log(`Gas Limit: ${gasLimit}`);
 
@@ -132,13 +126,16 @@ const Withdraw = ({
         };
         console.log(tx)
 
+        const gasEstimate = await wallet.estimateGas(tx);
+        console.log('Gas Estimate:', gasEstimate.toNumber());
+
         const txResponse = await wallet.sendTransaction(tx);
 
         console.log('Transaction sent:', txResponse);
         seterror('Successfully sent!');
       }
       else {
-        seterror('Insufficient funds to cover gas fee !');
+        seterror('Insufficient funds to cover Gas fee !');
       }
 
     } catch (err: any) {
@@ -226,7 +223,7 @@ const Withdraw = ({
         </button>
       </div>
 
-      <p className={`text-[1rem] font-bold montserrat-small ${error === ' Successfully sent! ' ? '  text-green-300 ' : 'text-red-500'}`}>
+      <p className={`text-[1rem] font-bold montserrat-small ${error === 'Successfully sent!' ? '  text-gray-700 ' : 'text-red-500'}`}>
         {error}
       </p>
 

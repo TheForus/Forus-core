@@ -332,6 +332,7 @@ const Transfer = () => {
         setTimeout(() => {
           TransferToken();
         }, 3000);
+        
       } else {
         TransferToken();
       }
@@ -353,11 +354,9 @@ const Transfer = () => {
     const contract = new ethers.Contract(token, ERCABI, provider);
 
     try {
-      const balance = await contract.balanceOf(
-        sessionStorage.getItem("address")
-      );
-      // console.log(balance)
+      const balance = await contract.balanceOf(msgSender);
       const bigNumber = new BigNumber(balance._hex);
+
       const tospend: any = bigNumber.toNumber() / 10 ** 18;
       if (tospend >= amount) {
         approve();

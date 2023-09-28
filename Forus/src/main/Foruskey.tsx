@@ -72,9 +72,10 @@ const ForusKey = (props: Props) => {
     notyf.success("Copied");
   };
 
+
   const saveSignature = () => {
     navigator.clipboard.writeText(ForusKey);
-    downloadTxt(sessionStorage.getItem("signature"), "Forus-signature.txt");
+    downloadTxt('#ForusSignature-'+sessionStorage.getItem("signature") + '\n' + "#ForusKey-" + ForusKey, "Forus-signature.txt");
 
   };
 
@@ -143,7 +144,7 @@ const ForusKey = (props: Props) => {
         text-black rounded-md font-semibold transition-all ease-linear"
             onClick={Generate}
           >
-            Generate Fk
+            Generate Foruskey
           </button>
 
 
@@ -160,7 +161,7 @@ const ForusKey = (props: Props) => {
 
             />
             <ToolTip tooltip="Save Signature Key">
-              <span>Signature</span>
+              <span>Save Signature</span>
             </ToolTip>
           </div>
 

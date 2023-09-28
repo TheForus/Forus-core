@@ -146,12 +146,10 @@ const Receive: React.FC<ChildProps> = ({
   useEffect(() => {
 
     if (totalLength > index) {
-
       setTimeout(() => {
 
         setIndex(Math.min(totalLength, index + 10));
 
-        // console.log(index, totalLength)
 
       }, 750);
 
@@ -165,12 +163,7 @@ const Receive: React.FC<ChildProps> = ({
   console.log('trxlist', trx2List)
 
 
-
-
-
-
   const fetchData = async () => {
-
 
     let logs: any[] = [];
 
@@ -192,8 +185,8 @@ const Receive: React.FC<ChildProps> = ({
     let hashedSecret;
     let prefix: string | any;
 
-    logs.forEach((z: any) => {
-      ephPubKey = ec.keyFromPublic(z.Keys.slice(4), "hex");
+    logs.forEach((l: any) => {
+      ephPubKey = ec.keyFromPublic(l.Keys.slice(4), "hex");
       sharedSecret = signaturekey.derive(ephPubKey.getPublic()); //
       hashedSecret = ec.keyFromPrivate(keccak256(sharedSecret.toArray()));
 
@@ -201,13 +194,12 @@ const Receive: React.FC<ChildProps> = ({
 
 
       try {
-        if (prefix.toString() === z.Keys.slice(0, 4).toString()) {
-          setId(z.id);
+        if (prefix.toString() === l.Keys.slice(0, 4).toString()) {
+          setId(l.id);
           setisfounded("founded");
 
           const _key = signaturekey.getPrivate().add(hashedSecret.getPrivate());
           const privateKey = _key.mod(ec.curve.n);
-          // setprivatekey(privateKey.toString(16, 32));
 
           setwallet(privateKey.toString(16, 32));
           setsavedSignaturekey('')

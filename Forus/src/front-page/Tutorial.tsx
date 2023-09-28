@@ -14,7 +14,7 @@ const Tutorial = (props: Props) => {
           className="montserrat-subtitle py-4 font-semibold text-4xl
           text-bgGray d border-b border-gray-400"
         >
-          See how it works
+          Demo Tutorial
         </h1>
         <div className="py-5 flex justify-center md:h-[580px] h-[300px] xl:w-[60%] w-full">
           <ReactPlayer
