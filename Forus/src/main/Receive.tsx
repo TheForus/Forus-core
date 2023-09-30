@@ -114,6 +114,16 @@ const Receive: React.FC<ChildProps> = ({
   const [index, setIndex] = useState<number>(0)
   const [totalLength, setTotalLength] = useState<number>(0)
 
+  //verify signature
+
+  const verifySignature = ((sign: any) => {
+    if (sign.startsWith('#ForusSignature-')) {
+
+     setsavedSignaturekey(sign.replace('#ForusSignature-', '').slice(0, 64));
+
+    }
+  })
+  console.log('Saved signature key', savedSignaturekey)
 
   const fetch = async () => {
     try {
@@ -345,7 +355,8 @@ const Receive: React.FC<ChildProps> = ({
             hover:border-cyan-900 w-[100%] bg-[#dedee9] border-2 border-gray-500"
                 value={savedSignaturekey}
                 onChange={(e) => {
-                  setsavedSignaturekey(e.target.value);
+                  setsavedSignaturekey(e.target.value);   
+                  verifySignature(e.target.value);
                 }}
                 placeholder="Signature (optional)"
               />

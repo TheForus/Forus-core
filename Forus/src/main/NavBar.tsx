@@ -115,7 +115,7 @@ const NavBar = (props: Props) => {
                 className=" montserrat-subtitle border-1 sm:text-[1rem] text-[0.9rem] px-2 sm:px-4
                rounded-full text-[#e9edf1] font-extrabold border border-gray-500 hover:border-highlight"
               >
-                <ul className="" onClick={() => setshow(!show)}>
+                <ul className="" onMouseEnter={() => setshow(!show)} onMouseLeave={() => setshow(!show)}  >
                   <li
                     className="flex p-1 px-2 sm:px-4 cursor-pointer rounded-md text-black
                   items-center gap-2 w-full "
@@ -138,7 +138,7 @@ const NavBar = (props: Props) => {
                     {show &&
                       connect.chainOptions.map((chain: any) => (
                         <div className=" hover:bg-slate-500">
-                
+
                           <li
                             className="flex flex-row-reverse p-1 px-4 cursor-pointer
                            font-semibold
@@ -202,8 +202,8 @@ const NavBar = (props: Props) => {
               />
             ) : (
               <AiOutlineCopy
-                className={`${isAddrHovered ? "inline-flex" : "hidden"
-                  } text-gray-600 font-bold text-[1.1rem] "text-gray-600 `}
+                className={`${isAddrHovered ? "inline-flex mt-2" : "hidden"
+                  } text-gray-600 font-bold text-[1.2rem] "text-gray-600 `}
               />
             )}
           </div>

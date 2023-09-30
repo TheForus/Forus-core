@@ -92,7 +92,7 @@ const ForusKey = (props: Props) => {
               text-3xl"
           >
             {" "}
-            Attain Funds
+         Share the
             <span
               className="hightlightText
             text-transparent sm:text-[2.2rem] xl:text-[2.8rem] bg-clip-text 
@@ -100,12 +100,12 @@ const ForusKey = (props: Props) => {
             "
             >
               {" "}
-              Covertly & Securely
+              Forus key 
             </span>{" "}
-            With Forus
+            &  get funds privately !
           </h1>
           <p className="text-gray-400 text-[0.8rem] sm:text-[1.1rem] montserrat-small font-semibold">
-            Never reveal the signature. Only Share your forus key to receive funds.
+           Warning : Never reveal the signature. Only Share your forus key to receive funds.
           </p>
 
         </div>
