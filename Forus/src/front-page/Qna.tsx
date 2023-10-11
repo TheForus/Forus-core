@@ -30,6 +30,35 @@ const Qna = (props: Props) => {
         lg:text-lg cursor-pointer flex items-center
          montserrat-subheading py-4 text-gray-600 gap-16`}
         >
+          1: How to use forus?
+          <span>
+            {showAnswers[0] ? (
+              <IoAddSharp
+                color="#131619"
+                className="lg:text-4xl text-3xl rotate-45 transition-all duration-100"
+              />
+            ) : (
+              <IoAddSharp
+                color="#131619"
+                className="lg:text-4xl text-3xl duration-100"
+              />
+            )}
+          </span>
+        </h4>
+        {showAnswers[0] && (
+          <p className=" w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
+            Generate a forus key and save it with its corresponding signature . Store your signature in a secure place and share only your forus key with sender and ask him to send you funds on your forus key
+            through https://forus.live . When he initates the the transaction to your forus key a new unknown address would be generated which only you are able to access by the help of your saved signature key.
+            In short : By using forus you can receive funds through stealth addresses , without sharing any personal address with anyone!
+
+          </p>
+        )}
+        <h4
+          onClick={() => toggleAnswer(0)}
+          className={`${showAnswers[0]} text-left justify-between w-full  hover:text-gray-700
+        lg:text-lg cursor-pointer flex items-center
+         montserrat-subheading py-4 text-gray-600 gap-16`}
+        >
           1: How does forus ensure the privacy and confidentiality of financial
           transactions?
           <span>
@@ -199,7 +228,7 @@ const Qna = (props: Props) => {
           </p>
         )}
 
-<h4
+        <h4
           onClick={() => toggleAnswer(0)}
           className={`${showAnswers[0]} text-left justify-between w-full  hover:text-gray-700
         lg:text-lg cursor-pointer flex items-center
@@ -222,9 +251,11 @@ const Qna = (props: Props) => {
         </h4>
         {showAnswers[0] && (
           <p className=" w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
-           Generate New ;) and save its corresponding signature
+            Generate New ;) and save its corresponding signature
           </p>
         )}
+
+        
       </div>
     </div>
   );

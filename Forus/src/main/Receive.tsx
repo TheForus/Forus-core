@@ -10,7 +10,7 @@ import {
   AiOutlineScan,
   AiOutlineShrink,
 } from "react-icons/ai";
-import copy from "../Logos/copy.jpg";
+// import copy from "../Logos/copy.jpg";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import { db } from "../config/firebase.js";
@@ -25,6 +25,7 @@ const ec = new EllipticCurve.ec("secp256k1");
 //Combining the publickey with signatureKey to calcuate the private key of stealth address
 
 interface ChildProps {
+
   withdrawFunction: () => void;
   setmasterkey: React.Dispatch<React.SetStateAction<string | any>>;
   setamountTowithdraw: React.Dispatch<React.SetStateAction<string | any>>;
@@ -37,7 +38,7 @@ const Receive: React.FC<ChildProps> = ({
   withdrawFunction,
   setmasterkey,
   setamountTowithdraw,
-  show,
+  // show,
   amountTowithdraw,
 
 }) => {
@@ -66,6 +67,7 @@ const Receive: React.FC<ChildProps> = ({
   let array: any[] = [];
 
   const setwallet = async (key: string) => {
+
     const provider = new ethers.providers.Web3Provider(ethereum);
 
     let wallet = new ethers.Wallet(key);
@@ -119,10 +121,14 @@ const Receive: React.FC<ChildProps> = ({
   const verifySignature = ((sign: any) => {
     if (sign.startsWith('#ForusSignature-')) {
 
-     setsavedSignaturekey(sign.replace('#ForusSignature-', '').slice(0, 64));
+      setsavedSignaturekey(sign.replace('#ForusSignature-', '').slice(0, 64));
 
     }
+    else {
+      seterr('Invalid Signature File')
+    }
   })
+
   console.log('Saved signature key', savedSignaturekey)
 
   const fetch = async () => {
@@ -205,7 +211,9 @@ const Receive: React.FC<ChildProps> = ({
 
       try {
         if (prefix.toString() === l.Keys.slice(0, 4).toString()) {
+
           setId(l.id);
+
           setisfounded("founded");
 
           const _key = signaturekey.getPrivate().add(hashedSecret.getPrivate());
@@ -216,6 +224,7 @@ const Receive: React.FC<ChildProps> = ({
         }
 
         return;
+
       } catch (e: any) {
         seterr(e.message);
       }
@@ -234,6 +243,7 @@ const Receive: React.FC<ChildProps> = ({
 
     let skey: string | any = sessionStorage.getItem("signature");
     console.log("savedSignature : ", savedSignaturekey);
+
     if (savedSignaturekey === "") {
       signaturekey = ec.keyFromPrivate(skey, "hex");
     } else {
@@ -251,6 +261,7 @@ const Receive: React.FC<ChildProps> = ({
   };
 
   useEffect(() => {
+    
     if (amountTowithdraw > 0) {
       generateprivatekey();
     }
@@ -355,17 +366,18 @@ const Receive: React.FC<ChildProps> = ({
             hover:border-cyan-900 w-[100%] bg-[#dedee9] border-2 border-gray-500"
                 value={savedSignaturekey}
                 onChange={(e) => {
-                  setsavedSignaturekey(e.target.value);   
+                  setsavedSignaturekey(e.target.value);
                   verifySignature(e.target.value);
                 }}
-                placeholder="Signature (optional)"
+                placeholder="Paste your signature file..."
               />
             )}
             {hide && (
               <p className="text-gray-600 p-1 py-2 font-semibold montserrat-small ">
-                Expand to enter the signatureKey (optional)
+                Expand to enter the signature Key
               </p>
             )}
+
             {/* expand icon (toggle of input button) */}
             <div className="flex items-center">
               {hide ? (
@@ -385,6 +397,7 @@ const Receive: React.FC<ChildProps> = ({
           </div>
 
           {/* Match key */}
+
           <div className="w-full flex justify-center pt-2 mr-4">
             <button
               onClick={generateprivatekey}
@@ -396,6 +409,10 @@ const Receive: React.FC<ChildProps> = ({
               <span>Scan</span>
             </button>
           </div>
+
+          <p className={`text-[1rem] font-bold montserrat-small text-red-500`}>
+            {err}
+          </p>
         </div>
       )}
     </>

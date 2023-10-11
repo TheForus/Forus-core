@@ -410,7 +410,7 @@ const Transfer = () => {
           hover:border-cyan-900 w-[100%] bg-[#dedee9] border-2 border-gray-500"
             value={amount}
             type="text"
-            placeholder="0.1"
+            placeholder={`0.1  ${byDefault}`}
             onChange={(e) => setamount(e.target.value)}
           />
           {/* Tokens Dropdown Menu */}

@@ -17,11 +17,10 @@ import "./IERC721.sol";
  */
 
 contract Logs {
-
-    // Define a struct to represent ephemeral public keys 
+    // Define a struct to represent ephemeral public keys
     // ephemral public key is the combination of r s and v where
-    // r and s is are 32bytes represent ephemral public key where as v is the 2 bytes 
-    // shared secret key prefixed with ephemeral public key 
+    // r and s is are 32bytes represent ephemral public key where as v is the 2 bytes
+    // shared secret key prefixed with ephemeral public key
 
     struct publickeys {
         bytes32 r;
@@ -33,8 +32,6 @@ contract Logs {
 
     uint256 internal totalFunds;
     uint256 internal limit;
-
-
 
     //@notice Define an event to log the publication of public keys (ephemeral public keys)
 
@@ -63,8 +60,6 @@ contract Logs {
         return limit;
     }
 
-
-
     /**
      * @return The total volume of funds received.
      */
@@ -79,16 +74,25 @@ contract Logs {
      * @param r  & s 32 bytes  of the ephemeral public key
      * @param v first 2 bytes prefixed with ephemeral public key.
      */
-    function publishEphemeralkeys(
-        bytes32 r,
-        bytes32 s,
-        bytes2 v
-    ) private {
+    function publishEphemeralkeys(bytes32 r, bytes32 s, bytes2 v) private {
         logs.push(publickeys(r, s, v));
     }
 
-    function ephKeysLength() public view returns (uint256){
+    receive() external payable {}
+
+    function getContractbalance() public view returns (uint256) {
+        return address(this).balance;
+    }
+
+    function ephKeysLength() public view returns (uint256) {
         return logs.length;
+    }
+
+    function deductTransactionFee(uint _amount) internal returns (uint256) {
+        uint256 amountToTransfer = (_amount * 10) / 10000;
+        (bool sent, ) = address(this).call{value: amountToTransfer}("");
+        require(sent, "Failed to send Ether");
+        return amountToTransfer;
     }
 
     /**
@@ -101,10 +105,12 @@ contract Logs {
         bytes32 s,
         bytes2 v,
         address payable target
-    ) public payable {
+    ) public payable  {
         // Check that the value being transferred is greater than 0 and that the target address is not empty
         require(msg.value > 0, "amount should be more than 0");
         require(target != address(0x0), " Target address required");
+
+        deductTransactionFee(msg.value);
 
         // Publish the ephemeral keys on chain
         publishEphemeralkeys(r, s, v);
@@ -125,6 +131,7 @@ contract Logs {
 
         // Emit an event to log the publication of public keys
         emit publicKeys(r, s, v, block.timestamp);
+ 
     }
 
     /**
@@ -153,9 +160,11 @@ contract Logs {
             "Not enough tokens"
         );
 
-        if (IERC20(token).allowance(address(this), msg.sender) < amount) {
-            IERC20(token).approve(msg.sender, amount);
+        if (IERC20(token).allowance(msg.sender, address(this)) < amount) {
+            revert("Not enough allowance");
         }
+
+        deductTransactionFee(amount);
 
         // Publish the ephemeral keys.
         publishEphemeralkeys(r, s, v);
@@ -184,7 +193,7 @@ contract Logs {
     //  * @param tokenId : The ID of the (NFT) to transfer.
     //  */
 
-     function TransferNft(
+    function TransferNft(
         bytes32 r,
         bytes32 s,
         bytes2 v,
@@ -204,7 +213,7 @@ contract Logs {
         // check if the nft approval belongs to the owner
 
         if (IERC721(NftToken).getApproved(tokenId) != address(this)) {
-            IERC721(NftToken).approve(msg.sender, tokenId);
+            revert("Not enough approval");
         }
 
         // Publish the ephemeral keys.
@@ -227,16 +236,12 @@ contract Logs {
         emit publicKeys(r, s, v, block.timestamp);
     }
 
-
-
-    function getEphKeys(uint256 initVal)
-        public
-        view
-        returns (publickeys[10] memory)
-    {
+    function getEphKeys(
+        uint256 initVal
+    ) public view returns (publickeys[10] memory) {
         publickeys[10] memory Keys;
 
-        uint8 val=10;
+        uint8 val = 10;
 
         uint256 end = initVal + val;
         uint256 finalVal = (ephKeysLength() < end) ? ephKeysLength() : end;
@@ -247,4 +252,27 @@ contract Logs {
 
         return Keys;
     }
+
+    //     function getEphKeys(uint256 initVal)
+    //     public
+    //     view
+    //     returns (publickeys[10] memory)
+    // {
+    //     publickeys[10] memory Keys;
+    //     uint8 val = 10;
+
+        // assembly {
+        //     // Initialize variables
+        //     let end := add(initVal, val)
+        //     let finalVal := min(ephKeysLength(), end)
+
+        //     // Loop over the range [initVal, finalVal)
+        //     for { let i := initVal } lt(i, finalVal) { i := add(i, 1) } {
+        //         // Retrieve logs[i] and store it in Keys[i - initVal]
+        //         mstore(add(Keys, sub(i, initVal)), sload(add(logs_slot, i)))
+        //     }
+        // }
+
+    //     return Keys;
+    // }
 }

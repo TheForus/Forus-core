@@ -43,6 +43,19 @@ interface chain {
 
 export const chainOptions: chain[] = [
     {
+        name: "Arbitrum Sepolia Testnet", contract: '0x6C18c89ABCF1b2d01D8cA5C0e130258634f01586', chainId: "0x66eee", symbol: arb, currency: { symbol: "ETH", decimals: 18 }, rpcs: ['https://sepolia-rollup.arbitrum.io/rpc'], url: "https://sepolia-explorer.arbitrum.io/tx/", tokens: [
+
+
+            { name: "ETH", address: "", symbol: arb },
+            { name: "ARB", address: "0x9440c3bb6adb5f0d5b8a460d8a8c010690dac2e8", symbol: arb },
+            { name: "LINK", address: "0xfafedb041c0dd4fa2dc0d87a6b0979ee6fa7af5f", symbol: link },
+            { name: "USDT", address: "0x211554151f2f00305f33530fdd3a5d0354927a65", symbol: USDT },
+            { name: "DAI", address: "0x9440c3bb6adb5f0d5b8a460d8a8c010690dac2e8", symbol: dai },
+
+
+        ]
+    },
+    {
         name: "Avalanche Fuji", contract: '', chainId: "0xa869", symbol: avax, currency: { symbol: "AVAX", decimals: 18 }, rpcs: ['https://api.avax-test.network/ext/bc/C/rpc'], url: "https://testnet.avax.network", tokens: [
 
             { name: "AVAX", address: "", symbol: avax },
@@ -77,19 +90,7 @@ export const chainOptions: chain[] = [
 
         ]
     },
-    {
-        name: "Arbitrum Sepolia Testnet", contract: '0x6C18c89ABCF1b2d01D8cA5C0e130258634f01586', chainId: "0x66eee", symbol: arb, currency: { symbol: "ETH", decimals: 18 }, rpcs: ['https://sepolia-rollup.arbitrum.io/rpc'], url: "https://sepolia-explorer.arbitrum.io/tx/", tokens: [
-
-
-            { name: "ETH", address: "", symbol: arb },
-            { name: "ARB", address: "0x9440c3bb6adb5f0d5b8a460d8a8c010690dac2e8", symbol: arb },
-            { name: "LINK", address: "0xfafedb041c0dd4fa2dc0d87a6b0979ee6fa7af5f", symbol: link },
-            { name: "USDT", address: "0x211554151f2f00305f33530fdd3a5d0354927a65", symbol: USDT },
-            { name: "DAI", address: "0x9440c3bb6adb5f0d5b8a460d8a8c010690dac2e8", symbol: dai },
-
-
-        ]
-    },
+   
     {
         name: "Eos Testnet", contract: '0x60BA717Dd36b84557E46690c6163De5dbDc6F6bb', chainId: "0x3cc5", symbol: goerli, currency: { symbol: "EOS", decimals: 18 }, rpcs: ['https://api.testnet.evm.eosnetwork.com'], url: "https://explorer.testnet.evm.eosnetwork.com/tx/", tokens: [
 

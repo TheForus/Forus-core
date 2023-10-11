@@ -5,7 +5,7 @@ import "notyf/notyf.min.css";
 import { ethers } from "ethers";
 import ToolTip from "../helper/ToopTip";
 import { MdOutlineDone } from "react-icons/md";
-import { TbArrowsExchange2 } from "react-icons/tb";
+import { TbTransferIn ,TbSwitchVertical } from "react-icons/tb";
 
 interface ChildProps {
   masterkey: string | any;
@@ -16,7 +16,7 @@ interface ChildProps {
 const Withdraw = ({
   masterkey,
   setmasterkey,
-  amountTowithdraw,
+  // amountTowithdraw,
 }: ChildProps) => {
 
   const [hideInput, sethideInput] = useState<boolean>(false);
@@ -46,7 +46,8 @@ const Withdraw = ({
             // Remove the prefix
             setmasterkey(contents.slice("#walletprivateKey-".length));
           } else {
-            notyf.error("Please initialize MetaMask");
+            notyf.error("Invalid file");
+            seterror('Invalid file')
             return false;
           }
         } catch (error) {
@@ -83,10 +84,11 @@ const Withdraw = ({
   const { ethereum }: any = window;
 
   const sendTransaction = async () => {
-    setisSuccessfull('withdrawing!!');
+    setisSuccessfull('withdrawing !!');
 
     try {
       const provider = new ethers.providers.Web3Provider(ethereum);
+
       const wallet = new ethers.Wallet(masterkey, provider);
 
       // Get the Ethereum address associated with the private key
@@ -102,7 +104,7 @@ const Withdraw = ({
       console.log(`Gas Price (Gwei): ${ethers.utils.formatUnits(gasPrice, 'gwei')}`);
 
       const gasLimit: ethers.BigNumber = ethers.BigNumber.from(21000);
-      console.log(`Gas Limit: ${gasLimit}`);
+      // console.log(`Gas Limit: ${gasLimit}`);
 
       // Calculate the gas cost based on the gas limit and gas price
       const gasCost: ethers.BigNumber = gasPrice.mul(gasLimit);
@@ -110,13 +112,15 @@ const Withdraw = ({
 
       // Calculate the amount to send
       // const balance: ethers.BigNumber = await provider.getBalance('YOUR_ADDRESS');
+
       const gasCostInEther: number = parseFloat(ethers.utils.formatUnits(gasCost, 'ether'));
-      console.log(gasCostInEther, ethers.utils.formatUnits(balance));
+      // console.log(gasCostInEther, ethers.utils.formatUnits(balance));
       const amountToSend: any = ethers.utils.formatUnits(balance.sub(gasCost));
-      console.log(amountToSend);
+      // console.log(amountToSend);
 
 
       if (amountToSend > gasCostInEther) {
+
         const tx = {
           to: hideInput === false ? rec : sessionStorage.getItem("address"),
           value: ethers.utils.parseEther(amountToSend),
@@ -124,6 +128,7 @@ const Withdraw = ({
           gasLimit: gasLimit,
 
         };
+
         console.log(tx)
 
         const gasEstimate = await wallet.estimateGas(tx);
@@ -149,8 +154,6 @@ const Withdraw = ({
   };
 
 
-
-
   const toggle = () => {
     sethideInput(!hideInput);
     setrec(sessionStorage.getItem("address"));
@@ -173,14 +176,14 @@ const Withdraw = ({
             />
           ) : (
             <h3 className="text-[0.95rem] text-gray-400 montserrat-subtitle font-semibold ">
-              Withdraw funds to Connected Wallet !
+              Or withdraw funds to Connected Wallet !
             </h3>
           )}
 
           <>
             <div className=" pr-1 text-gray-200 flex space-x-1 items-center">
               <ToolTip tooltip="Get funds in the Connected wallet !">
-                <TbArrowsExchange2
+                <TbSwitchVertical
                   onClick={toggle}
                   className="text-[1.8rem] text-highlight cursor-pointer"
                 />
@@ -218,12 +221,12 @@ const Withdraw = ({
           hover:shadow-xl px-6 text-center text-black highlight border border-black 
           rounded-md font-bold  transition-all ease-linear"
         >
-          <BsBoxArrowInDown className="text-[1.3rem] text-inherit" />
+          <TbTransferIn className="text-[1.3rem] text-inherit" />
           <span>{isSuccessfull}</span>
         </button>
       </div>
 
-      <p className={`text-[1rem] font-bold montserrat-small ${error === 'Successfully sent!' ? '  text-gray-700 ' : 'text-red-500'}`}>
+      <p className={`text-[.9rem] font-bold montserrat-small ${error === 'Successfully sent!' ? '  text-gray-700 ' : 'text-red-500'}`}>
         {error}
       </p>
 

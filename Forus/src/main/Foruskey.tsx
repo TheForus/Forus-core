@@ -6,7 +6,7 @@ import { AiOutlineCopy } from "react-icons/ai";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import { downloadTxt } from "../helper/downloadTxt";
-import { FaFileSignature } from "react-icons/fa";
+import { RxDownload } from "react-icons/rx";
 import bg from "../assets/bg.png";
 import ToolTip from "../helper/ToopTip";
 
@@ -144,7 +144,7 @@ const ForusKey = (props: Props) => {
         text-black rounded-md font-semibold transition-all ease-linear"
             onClick={Generate}
           >
-            Generate Foruskey
+            Generate Key
           </button>
 
 
@@ -156,12 +156,12 @@ const ForusKey = (props: Props) => {
       
             "
           >
-            <FaFileSignature
-              className="font-bold text-2xl text-[181b1f]"
+            <RxDownload
+              className="font-bold text-xl text-[181b1f]"
 
             />
             <ToolTip tooltip="Save Signature Key">
-              <span>Save Signature</span>
+              <span>Signature</span>
             </ToolTip>
           </div>
 
