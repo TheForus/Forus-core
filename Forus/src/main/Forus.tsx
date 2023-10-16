@@ -5,7 +5,7 @@ import Transactions from "./Transactions";
 import React, { createContext, useState, useEffect } from "react";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
-import abi from "../artifacts/contracts/Logs.sol/Logs.json";
+// import abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { ethers } from "ethers";
 import { chainOptions } from "../helper/ChainOptions";
 
@@ -117,17 +117,17 @@ const Forus = (props: Props) => {
         const chainId = await ethereum.request({ method: "eth_chainId" });
         const chain = chainOptions.find(option => option.chainId === chainId);
 
-        if (chain) {
-          const provider = new ethers.providers.Web3Provider(ethereum);
-          const theContract = new ethers.Contract(chain.contract, abi.abi, provider);
-          const [limit, totalFunds] = await Promise.all([
-            theContract.getTotalAddresses(),
-            theContract.getTotalVolume(),
-          ]);
+        // if (chain) {
+        //   const provider = new ethers.providers.Web3Provider(ethereum);
+        //   const theContract = new ethers.Contract(chain.contract, abi.abi, provider);
+        //   const [limit, totalFunds] = await Promise.all([
+        //     theContract.getTotalAddresses(),
+        //     theContract.getTotalVolume(),
+        //   ]);
 
-          setsumof(limit.toString());
-          setsumofAddress(totalFunds / 10 ** 18);
-        }
+        //   setsumof(limit.toString());
+        //   setsumofAddress(totalFunds / 10 ** 18);
+        // }
       } catch (error) {
         console.error("Error fetching chain data:", error);
       }

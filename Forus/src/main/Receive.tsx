@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { keccak256 } from "ethers/lib.esm/utils";
 import { generatePath, useNavigate } from "react-router-dom";
-import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
+// import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
 import {
@@ -21,6 +21,7 @@ import { MdHistory, MdOutlineDone } from "react-icons/md";
 import ToolTip from "../helper/ToopTip";
 
 const ec = new EllipticCurve.ec("secp256k1");
+let Abi : any;
 
 //Combining the publickey with signatureKey to calcuate the private key of stealth address
 

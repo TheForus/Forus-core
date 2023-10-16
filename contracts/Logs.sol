@@ -2,25 +2,41 @@
 
 pragma solidity ^0.8.16;
 
-// Import the interfaces for ERC20 and ERC721 tokens
-
+// Import the interfaces for IERC20 and IERC721 tokens
 import "./IERC20.sol";
 import "./IERC721.sol";
+import "./SafeMath.sol";
+import "./Lib.sol";
+
+
 
 /**
  * @title Logs
- * @dev The Logs contract allows senders to publish their public key (ephemeral keys) on the blockchain, consisting of the parameters r, s, and v.
+ * @dev The Logs contract allows users to publish their public keys on  blockchain,
+ * consisting of the parameters r, s, and v.
  * These keys allow the receiver to generate the private key associated with his stealth address.
  * Users publish their public keys by invoking the appropriate functions in the contract.
- * The contract maintains a log of published keys and keeps track of the total funds received.
- * Users can transfer coins, tokens, and Non fungible tokens to a designated recipient stealth address, authorized by their published keys.
+ * The contract maintains a log of published keys and keeps track of the total funds sent and received.
+ * Users can transfer ethereum, IERC20, and Non-fungible tokens to a designated recipient stealth address,
+ * authorized by their published keys.
  */
 
+
+
+
 contract Logs {
-    // Define a struct to represent ephemeral public keys
-    // ephemral public key is the combination of r s and v where
-    // r and s is are 32bytes represent ephemral public key where as v is the 2 bytes
-    // shared secret key prefixed with ephemeral public key
+
+    using SafeMath for uint256;
+
+    // using Lib for uint256;
+
+
+
+
+    // @notice Define a struct to represent public keys
+    // @dev 'r' and 's' are the 32 bytes represent ephemeral key
+    // where 'v' is 2 bytes shared secret key prefixed with ephemeral key used for verification
+    // public keys = v+(r+s) or v + (ephemeral keys)
 
     struct publickeys {
         bytes32 r;
@@ -28,132 +44,232 @@ contract Logs {
         bytes2 v;
     }
 
-    //  @notice Define variables to keep track of the total funds received and the length of publick keys
+
+
+    // @notice Define variables to keep track of the total funds received and the length of public keys
 
     uint256 internal totalFunds;
-    uint256 internal limit;
 
-    //@notice Define an event to log the publication of public keys (ephemeral public keys)
+    uint256 internal totalStealthAdd;
 
-    event publicKeys(bytes32 r, bytes32 s, bytes2 v, uint256 indexed timestamp);
 
-    //  @notice Define a variable to store the owner of the contract
+
+    // @notice Define a variable to store the owner of the contract
 
     address private owner;
 
-    //@notice Define an array to store the logs of published public keys
 
-    publickeys[] public logs;
 
-    /**
-     * @dev Constructor function that sets the owner of the contract.
-     */
+    // @notice Define an array to store the logs of published public keys
+
+    publickeys[] public keys;
+
+
+
+
+
+    mapping(string => publickeys[]) public logs;
+
+    // @notice Define the contract name
+
+    string public contractName;
+
+
+
+    // @notice Events
+
+    event publicKeys(bytes32 r, bytes32 s, bytes2 v);
+
+
+
+
+    // @notice Modifiers
+
+    modifier onlyOwner() {
+        assert(msg.sender == owner);
+        _;
+    }
+
+    modifier validateTokenAddr(address token) {
+        require(token != address(0x0), "Token address required");
+        _;
+    }
+
+
+
+
+    // @notice Constructor
+
     constructor() {
         owner = msg.sender;
+        contractName = "Forus v1";
     }
 
-    /**
-     * @return The total number of addresses.
 
-     */
-    function getTotalAddresses() public view returns (uint256) {
-        return limit;
+
+
+    // @notice Getters
+
+    function gettotalStealthAddresses() public view returns (uint256) {
+        return totalStealthAdd;
     }
 
-    /**
-     * @return The total volume of funds received.
-     */
+
 
     function getTotalVolume() public view returns (uint256) {
         return totalFunds;
     }
 
-    /**
-     * @notice private function to publish ephemeral public keys in logs array
-     * @dev ephemeral public key is made up of r s v paramaters
-     * @param r  & s 32 bytes  of the ephemeral public key
-     * @param v first 2 bytes prefixed with ephemeral public key.
-     */
-    function publishEphemeralkeys(bytes32 r, bytes32 s, bytes2 v) private {
-        logs.push(publickeys(r, s, v));
+
+
+
+    // @notice Function to update the total volume of the contract
+
+    function updateTvl(uint256 _vol) internal {
+        uint256 updatedTotalFunds;
+        uint256 updatedtotalStealthAddresses;
+
+        assembly {
+            // Load values from storage
+            updatedTotalFunds := sload(totalFunds.slot)
+            updatedtotalStealthAddresses := sload(totalStealthAdd.slot)
+
+            // Perform operations
+            updatedTotalFunds := add(updatedTotalFunds, _vol)
+            updatedtotalStealthAddresses := add(updatedtotalStealthAddresses, 1)
+
+            // Store the updated values back to storage
+            sstore(totalFunds.slot, updatedTotalFunds)
+            sstore(totalStealthAdd.slot, updatedtotalStealthAddresses)
+        }
     }
+
+
+
 
     receive() external payable {}
 
-    function getContractbalance() public view returns (uint256) {
+
+
+
+    // @notice Function to withdraw the balance of the contract
+    // @param _dest: The destination address
+
+    function withdraw(address _dest) public onlyOwner {
+        uint256 contractBalance = address(this).balance;
+        (bool sent, ) = _dest.call{value: contractBalance}("");
+        require(sent, "Failed to send Trx");
+    }
+
+
+
+
+    function getBalance() public view onlyOwner returns (uint256) {
         return address(this).balance;
     }
 
-    function ephKeysLength() public view returns (uint256) {
-        return logs.length;
+
+
+    // @notice Function to publish public keys
+    // @param r s: 32-byte of ephemeral key
+    // @param v: 2-byte shared secret key prefixed with ephemeral key
+
+    function publishPubkeys(
+        string memory key,
+        bytes32 r,
+        bytes32 s,
+        bytes2 v
+    ) private {
+        logs[key].push(publickeys(r, s, v));
+        keys.push(publickeys(r, s, v));
     }
 
-    function deductTransactionFee(uint _amount) internal returns (uint256) {
-        uint256 amountToTransfer = (_amount * 10) / 10000;
-        (bool sent, ) = address(this).call{value: amountToTransfer}("");
-        require(sent, "Failed to send Ether");
-        return amountToTransfer;
+    // @notice Function to get the length of public keys array
+
+    function pubKeysLen() public view returns (uint256) {
+        return keys.length;
     }
 
-    /**
-     // @notice transfers funds to a target stealth address.
-     * @param target: The target address (i.e stealth address) to receive the funds.
-     */
+
+
+
+
+
+    // @notice Function to transfer TRX to a target stealth address
+    // @param r & s: 32-byte ephemeral key
+
+    // @param v: 2-byte shared secret key prefixed with ephemeral key
+    // @param target: The target address (i.e., the recipient's stealth address)
+
 
     function Transfer(
+        string memory key,
         bytes32 r,
         bytes32 s,
         bytes2 v,
         address payable target
-    ) public payable  {
-        // Check that the value being transferred is greater than 0 and that the target address is not empty
-        require(msg.value > 0, "amount should be more than 0");
-        require(target != address(0x0), " Target address required");
+    ) public payable returns (uint256, uint256) {
+        // Check that the value being transferred is greater than 0.
+        require(msg.value > 0, "Amount should be more than 0");
 
-        deductTransactionFee(msg.value);
+        uint256 amountTrx = msg.value;
 
-        // Publish the ephemeral keys on chain
-        publishEphemeralkeys(r, s, v);
+        // Calculate and transfer the required 0.1% fee
+        uint256 initFee = Lib.cal(amountTrx);
+
+        if (msg.sender.balance < amountTrx.add(initFee)) {
+            revert("Not enough trx to cover transaction");
+        }
+
+        // Publishing public keys on chain respective to receipent's key
+        publishPubkeys(key, r, s, v);
+
+        // @notice Store the 0.1 % trx to the contract
+        (bool store, ) = address(this).call{value: initFee}("");
+        require(store, "Failed to send");
 
         // @notice Transfer the funds to the targeted stealth address
-        (bool sent, ) = target.call{value: msg.value}("");
-        require(sent, " Failed to send ");
+        (bool transferSuccess, ) = target.call{value: msg.value}("");
+        require(transferSuccess, "Transfer to recipient failed");
 
         // Perform calculations and updates using temporary variables
-
-        uint256 updatedTotalFunds = totalFunds + msg.value;
-        uint256 updatedLimit = limit + 1;
-
-        // Update storage variables with the updated values
-
-        totalFunds = updatedTotalFunds;
-        limit = updatedLimit;
+        updateTvl(msg.value);
 
         // Emit an event to log the publication of public keys
-        emit publicKeys(r, s, v, block.timestamp);
- 
+
+        emit publicKeys(r, s, v);
+
+        return (amountTrx, initFee);
     }
 
-    /**
-    // @notice transfers funds to the target stealth address.
-     * @param token : The address of the ERC20 token contract.
-     * @param target : The target address (stealth address) to receive the tokens.
-     * @param amount : The amount of tokens to transfer.
-     */
 
-    function TransferToken(
+
+
+
+
+
+    // @notice Function to transfer IERC20 tokens to a target stealth address
+    // @param r & s: 32-byte ephemeral key
+    // @param v: 2-byte shared secret key prefixed with ephemeral key
+    // @param token: The IERC20 token address
+    // @param target: The target address
+    // @param amount: The amount of tokens to transfer
+
+
+    function TransferERC20(
+        string memory key,
         bytes32 r,
         bytes32 s,
         bytes2 v,
         address token,
         address target,
         uint256 amount
-    ) external {
-        // Check that the amount being transferred is greater than 0 and that both token and target addresses are not empty.
+    ) external payable validateTokenAddr(token) {
+        uint256 amountTrx = msg.value;
+
+        // Check that the amount being transferred is greater than 0
 
         require(amount > 0, "Amount should be more than 0");
-        require(token != address(0x0), " Enter the token address");
-        require(target != address(0x0), " Enter the receipent address");
 
         require(
             IERC20(token).balanceOf(msg.sender) >= amount,
@@ -164,115 +280,101 @@ contract Logs {
             revert("Not enough allowance");
         }
 
-        deductTransactionFee(amount);
+        // Calculate and transfer the required 0.1% Lib
+        uint256 initFee = Lib.cal(amount);
 
-        // Publish the ephemeral keys.
-        publishEphemeralkeys(r, s, v);
+        if (amountTrx < initFee && msg.sender.balance < initFee) {
+            revert("Not enough trx to cover Lib");
+        }
+
+        // @notice Store the 0.1 % trx to the contract
+        (bool store, ) = address(this).call{value: initFee}("");
+        require(store, "Failed to send");
+
+        // Publish the public keys.
+        publishPubkeys(key, r, s, v);
 
         // @notice Transfer tokens from sender's account to target account.
         IERC20(token).transferFrom(msg.sender, target, amount);
 
         // Perform calculations and updates using temporary variables.
-
-        uint256 updatedTotalFunds = totalFunds + amount;
-        uint256 updatedLimit = limit + 1;
-
-        // Update storage variables with the updated values.
-
-        totalFunds = updatedTotalFunds;
-        limit = updatedLimit;
+        updateTvl(amount);
 
         // Emit an event to log the publication of public keys.
-        emit publicKeys(r, s, v, block.timestamp);
+        emit publicKeys(r, s, v);
     }
 
-    // /**
-    //  * @notice transfers Non Fungible tokens (NFTs) to a target address.
-    //  * @param NftToken : The address of the ERC721 token contract.
-    //  * @param target : The target address (stealth address) to receive the (NFT) token .
-    //  * @param tokenId : The ID of the (NFT) to transfer.
-    //  */
 
-    function TransferNft(
+
+
+
+    // @notice Function to transfer IERC721/ERC721  to a target stealth address
+    // @param r & s: 32-byte ephemeral key
+    // @param v: 2-byte shared secret key prefixed with ephemeral key
+    // @param ERC721Token: The IERC721 token address
+    // @param target: The targeted stealth address
+    // @param tokenId: The tokenId of IERC721 to transfer
+
+
+    function TransferERC721(
+        string memory key,
         bytes32 r,
         bytes32 s,
         bytes2 v,
-        address NftToken,
+        address ERC721Token,
         address target,
         uint256 tokenId
     ) external {
-        // Check that both NftToken and target addresses are not empty.
-        require(NftToken != address(0x0), " Enter the token address");
-        require(target != address(0x0), " Target address required");
+
+        // Check that ERC721Token is not empty.
+        require(ERC721Token != address(0x0), " Enter the token address");
 
         require(
-            IERC721(NftToken).ownerOf(tokenId) == msg.sender,
-            "Not enough tokens"
+            IERC721(ERC721Token).ownerOf(tokenId) == msg.sender,
+            "You are not the owner of this tokenId"
         );
 
-        // check if the nft approval belongs to the owner
+        // check if the ERC721 approval belongs to the owner
 
-        if (IERC721(NftToken).getApproved(tokenId) != address(this)) {
-            revert("Not enough approval");
+        if (IERC721(ERC721Token).getApproved(tokenId) != address(this)) {
+            revert("Not approved");
         }
 
-        // Publish the ephemeral keys.
-        publishEphemeralkeys(r, s, v);
+        // Publish the public keys.
+        publishPubkeys(key, r, s, v);
 
-        // @notice Transfer Non Fungible tokens (NFT) from sender's account to target account.
-        IERC721(NftToken).transferFrom(msg.sender, target, tokenId);
+        // @notice Transfer Non Fungible tokens (ERC721) from sender's account to target account.
+
+        IERC721(ERC721Token).transferFrom(msg.sender, target, tokenId);
 
         // Perform calculations and updates using temporary variables.
-
-        uint256 updatedTotalFunds = totalFunds + tokenId;
-        uint256 updatedLimit = limit + 1;
-
-        // Update storage variables with the updated values.
-
-        totalFunds = updatedTotalFunds;
-        limit = updatedLimit;
+        updateTvl(1);
 
         // Emit an event to log the publication of public keys.
-        emit publicKeys(r, s, v, block.timestamp);
+        emit publicKeys(r, s, v);
     }
 
-    function getEphKeys(
+
+
+
+
+    // @notice Function to retrieve a range of public keys
+    // @param initVal: The initial value required retreiving public keys
+
+    function retrievePubKeys(
+        string memory key,
         uint256 initVal
     ) public view returns (publickeys[10] memory) {
         publickeys[10] memory Keys;
 
-        uint8 val = 10;
-
-        uint256 end = initVal + val;
-        uint256 finalVal = (ephKeysLength() < end) ? ephKeysLength() : end;
+        uint256 len = logs[key].length;
+        uint256 end = initVal.add(10);
+        uint256 finalVal = Lib.min(len, end);
 
         for (uint256 i = initVal; i < finalVal; i++) {
-            Keys[i - initVal] = logs[i];
+            Keys[i - initVal] = logs[key][i]; 
         }
 
         return Keys;
     }
-
-    //     function getEphKeys(uint256 initVal)
-    //     public
-    //     view
-    //     returns (publickeys[10] memory)
-    // {
-    //     publickeys[10] memory Keys;
-    //     uint8 val = 10;
-
-        // assembly {
-        //     // Initialize variables
-        //     let end := add(initVal, val)
-        //     let finalVal := min(ephKeysLength(), end)
-
-        //     // Loop over the range [initVal, finalVal)
-        //     for { let i := initVal } lt(i, finalVal) { i := add(i, 1) } {
-        //         // Retrieve logs[i] and store it in Keys[i - initVal]
-        //         mstore(add(Keys, sub(i, initVal)), sload(add(logs_slot, i)))
-        //     }
-        // }
-
-    //     return Keys;
-    // }
 }

@@ -4,7 +4,7 @@ import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
 import { useContext } from "react";
 import { AppContext } from "./Forus";
-import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
+// import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { BsChevronDown } from "react-icons/bs";
 import { ethers } from "ethers";
 import sending from "../Logos/sending.gif";
@@ -21,6 +21,7 @@ const ec = new EllipticCurve.ec("secp256k1");
 const Transfer = () => {
   const notyf = new Notyf();
   let currentNetwork: string | any = sessionStorage.getItem("chain");
+  let  Abi : any;
 
 
   const { validateChain, } = useContext(AppContext);
@@ -197,7 +198,7 @@ const Transfer = () => {
 
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
-    const contract = new ethers.Contract(ContractAddress, Abi.abi, signer);
+    const contract = new ethers.Contract(ContractAddress, Abi, signer);
     console.log(r,
       s,
       v,
@@ -260,7 +261,7 @@ const Transfer = () => {
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
     console.log(ContractAddress)
-    const contract = new ethers.Contract(ContractAddress, Abi.abi, signer);
+    const contract = new ethers.Contract(ContractAddress, Abi, signer);
 
 
     try {
