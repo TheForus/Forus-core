@@ -15,7 +15,7 @@ library Lib {
     // calculating 0.1 amount from the given input
 
     function cal(uint req) external pure returns (uint256 amountToTransfer) {
-        uint256 amount = req.mul(1).div(1000);
+        uint256 amount = (req.mul(1)).div(100);
         amountToTransfer = amount;
     }
 

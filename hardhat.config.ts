@@ -6,12 +6,13 @@ dotenv.config();
 
 const config: HardhatUserConfig = {
   solidity: "0.8.16",
+  
   networks: {
-    PEGOTestnet : {
+    // PEGOTestnet : {
 
-      url: process.env.PEGO_API_URL,
-      accounts: [process.env.PRIVATE_KEY!]
-    }
+    //   url: process.env.PEGO_API_URL,
+    //   accounts: [process.env.PRIVATE_KEY!]
+    // }
 
     // EosEvmTestnet: {
     //   url: process.env.EOS_API_URL,
@@ -34,10 +35,10 @@ const config: HardhatUserConfig = {
     //   url: process.env.APOTHEM_API_URL,
     //   accounts: [process.env.PRIVATE_KEY!]
     // },
-    // fantomtestnet: {
-    //   url: process.env.FANTOM_API_URL,
-    //   accounts: [process.env.PRIVATE_KEY!]
-    // }
+    fantomtestnet: {
+      url: process.env.FANTOM_API_URL,
+      accounts: [process.env.PRIVATE_KEY!]
+    }
 
   }
 };

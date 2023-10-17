@@ -8,8 +8,6 @@ import "./IERC721.sol";
 import "./SafeMath.sol";
 import "./Lib.sol";
 
-
-
 /**
  * @title Logs
  * @dev The Logs contract allows users to publish their public keys on  blockchain,
@@ -21,17 +19,10 @@ import "./Lib.sol";
  * authorized by their published keys.
  */
 
-
-
-
 contract Logs {
-
     using SafeMath for uint256;
 
     // using Lib for uint256;
-
-
-
 
     // @notice Define a struct to represent public keys
     // @dev 'r' and 's' are the 32 bytes represent ephemeral key
@@ -44,29 +35,19 @@ contract Logs {
         bytes2 v;
     }
 
-
-
     // @notice Define variables to keep track of the total funds received and the length of public keys
 
     uint256 internal totalFunds;
 
     uint256 internal totalStealthAdd;
 
-
-
     // @notice Define a variable to store the owner of the contract
 
     address private owner;
 
-
-
     // @notice Define an array to store the logs of published public keys
 
     publickeys[] public keys;
-
-
-
-
 
     mapping(string => publickeys[]) public logs;
 
@@ -74,14 +55,9 @@ contract Logs {
 
     string public contractName;
 
-
-
     // @notice Events
 
     event publicKeys(bytes32 r, bytes32 s, bytes2 v);
-
-
-
 
     // @notice Modifiers
 
@@ -95,9 +71,6 @@ contract Logs {
         _;
     }
 
-
-
-
     // @notice Constructor
 
     constructor() {
@@ -105,23 +78,15 @@ contract Logs {
         contractName = "Forus v1";
     }
 
-
-
-
     // @notice Getters
 
     function gettotalStealthAddresses() public view returns (uint256) {
         return totalStealthAdd;
     }
 
-
-
     function getTotalVolume() public view returns (uint256) {
         return totalFunds;
     }
-
-
-
 
     // @notice Function to update the total volume of the contract
 
@@ -144,13 +109,7 @@ contract Logs {
         }
     }
 
-
-
-
     receive() external payable {}
-
-
-
 
     // @notice Function to withdraw the balance of the contract
     // @param _dest: The destination address
@@ -158,17 +117,12 @@ contract Logs {
     function withdraw(address _dest) public onlyOwner {
         uint256 contractBalance = address(this).balance;
         (bool sent, ) = _dest.call{value: contractBalance}("");
-        require(sent, "Failed to send Trx");
+        require(sent, "Failed to send eth");
     }
-
-
-
 
     function getBalance() public view onlyOwner returns (uint256) {
         return address(this).balance;
     }
-
-
 
     // @notice Function to publish public keys
     // @param r s: 32-byte of ephemeral key
@@ -190,17 +144,11 @@ contract Logs {
         return keys.length;
     }
 
-
-
-
-
-
-    // @notice Function to transfer TRX to a target stealth address
+    // @notice Function to transfer eth to a target stealth address
     // @param r & s: 32-byte ephemeral key
 
     // @param v: 2-byte shared secret key prefixed with ephemeral key
     // @param target: The target address (i.e., the recipient's stealth address)
-
 
     function Transfer(
         string memory key,
@@ -208,30 +156,43 @@ contract Logs {
         bytes32 s,
         bytes2 v,
         address payable target
-    ) public payable returns (uint256, uint256) {
+    )
+        public
+        payable
+        returns (
+            uint256,
+            uint256,
+            uint256,
+            uint256
+        )
+    {
         // Check that the value being transferred is greater than 0.
         require(msg.value > 0, "Amount should be more than 0");
 
-        uint256 amountTrx = msg.value;
+        uint256 amountEth = msg.value;
 
         // Calculate and transfer the required 0.1% fee
-        uint256 initFee = Lib.cal(amountTrx);
+        uint256 initFee = (msg.value.mul(1)) / 1000;
+        require(initFee > 0,'Not enough fees');
 
-        if (msg.sender.balance < amountTrx.add(initFee)) {
-            revert("Not enough trx to cover transaction");
+        if (msg.sender.balance < msg.value.add(initFee)) {
+            revert("Not enough eth to cover transaction");
         }
 
         // Publishing public keys on chain respective to receipent's key
         publishPubkeys(key, r, s, v);
 
-        // @notice Store the 0.1 % trx to the contract
+
+         // @notice Store the 0.1 % eth to the contract
         (bool store, ) = address(this).call{value: initFee}("");
         require(store, "Failed to send");
 
+
         // @notice Transfer the funds to the targeted stealth address
-        (bool transferSuccess, ) = target.call{value: msg.value}("");
+        (bool transferSuccess, ) = target.call{value: msg.value.sub(initFee)}("");
         require(transferSuccess, "Transfer to recipient failed");
 
+       
         // Perform calculations and updates using temporary variables
         updateTvl(msg.value);
 
@@ -239,14 +200,8 @@ contract Logs {
 
         emit publicKeys(r, s, v);
 
-        return (amountTrx, initFee);
+        return (amountEth, initFee, msg.sender.balance, address(this).balance);
     }
-
-
-
-
-
-
 
     // @notice Function to transfer IERC20 tokens to a target stealth address
     // @param r & s: 32-byte ephemeral key
@@ -254,7 +209,6 @@ contract Logs {
     // @param token: The IERC20 token address
     // @param target: The target address
     // @param amount: The amount of tokens to transfer
-
 
     function TransferERC20(
         string memory key,
@@ -265,29 +219,31 @@ contract Logs {
         address target,
         uint256 amount
     ) external payable validateTokenAddr(token) {
-        uint256 amountTrx = msg.value;
+        uint256 amountEth = msg.value;
 
         // Check that the amount being transferred is greater than 0
 
-        require(amount > 0, "Amount should be more than 0");
+        require(amountEth > 0, "Amount should be more than 0");
 
         require(
-            IERC20(token).balanceOf(msg.sender) >= amount,
+            IERC20(token).balanceOf(msg.sender) >= amountEth,
             "Not enough tokens"
         );
 
-        if (IERC20(token).allowance(msg.sender, address(this)) < amount) {
+        if (IERC20(token).allowance(msg.sender, address(this)) < amountEth) {
             revert("Not enough allowance");
         }
 
-        // Calculate and transfer the required 0.1% Lib
-        uint256 initFee = Lib.cal(amount);
+        // Calculate and transfer the required 0.1% fee
+        uint256 initFee = (msg.value.mul(1)) / 1000;
+        require(initFee > 0,'Not enough fees');
+        
 
-        if (amountTrx < initFee && msg.sender.balance < initFee) {
-            revert("Not enough trx to cover Lib");
+        if (amount < initFee && msg.sender.balance < initFee) {
+            revert("Not enough eth to cover Lib");
         }
 
-        // @notice Store the 0.1 % trx to the contract
+        // @notice Store the 0.1 % eth to the contract
         (bool store, ) = address(this).call{value: initFee}("");
         require(store, "Failed to send");
 
@@ -304,17 +260,12 @@ contract Logs {
         emit publicKeys(r, s, v);
     }
 
-
-
-
-
     // @notice Function to transfer IERC721/ERC721  to a target stealth address
     // @param r & s: 32-byte ephemeral key
     // @param v: 2-byte shared secret key prefixed with ephemeral key
     // @param ERC721Token: The IERC721 token address
     // @param target: The targeted stealth address
     // @param tokenId: The tokenId of IERC721 to transfer
-
 
     function TransferERC721(
         string memory key,
@@ -325,7 +276,6 @@ contract Logs {
         address target,
         uint256 tokenId
     ) external {
-
         // Check that ERC721Token is not empty.
         require(ERC721Token != address(0x0), " Enter the token address");
 
@@ -354,17 +304,14 @@ contract Logs {
         emit publicKeys(r, s, v);
     }
 
-
-
-
-
     // @notice Function to retrieve a range of public keys
     // @param initVal: The initial value required retreiving public keys
 
-    function retrievePubKeys(
-        string memory key,
-        uint256 initVal
-    ) public view returns (publickeys[10] memory) {
+    function retrievePubKeys(string memory key, uint256 initVal)
+        public
+        view
+        returns (publickeys[10] memory)
+    {
         publickeys[10] memory Keys;
 
         uint256 len = logs[key].length;
@@ -372,7 +319,7 @@ contract Logs {
         uint256 finalVal = Lib.min(len, end);
 
         for (uint256 i = initVal; i < finalVal; i++) {
-            Keys[i - initVal] = logs[key][i]; 
+            Keys[i - initVal] = logs[key][i];
         }
 
         return Keys;
