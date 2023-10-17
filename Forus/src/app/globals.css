@@ -1,0 +1,190 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f0fdfa;
+
+  /* This removes blue background on click of the button */
+  -webkit-tap-highlight-color: transparent;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+*::selection {
+  /* Set the background color to red */
+  background-color: #b3b9c0;
+}
+
+/* ! main css */
+
+@font-face {
+  font-family: Montserrat;
+  src: url("../../public/Fonts/Montserrat-MediumItalic.ttf");
+}
+
+@font-face {
+  font-family: MontserratHeading;
+  src: url("../../public/Fonts/Montserrat-Regular.ttf");
+}
+
+@font-face {
+  font-family: MontserratSubHeading;
+  src: url("../../public/Fonts/Montserrat-SemiBold.ttf");
+}
+
+@font-face {
+  font-family: MontserraTitle;
+  src: url("../../public/Fonts/Montserrat-BoldItalic.ttf");
+}
+
+@font-face {
+  font-family: MontserraSubTitle;
+  src: url("../../public/Fonts/Montserrat-Light.ttf");
+}
+
+@font-face {
+  font-family: MontserratSmall;
+  src: url("../../public/Fonts/Montserrat-Light.ttf");
+}
+
+.montserrat-subtitle {
+  font-family: MontserraSubTitle;
+}
+
+.montserrat-title {
+  font-family: MontserraTitle;
+  letter-spacing: 1px;
+}
+
+.montserrat-subheading {
+  font-family: MontserratSubHeading;
+}
+
+.montserrat-heading {
+  font-family: MontserratHeading;
+}
+
+.montserrat-medium {
+  font-family: Montserrat;
+}
+
+.montserrat-small {
+  font-family: MontserratSmall;
+}
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+/* bouncing wolf */
+.logo-div:hover .logo {
+  @keyframes bounce {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  /* Apply the animation to the element with the [animate-bounce] class */
+  animation: bounce 0.5s infinite;
+  animation-duration: 1500ms;
+}
+
+/* Css for QNA Component */
+.show {
+  max-height: 1000px;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.hide {
+  max-height: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* Dark theme css */
+.theme-btn:hover .dark {
+  display: inline-block;
+}
+
+.light {
+  display: inline-block;
+}
+
+.theme-btn:hover .light {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* highlight Color */
+/* .highlight { */
+  /* background-image: linear-gradient(to right top, #073170, #004d7a, #008793, #5AD8CC); */
+  /* background-image: linear-gradient(to right top, #5ad8cc, #6addd2, #78e2d7, #85e6dd, #92ebe2); */
+  /* background: linear-gradient(114deg, rgb(18, 90, 85) 35%, rgb(42, 68, 66) 49%, rgba(90,216,204,1) 71%); */
+  /* background: linear-gradient(114deg, rgb(173, 255, 248) 0%, rgba(90,216,204,1) 90%); */
+  /* background: linear-gradient(90deg, rgba(0,28,26,1) 0%, rgba(90,216,204,1) 57%, rgba(209,217,214,1) 100%); */
+/* } */
+
+.highlight {
+  background: linear-gradient(to right, #0cebeb, #20e3b2, #29ffc6);
+  /* background: linear-gradient(to right, #C180F7, #CD56BB, #D83084); */
+}
+
+.highlight:hover {
+  background: transparent;
+}
+
+.hightlightText {
+  color: linear-gradient(to right, #0cebeb, #20e3b2, #29ffc6);
+}
