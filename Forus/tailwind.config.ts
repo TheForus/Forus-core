@@ -1,12 +1,17 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
-  important: true,
-  darkMode: "class",
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+
+    // Or if using `src` directory:
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
   theme: {
     extend: {
       animation: {
-        'pulse-2s': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        "pulse-2s": "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
       colors: {
         bgBlack: "#080808",
@@ -18,5 +23,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwind-scrollbar")]
+  plugins: [require("tailwind-scrollbar")],
 };

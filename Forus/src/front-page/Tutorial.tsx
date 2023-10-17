@@ -1,5 +1,6 @@
-// import ReactPlayer from 'react-player';
-import ReactPlayer from "react-player/lazy";
+"use client";
+
+import ReactPlayer from 'react-player';
 
 type Props = {};
 

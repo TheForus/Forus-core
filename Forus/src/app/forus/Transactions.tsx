@@ -3,7 +3,7 @@ import Transfer from "./Transfer";
 import Receive from "./Receive";
 
 import { useContext } from "react";
-import { AppContext } from "./Forus";
+import { AppContext } from "./page";
 import Withdraw from "./Withdraw";
 
 type Props = {};

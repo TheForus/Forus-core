@@ -1,9 +1,9 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import screenshot from "../assets/screenshot.png";
+import screenshot from "../../public/assets/screenshot.png";
+import Link from "next/link";
+import Image from "next/image";
 
 const Header = () => {
-  const navigate = useNavigate();
   return (
     <>
       <div
@@ -45,19 +45,19 @@ const Header = () => {
             Financial Interactions with Cutting-edge Cryptography. */}
             Get funds confidentially without sharing wallet address !!
           </p>
-          <button
+          <Link
+            href={"/forus"}
             className="border-1 montserrat-subtitle  
             hover:scale-95 transition-all ease-linear p-1 px-10 rounded-full border-[#48494b] 
              montserrat-subtitle font-bold  text-xl bg-[#292a2c] text-gray-300"
-            onClick={() => navigate("/forus")}
           >
             Launch
-          </button>
+          </Link>
         </div>
 
         {/* right Banner */}
         <div className="flex justify-end items-center ">
-          <img
+          <Image
             className="md:mt-0 mt-10 rounded-[1.5rem] object-center xl:w-[800px] md:w-[900px]
             lg:h-[280px] xl:h-[290px] h-[250px] sm:[mt-0]
             shadow-xl shadow-[#757575]"

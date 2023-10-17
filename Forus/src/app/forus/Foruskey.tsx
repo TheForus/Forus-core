@@ -1,14 +1,14 @@
-import { Crc } from "../helper/Crc";
+import { Crc } from "../../helper/Crc";
 import base58 from "bs58";
 import { useState, useEffect } from "react";
 import EllipticCurve from "elliptic";
 import { AiOutlineCopy } from "react-icons/ai";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
-import { downloadTxt } from "../helper/downloadTxt";
+import { downloadTxt } from "../../helper/downloadTxt";
 import { RxDownload } from "react-icons/rx";
-import bg from "../assets/bg.png";
-import ToolTip from "../helper/ToopTip";
+import bg from "../../../public/assets/bg.png";
+import ToolTip from "../../helper/ToopTip";
 
 const ec = new EllipticCurve.ec("secp256k1");
 

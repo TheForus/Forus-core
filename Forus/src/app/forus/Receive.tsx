@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { keccak256 } from "ethers/lib.esm/utils";
-import { generatePath, useNavigate } from "react-router-dom";
+// import { generatePath, useNavigate } from "react-router-dom";
 // import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
@@ -13,12 +13,12 @@ import {
 // import copy from "../Logos/copy.jpg";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
-import { db } from "../config/firebase.js";
+// import { db } from "../../config/firebase.js";
 import { getDocs, collection, deleteDoc, doc } from "firebase/firestore";
-import { downloadTxt } from "../helper/downloadTxt";
+import { downloadTxt } from "../../helper/downloadTxt";
 import { ethers, BigNumber } from "ethers";
 import { MdHistory, MdOutlineDone } from "react-icons/md";
-import ToolTip from "../helper/ToopTip";
+import ToolTip from "../../helper/ToopTip";
 
 const ec = new EllipticCurve.ec("secp256k1");
 let Abi : any;
@@ -59,7 +59,7 @@ const Receive: React.FC<ChildProps> = ({
   const [isfounded, setisfounded] = useState<string>("");
   const [pkCopied, setPkCopied] = useState<boolean>(false);
 
-  const keys = collection(db, "Logs");
+  // const keys = collection(db, "Logs");
 
   const [transactionTab, setTransactionTab] = useState(false);
   const [trxList, settrxList] = useState<any>([]);
@@ -185,11 +185,11 @@ const Receive: React.FC<ChildProps> = ({
     let logs: any[] = [];
 
     try {
-      const data = await getDocs(keys);
-      logs = data.docs.map((doc: any) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
+      // const data = await getDocs(keys);
+      // logs = data.docs.map((doc: any) => ({
+      //   ...doc.data(),
+      //   id: doc.id,
+      // }));
     } catch (err: any) {
       console.error(err);
       seterr(err.message);
@@ -271,8 +271,8 @@ const Receive: React.FC<ChildProps> = ({
 
 
   const removingKey = async () => {
-    const Doc = doc(db, "Logs", id);
-    await deleteDoc(Doc);
+    // const Doc = doc(db, "Logs", id);
+    // await deleteDoc(Doc);
   };
 
 

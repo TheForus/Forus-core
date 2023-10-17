@@ -1,3 +1,5 @@
+"use client";
+
 import NavBar from "./NavBar";
 import Foruskey from "./Foruskey";
 import Instruction from "./Instruction";
@@ -7,9 +9,7 @@ import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 // import abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { ethers } from "ethers";
-import { chainOptions } from "../helper/ChainOptions";
-
-
+import { chainOptions } from "../..//helper/ChainOptions";
 
 type Props = {};
 
@@ -38,11 +38,9 @@ const Forus = (props: Props) => {
   const [sumof, setsumof] = useState<string | any>("0");
   const [sumofAddress, setsumofAddress] = useState<string | any>("0");
 
-
   const { ethereum }: any = window;
 
-  const selectedChain: string | any = sessionStorage.getItem("chain")
-
+  const selectedChain: string | any = sessionStorage.getItem("chain");
 
   const isWallet = async () => {
     if (ethereum === undefined) {
@@ -73,8 +71,6 @@ const Forus = (props: Props) => {
     }
   };
 
-
-
   const handleChainChange = async (chainId: any) => {
     chainOptions.map((chain) => {
       if (sessionStorage.getItem("chain") !== chain.name) {
@@ -98,24 +94,27 @@ const Forus = (props: Props) => {
     });
   };
 
-
-
-
   const validateChain = async () => {
     const chainId = await ethereum.request({ method: "eth_chainId" });
-    const matchingChain = chainOptions.find(chain => chain.chainId === chainId);
+    const matchingChain = chainOptions.find(
+      (chain) => chain.chainId === chainId
+    );
 
-    sessionStorage.setItem("chain", matchingChain ? matchingChain.name : "unSupported Chain");
-    sessionStorage.setItem("symbol", matchingChain ? matchingChain.currency.symbol : "");
-
+    sessionStorage.setItem(
+      "chain",
+      matchingChain ? matchingChain.name : "unSupported Chain"
+    );
+    sessionStorage.setItem(
+      "symbol",
+      matchingChain ? matchingChain.currency.symbol : ""
+    );
   };
 
   useEffect(() => {
     const fetchCurrentChainData = async () => {
-
       try {
         const chainId = await ethereum.request({ method: "eth_chainId" });
-        const chain = chainOptions.find(option => option.chainId === chainId);
+        const chain = chainOptions.find((option) => option.chainId === chainId);
 
         // if (chain) {
         //   const provider = new ethers.providers.Web3Provider(ethereum);
@@ -131,10 +130,9 @@ const Forus = (props: Props) => {
       } catch (error) {
         console.error("Error fetching chain data:", error);
       }
-    }
+    };
 
-    fetchCurrentChainData()
-
+    fetchCurrentChainData();
   }, [show, []]);
 
   const [userBalance, setUserBalance] = useState<string>("");
@@ -146,9 +144,10 @@ const Forus = (props: Props) => {
     try {
       const provider = new ethers.providers.Web3Provider(ethereum);
       const balance = await provider.getBalance(accounts[0]);
-      setUserBalance(ethers.utils.formatEther(balance).toString().slice(0, 5) +
-        " " +
-        sessionStorage.getItem("symbol")
+      setUserBalance(
+        ethers.utils.formatEther(balance).toString().slice(0, 5) +
+          " " +
+          sessionStorage.getItem("symbol")
       );
     } catch (e: any) {
       console.log(e);
@@ -176,7 +175,6 @@ const Forus = (props: Props) => {
   }
 
   const connectWallet = async (): Promise<void> => {
-
     isWallet();
 
     try {
@@ -207,9 +205,7 @@ const Forus = (props: Props) => {
   return (
     <AppContext.Provider value={ContextValue}>
       <div className="bg-[#e9e9f3] max-h-max min-h-[100vh] lg:overflow-hidden">
-
         <NavBar />
-
         <div
           className="md:w-[90%] max-w-[1220px] mx-auto
                   py-8 p-4"

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AppContext } from "./Forus";
+import { AppContext } from "./page";
 import { MdVerifiedUser } from "react-icons/md";
 
 type Props = {};

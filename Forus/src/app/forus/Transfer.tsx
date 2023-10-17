@@ -3,16 +3,16 @@ import { base58, keccak256 } from "ethers/lib/utils.js";
 import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
 import { useContext } from "react";
-import { AppContext } from "./Forus";
+import { AppContext } from "./page";
 // import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { BsChevronDown } from "react-icons/bs";
 import { ethers } from "ethers";
 import sending from "../Logos/sending.gif";
 import { Notyf } from "notyf";
 import BigNumber from "bignumber.js";
-import { db } from "../config/firebase.js";
+// import { db } from "../../config/firebase.js";
 import { collection, addDoc } from "firebase/firestore";
-import { chainOptions } from "../helper/ChainOptions";
+import { chainOptions } from "../../helper/ChainOptions";
 import "notyf/notyf.min.css";
 import { BiTransfer } from "react-icons/bi";
 
@@ -161,7 +161,7 @@ const Transfer = () => {
     return true;
   };
 
-  const logs = collection(db, "Logs");
+  // const logs = collection(db, "Logs");
 
   /*
      storing the ephemeral public key in firebase along with blockchain to easily and effeciantly retreive
@@ -170,9 +170,9 @@ const Transfer = () => {
   const storing = async () => {
     const stored = `${v.replace("0x", "")}04${r.slice(2)}${s.slice(2)}`;
     try {
-      await addDoc(logs, {
-        Keys: stored,
-      });
+      // await addDoc(logs, {
+      //   Keys: stored,
+      // });
     } catch (err) {
       console.error(err);
     }

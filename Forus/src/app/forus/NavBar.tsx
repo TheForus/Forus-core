@@ -1,7 +1,6 @@
-import logo from "../Logos/logo.png";
-import { useNavigate } from "react-router-dom";
+import logo from "../../../public/Logos/logo.png";
 import { useContext } from "react";
-import { AppContext } from "./Forus";
+import { AppContext } from "./page";
 import { FaDiscord, FaGithub, FaTwitter } from "react-icons/fa";
 import { IoMdHome } from "react-icons/io";
 import { HiQuestionMarkCircle } from "react-icons/hi";
@@ -10,12 +9,13 @@ import { AiFillFilePdf } from "react-icons/ai";
 import { MdArrowDropDown } from "react-icons/md";
 import { MdArrowDropUp, MdOutlineDone } from "react-icons/md";
 import { AiOutlineCopy } from "react-icons/ai";
+import Image from "next/image";
+import Link from "next/link";
 
 type Props = {};
 
 const NavBar = (props: Props) => {
   const connect = useContext(AppContext);
-  const navigate = useNavigate();
   const [show, setshow] = useState<boolean>(false);
   const [isAddrHovered, setIsAddrHovered] = useState<boolean>(false);
   const [addressCopied, setAddressCopied] = useState<boolean>(false);
@@ -51,30 +51,34 @@ const NavBar = (props: Props) => {
     <div className=" mx-auto max-w-[1300px] pb-12 pt-4 sm:pt-8   ">
       <div className="sm:px-7 px-4 flex justify-between">
         {/* leftside logo */}
-        <div
-          className="flex items-center cursor-pointer"
-          onClick={() => navigate("/")}
-        >
-          <div className="flex items-center logo-div">
-            <img src={logo} alt="" className="logo w-[56px] h-[51px]" />
-            <h1 className="-ml-1 montserrat-subtitle sm:text-[1.5rem] font-bold text-[1.4rem] text-gray-600">
-              Forus
-            </h1>
-          </div>
+        <div className="flex items-center">
+          <Link href="/" scroll={false}>
+            <div className="flex items-center logo-div">
+              <Image
+                src={logo}
+                alt=""
+                className="logo
+                w-[56px] h-[51px]"
+              />
+              <h1 className="-ml-1 montserrat-subtitle sm:text-[1.5rem] font-bold text-[1.4rem] text-gray-600">
+                Forus
+              </h1>
+            </div>
+          </Link>
           {/* Navigation Buttons */}
           <div className="flex items-center space-x-8">
-            <button
-              onClick={() => navigate("/")}
+            <Link
+              href={"/"}
               className="flex md:flex-row flex-col items-center transition-all ease-linear
                md:items-end space-x-1 sm:ml-14 ml-9  text-gray-600 
                 montserrat-subtitle underline-offset-8 font-bold hover:underline decoration-bgGray  sm:text-[1.1rem] text-[0.8rem]"
             >
               <IoMdHome size={23} className="md:self-start  text-gray-500 " />
               <p className="sm:inline-flex hidde text-gray-800  n">Home</p>
-            </button>
+            </Link>
 
-            <div
-              onClick={() => navigate("/")}
+            <Link
+              href={"/"}
               className="flex md:flex-row flex-col items-center md:items-end space-x-1 sm:ml-14 
                text-gray-600   ml-2
                 montserrat-subtitle underline-offset-8
@@ -86,7 +90,7 @@ const NavBar = (props: Props) => {
                 className="md:self-start text-gray-500   "
               />
               <p className="sm:inline-flex hidden text-gray-800 ">Read</p>
-            </div>
+            </Link>
           </div>
         </div>
 
@@ -115,7 +119,11 @@ const NavBar = (props: Props) => {
                 className=" montserrat-subtitle border-1 sm:text-[1rem] text-[0.9rem] px-2 sm:px-4
                rounded-full text-[#e9edf1] font-extrabold border border-gray-500 hover:border-highlight"
               >
-                <ul className="" onMouseEnter={() => setshow(!show)} onMouseLeave={() => setshow(!show)}  >
+                <ul
+                  className=""
+                  onMouseEnter={() => setshow(!show)}
+                  onMouseLeave={() => setshow(!show)}
+                >
                   <li
                     className="flex p-1 px-2 sm:px-4 cursor-pointer rounded-md text-black
                   items-center gap-2 w-full "
@@ -129,16 +137,16 @@ const NavBar = (props: Props) => {
                   </li>
                   <div
                     className={`
-              ${show &&
-                      `transition-all ease-in py-2 border-none  shadow-md flex flex-col
+              ${
+                show &&
+                `transition-all ease-in py-2 border-none  shadow-md flex flex-col
                  rounded-b-md absolute ml-1 mt-1 text-black bg-bgGray z-10 `
-                      }
+              }
             `}
                   >
                     {show &&
                       connect.chainOptions.map((chain: any) => (
                         <div className=" hover:bg-slate-500">
-
                           <li
                             className="flex flex-row-reverse p-1 px-4 cursor-pointer
                            font-semibold
@@ -189,8 +197,8 @@ const NavBar = (props: Props) => {
               >
                 {sessionStorage.getItem("address") !== null || false
                   ? `${sessionStorage
-                    .getItem("address")
-                    ?.slice(0, 9)}...${sessionStorage
+                      .getItem("address")
+                      ?.slice(0, 9)}...${sessionStorage
                       .getItem("address")
                       ?.slice(-5)}`
                   : ""}
@@ -202,8 +210,9 @@ const NavBar = (props: Props) => {
               />
             ) : (
               <AiOutlineCopy
-                className={`${isAddrHovered ? "inline-flex mt-2" : "hidden"
-                  } text-gray-600 font-bold text-[1.2rem] "text-gray-600 `}
+                className={`${
+                  isAddrHovered ? "inline-flex mt-2" : "hidden"
+                } text-gray-600 font-bold text-[1.2rem] "text-gray-600 `}
               />
             )}
           </div>
@@ -213,7 +222,10 @@ const NavBar = (props: Props) => {
               className="flex space-x-1 justify-center w-[100%] mx-auto mb-4 my-2 py-1 montserrat-subtitle border-1  montserrat-subtitle  
           hover:shadow-xl px-3 text-center text-black highlight border border-black 
           rounded-md font-bold hover:border-highlight hover:text-highlight  transition-all ease-linear"
-            > connect wallet</button>
+            >
+              {" "}
+              connect wallet
+            </button>
           ) : (
             ""
           )}
