@@ -74,41 +74,41 @@ const ForusKey = (props: Props) => {
     navigator.clipboard.writeText(ForusKey);
     downloadTxt(
       "#ForusSignature-" +
-        sessionStorage.getItem("signature") +
-        "\n" +
-        "#ForusKey-" +
-        ForusKey,
+      sessionStorage.getItem("signature") +
+      "\n" +
+      "#ForusKey-" +
+      ForusKey,
       "Forus-signature.txt"
     );
   };
 
   return (
-    <>
+    <div className="">
       <div
         // style={{ backgroundImage: `url(${})` }}
-        className="relative w-full xl:justify-center h-full object-scale-down rounded-md bg-no-repeat 
-        flex flex-row items-start gap-6 justify-start py-4 px-6 rounded-t-md z-10 
+        className="relative w-full xl:justify-between h-full object-scale-down rounded-md bg-no-repeat 
+        flex flex-row items-start gap-6 justify-start py-4 px-6 rounded-t-md z-10  
         bg-gradient-to-tr from-black via-black/80 border-gray-700 border"
       >
-        <div className="z-10 pb-6 flex flex-col space-y-1 xl:items-center items-start xl:w-max w-full">
+        <div className="z-10  pb-6 flex flex-col space-y-1 xl:items-start items-start xl:w-max w-full">
           <h1
-            className="montserrat-heading font-[1000] sm:text-[1.4rem] xl:text-[1.6rem]
-           bg-clip-text text-gray-300 text-xl"
+            className="montserrat-heading text-transparent  hightlightText  ml-2 font-[1000] sm:text-[1.4rem] xl:text-[1.6rem]
+           bg-clip-text  text-xl  bg-gradient-to-r from-highlight to-cyan-600"
           >
-            Share the
-            <span
+            {/* Share the */}
+            {/* <span
               className="hightlightText mx-2 text-transparent sm:text-[1.5rem] xl:text-[1.7rem]
              bg-clip-text bg-gradient-to-r from-highlight to-cyan-600"
-            >
-              Forus key
-            </span>
-            & get paid privately !
+            > */}
+              Generate forus key & share it.
+            {/* </span> */}
+            {/* & get paid privately ! */}
           </h1>
           {/* Forus */}
           <div className="flex space-x-2 pt-2">
-            <div className="my-2 flex sm:gap-4 items-center p-2 sm:px-3 sm:mx-0 mx-3 bg-white/10 rounded-md hover:shadow-sm shadow-gray-400 px-2">
+            <div className="my-2 flex sm:gap-4 items-center p-2 sm:px-3 sm:mx-0 mx-3 bg-gray-600 rounded-md hover:shadow-sm shadow-gray-400 px-2">
               <p className="sm:text-[0.9rem] text-[0.8rem] montserrat-small font-extrabold text-white">
-                {ForusKey}
+                #Foruskey-{ForusKey}
               </p>
             </div>
             <div className="flex items-center text-white space-x-3">
@@ -122,12 +122,14 @@ const ForusKey = (props: Props) => {
           </div>
           <div className="text-gray-400  flex justify-around items-center text-[0.7rem] 
           sm:text-[0.8rem] montserrat-small font-semibold">
-            <AiOutlineInfoCircle size={20} color="#fff" />
+            <AiOutlineInfoCircle size={20} color="#fff" className="ml-1" />
+            <p className="ml-2">
             Never reveal the signature. Only Share your forus key to receive
             funds.
+            </p>
           </div>
         </div>
-        <div className="flex flex-col gap-2 justify-start z-20">
+        <div className="flex flex-col gap-2 mt-10 mr-6 justify-start z-20">
           <div
             className="flex cursor-pointer space-x-2 my-1 montserrat-subtitle p-1
             montserrat-subtitle px-6 text-center text-gray-300 rounded-md font-semibold
@@ -148,7 +150,7 @@ const ForusKey = (props: Props) => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

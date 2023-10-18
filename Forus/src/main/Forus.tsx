@@ -214,10 +214,10 @@ const Forus = (props: Props) => {
           <NavBar />
 
           <div
-            className="md:w-[90%] max-w-[1220px] mx-auto
+            className="md:w-[90%]  max-w-[1220px] mx-auto
             py-8 p-4"
           >
-            <div className="relative xl:w-full w-max h-full">
+            <div className="relative  ml-11  xl:w-[90%] w-[60%] h-full">
               <div className="border border-gray-500 shadow-gray-800 absolute top-0 right-0 w-full h-full rounded-md 
             bg-gradient-to-tr from-blue-400 to-black/20"></div>
               <Foruskey />
