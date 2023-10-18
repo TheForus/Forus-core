@@ -46,5 +46,9 @@ library SafeMath {
         return c;
     }
 
+     function min(uint256 x, uint256 y) external pure returns (uint256) {
+        return x < y ? x : y;
+    }
+
    
 }

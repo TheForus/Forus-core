@@ -11,6 +11,8 @@ import bg from "../assets/bg.png";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import ToolTip from "../helper/ToopTip";
 import { IoCreateSharp ,IoDownloadOutline } from "react-icons/io5";
+import * as bip39 from 'bip39';
+import { Buffer } from 'buffer'; // Import the buffer library
 
 const ec = new EllipticCurve.ec("secp256k1");
 
@@ -36,6 +38,21 @@ const ForusKey = (props: Props) => {
         key.getPrivate().toString(16)
       );
       setstoredsignatureKey(signature);
+
+
+      const pk= key.getPrivate().toString(16)
+
+      const privateKeyBinary = Buffer.from(pk, 'hex');
+      console.log(privateKeyBinary)
+      
+      try{
+        const mnemonic : any = bip39.entropyToMnemonic(privateKeyBinary);
+        console.log('mnemonic',mnemonic)
+      }
+      catch(e){
+        console.error(e)
+      }
+
 
 
       //here we making public key (i.e forus key) from our private key (i.e signature key)
