@@ -172,6 +172,6 @@
   }
 }
 
-.animation-gradient-animation {
+.ribbon-animation {
   animation: gradient-animation 15s ease infinite;
 }

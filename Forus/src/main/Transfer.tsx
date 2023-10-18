@@ -390,9 +390,9 @@ const Transfer = () => {
       >
         {/* <h2 className="text-[1.3rem] text-left mb-1">Forus Key </h2> */}
         <input
-          className="my-4 text-[0.9rem] font-semibold text-gray-600  placeholder:text-gray-500
+          className="my-4 text-[0.9rem] font-semibold text-gray-300  placeholder:text-gray-500
           montserrat-subtitle outline-none px-3 py-3 h-[100%] rounded-md
-           hover:border-cyan-900 w-[100%] bg-[#dedee9] border-2 border-gray-500"
+           hover:border-cyan-900 w-[100%] bg-black/10 border-2 border-gray-600"
           type="text"
           onChange={validatingForuskey}
           placeholder="Enter Your Forus Key"
@@ -406,9 +406,9 @@ const Transfer = () => {
        "
         >
           <input
-            className="text-[0.9rem] font-semibold text-gray-600  placeholder:text-gray-500
+            className="text-[0.9rem] font-semibold text-gray-300  placeholder:text-gray-500
           montserrat-subtitle outline-none py-3 px-3 h-[100%] rounded-md
-          hover:border-cyan-900 w-[100%] bg-[#dedee9] border-2 border-gray-500"
+          hover:border-cyan-900 w-[100%] bg-black/10 border-2 border-gray-600"
             value={amount}
             type="text"
             placeholder={`0.1  ${byDefault}`}
