@@ -100,14 +100,20 @@ const ForusKey = (props: Props) => {
               className="hightlightText mx-2 text-transparent sm:text-[1.5rem] xl:text-[1.7rem]
              bg-clip-text bg-gradient-to-r from-highlight to-cyan-600"
             > */}
-              Generate forus key & share it.
+              Forus Key  
             {/* </span> */}
+             <span
+              className=" mx-2  sm:text-[1.4rem] xl:text-[1.6rem]
+             text-gray-400"
+            >
+              (Share It to Receive Funds)
+            </span>
             {/* & get paid privately ! */}
           </h1>
           {/* Forus */}
           <div className="flex space-x-2 pt-2">
             <div className="my-2 flex sm:gap-4 items-center p-2 sm:px-3 sm:mx-0 mx-3 bg-gray-600 rounded-md hover:shadow-sm shadow-gray-400 px-2">
-              <p className="sm:text-[0.9rem] text-[0.8rem] montserrat-small font-extrabold text-white">
+              <p className="sm:text-[.9rem] text-[1.1rem] montserrat-small font-extrabold text-white">
                 #Foruskey-{ForusKey}
               </p>
             </div>
