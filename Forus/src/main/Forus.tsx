@@ -10,8 +10,6 @@ import { ethers } from "ethers";
 import { chainOptions } from "../helper/ChainOptions";
 import HeaderRibbon from "../components/HeaderRibbon";
 
-
-
 type Props = {};
 
 interface ContextValue {
@@ -39,11 +37,9 @@ const Forus = (props: Props) => {
   const [sumof, setsumof] = useState<string | any>("0");
   const [sumofAddress, setsumofAddress] = useState<string | any>("0");
 
-
   const { ethereum }: any = window;
 
-  const selectedChain: string | any = sessionStorage.getItem("chain")
-
+  const selectedChain: string | any = sessionStorage.getItem("chain");
 
   const isWallet = async () => {
     if (ethereum === undefined) {
@@ -74,8 +70,6 @@ const Forus = (props: Props) => {
     }
   };
 
-
-
   const handleChainChange = async (chainId: any) => {
     chainOptions.map((chain) => {
       if (sessionStorage.getItem("chain") !== chain.name) {
@@ -99,24 +93,27 @@ const Forus = (props: Props) => {
     });
   };
 
-
-
-
   const validateChain = async () => {
     const chainId = await ethereum.request({ method: "eth_chainId" });
-    const matchingChain = chainOptions.find(chain => chain.chainId === chainId);
+    const matchingChain = chainOptions.find(
+      (chain) => chain.chainId === chainId
+    );
 
-    sessionStorage.setItem("chain", matchingChain ? matchingChain.name : "unSupported Chain");
-    sessionStorage.setItem("symbol", matchingChain ? matchingChain.currency.symbol : "");
-
+    sessionStorage.setItem(
+      "chain",
+      matchingChain ? matchingChain.name : "unSupported Chain"
+    );
+    sessionStorage.setItem(
+      "symbol",
+      matchingChain ? matchingChain.currency.symbol : ""
+    );
   };
 
   useEffect(() => {
     const fetchCurrentChainData = async () => {
-
       try {
         const chainId = await ethereum.request({ method: "eth_chainId" });
-        const chain = chainOptions.find(option => option.chainId === chainId);
+        const chain = chainOptions.find((option) => option.chainId === chainId);
 
         // if (chain) {
         //   const provider = new ethers.providers.Web3Provider(ethereum);
@@ -132,10 +129,9 @@ const Forus = (props: Props) => {
       } catch (error) {
         console.error("Error fetching chain data:", error);
       }
-    }
+    };
 
-    fetchCurrentChainData()
-
+    fetchCurrentChainData();
   }, [show, []]);
 
   const [userBalance, setUserBalance] = useState<string>("");
@@ -147,9 +143,10 @@ const Forus = (props: Props) => {
     try {
       const provider = new ethers.providers.Web3Provider(ethereum);
       const balance = await provider.getBalance(accounts[0]);
-      setUserBalance(ethers.utils.formatEther(balance).toString().slice(0, 5) +
-        " " +
-        sessionStorage.getItem("symbol")
+      setUserBalance(
+        ethers.utils.formatEther(balance).toString().slice(0, 5) +
+          " " +
+          sessionStorage.getItem("symbol")
       );
     } catch (e: any) {
       console.log(e);
@@ -177,7 +174,6 @@ const Forus = (props: Props) => {
   }
 
   const connectWallet = async (): Promise<void> => {
-
     isWallet();
 
     try {
@@ -207,22 +203,32 @@ const Forus = (props: Props) => {
 
   return (
     <AppContext.Provider value={ContextValue}>
-      <div className="bg-[#0d0d0d] max-h-max min-h-[100vh] lg:overflow-hidden">
-        <HeaderRibbon/>
-
-        <NavBar />
-
+      <div className="bg-gradient-to-tr from-black via-black/80 to-transparent relative w-full h-full">
         <div
-          className="md:w-[90%] max-w-[1220px] mx-auto
-                  py-8 p-4"
-        >
-          <Foruskey />
+          className="absolute top-0 right-0 w-full h-full rounded-md bg-gradient-to-tr
+         from-blue-400 to-blue-600 z-[-10]"
+        ></div>
+        <div className="bg-black/80 max-h-max min-h-[100vh] lg:overflow-hidden">
+          <HeaderRibbon />
+
+          <NavBar />
+
           <div
-            className="flex lg:flex-row lg:justify-between lg:py-16 p-3
-          flex-col-reverse items-start pt-16 pb-6"
+            className="md:w-[90%] max-w-[1220px] mx-auto
+            py-8 p-4"
           >
-            <Instruction />
-            <Transactions />
+            <div className="relative xl:w-full w-max h-full">
+              <div className="border border-gray-500 shadow-gray-800 absolute top-0 right-0 w-full h-full rounded-md 
+            bg-gradient-to-tr from-blue-400 to-black/20"></div>
+              <Foruskey />
+            </div>
+            <div
+              className="flex lg:flex-row lg:justify-between lg:py-16 p-3
+          flex-col-reverse items-start pt-16 pb-6"
+            >
+              <Instruction />
+              <Transactions />
+            </div>
           </div>
         </div>
       </div>

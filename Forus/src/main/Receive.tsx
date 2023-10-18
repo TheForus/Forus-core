@@ -362,9 +362,9 @@ const Receive: React.FC<ChildProps> = ({
             {hide !== true && (
               <input
                 type="text"
-                className="text-[0.9rem] font-semibold text-gray-600  placeholder:text-gray-400
+                className="text-[0.9rem] font-semibold text-gray-300  placeholder:text-gray-500
             montserrat-subtitle outline-none px-3 py-3 h-[100%] rounded-md
-            hover:border-cyan-900 w-[100%] bg-[#dedee9] border-2 border-gray-500"
+            hover:border-cyan-900 w-[100%] bg-black/10 border-2 border-gray-600"
                 value={savedSignaturekey}
                 onChange={(e) => {
                   setsavedSignaturekey(e.target.value);
