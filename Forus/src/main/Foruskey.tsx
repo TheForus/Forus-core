@@ -8,7 +8,9 @@ import "notyf/notyf.min.css";
 import { downloadTxt } from "../helper/downloadTxt";
 import { RxDownload } from "react-icons/rx";
 import bg from "../assets/bg.png";
+import { AiOutlineInfoCircle } from "react-icons/ai";
 import ToolTip from "../helper/ToopTip";
+import { IoCreateSharp ,IoDownloadOutline } from "react-icons/io5";
 
 const ec = new EllipticCurve.ec("secp256k1");
 
@@ -75,24 +77,24 @@ const ForusKey = (props: Props) => {
 
   const saveSignature = () => {
     navigator.clipboard.writeText(ForusKey);
-    downloadTxt('#ForusSignature-'+sessionStorage.getItem("signature") + '\n' + "#ForusKey-" + ForusKey, "Forus-signature.txt");
+    downloadTxt('#ForusSignature-' + sessionStorage.getItem("signature") + '\n' + "#ForusKey-" + ForusKey, "Forus-signature.txt");
 
   };
 
   return (
     <>
       <div
-        style={{ backgroundImage: `url(${bg})` }}
-        className="bg-[#e9e9f3] object-scale-down border border-gray rounded-md backdrop-blur-lg bg-no-repeat flex flex-col items-center p-8 rounded-t-md"
+        // style={{ backgroundImage: `url(${})` }}
+        className=" object-scale-down  rounded-md backdrop-blur-lg bg-no-repeat flex flex-col items-center p-8 rounded-t-md"
       >
         <div className="pb-6 flex flex-col space-y-4 items-center border-black  w-full">
           <h1
             className="mx-auto montserrat-heading font-[1000]
-             sm:text-[2.1rem] xl:text-[2.7rem] bg-clip-text text-gray-700
+             sm:text-[2.1rem] xl:text-[2.7rem] bg-clip-text text-gray-400
               text-3xl"
           >
             {" "}
-         Share the
+            Share the
             <span
               className="hightlightText
             text-transparent sm:text-[2.2rem] xl:text-[2.8rem] bg-clip-text 
@@ -100,27 +102,28 @@ const ForusKey = (props: Props) => {
             "
             >
               {" "}
-              Forus key 
+              Forus key
             </span>{" "}
-            &  get funds privately !
+            &  get paid privately !
           </h1>
-          <p className="text-gray-400 text-[0.8rem] sm:text-[1.1rem] montserrat-small font-semibold">
-           Warning : Never reveal the signature. Only Share your forus key to receive funds.
-          </p>
+          <div className="text-gray-400 flex justify-around items-center text-[0.8rem] sm:text-[1.1rem] montserrat-small font-semibold">
+            <AiOutlineInfoCircle size={20} color="#fff" />
+            Never reveal the signature. Only Share your forus key to receive funds.
+          </div>
 
         </div>
         {/* Forus */}
         <div className="flex space-x-4">
           <div
-            className="my-2 flex sm:gap-4 items-center p-2 sm:px-3 sm:mx-0 mx-3 bg-gray-400 bg-opacity-60
-           rounded-md hover:shadow-sm shadow-gray-300 px-2   "
+            className="my-2 flex sm:gap-4 items-center p-2 sm:px-3 sm:mx-0 mx-3 bg-gray-300 
+           rounded-md hover:shadow-sm shadow-gray-400  px-2   "
           >
             <p
               className="sm:text-[1rem] text-[0.8rem] montserrat-small font-extrabold 
-            text-gray-700 "
+            text-black"
             >
-              <span className="sm:text-[1.1rem] text-[0.9rem] text-gray-800 text-md font-extrabold">
-                #Foruskey
+              <span className="sm:text-[1.1rem] text-[0.9rem] text-black text-md font-extrabold">
+                # Forus-key
               </span>{" "}
               - {ForusKey}
             </p>
@@ -128,7 +131,7 @@ const ForusKey = (props: Props) => {
           <div className="flex items-center text-white space-x-3">
             <ToolTip tooltip="Copy Forus Key">
               <AiOutlineCopy
-                className="cursor-pointer font-bold text-2xl text-gray-700 hover:text-highlight"
+                className="cursor-pointer font-bold text-2xl text-gray-400 hover:text-highlight"
                 onClick={copyForusKey}
               />
             </ToolTip>
@@ -138,14 +141,15 @@ const ForusKey = (props: Props) => {
 
 
 
-          <button
-            className="mb-4 my-2 montserrat-subtitle border-1 p-1 montserrat-subtitle border border-black
-         bg-highlight  px-6 text-center  
-        text-black rounded-md font-semibold transition-all ease-linear"
+          <div
+            className="flex cursor-pointer space-x-2 mb-4 my-2 montserrat-subtitle p-1 
+            montserrat-subtitle border border-black  px-6 text-center  
+           text-black rounded-md font-semibold highlight"
             onClick={Generate}
           >
-            Generate Key
-          </button>
+            <IoCreateSharp className="font-bold text-xl text-[181b1f]" />
+            Generate
+          </div>
 
 
 
@@ -156,12 +160,12 @@ const ForusKey = (props: Props) => {
       
             "
           >
-            <RxDownload
+            <IoDownloadOutline
               className="font-bold text-xl text-[181b1f]"
 
             />
             <ToolTip tooltip="Save Signature Key">
-              <span>Signature</span>
+              <span>Save Keys</span>
             </ToolTip>
           </div>
 

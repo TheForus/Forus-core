@@ -153,10 +153,25 @@
   /* background: linear-gradient(to right, #C180F7, #CD56BB, #D83084); */
 }
 
-.highlight:hover {
+/* .highlight:hover {
   background: transparent;
-}
+} */
 
 .hightlightText {
   color: linear-gradient(to right, #0cebeb, #20e3b2, #29ffc6);
+}
+
+@keyframes gradient-animation {
+  0%, 100% {
+    background-size: 200% 200%;
+    background-position: left center;
+  }
+  50% {
+    background-size: 200% 200%;
+    background-position: right center;
+  }
+}
+
+.animation-gradient-animation {
+  animation: gradient-animation 15s ease infinite;
 }

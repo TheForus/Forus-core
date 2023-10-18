@@ -166,7 +166,7 @@ const Withdraw = ({
           {hideInput === false ? (
             <input
               type="text"
-              className="flex-1 text-[0.9rem] font-semibold text-gray-400  placeholder:text-gray-500
+              className="flex-1 text-[0.9rem] font-semibold text-gray-600  placeholder:text-gray-500
           montserrat-subtitle outline-none px-4 py-3 rounded-md
           hover:border-cyan-900 w-[100%] bg-[#dedee9] border-2 border-gray-500"
               onChange={(e) => {
@@ -196,7 +196,7 @@ const Withdraw = ({
               >
                 {masterkey === "" ? (
                   <BsDownload
-                    className="cursor-pointer  text-[#65686b]"
+                    className="cursor-pointer  text-[#d9d9da]"
                     size={24}
                   />
                 ) : (
@@ -217,8 +217,8 @@ const Withdraw = ({
       <div className="w-full flex justify-center pt-3 mr-4">
         <button
           onClick={sendTransaction}
-          className="flex space-x-2 justify-center w-[100%] mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
-          hover:shadow-xl px-6 text-center text-black highlight border border-black 
+          className="flex space-x-2 justify-center w-[100%] mx-auto mb-4 my-2 montserrat-subtitle py-2 
+          hover:shadow-xl px-6 text-center text-black highlight j
           rounded-md font-bold  transition-all ease-linear"
         >
           <TbTransferIn className="text-[1.3rem] text-inherit" />

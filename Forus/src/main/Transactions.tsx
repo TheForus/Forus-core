@@ -60,7 +60,7 @@ const Transactions = (props: Props) => {
           className={`text-left px-6 py-1 border-b-2 border-black
         ${buttonStatus.transfer
               ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700"
-              : "text-gray-700"
+              : "text-gray-400"
             }`}
         >
           Transfer
@@ -70,7 +70,7 @@ const Transactions = (props: Props) => {
           className={`px-6 py-1 border-b-2 border-black
           ${buttonStatus.Receive
               ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700"
-              : "text-gray-700"
+              : "text-gray-400"
             }`}
         >
           Receive
@@ -80,7 +80,7 @@ const Transactions = (props: Props) => {
           className={`px-6 py-1 border-b-2 border-black
           ${buttonStatus.withdraw
               ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700"
-              : "text-gray-700"
+              : "text-gray-400"
             }`}
         >
           Withdraw

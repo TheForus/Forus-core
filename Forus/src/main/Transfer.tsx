@@ -390,7 +390,7 @@ const Transfer = () => {
       >
         {/* <h2 className="text-[1.3rem] text-left mb-1">Forus Key </h2> */}
         <input
-          className="my-4 text-[0.9rem] font-semibold text-gray-400  placeholder:text-gray-500
+          className="my-4 text-[0.9rem] font-semibold text-gray-600  placeholder:text-gray-500
           montserrat-subtitle outline-none px-3 py-3 h-[100%] rounded-md
            hover:border-cyan-900 w-[100%] bg-[#dedee9] border-2 border-gray-500"
           type="text"
@@ -406,7 +406,7 @@ const Transfer = () => {
        "
         >
           <input
-            className="text-[0.9rem] font-semibold text-gray-400  placeholder:text-gray-500
+            className="text-[0.9rem] font-semibold text-gray-600  placeholder:text-gray-500
           montserrat-subtitle outline-none py-3 px-3 h-[100%] rounded-md
           hover:border-cyan-900 w-[100%] bg-[#dedee9] border-2 border-gray-500"
             value={amount}
@@ -472,8 +472,8 @@ const Transfer = () => {
               proceed(); // Call proceed function otherwise
             }
           }}
-          className="flex space-x-2 justify-center w-[100%] mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
-          hover:shadow-xl px-6 text-center text-black highlight border border-black 
+          className="flex space-x-2 justify-center w-[100%] mx-auto mb-4 my-2 montserrat-subtitle  py-2 montserrat-subtitle  
+          hover:shadow-xl px-6 text-center text-black highlight 
           rounded-md font-bold  transition-all ease-linear"
         >
           {waiting === false ? (

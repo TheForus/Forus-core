@@ -8,6 +8,7 @@ import "notyf/notyf.min.css";
 // import abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { ethers } from "ethers";
 import { chainOptions } from "../helper/ChainOptions";
+import HeaderRibbon from "../components/HeaderRibbon";
 
 
 
@@ -206,7 +207,8 @@ const Forus = (props: Props) => {
 
   return (
     <AppContext.Provider value={ContextValue}>
-      <div className="bg-[#e9e9f3] max-h-max min-h-[100vh] lg:overflow-hidden">
+      <div className="bg-[#0d0d0d] max-h-max min-h-[100vh] lg:overflow-hidden">
+        <HeaderRibbon/>
 
         <NavBar />
 

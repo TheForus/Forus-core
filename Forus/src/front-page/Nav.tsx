@@ -27,7 +27,7 @@ const Nav = (props: Props) => {
             montserrat-subtitle cursor-pointer 
             sm:text-[1.3rem] text-[1.1rem] font-semibold"
           >
-            How it works ?
+            Tutorial
           </p>
         </Link>
         {/* theme button */}

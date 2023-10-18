@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import screenshot from "../assets/screenshot.png";
+import screenshot from "../assets/ForusKey.png";
+import Info from "./Info";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -51,22 +52,25 @@ const Header = () => {
              montserrat-subtitle font-bold  text-xl bg-[#292a2c] text-gray-300"
             onClick={() => navigate("/forus")}
           >
-            Launch
+            Launch App
           </button>
         </div>
 
         {/* right Banner */}
         <div className="flex justify-end items-center ">
           <img
-            className="md:mt-0 mt-10 rounded-[1.5rem] object-center xl:w-[800px] md:w-[900px]
-            lg:h-[280px] xl:h-[290px] h-[250px] sm:[mt-0]
+            className="md:mt-0 mt-10 rounded-[1.5rem] object-center 
             shadow-xl shadow-[#757575]"
             src={screenshot}
-            // height={1000}
+            height={1200}
+            width={1000}
             alt=""
           />
+      
         </div>
+        
       </div>
+      <Info/>
     </>
   );
 };

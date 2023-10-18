@@ -308,7 +308,7 @@ const Receive: React.FC<ChildProps> = ({
             )}
             <div
               className="flex items-center space-x-1 cursor-pointer 
-             text-gray-500 border-b border-dashed border-gray-400 text-[1rem] text-left"
+             text-gray-400 border-b border-dashed border-gray-400 text-[1rem] text-left"
               onClick={() => setTransactionTab(!transactionTab)}
             >
               <span>
@@ -352,7 +352,7 @@ const Receive: React.FC<ChildProps> = ({
             // <div key={i} className=" text-white ">
           ))
         ) : (
-          <h1 className="text-center relative top-5 text-xl montserrat-small font-semibold  text-gray-500">
+          <h1 className="text-center relative top-5 text-xl montserrat-small font-semibold  text-gray-400">
             No Transactions Recorded !
           </h1>
         )
@@ -362,7 +362,7 @@ const Receive: React.FC<ChildProps> = ({
             {hide !== true && (
               <input
                 type="text"
-                className="text-[0.9rem] font-semibold text-gray-400  placeholder:text-gray-500
+                className="text-[0.9rem] font-semibold text-gray-600  placeholder:text-gray-400
             montserrat-subtitle outline-none px-3 py-3 h-[100%] rounded-md
             hover:border-cyan-900 w-[100%] bg-[#dedee9] border-2 border-gray-500"
                 value={savedSignaturekey}
@@ -374,7 +374,7 @@ const Receive: React.FC<ChildProps> = ({
               />
             )}
             {hide && (
-              <p className="text-gray-600 p-1 py-2 font-semibold montserrat-small ">
+              <p className="text-gray-400 p-1 py-2 font-semibold montserrat-small ">
                 Expand to enter the signature Key
               </p>
             )}
@@ -402,8 +402,8 @@ const Receive: React.FC<ChildProps> = ({
           <div className="w-full flex justify-center pt-2 mr-4">
             <button
               onClick={generateprivatekey}
-              className="flex space-x-2 justify-center w-[100%] mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
-          hover:shadow-xl px-6 text-center text-black highlight border border-black 
+              className="flex space-x-2 justify-center w-[100%] mx-auto mb-4 my-2 montserrat-subtitle  py-2 
+          hover:shadow-xl px-6 text-center text-black highlight 
           rounded-md font-bold  transition-all ease-linear"
             >
               <AiOutlineScan className="text-[1.3rem] text-inherit" />

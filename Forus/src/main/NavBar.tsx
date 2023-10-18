@@ -1,10 +1,10 @@
-import logo from "../Logos/logo.png";
+import logo from "../Logos/logo.jpg";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AppContext } from "./Forus";
 import { FaDiscord, FaGithub, FaTwitter } from "react-icons/fa";
 import { IoMdHome } from "react-icons/io";
-import { HiQuestionMarkCircle } from "react-icons/hi";
+// import { HiQuestionMarkCircle } from "react-icons/hi";
 import { useState } from "react";
 import { AiFillFilePdf } from "react-icons/ai";
 import { MdArrowDropDown } from "react-icons/md";
@@ -57,7 +57,7 @@ const NavBar = (props: Props) => {
         >
           <div className="flex items-center logo-div">
             <img src={logo} alt="" className="logo w-[56px] h-[51px]" />
-            <h1 className="-ml-1 montserrat-subtitle sm:text-[1.5rem] font-bold text-[1.4rem] text-gray-600">
+            <h1 className="-ml-1 montserrat-subtitle sm:text-[1.5rem] font-bold text-[1.4rem] text-white">
               Forus
             </h1>
           </div>
@@ -66,26 +66,26 @@ const NavBar = (props: Props) => {
             <button
               onClick={() => navigate("/")}
               className="flex md:flex-row flex-col items-center transition-all ease-linear
-               md:items-end space-x-1 sm:ml-14 ml-9  text-gray-600 
+               md:items-end space-x-1 sm:ml-14 ml-9  text-white 
                 montserrat-subtitle underline-offset-8 font-bold hover:underline decoration-bgGray  sm:text-[1.1rem] text-[0.8rem]"
             >
-              <IoMdHome size={23} className="md:self-start  text-gray-500 " />
-              <p className="sm:inline-flex hidde text-gray-800  n">Home</p>
+              <IoMdHome size={23} className="md:self-start  text-gray-300 " />
+              <p className="sm:inline-flex hidde text-gray-300  n">Home</p>
             </button>
 
             <div
               onClick={() => navigate("/")}
               className="flex md:flex-row flex-col items-center md:items-end space-x-1 sm:ml-14 
-               text-gray-600   ml-2
+               text-white   ml-2
                 montserrat-subtitle underline-offset-8
                  font-bold hover:underline decoration-bgGray 
                  sm:text-[1.1rem] text-[0.8rem]"
             >
               <AiFillFilePdf
                 size={23}
-                className="md:self-start text-gray-500   "
+                className="md:self-start text-gray-300   "
               />
-              <p className="sm:inline-flex hidden text-gray-800 ">Read</p>
+              <p className="sm:inline-flex hidden text-gray-300 ">Read</p>
             </div>
           </div>
         </div>
@@ -94,17 +94,17 @@ const NavBar = (props: Props) => {
         <div className="sm:flex-row flex space-x-3 items-center">
           {/* Social Links */}
           <div className="lg:flex space-x-3 items-center hidden">
-            <p className=" text-gray-500 ">
+            <p className=" text-gray-300 ">
               <a href="https://discord.gg/keQnv2K8HP">
                 <FaDiscord size={22} />
               </a>
             </p>
-            <p className="  text-gray-500  ">
+            <p className="  text-gray-300  ">
               <a href="https://github.com/TheForus">
                 <FaGithub size={22} />
               </a>
             </p>
-            <p className="  text-gray-500  ">
+            <p className="  text-gray-300  ">
               <a href="https://twitter.com/The_Forus">
                 <FaTwitter size={22} />
               </a>
@@ -117,7 +117,7 @@ const NavBar = (props: Props) => {
               >
                 <ul className="" onMouseEnter={() => setshow(!show)} onMouseLeave={() => setshow(!show)}  >
                   <li
-                    className="flex p-1 px-2 sm:px-4 cursor-pointer rounded-md text-black
+                    className="flex p-1 px-2 sm:px-4 cursor-pointer rounded-md text-white
                   items-center gap-2 w-full "
                   >
                     {sessionStorage.getItem("chain")}
@@ -185,7 +185,7 @@ const NavBar = (props: Props) => {
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
                 onClick={copyAddress}
-                className={`sm:text-[1.3rem] md:text-[1rem] cursor-pointer montserrat-small text-gray-600 font-semibold text-[1rem]`}
+                className={`sm:text-[1.3rem] md:text-[1rem] cursor-pointer montserrat-small text-white font-semibold text-[1rem]`}
               >
                 {sessionStorage.getItem("address") !== null || false
                   ? `${sessionStorage
@@ -198,12 +198,12 @@ const NavBar = (props: Props) => {
             </div>
             {addressCopied ? (
               <MdOutlineDone
-                className={` text-gray-600 font-bold text-[1.1rem] "text-gray-600 `}
+                className={` text-white font-bold text-[1.1rem] "text-white `}
               />
             ) : (
               <AiOutlineCopy
                 className={`${isAddrHovered ? "inline-flex mt-2" : "hidden"
-                  } text-gray-600 font-bold text-[1.2rem] "text-gray-600 `}
+                  } text-white font-bold text-[1.2rem] "text-white `}
               />
             )}
           </div>
