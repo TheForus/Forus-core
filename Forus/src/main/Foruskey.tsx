@@ -87,8 +87,8 @@ const ForusKey = (props: Props) => {
       <div
         // style={{ backgroundImage: `url(${})` }}
         className="relative w-full xl:justify-between h-full object-scale-down rounded-md bg-no-repeat 
-        flex flex-row items-start gap-6 justify-start py-4 px-6 rounded-t-md z-10  
-        bg-gradient-to-tr from-black via-black/80 border-gray-700 border"
+        flex flex-col lg:flex-row items-start gap-3 lg:gap-6 justify-start py-4 px-6 rounded-t-md z-10
+        bg-gradient-to-tr from-black via-black/90 to-black/60 border-gray-700 border"
       >
         <div className="z-10  pb-6 flex flex-col space-y-1 xl:items-start items-start xl:w-max w-full">
           <h1
@@ -112,8 +112,10 @@ const ForusKey = (props: Props) => {
           </h1>
           {/* Forus */}
           <div className="flex space-x-2 pt-2">
-            <div className="my-2 flex sm:gap-4 items-center p-2 sm:px-3 sm:mx-0 mx-3 bg-gray-600 rounded-md hover:shadow-sm shadow-gray-400 px-2">
-              <p className="sm:text-[.9rem] text-[1.1rem] montserrat-small font-extrabold text-white">
+            <div className="my-2 flex sm:gap-4 items-center p-2 sm:px-3
+             sm:mx-0 mx-3 bg-gray-600 rounded-md hover:shadow-sm shadow-gray-400 px-2">
+              <p className="sm:text-[.9rem] text-[0.8rem] md:text-[1.1rem] montserrat-small
+               font-extrabold text-white">
                 #Foruskey-{ForusKey}
               </p>
             </div>
@@ -135,23 +137,23 @@ const ForusKey = (props: Props) => {
             </p>
           </div>
         </div>
-        <div className="flex flex-col gap-2 mt-10 mr-6 justify-start z-20">
+        <div className="flex lg:flex-col gap-2 lg:mt-10 mr-6 justify-start z-20">
           <div
             className="flex cursor-pointer space-x-2 my-1 montserrat-subtitle p-1
             montserrat-subtitle px-6 text-center text-gray-300 rounded-md font-semibold
-             bg-gray-700 border border-gray-600 min-w-max"
+             bg-gray-700 border hover:bg-black hover:border-highlight border-[#152F59] min-w-max"
             onClick={Generate}
           >
             <IoCreateSharp className="text-[#06B3D2] font-bold text-xl" />
-            Generate
+            <ToolTip tooltip="Generate Fresh Forus Key">Generate</ToolTip>
           </div>
           <div
             onClick={saveSignature}
             className="flex cursor-pointer space-x-2 my-1 montserrat-subtitle p-1
              montserrat-subtitle px-6 text-center text-gray-300 rounded-md font-semibold
-              bg-gray-700 border border-gray-600 min-w-max"
+              bg-gray-700 hover:bg-black hover:border-highlight border border-gray-600 min-w-max"
           >
-            <IoDownloadOutline className="font-bold text-[#06B3D2] text-xl text-inherit" />
+            <IoDownloadOutline className="font-bold text-[#06B3D2] text-xl" />
             <ToolTip tooltip="Save Signature Key">Save Keys</ToolTip>
           </div>
         </div>
