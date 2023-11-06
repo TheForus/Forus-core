@@ -22,10 +22,10 @@ const config: HardhatUserConfig = {
     //   url: process.env.ARBITRUM_API_URL,
     //   accounts: [process.env.PRIVATE_KEY!]
     // },
-    // sepolia: {
-    //   url: process.env.ALCHEMY_API_URL,
-    //   accounts: [process.env.PRIVATE_KEY!]
-    // },
+    sepolia: {
+      url: process.env.ALCHEMY_API_URL,
+      accounts: [process.env.PRIVATE_KEY!]
+    },
     // goerli: {
     //   url: process.env.ALCHEMY_API_URL,
     //   accounts: [process.env.PRIVATE_KEY!]
@@ -35,10 +35,10 @@ const config: HardhatUserConfig = {
     //   url: process.env.APOTHEM_API_URL,
     //   accounts: [process.env.PRIVATE_KEY!]
     // },
-    fantomtestnet: {
-      url: process.env.FANTOM_API_URL,
-      accounts: [process.env.PRIVATE_KEY!]
-    }
+    // fantomtestnet: {
+    //   url: process.env.FANTOM_API_URL,
+    //   accounts: [process.env.PRIVATE_KEY!]
+    // }
 
   }
 };
@@ -51,3 +51,4 @@ const config: HardhatUserConfig = {
 export default config;
 
 
+// dil jhoom jhoom jae

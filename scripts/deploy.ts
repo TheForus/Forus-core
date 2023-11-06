@@ -6,24 +6,15 @@ async function main() {
   const safeMath = await SafeMath.deploy();
   await safeMath.deployed();
 
-  // Deploy Lib, linking to SafeMath
-  const Lib = await ethers.getContractFactory("Lib");
-  const lib = await Lib.deploy();
-  await lib.deployed();
+
 
   // Deploy the main contract with library addresses
-  const Logs = await ethers.getContractFactory("Logs", {
-    libraries: {
-      Lib: lib.address,
-      SafeMath: safeMath.address,
-    },
-  });
+  const Logs = await ethers.getContractFactory("Logs");
 
   const log = await Logs.deploy();
   await log.deployed();
 
   console.log(`SafeMath deployed at: ${safeMath.address}`);
-  console.log(`Lib deployed at: ${lib.address}`);
   console.log(`Logs deployed at: ${log.address}`);
 }
 
@@ -33,3 +24,6 @@ main()
     console.error(error);
     process.exit(1);
   });
+
+  //SafeMath deployed at: 0x7eb471567d4f93D6286C8026a65Fd5016D1aA23A
+// Logs deployed at: 0x7ae827b45BDaCaF809F1f4fd633D15045eb8271b

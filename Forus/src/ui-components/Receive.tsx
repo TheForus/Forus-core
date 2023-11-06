@@ -15,10 +15,10 @@ import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import { db } from "../config/firebase.js";
 import { getDocs, collection, deleteDoc, doc } from "firebase/firestore";
-import { downloadTxt } from "../helpers/downloadTxt.js";
+import { downloadTxt } from "../helpers/downloadTxt";
 import { ethers, BigNumber } from "ethers";
 import { MdHistory, MdOutlineDone } from "react-icons/md";
-import ToolTip from "../helpers/ToopTip.js";
+import ToolTip from "../helpers/ToopTip";
 
 const ec = new EllipticCurve.ec("secp256k1");
 let Abi : any;
@@ -35,7 +35,7 @@ interface ChildProps {
 
 }
 
-const Receive: React.FC<ChildProps> = ({
+export const Receive: React.FC<ChildProps> = ({
   withdrawFunction,
   setmasterkey,
   setamountTowithdraw,
@@ -114,73 +114,68 @@ const Receive: React.FC<ChildProps> = ({
   };
 
 
-  const [index, setIndex] = useState<number>(0)
-  const [totalLength, setTotalLength] = useState<number>(0)
+//   const [index, setIndex] = useState<number>(0)
+//   const [totalLength, setTotalLength] = useState<number>(0)
 
   //verify signature
 
   const verifySignature = ((sign: any) => {
-    
-    if (sign.startsWith('#ForusSignature-')) {
+    if (sign.startsWith('#forus-signatureKey-')) {
 
-      setsavedSignaturekey(sign.replace('#ForusSignature-', '').slice(0, 64));
+      setsavedSignaturekey(sign.replace('#forus-signatureKey-', '').slice(0, 64));
 
     }
-
     else {
       seterr('Invalid Signature File')
     }
-
   })
 
   console.log('Saved signature key', savedSignaturekey)
 
+//   const fetch = async () => {
+//     try {
+//       const provider = new ethers.providers.Web3Provider(ethereum);
+//       const contract = new ethers.Contract('0x9c08ecf2B23C8d18dF2ec7e38c09e0C04649D7f4', Abi.abi, provider);
 
-
-  const fetch = async () => {
-    try {
-      const provider = new ethers.providers.Web3Provider(ethereum);
-      const contract = new ethers.Contract('0x9c08ecf2B23C8d18dF2ec7e38c09e0C04649D7f4', Abi.abi, provider);
-
-      const response = await contract.getEphKeys(BigNumber.from(index));
-      setTotalLength(await contract.ephKeysLength())
-      settrx2List(response)
-      console.log('response', response);
+//       const response = await contract.getEphKeys(BigNumber.from(index));
+//       setTotalLength(await contract.ephKeysLength())
+//       settrx2List(response)
+//       console.log('response', response);
 
 
 
-      // Increment index by 10 but not greater than totalLength
+//       // Increment index by 10 but not greater than totalLength
 
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
-
-  useEffect(() => {
-
-    // Fetch data initially and then every 750 ms
-    fetch();
-
-  }, []);
+//     } catch (error) {
+//       console.error('Error fetching data:', error);
+//     }
+//   };
 
 
-  useEffect(() => {
+//   useEffect(() => {
 
-    if (totalLength > index) {
-      setTimeout(() => {
+//     // Fetch data initially and then every 750 ms
+//     fetch();
 
-        setIndex(Math.min(totalLength, index + 10));
-
-
-      }, 750);
-
-      fetch()
-
-    }
+//   }, []);
 
 
-  }, [totalLength]);
+//   useEffect(() => {
+
+//     if (totalLength > index) {
+//       setTimeout(() => {
+
+//         setIndex(Math.min(totalLength, index + 10));
+
+
+//       }, 750);
+
+//       fetch()
+
+//     }
+
+
+//   }, [totalLength]);
 
   console.log('trxlist', trx2List)
 
@@ -204,17 +199,25 @@ const Receive: React.FC<ChildProps> = ({
 
     let ephPubKey: EC.KeyPair | any;
     let sharedSecret;
-    let hashedSecret;
+    let hashedSecret : any;
     let prefix: string | any;
 
     logs.forEach((l: any) => {
-      ephPubKey = ec.keyFromPublic(l.Keys.slice(4), "hex");
-      sharedSecret = signaturekey.derive(ephPubKey.getPublic()); //
-      hashedSecret = ec.keyFromPrivate(keccak256(sharedSecret.toArray()));
-
-      prefix = sharedSecret.toArray()[0].toString(16) + sharedSecret.toArray()[1].toString(16);
-
-
+        try{
+            ephPubKey = ec.keyFromPublic(l.Keys.slice(4), "hex");
+            sharedSecret = signaturekey.derive(ephPubKey.getPublic()); //
+            hashedSecret = ec.keyFromPrivate(keccak256(sharedSecret.toArray()));
+      
+            prefix = sharedSecret.toArray()[0].toString(16) + sharedSecret.toArray()[1].toString(16);
+            console.log(prefix.toString(), l.Keys.slice(0, 4).toString())
+      
+      
+        }
+        catch(e: any){
+          seterr(e.message);
+          console.log(e.message)
+        }
+   
       try {
         if (prefix.toString() === l.Keys.slice(0, 4).toString()) {
 
@@ -236,7 +239,6 @@ const Receive: React.FC<ChildProps> = ({
       }
     });
   };
-
 
   const generateprivatekey = (): void => {
 
@@ -314,7 +316,7 @@ const Receive: React.FC<ChildProps> = ({
             )}
             <div
               className="flex items-center space-x-1 cursor-pointer 
-             text-gray-500 border-b border-dashed border-gray-400 text-[1rem] text-left"
+             text-gray-400 border-b border-dashed border-gray-400 text-[1rem] text-left"
               onClick={() => setTransactionTab(!transactionTab)}
             >
               <span>
@@ -358,7 +360,7 @@ const Receive: React.FC<ChildProps> = ({
             // <div key={i} className=" text-white ">
           ))
         ) : (
-          <h1 className="text-center relative top-5 text-xl montserrat-small font-semibold  text-gray-500">
+          <h1 className="text-center relative top-5 text-xl montserrat-small font-semibold  text-gray-400">
             No Transactions Recorded !
           </h1>
         )
@@ -368,9 +370,9 @@ const Receive: React.FC<ChildProps> = ({
             {hide !== true && (
               <input
                 type="text"
-                className="text-[0.9rem] font-semibold text-gray-400  placeholder:text-gray-500
+                className="text-[0.9rem] font-semibold text-gray-300  placeholder:text-gray-500
             montserrat-subtitle outline-none px-3 py-3 h-[100%] rounded-md
-            hover:border-cyan-900 w-[100%] bg-[#dedee9] border-2 border-gray-500"
+            hover:border-cyan-900 w-[100%] bg-black/10 border-2 border-gray-600"
                 value={savedSignaturekey}
                 onChange={(e) => {
                   setsavedSignaturekey(e.target.value);
@@ -380,7 +382,7 @@ const Receive: React.FC<ChildProps> = ({
               />
             )}
             {hide && (
-              <p className="text-gray-600 p-1 py-2 font-semibold montserrat-small ">
+              <p className="text-gray-400 p-1 py-2 font-semibold montserrat-small ">
                 Expand to enter the signature Key
               </p>
             )}
@@ -408,8 +410,8 @@ const Receive: React.FC<ChildProps> = ({
           <div className="w-full flex justify-center pt-2 mr-4">
             <button
               onClick={generateprivatekey}
-              className="flex space-x-2 justify-center w-[100%] mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
-          hover:shadow-xl px-6 text-center text-black highlight border border-black 
+              className="flex space-x-2 justify-center w-[100%] mx-auto mb-4 my-2 montserrat-subtitle  py-2 
+          hover:shadow-xl px-6 text-center text-black highlight 
           rounded-md font-bold  transition-all ease-linear"
             >
               <AiOutlineScan className="text-[1.3rem] text-inherit" />
@@ -426,4 +428,4 @@ const Receive: React.FC<ChildProps> = ({
   );
 };
 
-export default Receive;
+// export default Receive;

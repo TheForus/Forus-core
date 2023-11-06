@@ -4,45 +4,41 @@ import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
 import { useContext } from "react";
 import { AppContext } from "./Container";
-// import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
+import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { BsChevronDown } from "react-icons/bs";
-import { ethers } from "ethers";
-import sending from "../Logos/sending.gif";
-import { Notyf } from "notyf";
-import BigNumber from "bignumber.js";
 import { db } from "../config/firebase.js";
 import { collection, addDoc } from "firebase/firestore";
+import { ethers } from "ethers";
+import { Notyf } from "notyf";
+import BigNumber from "bignumber.js";
 import { chainOptions } from "../helpers/ChainOptions";
 import "notyf/notyf.min.css";
 import { BiTransfer } from "react-icons/bi";
+import { ERC20ABI } from "../helpers/ERC20ABI";
+
 
 const ec = new EllipticCurve.ec("secp256k1");
 
 const Transfer = () => {
+
   const notyf = new Notyf();
+
   let currentNetwork: string | any = sessionStorage.getItem("chain");
-  let  Abi : any;
 
 
-  const { validateChain, } = useContext(AppContext);
+
+  const { accountChecker } = useContext(AppContext);
   const [ContractAddress, setContractAddress] = useState<string | any>("");
 
 
-  const ERCABI = [
-    "function balanceOf(address) view returns (uint)",
-    "function transfer(address to, uint amount) returns (bool)",
-    "function transferFrom(address sender, address recipient, uint256 amount) external returns (bool)",
-    "function symbol() external view returns (string memory)",
-    "function name() external view returns (string memory)",
-    "function approve(address owner, uint256 amount) external returns (bool)",
-    "function allowance(address owner, address spender) view returns (uint)",
-  ];
+
 
   const { ethereum }: any = window;
 
-  let r: string | any;
-  let s: string | any;
-  let v: string | any;
+
+  let x_cor: string | '';
+  let y_cor: string | '';
+  let sharedSecret: string | '';
 
   const [token, settoken] = useState<string | "">("");
   const [forusKey, setforusKey] = useState<string | "">("");
@@ -54,8 +50,11 @@ const Transfer = () => {
   const [txId, settxID] = useState<string | "">("");
 
 
-  useMemo(() => {
+  const msgSender: string | null = sessionStorage.getItem("address");
 
+  var receipentAddress: string;
+
+  useMemo(() => {
     chainOptions.map((chain) => {
 
       if (currentNetwork === chain.name) {
@@ -64,6 +63,7 @@ const Transfer = () => {
         setContractAddress(chain.contract)
         setchainList(chain.tokens)
       }
+
       return
 
     });
@@ -71,89 +71,134 @@ const Transfer = () => {
 
   }, []);
 
+  let provider = useMemo(() => {
+
+    return new ethers.providers.Web3Provider(ethereum);
+
+  }, [])
+
   // console.log(chainList, currentNetwork, ContractAddress, sessionStorage.getItem("contractAdd"), txId);
 
   const [trxid, settrxid] = useState<string>("");
   const [waiting, setwaiting] = useState<boolean>(false);
-  const [buttonState, setButtonState] = useState<string>("Transfer");
+  const [buttonState, setButtonState] = useState<string>(
+    !sessionStorage.getItem("address") ? "Connect Wallet" : "Transfer"
+  );
 
 
 
 
-  const msgSender: string | any = sessionStorage.getItem("address");
-
-  var receipentAddress: any;
+  //helpers functuion to validate forus key
 
   const validatingForuskey = (event: any) => {
-    if (
-      (event.target.value.slice(0, 2).toLowerCase() !== "fk" &&
-        event.target.value !== "") ||
-      event.target.value.length > 49 ||
-      event.target.value.length < 48
-    ) {
-      seterror("Invalid address");
-      setTimeout(() => {
-        seterror("");
-      }, 4000);
+
+    const key = event.target.value;
+
+    if (key !== '') {
+      if (
+        (key.slice(0, 2).toLowerCase() !== "0xfk" && (key.length > 49 || key.length < 49))) {
+        seterror("Invalid address");
+        setTimeout(() => {
+          seterror("");
+        }, 600);
+      }
     }
 
-    setforusKey(event.target.value);
+
+    setforusKey(key);
+
   };
 
-  const setUpStealthAddress = async () => {
-    let key: EC.KeyPair | any;
+  const validateInputs = () => {
 
-    const randomKey = ec.genKeyPair();
-    let ephemeralPublic: EC.KeyPair | any = randomKey.getPublic();
+    if (forusKey === "" || amount === "") {
+      seterror("Please fill the inputs");
+      setTimeout(() => {
+        seterror("");
+      }, 3000);
+      return;
+    }
+  }
+
+
+
+
+
+  //receipent public key (i.e forus key )
+  let rec_fkey: EC.KeyPair | any;
+
+
+
+  //ec keypair use to generate private numbers and public stealth address
+  let rkey: EC.KeyPair = ec.genKeyPair();
+
+  //one time ephemeral public key to be published in logs directory contract
+
+  let ephemeralPkey: any = rkey.getPublic();
+
+
+
+
+
+  const validateForusKey = async () => {
 
     /*
-         removing the prefix "fk" of the forus key then decoding it to generate an stealth address
-    */
+       removing the prefix "fk" of the forus key 
+  */
+
 
     try {
       if (forusKey.slice(0, 2).toLowerCase() === "fk") {
         const _forusKey = forusKey.slice(2);
-        const decodedForusKey = base58.decode(_forusKey);
-        const decodedId = decodedForusKey.subarray(0, 33);
-        key = ec.keyFromPublic(decodedId, "hex");
-      } else { 
-        seterror("Plz enter the valid forus key");
+
+        /*
+         removing the one bytes suffix from the forus key then decoding it to generate an stealth address
+    */
+        let decode_forusKey = base58.decode(_forusKey);
+
+        const decodedkey = decode_forusKey.subarray(0, 33);
+        rec_fkey = ec.keyFromPublic(decodedkey, "hex");
+
+      } else {
+        seterror("Invalid key");
       }
     } catch (e: any) {
       seterror(e.message);
     }
+  }
+  const setUpStealthAddress = async () => {
 
+
+    validateForusKey()
     /*
          Generating the stealth address by doing some elliptic curve calculation here
       */
 
     try {
-      const sharedsecret = randomKey.derive(key.getPublic());
-      const hashedSecret = ec.keyFromPrivate(keccak256(sharedsecret.toArray()));
-      const publicKey =
-        key
-          ?.getPublic()
-          ?.add(hashedSecret.getPublic())
-          ?.encode("array", false)
-          ?.splice(1) || [];
+      const calculateSecret = rkey.derive(rec_fkey.getPublic());
+      const hashedSecret = ec.keyFromPrivate(keccak256(calculateSecret.toArray()));
+      const publicKey = rec_fkey?.getPublic()?.add(hashedSecret.getPublic())?.encode("array", false);
 
-      const address = keccak256(publicKey);
-      const _HexAddress = address.substring(
-        address.length - 40,
-        address.length
-      );
+      //P = H(r*A) * G + B
+
+      //generating wallet address from public key
+
+      const _publicKey = publicKey?.splice(1) || []
+
+      const address = keccak256(_publicKey);
+
+      const _HexAddress = address.slice(-40);
 
       receipentAddress = "0x" + _HexAddress;
 
-      r = "0x" + ephemeralPublic?.getX().toString(16, 64) || "";
-      s = "0x" + ephemeralPublic?.getY().toString(16, 64) || "";
-      v =
-        "0x" +
-        sharedsecret.toArray()[0].toString(16) +
-        sharedsecret.toArray()[1].toString(16);
 
-      // console.log(v);
-      // console.log(`${v.replace("0x", "")}04${r.slice(2)}${s.slice(2)}`);
+      //x and y co-ordinate of ephemeral public key
+      x_cor = "0x" + ephemeralPkey?.getX().toString(16, 64) || "";
+      y_cor = "0x" + ephemeralPkey?.getY().toString(16, 64) || "";
+
+      //2byets shared secret prefixed with ephemeral public key
+      sharedSecret = "0x" + calculateSecret.toArray()[0].toString(16) + calculateSecret.toArray()[1].toString(16);
+
     } catch (e) {
       console.log("error", e);
     }
@@ -168,7 +213,7 @@ const Transfer = () => {
  the keys  */
 
   const storing = async () => {
-    const stored = `${v.replace("0x", "")}04${r.slice(2)}${s.slice(2)}`;
+    const stored = `${sharedSecret.replace("0x", "")}04${x_cor.slice(2)}${y_cor.slice(2)}`;
     try {
       await addDoc(logs, {
         Keys: stored,
@@ -176,34 +221,25 @@ const Transfer = () => {
     } catch (err) {
       console.error(err);
     }
-    console.log("storing...");
+    console.log("storing...", stored);
   };
 
-  const Transfer = async () => {
-    setUpStealthAddress();
-    if (!ethereum) {
-      notyf.error("Please initialize MetaMask");
-      return;
-    }
-    validateChain();
 
-    if (forusKey === "" || amount === "") {
-      seterror("Please enter the forus key");
-      setTimeout(() => {
-        seterror("");
-      }, 4000);
-      return;
-    }
+  const Transfer = async () => {
+
+    if (sessionStorage.getItem("address") === null) accountChecker()
+
+    setUpStealthAddress();
+
+    validateInputs();
+
     setwaiting(true);
 
-    const provider = new ethers.providers.Web3Provider(ethereum);
+    // const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
-    const contract = new ethers.Contract(ContractAddress, Abi, signer);
-    console.log(r,
-      s,
-      v,
-      receipentAddress,
-    )
+    const contract = new ethers.Contract(ContractAddress, Abi.abi, signer);
+
+    console.log(sharedSecret, x_cor, y_cor, receipentAddress,)
 
     try {
       const valueToSend = ethers.utils.parseEther(amount);
@@ -212,22 +248,26 @@ const Transfer = () => {
       };
 
 
-
-      const transferCoin = await contract.Transfer(
-        r,
-        s,
-        v,
+      const transfer = await contract.Transfer(
+        x_cor,
+        y_cor,
+        sharedSecret,
         receipentAddress,
         transactionParameters
       );
 
 
-      const trx = await transferCoin;
+      const trx = await transfer;
       trx.wait
+
       settrxid(txId + trx.hash);
 
-      storing();
-      setamount("");
+
+      // setamount("");
+      // setforusKey("");
+
+      storing()
+      console.log('done')
 
     } catch (e: any) {
       console.log(e);
@@ -240,57 +280,101 @@ const Transfer = () => {
 
 
 
+  // const signing = async () => {
+
+  //   // const provider = new ethers.providers.Web3Provider(ethereum);
+  //   const signer = provider.getSigner();
 
 
+  //   const relayer = new ethers.Wallet("", provider);
+  //   const message = "Hello, World!";
+  //   const messageHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(message));
+
+  //   // Sign the message
+  //   const signedTransaction = await signer.signMessage(ethers.utils.arrayify(messageHash));
+  //   const { v, r, s } = ethers.utils.splitSignature(signedTransaction);
+  //   const signature = ethers.utils.joinSignature({ r, s, v });
+  //   console.log(v, r, s);
+
+  //   const recoveredAddress = ethers.utils.verifyMessage(ethers.utils.arrayify(messageHash), signedTransaction);
+
+  //   console.log('Original Address:', await signer.getAddress());
+  //   console.log('Recovered Address:', recoveredAddress);
 
 
+  //   const tx = {
+  //     to: relayer.address,
+  //     data: signedTransaction,
+  //     value: ethers.utils.parseEther('0.0001'),
+  //   }
 
+
+  //   const txResponse = await relayer.sendTransaction(tx);
+
+
+  //   // const signature = ethers.utils.joinSignature({ r, s, v });
+
+  //   // Recover the public key
+
+  //   const publicKey = ethers.utils.recoverPublicKey(txResponse.hash, signedTransaction);
+
+
+  //   // Derive the Ethereum address from the public key
+  //   const address = ethers.utils.computeAddress(publicKey);
+
+  //   console.log('Recovered Address:', address);
+  //   console.log('hash', txResponse.hash);
+
+
+  //   settrxid(txId + txResponse.hash)
+  // }
 
 
 
   const TransferToken = async () => {
+
     setUpStealthAddress();
-    if (forusKey === "" || amount === "") {
-      seterror("Please enter the address");
-      setTimeout(() => {
-        seterror("");
-      }, 4000);
-      return;
-    }
+
+    validateInputs()
+
     setwaiting(true);
-    const provider = new ethers.providers.Web3Provider(ethereum);
+
+
+    // const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
-    console.log(ContractAddress)
-    const contract = new ethers.Contract(ContractAddress, Abi, signer);
+    // console.log(ContractAddress)
+    const contract = new ethers.Contract(ContractAddress, Abi.abi, signer);
 
 
     try {
       //to send exact amount of tokens are always counted as  amount**18
       const amountParams: any = ethers.utils.parseUnits(amount, 18);
-      console.log(amountParams.toString())
-      console.log(r,v)
+      // console.log(amountParams.toString())
+      // console.log(x_cor,
+      //   y_cor,
+      //   sharedSecret,)
+
       try {
 
-        // const transferCoin=await contract.transfer(receipentAddress, amountParams);
-        const transferERC20 = await contract.TransferToken(
-          r,
-          s,
-          v,
+
+        const transferERC20 = await contract.TransferERC20(
+          x_cor,
+          y_cor,
+          sharedSecret,
           token,
           receipentAddress,
           amountParams
         );
         const trx = await transferERC20;
         settrxid(txId + trx.hash);
-        console.log(receipentAddress)
+        // console.log(receipentAddress)
 
       } catch (err: any) {
         console.log(err.message);
         seterror(err.message);
       }
-      //storing the ephemeral key in db
-      storing();
-      console.log("stored..");
+      storing()
+
     } catch (e: any) {
       console.log(e);
       seterror(e.message);
@@ -299,44 +383,47 @@ const Transfer = () => {
   };
 
   async function approve() {
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const signer = provider.getSigner();
 
-    const contract = new ethers.Contract(token, ERCABI, signer);
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(token, ERC20ABI, signer);
 
 
     try {
-      const res = await contract.allowance(
+      const allowance = await contract.allowance(
         msgSender, ContractAddress
 
       );
 
-      const bigNumber = new BigNumber(res._hex);
-      const allowance: string | any = bigNumber.toNumber() / 10 ** 18;
-      console.log(res.toString())
+      const bigNumber = new BigNumber(allowance._hex);
+      const _allowance: number = bigNumber.toNumber() / 10 ** 18;
 
-      if (allowance < Number(amount)) {
-        setButtonState("approving..");
-    
+
+      if (_allowance < Number(amount)) {
+
         const approvedAmount: any = ethers.utils.parseUnits(amount, 18);
         const approve = await contract.approve(
           ContractAddress,
-          approvedAmount 
-         
+          approvedAmount
+
         );
+        setButtonState("approving..");
+
         const txResponse = await approve;
-        const tx=txResponse.wait
+        const tx = txResponse.wait
         console.log(tx)
+
+
         setButtonState("Transfer");
         notyf.success("approved");
 
         setTimeout(() => {
           TransferToken();
-        }, 3000);
-        
+        }, 2000);
+
       } else {
         TransferToken();
       }
+
     } catch (e: any) {
       console.log(e.message);
       seterror(e.message);
@@ -349,28 +436,30 @@ const Transfer = () => {
       return;
     }
 
-    validateChain();
+    // validateChain();
 
-    const provider = new ethers.providers.Web3Provider(ethereum); //
-    const contract = new ethers.Contract(token, ERCABI, provider);
+    const contract = new ethers.Contract(token, ERC20ABI, provider);
 
     try {
       const balance = await contract.balanceOf(msgSender);
       const bigNumber = new BigNumber(balance._hex);
 
       const tospend: any = bigNumber.toNumber() / 10 ** 18;
+
       if (tospend >= amount) {
         approve();
+
       } else {
         notyf.error("insufficient balance");
       }
     } catch (err: any) {
+
       console.log(err.message);
       seterror(err.message);
     }
   }
 
-  const changedefault = (c: any) => {
+  const changedefaultval = (c: any) => {
     setshow(!show);
     setbyDefault(c.name);
     settoken(c.address);
@@ -388,11 +477,11 @@ const Transfer = () => {
         className="text-bgGray w-[100%] rounded-md 
        "
       >
-        {/* <h2 className="text-[1.3rem] text-left mb-1">Forus Key </h2> */}
+
         <input
-          className="my-4 text-[0.9rem] font-semibold text-gray-400  placeholder:text-gray-500
+          className="my-4 text-[0.9rem] font-semibold text-gray-300  placeholder:text-gray-500
           montserrat-subtitle outline-none px-3 py-3 h-[100%] rounded-md
-           hover:border-cyan-900 w-[100%] bg-[#dedee9] border-2 border-gray-500"
+           hover:border-cyan-900 w-[100%] bg-black/10 border-2 border-gray-600"
           type="text"
           onChange={validatingForuskey}
           placeholder="Enter Your Forus Key"
@@ -400,15 +489,15 @@ const Transfer = () => {
       </div>
       {/* Amount */}
       <div className="text-bgGray w-[100%] pb-4 rounded-md">
-        {/* <h2 className="text-[1.3rem] text-left mb-1">Amount </h2> */}
+
         <div
           className="relative flex items-center  py-1 w-[100%] hover:shadow-sm rounded-md         
        "
         >
           <input
-            className="text-[0.9rem] font-semibold text-gray-400  placeholder:text-gray-500
+            className="text-[0.9rem] font-semibold text-gray-300  placeholder:text-gray-500
           montserrat-subtitle outline-none py-3 px-3 h-[100%] rounded-md
-          hover:border-cyan-900 w-[100%] bg-[#dedee9] border-2 border-gray-500"
+          hover:border-cyan-900 w-[100%] bg-black/10 border-2 border-gray-600"
             value={amount}
             type="text"
             placeholder={`0.1  ${byDefault}`}
@@ -418,8 +507,7 @@ const Transfer = () => {
           <div className="min-w-[95px] absolute right-1 ">
             <ul className="" onClick={() => setshow(!show)}>
               <li
-                className="flex p-2 px-3 cursor-pointer rounded-md 
- font-semibold border-l border-gray-700
+                className="flex p-2 px-3 cursor-pointer rounded-md  font-semibold border-l border-gray-700
             items-center gap-2 text-cyan-500"
               >
                 <p>{byDefault}</p>
@@ -444,7 +532,7 @@ const Transfer = () => {
                     montserrat-small text-[0.8rem]
                     justify-between"
                         key={c.name}
-                        onClick={() => changedefault(c)}
+                        onClick={() => changedefaultval(c)}
                       >
                         <img
                           className=" rounded-lg"
@@ -472,8 +560,8 @@ const Transfer = () => {
               proceed(); // Call proceed function otherwise
             }
           }}
-          className="flex space-x-2 justify-center w-[100%] mx-auto mb-4 my-2 montserrat-subtitle border-1 py-2 montserrat-subtitle  
-          hover:shadow-xl px-6 text-center text-black highlight border border-black 
+          className="flex space-x-2 justify-center w-[100%] mx-auto mb-4 my-2 montserrat-subtitle  py-2 montserrat-subtitle  
+          hover:shadow-xl px-6 text-center text-black highlight 
           rounded-md font-bold  transition-all ease-linear"
         >
           {waiting === false ? (
@@ -496,8 +584,13 @@ const Transfer = () => {
       <p className="montserrat-subtitle text-gray-600 font-semibold flex mx-auto items-center">
         {error}
       </p>
+      {/* <button className="flex space-x-2 justify-center w-[100%] mx-auto mb-4 my-2 montserrat-subtitle  py-2 montserrat-subtitle  
+          hover:shadow-xl px-6 text-center text-black highlight 
+          rounded-md font-bold  transition-all ease-linear" onClick={signing}>
+        sign  </button> */}
+
     </div>
-  );
+  )
 };
 
 export default Transfer;

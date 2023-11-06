@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import Transfer from "./Transfer";
-import Receive from "./Receive";
+import {Receive} from "./Receive"
 
 import { useContext } from "react";
-import { AppContext } from "./Forus";
+import { AppContext } from "./Container";
 import Withdraw from "./Withdraw";
 
 type Props = {};

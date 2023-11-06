@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Wrapper from "./front-page/Wrapper";
-import Forus from "./main/Forus";
+import Forus from "./ui-components/Container";
 
 function App() {
   return (

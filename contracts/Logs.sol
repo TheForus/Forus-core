@@ -11,7 +11,6 @@ import "./IERC721.sol";
 
 import "./SafeMath.sol";
 
-
 /**
  * @title Logs
  * @dev The Logs contract allows users to publish their public keys on  blockchain,
@@ -24,9 +23,7 @@ import "./SafeMath.sol";
  */
 
 contract Logs {
-
     using SafeMath for uint256;
-
 
     // @notice Define a struct to represent public keys
     // @dev 'x_cor' and 'y_cor' are the 32 bytes represent ephemeral key
@@ -111,7 +108,6 @@ contract Logs {
         }
     }
 
-
     // @notice Function to publish public keys
     // @param x_cor & y_cor: 32-byte of ephemeral key
     // @param sharedSecret: 2-bytes of stealth address prefixed with ephemeral key
@@ -120,21 +116,15 @@ contract Logs {
         bytes32 x_cor,
         bytes32 y_cor,
         bytes2 sharedSecret
-
     ) private {
-
         logs.push(publickeys(x_cor, y_cor, sharedSecret));
-
     }
 
-
     // @notice Function to get the length of public keys array
-
 
     function pubKeysLen() public view returns (uint256) {
         return logs.length;
     }
-
 
     // @notice Function to transfer eth to a target stealth address
     // @param x_cor & y_cor: 32-byte ephemeral key
@@ -147,14 +137,7 @@ contract Logs {
         bytes32 y_cor,
         bytes2 sharedSecret,
         address payable target
-    )
-        public
-        payable
-        returns (
-            uint256
-
-        )
-    {
+    ) public payable returns (uint256) {
         // Check that the value being transferred is greater than 0.
         require(msg.value > 0, "Amount should be more than 0");
 
@@ -167,7 +150,7 @@ contract Logs {
         (bool transferSuccess, ) = target.call{value: msg.value}("");
 
         require(transferSuccess, "Transfer to recipient failed");
-       
+
         // Perform calculations and updates using temporary variables
 
         updateTvl(msg.value);
@@ -179,11 +162,8 @@ contract Logs {
         return (msg.value);
     }
 
-
-
-
     // @notice Function to transfer ERC20 tokens to a target stealth address
-     // @param x_cor & y_cor: 32-byte ephemeral key
+    // @param x_cor & y_cor: 32-byte ephemeral key
 
     // @param sharedSecret: 2-byte of stealth address prefixed with ephemeral key
     // @param token: The ERC20 token contract address
@@ -197,10 +177,7 @@ contract Logs {
         address token,
         address target,
         uint256 amount
-
     ) external payable validateTokenAddr(token) {
-
-
         // Check that the amount being transferred is greater than 0
 
         require(amount > 0, "Amount should be more than 0");
@@ -225,13 +202,10 @@ contract Logs {
 
         // Emit an event to log the publication of public keys.
         emit publicKeys(x_cor, y_cor, sharedSecret);
-
     }
 
-
-
     // @notice Function to transfer ERC721 token  to a target stealth address
-     // @param x_cor & y_cor: 32-byte ephemeral key
+    // @param x_cor & y_cor: 32-byte ephemeral key
 
     // @param sharedSecret: 2-byte of stealth address prefixed with ephemeral key
     // @param ERC721Token: The ERC721 token address
@@ -246,7 +220,6 @@ contract Logs {
         address target,
         uint256 tokenId
     ) external {
-
         // Check that ERC721Token is not empty.
 
         require(ERC721Token != address(0x0), " Enter the token address");
@@ -278,25 +251,29 @@ contract Logs {
 
 
 
-    // @notice Function to retrieve a range of public keys
-    // @param initVal: The initial value required to start retreiving public keys
 
-    function retrievePubKeys( uint256 initVal)
+    // @notice Function to retrieve a range of public keys
+    // @param initVal: The initial value required to start retreiving public keys 
+     
+
+    function retrievePubKeys(uint256 initVal)
         public
         view
         returns (publickeys[10] memory)
     {
         publickeys[10] memory Keys;
 
-        uint256 len = logs.length;
-        uint256 end = initVal.add(10);
-        uint256 finalVal = len.min(end);
+        // Ensure initVal is not greater than the length of logs
+        uint256 j = initVal >= logs.length ? logs.length : initVal;
+        uint256 end = j > 10 ? j - 10 : 0;
 
-        for (uint256 i = initVal; i < finalVal; i++) {
-            Keys[i - initVal] = logs[i];
+        for (uint256 i = j; i > end; i--) {
+            // Check if index is within bounds of the logs array
+
+            //10-10=0 , 10-9=1 decrementing i from j and storing in keys
+            Keys[j - i] = logs[i - 1];
         }
 
         return Keys;
     }
-    
 }
