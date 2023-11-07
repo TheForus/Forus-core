@@ -160,7 +160,7 @@ const Keys = (props: Props) => {
             onClick={downloadKeys}
             className="flex cursor-pointer space-x-2 my-1 montserrat-subtitle p-1
              montserrat-subtitle px-6 text-center text-gray-300 rounded-md font-semibold
-              bg-gray-800 border border-gray-600 min-w-max"
+              bg-gray-800   min-w-max"
           >
             <IoDownloadOutline className="text-xl text-inherit" />
             <ToolTip tooltip="Save Signature Key">Store Keys</ToolTip>

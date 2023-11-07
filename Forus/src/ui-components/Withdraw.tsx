@@ -156,8 +156,10 @@ const Withdraw = ({
 
 
   const toggle = () => {
+
     setisInput(!isInput);
     setreceipentAdd(sessionStorage.getItem("address"));
+
   };
 
   return (
@@ -216,6 +218,7 @@ const Withdraw = ({
 
       {/* Withdraw Button */}
       <div className="w-full flex justify-center pt-3 mr-4">
+        
         <button
           onClick={sendTransaction}
           className="flex space-x-2 justify-center w-[100%] mx-auto mb-4 my-2 montserrat-subtitle py-2 

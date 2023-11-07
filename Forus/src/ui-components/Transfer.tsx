@@ -53,7 +53,7 @@ const Transfer = () => {
 
   const msgSender = useMemo(() => {
 
-    sessionStorage.getItem("address");
+    return sessionStorage.getItem("address");
 
   }, [])
 
@@ -444,7 +444,7 @@ const Transfer = () => {
         setTimeout(() => {
 
           TransferToken();
-          
+
         }, 2000);
 
       } else {
