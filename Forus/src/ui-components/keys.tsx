@@ -141,8 +141,8 @@ const Keys = (props: Props) => {
           sm:text-[0.8rem] montserrat-small font-semibold">
             <AiOutlineInfoCircle size={20} color="#fff" className="ml-1" />
             <p className="ml-2">
-              Never reveal the signature. Only Share your forus key to receive
-              funds.
+              Never reveal the signature. Only Share your forus key for confidential
+              transactions.
             </p>
           </div>
         </div>
@@ -160,9 +160,9 @@ const Keys = (props: Props) => {
             onClick={downloadKeys}
             className="flex cursor-pointer space-x-2 my-1 montserrat-subtitle p-1
              montserrat-subtitle px-6 text-center text-gray-300 rounded-md font-semibold
-              bg-gray-700 border border-gray-600 min-w-max"
+              bg-gray-800 border border-gray-600 min-w-max"
           >
-            <IoDownloadOutline className="font-bold text-[#06B3D2] text-xl text-inherit" />
+            <IoDownloadOutline className="text-xl text-inherit" />
             <ToolTip tooltip="Save Signature Key">Store Keys</ToolTip>
           </div>
         </div>

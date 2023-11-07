@@ -333,11 +333,11 @@ export const Receive: React.FC<ChildProps> = ({
             <div className="pt-4 flex justify-between px-6 text-highlight bg-gray-0">
               <div className="flex flex-col space-y-2">
                 <h2 className="text-left montserrat-small font-semibold">Address </h2>
-                <p className="text-gray-600">{z.address}</p>
+                <p className="text-gray-400">{z.address}</p>
               </div>
               <div className="flex flex-col space-y-2">
                 <h2 className="text-left montserrat-small font-semibold">Balance </h2>
-                <p className="text-gray-600">{z.balance}</p>
+                <p className="text-gray-400">{z.balance}</p>
               </div>
               <div className="flex flex-col montserrat-small font-semibold justify-center items-end space-y-2">
                 <h2 className="text-left">Private key </h2>
@@ -345,7 +345,7 @@ export const Receive: React.FC<ChildProps> = ({
                   <ToolTip tooltip="Copy Private key">
                     <AiOutlineCopy
                       onClick={() => copykey(z.key)}
-                      className={`text-gray-600 hover:text-green-400 font-bold cursor-pointer text-[1.2rem]`}
+                      className={`text-gray-400 hover:text-green-400 font-bold cursor-pointer text-[1.2rem]`}
                     />
                   </ToolTip>
                 ) : (

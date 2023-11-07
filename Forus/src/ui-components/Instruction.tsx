@@ -8,7 +8,7 @@ const Instruction = (props: Props) => {
   const { show, totalfunds, totalAddress } = useContext(AppContext);
   return (
     <>
-      <div className="w-[90%] h-full overflow-hidden">
+      <div className="w-[50%] ml-8 h-full overflow-hidden">
         {show === "transfer" ? (
           <div className="flex text-left flex-col gap-3">
             {" "}

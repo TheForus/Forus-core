@@ -48,8 +48,8 @@ const Transactions = (props: Props) => {
 
   return (
     <div
-      className="flex flex-col justify-start items-start sm:px-8 backdrop-blur-[50px]
-      max-w-[500px] hover:backdrop-blur-lg"
+      className="flex flex-col  backdrop-blur-[50px]
+      hover:backdrop-blur-lg"
     >
       <div
         className="max-w-[500px] mx-auto flex montserrat-subheading

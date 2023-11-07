@@ -115,7 +115,7 @@ const NavBar = (props: Props) => {
                 className=" montserrat-subtitle border-1 sm:text-[1rem] text-[0.9rem] px-2 sm:px-4
                rounded-full text-[#e9edf1] font-extrabold border border-gray-500 hover:border-highlight"
               >
-                <ul className="" onMouseEnter={() => setshow(!show)} onMouseLeave={() => setshow(!show)}  >
+                <ul className="" onClick={() => setshow(!show)}  >
                   <li
                     className="flex p-1 px-2 sm:px-4 cursor-pointer rounded-md text-white
                   items-center gap-2 w-full "

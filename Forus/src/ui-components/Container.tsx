@@ -110,7 +110,7 @@ const Forus = (props: Props) => {
       }
     };
 
-    (ethereum) ?  fetchCurrentChainData() : null;
+    (ethereum) ? fetchCurrentChainData() : null;
 
   }, [show, ethereum]);
 
@@ -199,14 +199,14 @@ const Forus = (props: Props) => {
             className="md:w-[90%]  max-w-[1220px] mx-auto
             py-8 p-4"
           >
-            <div className="relative  ml-11  xl:w-[90%] w-[60%] h-full">
+            <div className="relative  ml-14  xl:w-[90%] w-[60%] h-full">
               <div className="border border-gray-500 shadow-gray-800 absolute top-0 right-0 w-full h-full rounded-md 
             bg-gradient-to-tr from-blue-400 to-black/20"></div>
               <Foruskey />
             </div>
             <div
-              className="flex lg:flex-row lg:justify-between lg:py-16 p-3
-          flex-col-reverse items-start pt-16 pb-6"
+              className="flex lg:flex-row lg:justify-between justify-between 
+          flex-col-reverse  pt-16 pb-6 "
             >
               <Instruction />
               <Transactions />
