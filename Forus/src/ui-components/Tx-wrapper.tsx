@@ -9,11 +9,13 @@ import Withdraw from "./Withdraw";
 type Props = {};
 
 const Transactions = (props: Props) => {
+
   const { setShow ,show} = useContext(AppContext);
   const [buttonStatus, setButtonStatus] = useState({
     transfer: true,
     Receive: false,
     withdraw: false,
+    
   });
 
   const [masterkey, setmasterkey] = useState<string | any>("");

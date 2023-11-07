@@ -19,9 +19,10 @@ import { downloadTxt } from "../helpers/downloadTxt";
 import { ethers, BigNumber } from "ethers";
 import { MdHistory, MdOutlineDone } from "react-icons/md";
 import ToolTip from "../helpers/ToopTip";
+import { isDetected } from "../checkers/isDetected.js";
 
 const ec = new EllipticCurve.ec("secp256k1");
-let Abi : any;
+// let Abi: any;
 
 //Combining the publickey with signatureKey to calcuate the private key of stealth address
 
@@ -51,19 +52,17 @@ export const Receive: React.FC<ChildProps> = ({
   let retrievedArray: any[] = [];
 
   const [savedSignaturekey, setsavedSignaturekey] = useState<string>("");
-  const [, setprivatekey] = useState<string>("");
   const [hide, sethide] = useState<boolean>(true);
-  const [, setmatchingkey] = useState<boolean>(false);
   const [err, seterr] = useState<any>(false);
   const [id, setId] = useState<string | any>("");
   const [isfounded, setisfounded] = useState<string>("");
   const [pkCopied, setPkCopied] = useState<boolean>(false);
 
-  const keys = collection(db, "Logs");
+
 
   const [transactionTab, setTransactionTab] = useState(false);
   const [trxList, settrxList] = useState<any>([]);
-  const [trx2List, settrx2List] = useState<any>([]);
+  // const [trx2List, settrx2List] = useState<any>([]);
 
   let array: any[] = [];
 
@@ -108,18 +107,17 @@ export const Receive: React.FC<ChildProps> = ({
     //Array.from(new Set(array))
     settrxList(retrievedArray); // storing retreivedArray in RtrxList state
 
-    console.log("retrievedArray", retrievedArray);
+    // console.log("retrievedArray", retrievedArray);
 
 
   };
 
 
-//   const [index, setIndex] = useState<number>(0)
-//   const [totalLength, setTotalLength] = useState<number>(0)
 
   //verify signature
 
   const verifySignature = ((sign: any) => {
+
     if (sign.startsWith('#forus-signatureKey-')) {
 
       setsavedSignaturekey(sign.replace('#forus-signatureKey-', '').slice(0, 64));
@@ -130,55 +128,13 @@ export const Receive: React.FC<ChildProps> = ({
     }
   })
 
-  console.log('Saved signature key', savedSignaturekey)
-
-//   const fetch = async () => {
-//     try {
-//       const provider = new ethers.providers.Web3Provider(ethereum);
-//       const contract = new ethers.Contract('0x9c08ecf2B23C8d18dF2ec7e38c09e0C04649D7f4', Abi.abi, provider);
-
-//       const response = await contract.getEphKeys(BigNumber.from(index));
-//       setTotalLength(await contract.ephKeysLength())
-//       settrx2List(response)
-//       console.log('response', response);
 
 
 
-//       // Increment index by 10 but not greater than totalLength
-
-//     } catch (error) {
-//       console.error('Error fetching data:', error);
-//     }
-//   };
 
 
-//   useEffect(() => {
 
-//     // Fetch data initially and then every 750 ms
-//     fetch();
-
-//   }, []);
-
-
-//   useEffect(() => {
-
-//     if (totalLength > index) {
-//       setTimeout(() => {
-
-//         setIndex(Math.min(totalLength, index + 10));
-
-
-//       }, 750);
-
-//       fetch()
-
-//     }
-
-
-//   }, [totalLength]);
-
-  console.log('trxlist', trx2List)
-
+  const keys = collection(db, "Logs");
 
   const fetchData = async () => {
 
@@ -197,33 +153,41 @@ export const Receive: React.FC<ChildProps> = ({
 
     //declaring variables type here
 
-    let ephPubKey: EC.KeyPair | any;
-    let sharedSecret;
-    let hashedSecret : any;
-    let prefix: string | any;
+    let keyPair: EC.KeyPair | any;
+    let calculateSecret;
+    let hashedSecret: any;
+    let calculated_ss: string | any;
+    let publicKey : any ;
 
-    logs.forEach((l: any) => {
-        try{
-            ephPubKey = ec.keyFromPublic(l.Keys.slice(4), "hex");
-            sharedSecret = signaturekey.derive(ephPubKey.getPublic()); //
-            hashedSecret = ec.keyFromPrivate(keccak256(sharedSecret.toArray()));
-      
-            prefix = sharedSecret.toArray()[0].toString(16) + sharedSecret.toArray()[1].toString(16);
-            console.log(prefix.toString(), l.Keys.slice(0, 4).toString())
-      
-      
-        }
-        catch(e: any){
-          seterr(e.message);
-          console.log(e.message)
-        }
-   
+    logs.forEach((logs: any) => {
       try {
-        if (prefix.toString() === l.Keys.slice(0, 4).toString()) {
+        
+        publicKey=logs.Keys.slice(4)
+        keyPair = ec.keyFromPublic(publicKey, "hex");
+        calculateSecret = signaturekey.derive(keyPair.getPublic()); //
+        hashedSecret = ec.keyFromPrivate(keccak256(calculateSecret.toArray()));
 
-          setId(l.id);
+        calculated_ss = calculateSecret.toArray()[0].toString(16) + calculateSecret.toArray()[1].toString(16);
+        // console.log(calculated_ss.toString(), publicKey.slice(0, 4).toString())
 
-          setisfounded("founded");
+     //  P = (H(a * R) + b) * G
+     //  P = H(Ar)G + B
+
+      }
+      catch (e: any) {
+        seterr(e.message);
+        console.log(e.message)
+      }
+
+      try {
+        if (calculated_ss.toString() === publicKey.slice(0, 4).toString()) {
+
+          setId(logs.id);
+
+          setisfounded("Founded");
+
+
+          // calculating private key
 
           const _key = signaturekey.getPrivate().add(hashedSecret.getPrivate());
           const privateKey = _key.mod(ec.curve.n);
@@ -242,19 +206,16 @@ export const Receive: React.FC<ChildProps> = ({
 
   const generateprivatekey = (): void => {
 
-    const { ethereum }: any = window;
-    if (!ethereum) {
-      notyf.error("plz initialize metamask");
-      return;
-    }
+    //
 
-    setmatchingkey(true);
+    isDetected()
 
-    let skey: string | any = sessionStorage.getItem("signature");
-    console.log("savedSignature : ", savedSignaturekey);
+
+    let signatureKey: string | any = sessionStorage.getItem("signature");
+
 
     if (savedSignaturekey === "") {
-      signaturekey = ec.keyFromPrivate(skey, "hex");
+      signaturekey = ec.keyFromPrivate(signatureKey, "hex");
     } else {
       signaturekey = ec.keyFromPrivate(savedSignaturekey, "hex");
     }
@@ -266,11 +227,11 @@ export const Receive: React.FC<ChildProps> = ({
       notyf.success("Matched");
     }
 
-    setmatchingkey(false);
+
   };
 
   useEffect(() => {
-    
+
     if (amountTowithdraw > 0) {
       generateprivatekey();
     }
@@ -285,6 +246,7 @@ export const Receive: React.FC<ChildProps> = ({
 
 
   const copykey = (pkey: string) => {
+
     navigator.clipboard.writeText(pkey);
 
     setPkCopied(true);
@@ -354,10 +316,9 @@ export const Receive: React.FC<ChildProps> = ({
                     className={`text-green-500 font-bold text-[1.2rem] text-highlight`}
                   />
                 )}
-                {/* <img alt="" src={copy} className="h-6 w-6 cursor-pointer" /> */}
               </div>
             </div>
-            // <div key={i} className=" text-white ">
+
           ))
         ) : (
           <h1 className="text-center relative top-5 text-xl montserrat-small font-semibold  text-gray-400">

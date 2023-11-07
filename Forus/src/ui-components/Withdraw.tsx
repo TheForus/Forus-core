@@ -19,12 +19,12 @@ const Withdraw = ({
   // amountTowithdraw,
 }: ChildProps) => {
 
-  const [hideInput, sethideInput] = useState<boolean>(false);
+  const [isInput, setisInput] = useState<boolean>(false);
   const notyf = new Notyf();
 
   const useConnect = () => {
     setmasterkey("");
-    sethideInput(true);
+    setisInput(true);
   };
 
   const [isSuccessfull, setisSuccessfull] = useState<string>('withdraw');
@@ -78,13 +78,14 @@ const Withdraw = ({
     });
   };
 
-  const [rec, setrec] = useState<string | any>("");
+  const [receipentAdd, setreceipentAdd] = useState<string | any>("");
   const [error, seterror] = useState<string | ''>('');
 
   const { ethereum }: any = window;
 
   const sendTransaction = async () => {
-    setisSuccessfull('withdrawing !!');
+
+    setisSuccessfull('Withdrawing Amount...');
 
     try {
       const provider = new ethers.providers.Web3Provider(ethereum);
@@ -122,7 +123,7 @@ const Withdraw = ({
       if (amountToSend > gasCostInEther) {
 
         const tx = {
-          to: hideInput === false ? rec : sessionStorage.getItem("address"),
+          to: isInput === false ? receipentAdd : sessionStorage.getItem("address"),
           value: ethers.utils.parseEther(amountToSend),
           gasPrice: gasPrice,
           gasLimit: gasLimit,
@@ -155,24 +156,24 @@ const Withdraw = ({
 
 
   const toggle = () => {
-    sethideInput(!hideInput);
-    setrec(sessionStorage.getItem("address"));
+    setisInput(!isInput);
+    setreceipentAdd(sessionStorage.getItem("address"));
   };
 
   return (
     <div className="pt-5 mx-auto">
       <div className="py-2 flex space-x-4 items-center justify-between">
-        <div className={`flex-1 ${hideInput && 'justify-end'} flex space-x-2 justify-between items-center`}>
-          {hideInput === false ? (
+        <div className={`flex-1 ${isInput && 'justify-end'} flex space-x-2 justify-between items-center`}>
+          {isInput === false ? (
             <input
               type="text"
               className="flex-1 text-[0.9rem] font-semibold text-gray-300  placeholder:text-gray-500
           montserrat-subtitle outline-none px-4 py-3 rounded-md
           hover:border-cyan-900 w-[100%] bg-black/10 border-2 border-gray-600"
               onChange={(e) => {
-                setrec(e.target.value);
+                setreceipentAdd(e.target.value);
               }}
-              placeholder="Enter Recipient Address"
+              placeholder="Enter receipentAddipient Address"
             />
           ) : (
             <h3 className="text-[0.95rem] text-gray-400 montserrat-subtitle font-semibold ">

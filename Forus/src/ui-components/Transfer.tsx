@@ -15,6 +15,7 @@ import { chainOptions } from "../helpers/ChainOptions";
 import "notyf/notyf.min.css";
 import { BiTransfer } from "react-icons/bi";
 import { ERC20ABI } from "../helpers/ERC20ABI";
+import { isDetected } from "../checkers/isDetected";
 
 
 const ec = new EllipticCurve.ec("secp256k1");
@@ -50,11 +51,25 @@ const Transfer = () => {
   const [txId, settxID] = useState<string | "">("");
 
 
-  const msgSender: string | null = sessionStorage.getItem("address");
+  const msgSender = useMemo(() => {
+
+    sessionStorage.getItem("address");
+
+  }, [])
+
+
+  const provider = useMemo(() => {
+
+    return new ethers.providers.Web3Provider(ethereum);
+
+  }, [])
+
 
   var receipentAddress: string;
 
+
   useMemo(() => {
+
     chainOptions.map((chain) => {
 
       if (currentNetwork === chain.name) {
@@ -71,11 +86,7 @@ const Transfer = () => {
 
   }, []);
 
-  let provider = useMemo(() => {
 
-    return new ethers.providers.Web3Provider(ethereum);
-
-  }, [])
 
   // console.log(chainList, currentNetwork, ContractAddress, sessionStorage.getItem("contractAdd"), txId);
 
@@ -90,13 +101,14 @@ const Transfer = () => {
 
   //helpers functuion to validate forus key
 
+
   const validatingForuskey = (event: any) => {
 
     const key = event.target.value;
 
     if (key !== '') {
       if (
-        (key.slice(0, 2).toLowerCase() !== "0xfk" && (key.length > 49 || key.length < 49))) {
+        (key.slice(0, 2).toLowerCase() !== "fk" && (key.length > 49 || key.length < 49))) {
         seterror("Invalid address");
         setTimeout(() => {
           seterror("");
@@ -130,11 +142,11 @@ const Transfer = () => {
 
 
   //ec keypair use to generate private numbers and public stealth address
-  let rkey: EC.KeyPair = ec.genKeyPair();
+  let keypair: EC.KeyPair = ec.genKeyPair();
 
   //one time ephemeral public key to be published in logs directory contract
 
-  let ephemeralPkey: any = rkey.getPublic();
+  let ephemeralPkey: any = keypair.getPublic();
 
 
 
@@ -175,7 +187,7 @@ const Transfer = () => {
       */
 
     try {
-      const calculateSecret = rkey.derive(rec_fkey.getPublic());
+      const calculateSecret = keypair.derive(rec_fkey.getPublic());
       const hashedSecret = ec.keyFromPrivate(keccak256(calculateSecret.toArray()));
       const publicKey = rec_fkey?.getPublic()?.add(hashedSecret.getPublic())?.encode("array", false);
 
@@ -196,7 +208,8 @@ const Transfer = () => {
       x_cor = "0x" + ephemeralPkey?.getX().toString(16, 64) || "";
       y_cor = "0x" + ephemeralPkey?.getY().toString(16, 64) || "";
 
-      //2byets shared secret prefixed with ephemeral public key
+      // 2byets shared secret prefixed with ephemeral public key
+
       sharedSecret = "0x" + calculateSecret.toArray()[0].toString(16) + calculateSecret.toArray()[1].toString(16);
 
     } catch (e) {
@@ -229,17 +242,21 @@ const Transfer = () => {
 
     if (sessionStorage.getItem("address") === null) accountChecker()
 
+    //
+
     setUpStealthAddress();
+
+    //
 
     validateInputs();
 
     setwaiting(true);
 
-    // const provider = new ethers.providers.Web3Provider(ethereum);
+
     const signer = provider.getSigner();
     const contract = new ethers.Contract(ContractAddress, Abi.abi, signer);
 
-    console.log(sharedSecret, x_cor, y_cor, receipentAddress,)
+
 
     try {
       const valueToSend = ethers.utils.parseEther(amount);
@@ -258,7 +275,7 @@ const Transfer = () => {
 
 
       const trx = await transfer;
-      trx.wait
+      await trx.wait
 
       settrxid(txId + trx.hash);
 
@@ -266,8 +283,10 @@ const Transfer = () => {
       // setamount("");
       // setforusKey("");
 
+      //storing public keys in logs
+
       storing()
-      console.log('done')
+
 
     } catch (e: any) {
       console.log(e);
@@ -333,30 +352,29 @@ const Transfer = () => {
 
   const TransferToken = async () => {
 
+    //
+
     setUpStealthAddress();
+
+    //
 
     validateInputs()
 
     setwaiting(true);
 
 
-    // const provider = new ethers.providers.Web3Provider(ethereum);
+
     const signer = provider.getSigner();
-    // console.log(ContractAddress)
     const contract = new ethers.Contract(ContractAddress, Abi.abi, signer);
 
 
     try {
+
       //to send exact amount of tokens are always counted as  amount**18
       const amountParams: any = ethers.utils.parseUnits(amount, 18);
-      // console.log(amountParams.toString())
-      // console.log(x_cor,
-      //   y_cor,
-      //   sharedSecret,)
+
 
       try {
-
-
         const transferERC20 = await contract.TransferERC20(
           x_cor,
           y_cor,
@@ -365,14 +383,20 @@ const Transfer = () => {
           receipentAddress,
           amountParams
         );
+
         const trx = await transferERC20;
+        await trx.wait
+
         settrxid(txId + trx.hash);
-        // console.log(receipentAddress)
+
 
       } catch (err: any) {
         console.log(err.message);
         seterror(err.message);
       }
+
+      //storing in db
+
       storing()
 
     } catch (e: any) {
@@ -406,18 +430,21 @@ const Transfer = () => {
           approvedAmount
 
         );
-        setButtonState("approving..");
+        setButtonState("Approving..");
 
         const txResponse = await approve;
-        const tx = txResponse.wait
-        console.log(tx)
+        await txResponse.wait
+        console.log(txResponse)
 
 
         setButtonState("Transfer");
-        notyf.success("approved");
+
+        notyf.success("Approved");
 
         setTimeout(() => {
+
           TransferToken();
+          
         }, 2000);
 
       } else {
@@ -431,10 +458,11 @@ const Transfer = () => {
   }
 
   async function proceed() {
-    if (!ethereum) {
-      notyf.error("Please initialize MetaMask");
-      return;
-    }
+
+
+    //checking is ethereum connected
+
+    isDetected()
 
     // validateChain();
 
@@ -444,13 +472,13 @@ const Transfer = () => {
       const balance = await contract.balanceOf(msgSender);
       const bigNumber = new BigNumber(balance._hex);
 
-      const tospend: any = bigNumber.toNumber() / 10 ** 18;
+      const erc20Balance: any = bigNumber.toNumber() / 10 ** 18;
 
-      if (tospend >= amount) {
+      if (erc20Balance >= amount) {
         approve();
 
       } else {
-        notyf.error("insufficient balance");
+        notyf.error("insufficient token balance");
       }
     } catch (err: any) {
 
