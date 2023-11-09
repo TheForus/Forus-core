@@ -59,7 +59,7 @@ const Transactions = (props: Props) => {
       >
         <button
           onClick={handleTransferClick}
-          className={`text-left px-6 py-1 border-b-2 border-black
+          className={`text-left sm:px-6 py-1 border-b-2 border-black
         ${buttonStatus.transfer
               ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700"
               : "text-gray-400"
@@ -79,7 +79,7 @@ const Transactions = (props: Props) => {
         </button>
         <button
           onClick={handleWithdrawClick}
-          className={`px-6 py-1 border-b-2 border-black
+          className={`sm:px-6 py-1 border-b-2 border-black
           ${buttonStatus.withdraw
               ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700"
               : "text-gray-400"

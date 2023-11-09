@@ -23,8 +23,8 @@ const Nav = (props: Props) => {
       <div className="flex space-x-1 items-center">
         <Link spy={true} smooth={true} to="howitworks">
           <p
-            className="text-gray-700 hover:text-gray-900 p-1 sm:px-4 rounded-lg 
-            montserrat-subtitle cursor-pointer 
+            className="text-gray-700 hover:text-gray-900 hover:border-highlight p-1 sm:px-4  
+            montserrat-subtitle cursor-pointer border-b border-black
             sm:text-[1.3rem] text-[1.1rem] font-semibold"
           >
             Tutorial
