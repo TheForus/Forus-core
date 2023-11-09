@@ -110,7 +110,7 @@ const Keys = (props: Props) => {
         // style={{ backgroundImage: `url(${})` }}
         className="relative w-full xl:justify-between h-full rounded-md bg-no-repeat 
         flex flex-col lg:flex-row items-start gap-3 lg:gap-6 justify-start py-4 px-3 md:px-6 rounded-t-md z-10
-        bg-gradient-to-tr from-black via-black/90 to-black/60 border-gray-700 border"
+        bg-gradient-to-tr from-black via-black/80 border-gray-700 border"
       >
         <div className="z-10  pb-6 flex flex-col space-y-1 xl:items-start items-start xl:w-max w-full">
           <h1
