@@ -89,7 +89,7 @@ const Transactions = (props: Props) => {
         </button>
       </div>
       {/* below buttons */}
-      <div className="py-1 xl:w-[400px] mx-auto w-[87%]">
+      <div className="py-1 xl:w-[400px] md:w-[80%] mx-auto w-[87%]">
         {buttonStatus.transfer ? (
           <Transfer />
         ) : buttonStatus.Receive ? (

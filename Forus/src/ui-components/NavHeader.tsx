@@ -137,7 +137,7 @@ const NavBar = (props: Props) => {
                   <div
                     className={`
                     "transition-all ease-in py-2 border-none  shadow-md flex flex-col
-                    rounded-b-md absolute -ml-1 mt-0 text-black bg-bgGray z-20
+                    rounded-b-md absolute -ml-1 mt-0 text-black bg-[#c6fffb] z-20
                     ${show ? "opacity-100" : "opacity-0"}`
                     }
                     onMouseLeave={() => setshow(false)}

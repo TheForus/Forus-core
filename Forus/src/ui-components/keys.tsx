@@ -105,7 +105,7 @@ const Keys = (props: Props) => {
 
 
   return (
-    <main>
+    <main className="shadow-2xl shadow-[#1f2a3af3]">
       <div
         // style={{ backgroundImage: `url(${})` }}
         className="relative w-full xl:justify-between h-full rounded-md bg-no-repeat 
