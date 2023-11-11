@@ -365,7 +365,7 @@ export const Receive: React.FC<ChildProps> = ({
 
           ))
         ) : (
-          <h1 className="text-center relative top-5 text-xl montserrat-small font-semibold  text-gray-400">
+          <h1 className="mb-12 text-center relative top-5 text-xl montserrat-small font-semibold  text-red-400">
             No Transactions Recorded !
           </h1>
         )

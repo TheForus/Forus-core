@@ -8,7 +8,7 @@ const Instruction = (props: Props) => {
   const { show, totalfunds, totalAddress } = useContext(AppContext);
   return (
     <>
-      <div className="w-[50%] ml-8 h-full overflow-hidden">
+      <div className="sm:w-[50%] md:w-[80%] ml-8 h-full overflow-hidden">
         {show === "transfer" ? (
           <div className="flex text-left flex-col gap-3">
             {" "}
@@ -16,7 +16,7 @@ const Instruction = (props: Props) => {
             <h1 className="montserrat-subheading  text-gray-300 font-semibold text-[1.5rem]">
               Transfer
             </h1>
-            <div className="py-4 montserrat-heading  text-gray-300 flex flex-col gap-4 items-start">
+            <div className="w-full py-4 montserrat-heading  text-gray-300 flex flex-col gap-4 items-start">
               <div className="flex space-x-2 ">
                 <MdVerifiedUser className="text-highlight "size={29} />
                 <p className="flex-1">

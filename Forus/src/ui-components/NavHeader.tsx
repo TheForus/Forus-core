@@ -48,7 +48,7 @@ const NavBar = (props: Props) => {
   };
 
   return (
-    <div className=" mx-auto max-w-[1300px] pb-12 pt-4 sm:pt-8   ">
+    <div className="relative mx-auto max-w-[1300px] pb-12 pt-4 sm:pt-8   ">
       <div className="sm:px-7 px-4 flex justify-between">
         {/* leftside logo */}
         <div
@@ -62,7 +62,7 @@ const NavBar = (props: Props) => {
             </h1>
           </div>
           {/* Navigation Buttons */}
-          <div className="flex items-center space-x-8">
+          <div className="flex items-center sm:space-x-8">
             <button
               onClick={() => navigate("/")}
               className="flex md:flex-row flex-col items-center transition-all ease-linear
@@ -70,7 +70,7 @@ const NavBar = (props: Props) => {
                 montserrat-subtitle underline-offset-8 font-bold hover:underline decoration-bgGray  sm:text-[1.1rem] text-[0.8rem]"
             >
               <IoMdHome size={23} className="md:self-start  text-gray-300 " />
-              <p className="sm:inline-flex hidde text-gray-300  n">Home</p>
+              <p className="sm:inline-flex hidden text-gray-300  n">Home</p>
             </button>
 
             <div
@@ -93,32 +93,39 @@ const NavBar = (props: Props) => {
         {/* rigt side */}
         <div className="sm:flex-row flex space-x-3 items-center">
           {/* Social Links */}
-          <div className="lg:flex space-x-3 items-center hidden">
-            <p className=" text-gray-300 ">
-              <a href="https://discord.gg/keQnv2K8HP">
-                <FaDiscord size={22} />
-              </a>
-            </p>
-            <p className="  text-gray-300  ">
-              <a href="https://github.com/TheForus">
-                <FaGithub size={22} />
-              </a>
-            </p>
-            <p className="  text-gray-300  ">
-              <a href="https://twitter.com/The_Forus">
-                <FaTwitter size={22} />
-              </a>
-            </p>
+          <div className="lg:flex space-x-3 items-center">
+            <div className="lg:flex space-x-3 items-center hidden">
+              <p className=" text-gray-300 ">
+                <a href="https://discord.gg/keQnv2K8HP">
+                  <FaDiscord size={22} />
+                </a>
+              </p>
+              <p className="  text-gray-300  ">
+                <a href="https://github.com/TheForus">
+                  <FaGithub size={22} />
+                </a>
+              </p>
+              <p className="  text-gray-300  ">
+                <a href="https://twitter.com/The_Forus">
+                  <FaTwitter size={22} />
+                </a>
+              </p>
+            </div>
 
             {sessionStorage.getItem("address") !== null && (
               <div
-                className=" montserrat-subtitle border-1 sm:text-[1rem] text-[0.9rem] px-2 sm:px-4
-               rounded-full text-[#e9edf1] font-extrabold border border-gray-500 hover:border-highlight"
+                className="sm:static absolute left-3 bottom-2 montserrat-subtitle border-1 
+              sm:text-[1rem] text-[0.9rem] px-2 sm:px-4
+             rounded-full text-[#e9edf1] font-extrabold border border-gray-500 hover:border-highlight"
               >
-                <ul className="" onClick={() => setshow(!show)}  >
+                <ul
+                  className=""
+                  onMouseEnter={() => setshow(true)}
+                  onMouseLeave={() => setshow(false)}
+                >
                   <li
                     className="flex p-1 px-2 sm:px-4 cursor-pointer rounded-md text-white
-                  items-center gap-2 w-full "
+                items-center gap-2 w-full lg:text-[0.9rem] text-[0.8rem]"
                   >
                     {sessionStorage.getItem("chain")}
                     {!show ? (
@@ -129,16 +136,15 @@ const NavBar = (props: Props) => {
                   </li>
                   <div
                     className={`
-              ${show &&
-                      `transition-all ease-in py-2 border-none  shadow-md flex flex-col
-                 rounded-b-md absolute ml-1 mt-1 text-black bg-bgGray z-10 `
-                      }
-            `}
+                    "transition-all ease-in py-2 border-none  shadow-md flex flex-col
+                    rounded-b-md absolute -ml-1 mt-0 text-black bg-[#c6fffb] z-20
+                    ${show ? "opacity-100" : "opacity-0"}`
+                    }
+                    onMouseLeave={() => setshow(false)}
                   >
                     {show &&
                       connect.chainOptions.map((chain: any) => (
                         <div className=" hover:bg-slate-500">
-
                           <li
                             className="flex flex-row-reverse p-1 px-4 cursor-pointer
                            font-semibold
