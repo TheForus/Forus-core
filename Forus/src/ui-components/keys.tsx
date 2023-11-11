@@ -61,7 +61,7 @@ const Keys = (props: Props) => {
       uint8PubKey.set(uint8publicKey);
       uint8PubKey.set(checkSum, uint8publicKey.length);
 
-      //adding a single byte prefix "0xfk" to the public key (i.e forus key)
+      //adding a single byte prefix "fk" to the public key (i.e forus key)
 
       const _foruskey: string = "Fk" + base58.encode(uint8PubKey);
       sessionStorage.setItem("foruskey", _foruskey);
@@ -97,7 +97,7 @@ const Keys = (props: Props) => {
 
 
     let signature = sessionStorage.getItem('signature');
-    let forusKey = sessionStorage.getItem('foruskey');
+    let forusKey  =  sessionStorage.getItem('foruskey');
     const content = `#forus-signatureKey-${signature}\nforusKey-${forusKey}`;
     downloadTxt(content, 'forus-keys.txt');
   };

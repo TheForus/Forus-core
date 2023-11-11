@@ -8,7 +8,8 @@ import dai from "../assets/dai.png"
 import eth from "../assets/eth.png"
 import ftm from "../assets/chains/fantomTestnet.png"
 import arb from "../assets/chains/ARB.png"
-import avax from "../assets/avax.png"
+// import avax from "../assets/avax.png"
+import matic from "../assets/chains/matic.png"
 
 
 
@@ -121,6 +122,18 @@ export const chainOptions: chain[] = [
             { name: "ETH", address: "", symbol: eth },
             { name: "USDC", address: "0xfafedb041c0dd4fa2dc0d87a6b0979ee6fa7af5f", symbol: link },
             { name: "USDT", address: "0x40afC1AD5Ba35164b578C8c971B366ECE07C200A", symbol: USDT },
+            { name: "DAI", address: "0x9440c3bb6adb5f0d5b8a460d8a8c010690dac2e8", symbol: dai },
+
+
+        ]
+    },
+
+    {
+        name: "Mumbai", contract: '0x60BA717Dd36b84557E46690c6163De5dbDc6F6bb', chainId: "0x13881", symbol: matic, currency: { symbol: "MATIC", decimals: 18 }, rpcs: ['https://rpc-mumbai.maticvigil.com'], url: "https://mumbai.polygonscan.com/tx/", tokens: [
+
+
+            { name: "MATIC", address: "", symbol: matic },
+            { name: "USDT", address: "0x211554151f2f00305f33530fdd3a5d0354927a65", symbol: USDT },
             { name: "DAI", address: "0x9440c3bb6adb5f0d5b8a460d8a8c010690dac2e8", symbol: dai },
 
 

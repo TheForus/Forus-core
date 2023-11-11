@@ -8,6 +8,13 @@ const config: HardhatUserConfig = {
   solidity: "0.8.16",
   
   networks: {
+
+    mumbai: {
+      url: process.env.POLYGON_RPC_URL,
+      accounts: [process.env.PRIVATE_KEY!]
+    }
+,
+
     // PEGOTestnet : {
 
     //   url: process.env.PEGO_API_URL,
@@ -22,10 +29,10 @@ const config: HardhatUserConfig = {
     //   url: process.env.ARBITRUM_API_URL,
     //   accounts: [process.env.PRIVATE_KEY!]
     // },
-    sepolia: {
-      url: process.env.ALCHEMY_API_URL,
-      accounts: [process.env.PRIVATE_KEY!]
-    },
+    // sepolia: {
+    //   url: process.env.ALCHEMY_API_URL,
+    //   accounts: [process.env.PRIVATE_KEY!]
+    // },
     // goerli: {
     //   url: process.env.ALCHEMY_API_URL,
     //   accounts: [process.env.PRIVATE_KEY!]
@@ -49,5 +56,13 @@ const config: HardhatUserConfig = {
 // 0x6C18c89ABCF1b2d01D8cA5C0e130258634f01586 pego
 
 export default config;
-
+// Network name
+// Polygon zkEVM
+// Network URL
+// https://rpc.ankr.com/polygon_zkevm
+// Chain ID
+// 1101
+// Currency symbol
+// ETH
+// View all details
 

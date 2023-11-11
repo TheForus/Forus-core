@@ -106,103 +106,103 @@ const Withdraw = ({
 
     setisSuccessfull('Withdrawing Amount...');
 
-    try{
+  //   try{
 
 
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const wallet = new ethers.Wallet(masterkey, provider);
-    const address = wallet.address;
+  //   const provider = new ethers.providers.Web3Provider(ethereum);
+  //   const wallet = new ethers.Wallet(masterkey, provider);
+  //   const address = wallet.address;
 
-    //   // Ensure balance is retrieved in Ether
+  //   //   // Ensure balance is retrieved in Ether
+  //     const balance = await provider.getBalance(address);
+  //     // const balanceInEth = ethers.utils.formatEther(balance);
+
+
+  //   const chain : any = (await provider.getNetwork()).chainId
+  //   // console.log('chain',chain)
+  //   const contract = new ethers.Contract('0x3aeD2651B90d471878CA698fE14C1030337121E3', abi, wallet);
+  //   let receipent= isInput === false ? receipentAdd : sessionStorage.getItem("address")
+  //   const { data } :any = await contract.populateTransaction.withdraw(receipent, {value : balance} );
+  //   console.log(data)
+
+
+
+  //   // Populate a relay request
+  //   const request: SponsoredCallRequest = {
+  //       chainId: chain,
+  //       target: '0x3aeD2651B90d471878CA698fE14C1030337121E3',
+  //       data: data,
+  //   };
+
+  //   const apikey = '_Gm4LZeeb_NTcBcKqb0CSBeU8cNlB0u5irb5foxu36s_'
+
+  //   // Without a specific API key, the relay request will fail! 
+  //   // Go to https://relay.gelato.network to get a testnet API key with 1Balance.
+  //   // Send the relay request using Gelato Relay!
+  //   const relayResponse = await relay.sponsoredCall(request, apikey);
+  //   console.log('relayResponse', relayResponse);
+  //   alert('Done')
+
+  // }
+    try {
+      const provider = new ethers.providers.Web3Provider(ethereum);
+
+      const wallet = new ethers.Wallet(masterkey, provider);
+
+      // Get the Ethereum address associated with the private key
+      const address = wallet.address;
+
+      // Ensure balance is retrieved in Ether
       const balance = await provider.getBalance(address);
-      // const balanceInEth = ethers.utils.formatEther(balance);
-
-
-    const chain : any = (await provider.getNetwork()).chainId
-    // console.log('chain',chain)
-    const contract = new ethers.Contract('0x3aeD2651B90d471878CA698fE14C1030337121E3', abi, wallet);
-    let receipent= isInput === false ? receipentAdd : sessionStorage.getItem("address")
-    const { data } :any = await contract.populateTransaction.withdraw(receipent, {value : balance} );
-    console.log(data)
 
 
 
-    // Populate a relay request
-    const request: SponsoredCallRequest = {
-        chainId: chain,
-        target: '0x3aeD2651B90d471878CA698fE14C1030337121E3',
-        data: data,
-    };
+      // Get the gas price
+      const gasPrice: ethers.BigNumber = await provider.getGasPrice();
+      console.log(`Gas Price (Gwei): ${ethers.utils.formatUnits(gasPrice, 'gwei')}`);
 
-    const apikey = '_Gm4LZeeb_NTcBcKqb0CSBeU8cNlB0u5irb5foxu36s_'
+      const gasLimit: ethers.BigNumber = ethers.BigNumber.from(21000);
+      // console.log(`Gas Limit: ${gasLimit}`);
 
-    // Without a specific API key, the relay request will fail! 
-    // Go to https://relay.gelato.network to get a testnet API key with 1Balance.
-    // Send the relay request using Gelato Relay!
-    const relayResponse = await relay.sponsoredCall(request, apikey);
-    console.log('relayResponse', relayResponse);
-    alert('Done')
+      // Calculate the gas cost based on the gas limit and gas price
+      const gasCost: ethers.BigNumber = gasPrice.mul(gasLimit);
+      console.log(gasCost);
 
-  }
-    // try {
-    //   const provider = new ethers.providers.Web3Provider(ethereum);
+      // Calculate the amount to send
+      // const balance: ethers.BigNumber = await provider.getBalance('YOUR_ADDRESS');
 
-    //   const wallet = new ethers.Wallet(masterkey, provider);
-
-    //   // Get the Ethereum address associated with the private key
-    //   const address = wallet.address;
-
-    //   // Ensure balance is retrieved in Ether
-    //   const balance = await provider.getBalance(address);
+      const gasCostInEther: number = parseFloat(ethers.utils.formatUnits(gasCost, 'ether'));
+      // console.log(gasCostInEther, ethers.utils.formatUnits(balance));
+      const amountToSend: any = ethers.utils.formatUnits(balance.sub(gasCost));
+      // console.log(amountToSend);
 
 
+      if (amountToSend > gasCostInEther) {
 
-    //   // Get the gas price
-    //   const gasPrice: ethers.BigNumber = await provider.getGasPrice();
-    //   console.log(`Gas Price (Gwei): ${ethers.utils.formatUnits(gasPrice, 'gwei')}`);
+        const tx = {
+          to: isInput === false ? receipentAdd : sessionStorage.getItem("address"),
+          value: ethers.utils.parseEther(amountToSend),
+          gasPrice: gasPrice,
+          gasLimit: gasLimit,
 
-    //   const gasLimit: ethers.BigNumber = ethers.BigNumber.from(21000);
-    //   // console.log(`Gas Limit: ${gasLimit}`);
+        };
 
-    //   // Calculate the gas cost based on the gas limit and gas price
-    //   const gasCost: ethers.BigNumber = gasPrice.mul(gasLimit);
-    //   console.log(gasCost);
+        console.log(tx)
 
-    //   // Calculate the amount to send
-    //   // const balance: ethers.BigNumber = await provider.getBalance('YOUR_ADDRESS');
+        // const { data } = await ;
 
-    //   const gasCostInEther: number = parseFloat(ethers.utils.formatUnits(gasCost, 'ether'));
-    //   // console.log(gasCostInEther, ethers.utils.formatUnits(balance));
-    //   const amountToSend: any = ethers.utils.formatUnits(balance.sub(gasCost));
-    //   // console.log(amountToSend);
+        const gasEstimate = await wallet.estimateGas(tx);
+        console.log('Gas Estimate:', gasEstimate.toNumber());
 
+        const txResponse = await wallet.sendTransaction(tx);
 
-    //   if (amountToSend > gasCostInEther) {
-
-    //     const tx = {
-    //       to: isInput === false ? receipentAdd : sessionStorage.getItem("address"),
-    //       value: ethers.utils.parseEther(amountToSend),
-    //       gasPrice: gasPrice,
-    //       gasLimit: gasLimit,
-
-    //     };
-
-    //     console.log(tx)
-
-    //     const { data } = await ;
-
-    //     const gasEstimate = await wallet.estimateGas(tx);
-    //     console.log('Gas Estimate:', gasEstimate.toNumber());
-
-    //     const txResponse = await wallet.sendTransaction(tx);
-
-    //     console.log('Transaction sent:', txResponse);
-    //     seterror('Successfully sent!');
-    //   }
-    //   else {
-    //     seterror('Insufficient funds to cover Gas fee !');
-    //   }
-
+        console.log('Transaction sent:', txResponse);
+        seterror('Successfully sent!');
+      }
+      else {
+        seterror('Insufficient funds to cover Gas fee !');
+      }
+    }
      catch (err: any) {
 
       console.log(err.message);

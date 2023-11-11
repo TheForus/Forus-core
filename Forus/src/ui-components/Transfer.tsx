@@ -255,7 +255,9 @@ const Transfer = () => {
 
     const signer = provider.getSigner();
     const contract = new ethers.Contract(ContractAddress, Abi.abi, signer);
+    console.log(ContractAddress)
 
+    console.log(receipentAddress,)
 
 
     try {
@@ -272,10 +274,10 @@ const Transfer = () => {
         receipentAddress,
         transactionParameters
       );
-
+ 
 
       const trx = await transfer;
-      await trx.wait
+      // await trx.wait
 
       settrxid(txId + trx.hash);
 

@@ -70,7 +70,7 @@ export const Receive: React.FC<ChildProps> = ({
     const selectedChain = chainOptions.find((item) => currentNetwork === item.name);
     return selectedChain ? selectedChain.contract : null;
 
-  }, [chainOptions, currentNetwork]);
+  }, [chainOptions, currentNetwork ,ethereum]);
 
 
 
@@ -87,7 +87,7 @@ export const Receive: React.FC<ChildProps> = ({
 
     return new ethers.Contract(contractaddress, Abi.abi, provider);
 
-  }, [])
+  }, [ethereum ,])
 
 
 
