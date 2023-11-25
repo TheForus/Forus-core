@@ -12,6 +12,7 @@ import HeaderRibbon from "../components/HeaderRibbon";
 import { ValidateChainData } from "../checkers/ValidateChainData";
 import { SwitchChain } from "../helpers/SwitchChain"
 import { isDetected } from "../checkers/isDetected";
+import CopyRight  from "./CopyRight"
 
 type Props = {};
 
@@ -214,7 +215,9 @@ const Forus = (props: Props) => {
               <Transactions />
             </div>
           </div>
+          <CopyRight/>
         </div>
+ 
       </div>
     </AppContext.Provider>
   );

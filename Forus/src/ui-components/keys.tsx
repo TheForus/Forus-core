@@ -14,6 +14,7 @@ import { MdOutlineDone } from "react-icons/md";
 // import { useHistory } from "react-router-dom" ; 
 
 
+
 const ec = new EllipticCurve.ec("secp256k1");
 
 type Props = {};
@@ -26,7 +27,7 @@ const Keys = (props: Props) => {
   // const history = useHistory();
 
   const [ForusKey, setForusKey] = useState<string | any>("");
-  const [, setstoredsignatureKey] = useState<string | any>("");
+  // const [, setstoredsignatureKey] = useState<string | any>("");
   const [addressCopied, setAddressCopied] = useState<boolean>(false);
 
   //generating the cp address and secret key
@@ -92,8 +93,8 @@ const Keys = (props: Props) => {
     navigator.clipboard.writeText(`https://forus.live/forus?key=${ForusKey}`);
     notyf.success("Copied");
     setAddressCopied(true);
+  
 
-    // history.push(`/other-page?key=${ForusKey}`);
   };
 
 

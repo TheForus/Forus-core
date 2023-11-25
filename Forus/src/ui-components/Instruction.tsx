@@ -63,7 +63,7 @@ const Instruction = (props: Props) => {
               <div className="flex space-x-2">
                 <MdVerifiedUser className="text-highlight "size={29} />
                 <p className="flex-1">
-                  Click on view transaction to see the list of transaction sent to your forus key.
+                  Click on view transaction to see the list of transaction sent through your forus key.
                 </p>
               </div>
 

@@ -8,3 +8,4 @@ module.exports = {
   },
   plugins: [],
 }
+// c:/Users/HomePC/Desktop/Dekstop/theforus/Forus-core/Forus/tailwind.config.js

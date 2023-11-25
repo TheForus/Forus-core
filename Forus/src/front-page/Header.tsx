@@ -44,7 +44,7 @@ const Header = () => {
           >
             {/* Breaking the link between sender and receiver. Safeguard Your
             Financial Interactions with Cutting-edge Cryptography. */}
-            Get funds confidentially without sharing wallet address !!
+            Get funds privately without sharing wallet address !!
           </p>
           <button
             className="border-1 montserrat-subtitle  

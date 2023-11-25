@@ -22,7 +22,7 @@ const HeaderRibbon = () => {
           <div className="cursor-pointer montserrat-small font-semibold flex justify-center hover:text-white text-gray-100 items-center">
           <AiOutlineInfoCircle className="text-[1.2rem]"    size={24}/>
             <h4 className="text-[.7rem] ml-2 xl:text-[.9rem] text-inherit">
-              Welcome To Forus ( Live on Testnets )
+              Welcome To Forus ( Testing phase )
             </h4>
             <span>
               <GoChevronRight className="ml-2 text-[1.4rem] text-inherit" />

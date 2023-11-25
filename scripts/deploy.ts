@@ -25,5 +25,3 @@ main()
     process.exit(1);
   });
 
-  //SafeMath deployed at: 0x7eb471567d4f93D6286C8026a65Fd5016D1aA23A
-// Logs deployed at: 0x7ae827b45BDaCaF809F1f4fd633D15045eb8271b

@@ -47,9 +47,9 @@ const Qna = (props: Props) => {
         </h4>
         {showAnswers[0] && (
           <p className=" w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
-            Generate a forus key and save it with its corresponding signature . Store your signature in a secure place and share only your forus key with sender and ask him to send you funds on your forus key
-            through https://forus.live . When he initates the the transaction to your forus key a new unknown address would be generated which only you are able to access by the help of your saved signature key.
-            In short : By using forus you can receive funds through stealth addresses , without sharing any personal address with anyone!
+            Generate a forus key and store it with its corresponding signature . Now share only your forus key (or you can also share its "link" ) with sender and ask him to send you funds
+            through https://forus.live/forus . When he initates the the transaction using your forus key a new unknown address would be generated with the funds he sent, which only you are able to access by the help of your saved signature key.
+           
 
           </p>
         )}
@@ -77,9 +77,9 @@ const Qna = (props: Props) => {
         </h4>
         {showAnswers[1] && (
           <p className=" w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
-            forus employs secure stealth addresses and a one-time public key
+            Forus employs secure stealth addresses and a one-time public key
             mechanism, making it hard to trace or monitor
-            transactions by anyone else. This ensures enhanced privacy and
+transactions by anyone else. This ensures enhanced privacy and
             confidentiality.
           </p>
         )}
@@ -89,7 +89,7 @@ const Qna = (props: Props) => {
         lg:text-lg cursor-pointer flex items-center
          montserrat-subheading py-4 text-gray-600 gap-16`}
         >
-          3: What is signature in forus?
+          3: What is signature key in forus?
           <span>
             {showAnswers[2] ? (
               <IoAddSharp
@@ -108,7 +108,7 @@ const Qna = (props: Props) => {
           <p className="dark:text-gray-300 w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
             "Signature" is the 32 bytes random key works as a private key of your forus key
             Its a key to unlock funds on the stealth address generated from your forus key . So when you share your forus key
-            with the sender always save its corresponding signature in a secure place
+            with the sender always save its corresponding signature in a secure place.
           </p>
         )}
         <h4
@@ -136,8 +136,8 @@ const Qna = (props: Props) => {
         {showAnswers[3] && (
           <p className=" w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
             Simply click the "generate" button , and a unique Forus key will be
-            generated for you. Make sure to save the accompanying signature key
-            in a secure location for future use.
+            generated for you . Make sure to save the accompanying signature key
+            in a secure location .
           </p>
         )}
         <h4
@@ -164,7 +164,7 @@ const Qna = (props: Props) => {
         </h4>
         {showAnswers[4] && (
           <p className=" w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
-            You can retrieve your private key by clicking on the "scan"
+            You can retrieve the private key of stealth address by clicking on the "scan"
             button and by pasting your signature key in the destinated input . This will allow
             you to access the specific stealth address where the funds have been sent.
           </p>
@@ -224,36 +224,12 @@ const Qna = (props: Props) => {
         </h4>
         {showAnswers[6] && (
           <p className=" w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
-            Signature key works like private key of forus key if u lost it you could never retreive the funds sent from your forus key . Well ! its crutial to always save the signature key of your forus key if u have lost the signature key you are done .One thing you can generate a new foruskey and save corresponding signature and ask the sender to use that forus key to send funds to get save from stolen funds in future.
+            Signature key works like private key of forus key if u lost it you could never retreive the funds sent with the help of your forus key . Well ! its crutial to always save the keys after generating.
           </p>
         )}
 
-        <h4
-          onClick={() => toggleAnswer(7)}
-          className={`${showAnswers[7]} text-left justify-between w-full  hover:text-gray-700
-        lg:text-lg cursor-pointer flex items-center
-         montserrat-subheading py-4 text-gray-600 gap-16`}
-        >
-          8: What if i lost my Forus key?
-          <span>
-            {showAnswers[7] ? (
-              <IoAddSharp
-                color="#131619"
-                className="lg:text-4xl text-3xl rotate-45 transition-all duration-100"
-              />
-            ) : (
-              <IoAddSharp
-                color="#131619"
-                className="lg:text-4xl text-3xl duration-100"
-              />
-            )}
-          </span>
-        </h4>
-        {showAnswers[7] && (
-          <p className=" w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
-            Generate New ;) and save its corresponding signature
-          </p>
-        )}
+   
+        
       </div>
     </div>
   );
