@@ -9,7 +9,6 @@ import {
   AiOutlineScan,
   AiOutlineShrink,
 } from "react-icons/ai";
-import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import { downloadTxt } from "../helpers/downloadTxt";
 import { ethers, BigNumber } from "ethers";
@@ -37,7 +36,7 @@ interface ChildProps {
 export const Receive: React.FC<ChildProps> = ({
   withdrawFunction,
   setmasterkey,
-  setamountTowithdraw,
+  // setamountTowithdraw,
 
 
 }) => {

@@ -1,15 +1,14 @@
-import goerli from "../assets/chains/goerli.png";
+
 // import sepolia from "../assets/chains/sepolia.jpeg";
-import fantom from "../assets/chains/fantomTestnet.png";
+
 import USDT from '../assets/usdt.png'
-import pego from "../assets/pego.png"
 import link from "../assets/link.png"
 import dai from "../assets/dai.png"
 import eth from "../assets/eth.png"
-import ftm from "../assets/chains/fantomTestnet.png"
 import arb from "../assets/chains/ARB.png"
 // import avax from "../assets/avax.png"
 import matic from "../assets/chains/matic.png"
+import klay from "../assets/klay.png"
 
 
 
@@ -41,6 +40,24 @@ interface chain {
 
 
 export const chainOptions: chain[] = [
+
+
+   
+    {
+        name: "Klaytn Testnet Baobab", contract: '0x60BA717Dd36b84557E46690c6163De5dbDc6F6bb', chainId: "0x3e9", symbol: klay, currency: { symbol: "KLAY", decimals: 18 }, rpcs: ['https://public-en-baobab.klaytn.net'], url: "https://klaytnscope.com/tx/", tokens: [
+
+
+            { name: "KLAY", address: "", symbol: klay },
+            { name: "USDT", address: "0x211554151f2f00305f33530fdd3a5d0354927a65", symbol: USDT },
+            { name: "DAI", address: "0x9440c3bb6adb5f0d5b8a460d8a8c010690dac2e8", symbol: dai },
+
+
+        ]
+    },
+
+
+
+
     {
         name: "Arbitrum Sepolia Testnet", contract: '0x6C18c89ABCF1b2d01D8cA5C0e130258634f01586', chainId: "0x66eee", symbol: arb, currency: { symbol: "ETH", decimals: 18 }, rpcs: ['https://sepolia-rollup.arbitrum.io/rpc'], url: "https://sepolia-explorer.arbitrum.io/tx/", tokens: [
 
@@ -77,18 +94,18 @@ export const chainOptions: chain[] = [
     //     ]
     // },
 
-    {
-        name: "Fantom Testnet", contract: '0x48b96fF6D5027f6b8bDc9D2FcC13559bf63829Fc', chainId: "0xfa2", symbol: fantom, currency: { symbol: "FTM", decimals: 18 }, rpcs: ['https://rpc.testnet.fantom.network'], url: "https://explorer.testnet.fantom.network/transactions/", tokens: [
+    // {
+    //     name: "Fantom Testnet", contract: '0x48b96fF6D5027f6b8bDc9D2FcC13559bf63829Fc', chainId: "0xfa2", symbol: fantom, currency: { symbol: "FTM", decimals: 18 }, rpcs: ['https://rpc.testnet.fantom.network'], url: "https://explorer.testnet.fantom.network/transactions/", tokens: [
 
 
-            { name: "FTM", address: "", symbol: ftm },
-            { name: "USDC", address: "0xfafedb041c0dd4fa2dc0d87a6b0979ee6fa7af5f", symbol: link },
-            { name: "USDT", address: "0x40afC1AD5Ba35164b578C8c971B366ECE07C200A", symbol: USDT },
-            { name: "DAI", address: "0x9440c3bb6adb5f0d5b8a460d8a8c010690dac2e8", symbol: dai },
+    //         { name: "FTM", address: "", symbol: ftm },
+    //         { name: "USDC", address: "0xfafedb041c0dd4fa2dc0d87a6b0979ee6fa7af5f", symbol: link },
+    //         { name: "USDT", address: "0x40afC1AD5Ba35164b578C8c971B366ECE07C200A", symbol: USDT },
+    //         { name: "DAI", address: "0x9440c3bb6adb5f0d5b8a460d8a8c010690dac2e8", symbol: dai },
 
 
-        ]
-    },
+    //     ]
+    // },
    
     // {
     //     name: "Eos Testnet", contract: '0x60BA717Dd36b84557E46690c6163De5dbDc6F6bb', chainId: "0x3cc5", symbol: goerli, currency: { symbol: "EOS", decimals: 18 }, rpcs: ['https://api.testnet.evm.eosnetwork.com'], url: "https://explorer.testnet.evm.eosnetwork.com/tx/", tokens: [

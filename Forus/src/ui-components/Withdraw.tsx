@@ -289,7 +289,7 @@ const Withdraw = ({
         </button>
       </div>
 
-      <p className={`text-[.9rem] font-bold montserrat-small ${error === 'Successfully sent!' ? '  text-gray-400 ' : 'text-red-500'}`}>
+      <p className={`text-[.9rem] font-bold montserrat-small ${error === 'Successfully sent!' ? 'montserrat-subtitle flex mx-auto items-center animate-pulse-2s montserrat-small  text-highlight  text-center font-semibold underline underline-offset-8 decoration-bgGray cursor-pointer ' : 'text-red-500'}`}>
         {error}
       </p>
 

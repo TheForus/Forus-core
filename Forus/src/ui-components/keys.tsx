@@ -11,6 +11,7 @@ import { AiOutlineInfoCircle } from "react-icons/ai";
 import ToolTip from "../helpers/ToopTip";
 import { IoCreateSharp, IoDownloadOutline } from "react-icons/io5";
 import { MdOutlineDone } from "react-icons/md";
+// import { useHistory } from "react-router-dom" ; 
 
 
 const ec = new EllipticCurve.ec("secp256k1");
@@ -19,7 +20,10 @@ type Props = {};
 
 const Keys = (props: Props) => {
 
+
+
   const notyf = new Notyf();
+  // const history = useHistory();
 
   const [ForusKey, setForusKey] = useState<string | any>("");
   const [, setstoredsignatureKey] = useState<string | any>("");
@@ -85,9 +89,11 @@ const Keys = (props: Props) => {
 
   const copyforusKey = () => {
 
-    navigator.clipboard.writeText(ForusKey);
+    navigator.clipboard.writeText(`https://forus.live/forus?key=${ForusKey}`);
     notyf.success("Copied");
     setAddressCopied(true);
+
+    // history.push(`/other-page?key=${ForusKey}`);
   };
 
 
@@ -142,7 +148,7 @@ const Keys = (props: Props) => {
               </p>
             </div>
             <div className="flex items-center text-white md:space-x-3">
-              <ToolTip tooltip="Copy Forus Key">
+              <ToolTip tooltip="Copy Link">
                 {/* <AiOutlineCopy
                   className="cursor-pointer font-bold text-2xl text-gray-400 hover:text-highlight"
                   onClick={copyforusKey}

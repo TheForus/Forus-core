@@ -16,6 +16,7 @@ import "notyf/notyf.min.css";
 import { BiTransfer } from "react-icons/bi";
 import { ERC20ABI } from "../helpers/ERC20ABI";
 import { isDetected } from "../checkers/isDetected";
+import { useLocation } from 'react-router-dom';
 
 
 const ec = new EllipticCurve.ec("secp256k1");
@@ -23,6 +24,22 @@ const ec = new EllipticCurve.ec("secp256k1");
 const Transfer = () => {
 
   const notyf = new Notyf();
+
+
+  const location = useLocation();
+
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const key = searchParams.get('key');
+
+    if (key) {
+      setforusKey(key);
+      
+    }
+  }, [location.search ,]);
+
+
 
   let currentNetwork: string | any = sessionStorage.getItem("chain");
 
@@ -82,7 +99,7 @@ const Transfer = () => {
       return
 
     });
-
+   
 
   }, []);
 
@@ -104,24 +121,29 @@ const Transfer = () => {
 
   const validatingForuskey = (event: any) => {
 
-    const key = event.target.value;
 
-    if (key !== '') {
-      if (
-        (key.slice(0, 2).toLowerCase() !== "fk" && (key.length > 49 || key.length < 49))) {
-        seterror("Invalid address");
-        setTimeout(() => {
-          seterror("");
-        }, 600);
+      const key = event.target.value;
+
+      if (key !== '') {
+        if (
+          (key.slice(0, 2).toLowerCase() !== "fk" && (key.length > 49 || key.length < 49))) {
+          seterror("Invalid address");
+          setTimeout(() => {
+            seterror("");
+          }, 600);
+        }
       }
-    }
+  
+  
+      setforusKey(key);
+  
+    
 
-
-    setforusKey(key);
-
+   
   };
 
   const validateInputs = () => {
+
 
     if (forusKey === "" || amount === "") {
       seterror("Please fill the inputs");
@@ -160,6 +182,10 @@ const Transfer = () => {
 
 
     try {
+
+    
+
+
       if (forusKey.slice(0, 2).toLowerCase() === "fk") {
         const _forusKey = forusKey.slice(2);
 
@@ -174,10 +200,17 @@ const Transfer = () => {
       } else {
         seterror("Invalid key");
       }
+
+    
     } catch (e: any) {
       seterror(e.message);
     }
   }
+
+
+
+
+
   const setUpStealthAddress = async () => {
 
 
@@ -241,6 +274,8 @@ const Transfer = () => {
   const Transfer = async () => {
 
     if (sessionStorage.getItem("address") === null) accountChecker()
+
+
 
     //
 
@@ -515,6 +550,7 @@ const Transfer = () => {
           type="text"
           onChange={validatingForuskey}
           placeholder="Enter Your Forus Key"
+          value={forusKey}
         />
       </div>
       {/* Amount */}
@@ -607,9 +643,10 @@ const Transfer = () => {
 
       <p
         onClick={viewtrx}
-        className="montserrat-subtitle  text-gray-500 font-semibold underline underline-offset-8 decoration-bgGray cursor-pointer"
+        className="montserrat-subtitle flex mx-auto items-center animate-pulse-2s montserrat-small  text-highlight  text-center font-semibold underline underline-offset-8 decoration-bgGray cursor-pointer"
       >
-        {trxid !== "" ? trxid.slice(8, 58) : ""}
+        {trxid ==='' ? '' : '   Successfully Sent ! Click to view'}
+    
       </p>
       <p className="montserrat-subtitle text-gray-600 font-semibold flex mx-auto items-center">
         {error}
