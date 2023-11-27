@@ -9,7 +9,7 @@ const HeaderRibbon = () => {
   const timeoutHandler = () => {
     setTimeout(() => {
       return setTimer(false);
-    }, 10000);
+    }, 10000); // timeout to close the headRibbon
   }
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const HeaderRibbon = () => {
         <main
           className={`p-2 flex justify-center items-center ribbon-animation
       bg-gradient-to-r from-blue-400 to-green-600 hover:bg-blue-500
-      hover:text-black transition-all duration-1000 ease-in-out ${timer ? 'opacity-100 mt-0' : 'opacity-0 -mt-12'}`}
+      hover:text-black transition-all duration-700 ease-in-out ${timer ? 'opacity-100 mt-0' : 'opacity-0 -mt-12'}`}
         >
           <div className="flex space-x-7">
             {/* <span
