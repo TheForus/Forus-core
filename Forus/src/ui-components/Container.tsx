@@ -202,7 +202,7 @@ const Forus = (props: Props) => {
           <NavBar />
 
           <div
-            className="md:w-[90%]  max-w-[1220px] mx-auto
+            className="md:w-[100%]  max-w-[1280px] mx-auto
             py-8 p-4"
           >
             <div className="relative m-auto lg:w-[94%] xl:w-[96%] w-[100%] h-full">
