@@ -13,11 +13,9 @@ const config: HardhatUserConfig = {
     //   url: process.env.POLYGON_RPC_URL,
     //   accounts: [process.env.PRIVATE_KEY!]
     // },
- baobab: {
-  url: process.env.KLAYTN_BAOBAB_URL || "",
-  gasPrice: 250000000000,
-  accounts:
-    process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+ blasttestnet: {
+  url: process.env.BLAST_TESTNET_URL || "",
+  accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
 }
 
     // PEGOTestnet : {

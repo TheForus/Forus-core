@@ -90,7 +90,7 @@ const Keys = (props: Props) => {
 
   const copyforusKey = () => {
 
-    navigator.clipboard.writeText(`https://forus.live/forus?key=${ForusKey}`);
+    navigator.clipboard.writeText(`localhost:3000/forus?key=${ForusKey}`);
     notyf.success("Copied");
     setAddressCopied(true);
   

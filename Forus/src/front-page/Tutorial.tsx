@@ -21,7 +21,7 @@ const Tutorial = (props: Props) => {
             width="90%"
             height="95%"
             controls={true}
-            url=""
+            url="https://clipchamp.com/watch/5NOeV00tAR8"
           />
         </div>
       </div>

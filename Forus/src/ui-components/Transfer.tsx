@@ -334,59 +334,6 @@ const Transfer = () => {
 
 
 
-
-
-  // const signing = async () => {
-
-  //   // const provider = new ethers.providers.Web3Provider(ethereum);
-  //   const signer = provider.getSigner();
-
-
-  //   const relayer = new ethers.Wallet("", provider);
-  //   const message = "Hello, World!";
-  //   const messageHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(message));
-
-  //   // Sign the message
-  //   const signedTransaction = await signer.signMessage(ethers.utils.arrayify(messageHash));
-  //   const { v, r, s } = ethers.utils.splitSignature(signedTransaction);
-  //   const signature = ethers.utils.joinSignature({ r, s, v });
-  //   console.log(v, r, s);
-
-  //   const recoveredAddress = ethers.utils.verifyMessage(ethers.utils.arrayify(messageHash), signedTransaction);
-
-  //   console.log('Original Address:', await signer.getAddress());
-  //   console.log('Recovered Address:', recoveredAddress);
-
-
-  //   const tx = {
-  //     to: relayer.address,
-  //     data: signedTransaction,
-  //     value: ethers.utils.parseEther('0.0001'),
-  //   }
-
-
-  //   const txResponse = await relayer.sendTransaction(tx);
-
-
-  //   // const signature = ethers.utils.joinSignature({ r, s, v });
-
-  //   // Recover the public key
-
-  //   const publicKey = ethers.utils.recoverPublicKey(txResponse.hash, signedTransaction);
-
-
-  //   // Derive the Ethereum address from the public key
-  //   const address = ethers.utils.computeAddress(publicKey);
-
-  //   console.log('Recovered Address:', address);
-  //   console.log('hash', txResponse.hash);
-
-
-  //   settrxid(txId + txResponse.hash)
-  // }
-
-
-
   const TransferToken = async () => {
 
     //

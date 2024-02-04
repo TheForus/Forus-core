@@ -178,6 +178,7 @@ contract Logs {
         address target,
         uint256 amount
     ) external payable validateTokenAddr(token) {
+        
         // Check that the amount being transferred is greater than 0
 
         require(amount > 0, "Amount should be more than 0");
