@@ -20,7 +20,7 @@ const Instruction = (props: Props) => {
               <div className="flex space-x-2 ">
                 <MdVerifiedUser className="text-highlight "size={29} />
                 <p className="flex-1">
-                  Safely insert the Recipient's <b>Forus key</b> into the designated
+                  Safely insert the Receipent's <b>Forus key</b> into the designated
                   field.
                 </p>
               </div>
@@ -63,14 +63,14 @@ const Instruction = (props: Props) => {
               <div className="flex space-x-2">
                 <MdVerifiedUser className="text-highlight "size={29} />
                 <p className="flex-1">
-                  Click on view transaction to see the list of transaction sent through your forus key.
+                  Click on view transaction to see the list of  stealth adresses having funds in them .
                 </p>
               </div>
 
               <div className="flex space-x-2">
                 <MdVerifiedUser className="text-highlight "size={29} />
                 <p className="flex-1">
-                  Copy the private key of your stealth address and gain access to the funds sent to your
+                  Copy the private key of your stealth address and gain access to your
                   stealth address.
                 </p>
               </div>

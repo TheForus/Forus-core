@@ -36,9 +36,6 @@ interface ChildProps {
 export const Receive: React.FC<ChildProps> = ({
   withdrawFunction,
   setmasterkey,
-  // setamountTowithdraw,
-
-
 }) => {
 
 
@@ -66,7 +63,7 @@ export const Receive: React.FC<ChildProps> = ({
 
   const contractaddress: string | any = useMemo(() => {
 
-    const selectedChain = chainOptions.find((item) => currentNetwork === item.name);
+    const selectedChain = chainOptions.find((chain) => currentNetwork === chain.name);
     return selectedChain ? selectedChain.contract : null;
 
   }, [chainOptions, currentNetwork ,ethereum]);
@@ -154,8 +151,8 @@ export const Receive: React.FC<ChildProps> = ({
 
     try {
 
-      const tvl = await contract.pubKeysLen();
-      setInitValue(tvl.toNumber());
+      const totalKeys = await contract.pubKeysLen();
+      setInitValue(totalKeys.toNumber());
 
     } catch (error) {
 
@@ -204,7 +201,6 @@ export const Receive: React.FC<ChildProps> = ({
 
       setInitValue(0);
 
-      console.log('else', initValue);
     }
   }, [initValue]); // Trigger when initValue changes
 

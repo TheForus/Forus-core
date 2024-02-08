@@ -6,8 +6,6 @@ import { useContext } from "react";
 import { AppContext } from "./Container";
 import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { BsChevronDown } from "react-icons/bs";
-import { db } from "../config/firebase.js";
-import { collection, addDoc } from "firebase/firestore";
 import { ethers } from "ethers";
 import { Notyf } from "notyf";
 import BigNumber from "bignumber.js";
@@ -28,28 +26,9 @@ const Transfer = () => {
 
   const location = useLocation();
 
-
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const key = searchParams.get('key');
-
-    if (key) {
-      setforusKey(key);
-      
-    }
-  }, [location.search ,]);
-
-
+  const { accountChecker } = useContext(AppContext);
 
   let currentNetwork: string | any = sessionStorage.getItem("chain");
-
-
-
-  const { accountChecker } = useContext(AppContext);
-  const [ContractAddress, setContractAddress] = useState<string | any>("");
-
-
-
 
   const { ethereum }: any = window;
 
@@ -66,6 +45,12 @@ const Transfer = () => {
   const [byDefault, setbyDefault] = useState<string>("ETH");
   const [chainList, setchainList] = useState<any>([])
   const [txId, settxID] = useState<string | "">("");
+  const [ContractAddress, setContractAddress] = useState<string | any>("");
+
+
+  const [trxid, settrxid] = useState<string>("");
+  const [waiting, setwaiting] = useState<boolean>(false);
+  const [buttonState, setButtonState] = useState<string>("Transfer");
 
 
   const msgSender = useMemo(() => {
@@ -85,7 +70,7 @@ const Transfer = () => {
   var receipentAddress: string;
 
 
-  useMemo(() => {
+  const connectNetwork = async () => {
 
     chainOptions.map((chain) => {
 
@@ -99,24 +84,35 @@ const Transfer = () => {
       return
 
     });
-   
+  }
+
+
+  useEffect(() => {
+
+    connectNetwork()
 
   }, []);
 
+  useMemo(() => {
 
 
-  // console.log(chainList, currentNetwork, ContractAddress, sessionStorage.getItem("contractAdd"), txId);
-
-  const [trxid, settrxid] = useState<string>("");
-  const [waiting, setwaiting] = useState<boolean>(false);
-  const [buttonState, setButtonState] = useState<string>(
-    !sessionStorage.getItem("address") ? "Connect Wallet" : "Transfer"
-  );
+    connectNetwork()
+    const searchParams = new URLSearchParams(location.search);
+    const key = searchParams.get('key');
 
 
+    if (key) {
+      
+      setforusKey(key);    
+    }
+
+  }, [location.search, currentNetwork, byDefault]);
 
 
-  //helpers functuion to validate forus key
+
+
+
+  //helpers function to validate forus key
 
 
   const validatingForuskey = (event: any) => {
@@ -166,8 +162,8 @@ const Transfer = () => {
   //ec keypair use to generate private numbers and public stealth address
   let keypair: EC.KeyPair = ec.genKeyPair();
 
-  //one time ephemeral public key to be published in logs directory contract
 
+  //one time ephemeral public key to be published in logs directory contract
   let ephemeralPkey: any = keypair.getPublic();
 
 
@@ -241,7 +237,7 @@ const Transfer = () => {
       x_cor = "0x" + ephemeralPkey?.getX().toString(16, 64) || "";
       y_cor = "0x" + ephemeralPkey?.getY().toString(16, 64) || "";
 
-      // 2byets shared secret prefixed with ephemeral public key
+      // 2bytes shared secret prefixed with ephemeral public key
 
       sharedSecret = "0x" + calculateSecret.toArray()[0].toString(16) + calculateSecret.toArray()[1].toString(16);
 
@@ -252,48 +248,29 @@ const Transfer = () => {
     return true;
   };
 
-  const logs = collection(db, "Logs");
-
-  /*
-     storing the ephemeral public key in firebase along with blockchain to easily and effeciantly retreive
- the keys  */
-
-  const storing = async () => {
-    const stored = `${sharedSecret.replace("0x", "")}04${x_cor.slice(2)}${y_cor.slice(2)}`;
-    try {
-      await addDoc(logs, {
-        Keys: stored,
-      });
-    } catch (err) {
-      console.error(err);
-    }
-    console.log("storing...", stored);
-  };
+ 
 
 
   const Transfer = async () => {
 
-    if (sessionStorage.getItem("address") === null) accountChecker()
+    validateInputs();
 
+
+    if (sessionStorage.getItem("address") === null) accountChecker()
 
 
     //
 
     setUpStealthAddress();
 
-    //
-
-    validateInputs();
-
+  
     setwaiting(true);
 
 
     const signer = provider.getSigner();
     const contract = new ethers.Contract(ContractAddress, Abi.abi, signer);
-    console.log(ContractAddress)
-
-    console.log(receipentAddress,)
-
+    console.log("receipentAddress",sessionStorage.getItem("address"),ContractAddress)
+    
 
     try {
       const valueToSend = ethers.utils.parseEther(amount);
@@ -310,21 +287,11 @@ const Transfer = () => {
         transactionParameters
       );
  
-
+  
       const trx = await transfer;
-      // await trx.wait
-
-      settrxid(txId + trx.hash);
-
-
-      // setamount("");
-      // setforusKey("");
-
-      //storing public keys in logs
-
-      storing()
-
-
+     
+      settrxid(txId + trx.hash);   
+  
     } catch (e: any) {
       console.log(e);
       seterror(e.message);
@@ -379,9 +346,7 @@ const Transfer = () => {
         seterror(err.message);
       }
 
-      //storing in db
 
-      storing()
 
     } catch (e: any) {
       console.log(e);
@@ -483,6 +448,17 @@ const Transfer = () => {
     }
   };
 
+
+  const transferFunds = async () => {
+    
+    const selectedChain = chainOptions.find((chain: any) => chain.currency.symbol === byDefault);   
+    if (selectedChain) {
+      Transfer(); // Call Transfer function if the condition is met
+    } else {
+      proceed(); // Call proceed function otherwise
+    }
+  }
+
   return (
     <div className="flex flex-col justify-center items-start space-y-2">
       <div
@@ -516,7 +492,10 @@ const Transfer = () => {
             placeholder={`0.1  ${byDefault}`}
             onChange={(e) => setamount(e.target.value)}
           />
+
           {/* Tokens Dropdown Menu */}
+
+
           <div className="min-w-[95px] absolute right-1 ">
             <ul className="" onClick={() => setshow(!show)}>
               <li
@@ -566,12 +545,7 @@ const Transfer = () => {
       <div className="w-full flex justify-center mr-4">
         <button
           onClick={() => {
-            const selectedChain = chainOptions.find((chain: any) => chain.currency.symbol === byDefault);
-            if (selectedChain) {
-              Transfer(); // Call Transfer function if the condition is met
-            } else {
-              proceed(); // Call proceed function otherwise
-            }
+            transferFunds();
           }}
           className="flex space-x-2 justify-center w-[100%] mx-auto mb-4 my-2 montserrat-subtitle  py-2 montserrat-subtitle  
           hover:shadow-xl px-6 text-center text-black highlight 
@@ -598,10 +572,7 @@ const Transfer = () => {
       <p className="montserrat-subtitle text-gray-600 font-semibold flex mx-auto items-center">
         {error}
       </p>
-      {/* <button className="flex space-x-2 justify-center w-[100%] mx-auto mb-4 my-2 montserrat-subtitle  py-2 montserrat-subtitle  
-          hover:shadow-xl px-6 text-center text-black highlight 
-          rounded-md font-bold  transition-all ease-linear" onClick={signing}>
-        sign  </button> */}
+  
 
     </div>
   )

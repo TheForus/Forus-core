@@ -34,7 +34,7 @@ interface ContextValue {
 
 export const AppContext = createContext<ContextValue | any>(null);
 
-const Forus = (props: Props) => {
+const Container = (props: Props) => {
   //start
   const notyf = new Notyf();
 
@@ -226,4 +226,4 @@ const Forus = (props: Props) => {
   );
 };
 
-export default Forus;
+export default Container;

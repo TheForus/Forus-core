@@ -6,25 +6,6 @@ import { ethers } from "ethers";
 import ToolTip from "../helpers/ToopTip";
 import { MdOutlineDone } from "react-icons/md";
 import { TbTransferIn, TbSwitchVertical } from "react-icons/tb";
-import { GelatoRelay, SponsoredCallRequest } from "@gelatonetwork/relay-sdk";
-const relay = new GelatoRelay();
-
-
-const abi = [
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "rec",
-        "type": "address"
-      }
-    ],
-    "name": "withdraw",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  }
-]
 
 interface ChildProps {
   masterkey: string | any;
@@ -41,10 +22,6 @@ const Withdraw = ({
   const [isInput, setisInput] = useState<boolean>(false);
   const notyf = new Notyf();
 
-  const useConnect = () => {
-    setmasterkey("");
-    setisInput(true);
-  };
 
   const [isSuccessfull, setisSuccessfull] = useState<string>('withdraw');
 
@@ -62,7 +39,7 @@ const Withdraw = ({
         try {
           const contents = await readmasterkey(selectedFile);
           if (contents.startsWith("#walletprivateKey-")) {
-            // Remove the prefix
+            // Removing  the prefix
             setmasterkey(contents.slice("#walletprivateKey-".length));
           } else {
             notyf.error("Invalid file");
@@ -106,44 +83,7 @@ const Withdraw = ({
 
     setisSuccessfull('Withdrawing Amount...');
 
-  //   try{
 
-
-  //   const provider = new ethers.providers.Web3Provider(ethereum);
-  //   const wallet = new ethers.Wallet(masterkey, provider);
-  //   const address = wallet.address;
-
-  //   //   // Ensure balance is retrieved in Ether
-  //     const balance = await provider.getBalance(address);
-  //     // const balanceInEth = ethers.utils.formatEther(balance);
-
-
-  //   const chain : any = (await provider.getNetwork()).chainId
-  //   // console.log('chain',chain)
-  //   const contract = new ethers.Contract('0x3aeD2651B90d471878CA698fE14C1030337121E3', abi, wallet);
-  //   let receipent= isInput === false ? receipentAdd : sessionStorage.getItem("address")
-  //   const { data } :any = await contract.populateTransaction.withdraw(receipent, {value : balance} );
-  //   console.log(data)
-
-
-
-  //   // Populate a relay request
-  //   const request: SponsoredCallRequest = {
-  //       chainId: chain,
-  //       target: '0x3aeD2651B90d471878CA698fE14C1030337121E3',
-  //       data: data,
-  //   };
-
-  //   const apikey = '_Gm4LZeeb_NTcBcKqb0CSBeU8cNlB0u5irb5foxu36s_'
-
-  //   // Without a specific API key, the relay request will fail! 
-  //   // Go to https://relay.gelato.network to get a testnet API key with 1Balance.
-  //   // Send the relay request using Gelato Relay!
-  //   const relayResponse = await relay.sponsoredCall(request, apikey);
-  //   console.log('relayResponse', relayResponse);
-  //   alert('Done')
-
-  // }
     try {
       const provider = new ethers.providers.Web3Provider(ethereum);
 
@@ -189,7 +129,6 @@ const Withdraw = ({
 
         console.log(tx)
 
-        // const { data } = await ;
 
         const gasEstimate = await wallet.estimateGas(tx);
         console.log('Gas Estimate:', gasEstimate.toNumber());

@@ -11,7 +11,7 @@ import { AiOutlineInfoCircle } from "react-icons/ai";
 import ToolTip from "../helpers/ToopTip";
 import { IoCreateSharp, IoDownloadOutline } from "react-icons/io5";
 import { MdOutlineDone } from "react-icons/md";
-// import { useHistory } from "react-router-dom" ; 
+
 
 
 
@@ -24,13 +24,12 @@ const Keys = (props: Props) => {
 
 
   const notyf = new Notyf();
-  // const history = useHistory();
 
   const [ForusKey, setForusKey] = useState<string | any>("");
-  // const [, setstoredsignatureKey] = useState<string | any>("");
   const [addressCopied, setAddressCopied] = useState<boolean>(false);
 
-  //generating the cp address and secret key
+
+  //generating keys
 
   const generateKeys = () => {
 
@@ -90,7 +89,7 @@ const Keys = (props: Props) => {
 
   const copyforusKey = () => {
 
-    navigator.clipboard.writeText(`localhost:3000/forus?key=${ForusKey}`);
+    navigator.clipboard.writeText(`https://forus.live/forus?key=${ForusKey}`);
     notyf.success("Copied");
     setAddressCopied(true);
   
@@ -100,10 +99,7 @@ const Keys = (props: Props) => {
 
 
   const downloadKeys = () => {
-    navigator.clipboard.writeText(ForusKey);
-
-
-    let signature = sessionStorage.getItem('signature');
+    let signature =  sessionStorage.getItem('signature');
     let forusKey  =  sessionStorage.getItem('foruskey');
     const content = `#forus-signatureKey-${signature}\nforusKey-${forusKey}`;
     downloadTxt(content, 'forus-keys.txt');
@@ -113,9 +109,7 @@ const Keys = (props: Props) => {
 
   return (
     <main className="shadow-2xl shadow-[#1f2a3af3]">
-      <div
-        // style={{ backgroundImage: `url(${})` }}
-        className="relative w-full xl:justify-between h-full rounded-md bg-no-repeat 
+      <div className="relative w-full xl:justify-between h-full rounded-md bg-no-repeat 
         flex flex-col lg:flex-row items-start gap-3 lg:gap-6 justify-start py-4 px-3 md:px-6 rounded-t-md z-10
         bg-gradient-to-tr from-black via-black/80 border-gray-700 border"
       >
@@ -124,20 +118,14 @@ const Keys = (props: Props) => {
             className="montserrat-heading text-transparent  hightlightText  ml-2 font-[1000] sm:text-[1.4rem] xl:text-[1.6rem]
            bg-clip-text  text-xl  bg-gradient-to-r from-highlight to-cyan-600"
           >
-            {/* Share the */}
-            {/* <span
-              className="hightlightText mx-2 text-transparent sm:text-[1.5rem] xl:text-[1.7rem]
-             bg-clip-text bg-gradient-to-r from-highlight to-cyan-600"
-            > */}
             Forus Key
-            {/* </span> */}
             <span
               className=" mx-2  sm:text-[1.4rem] xl:text-[1.6rem]
              text-gray-400"
             >
               (Share It to Receive Funds)
             </span>
-            {/* & get paid privately ! */}
+
           </h1>
           {/* Forus */}
           <div className="flex space-x-2 pt-2">
@@ -150,10 +138,6 @@ const Keys = (props: Props) => {
             </div>
             <div className="flex items-center text-white md:space-x-3">
               <ToolTip tooltip="Copy Link">
-                {/* <AiOutlineCopy
-                  className="cursor-pointer font-bold text-2xl text-gray-400 hover:text-highlight"
-                  onClick={copyforusKey}
-                /> */}
                    {addressCopied ? (
               <MdOutlineDone
                 className={` text-white font-bold text-[1.1rem] "text-white `}

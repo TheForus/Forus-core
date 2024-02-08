@@ -1,6 +1,7 @@
 import { ethers } from "hardhat";
 
 async function main() {
+  
   // Deploy SafeMath first
   const SafeMath = await ethers.getContractFactory("SafeMath");
   const safeMath = await SafeMath.deploy();
