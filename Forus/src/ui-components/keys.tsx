@@ -108,7 +108,7 @@ const Keys = (props: Props) => {
 
 
   return (
-    <main className="shadow-2xl shadow-[#1f2a3af3]">
+    <main className="shadow-2xl  mt-20 shadow-[#1f2a3af3]">
       <div className="relative w-full xl:justify-between h-full rounded-md bg-no-repeat 
         flex flex-col lg:flex-row items-start gap-3 lg:gap-6 justify-start py-4 px-3 md:px-6 rounded-t-md z-10
         bg-gradient-to-tr from-black via-black/80 border-gray-700 border"

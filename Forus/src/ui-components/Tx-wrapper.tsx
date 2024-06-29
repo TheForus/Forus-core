@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Transfer from "./Transfer";
-import {Receive} from "./Receive"
+import { Receive } from "./Receive";
 
 import { useContext } from "react";
 import { AppContext } from "./Container";
@@ -9,13 +9,11 @@ import Withdraw from "./Withdraw";
 type Props = {};
 
 const Transactions = (props: Props) => {
-
-  const { setShow ,show} = useContext(AppContext);
+  const { setShow, show } = useContext(AppContext);
   const [buttonStatus, setButtonStatus] = useState({
     transfer: true,
     Receive: false,
     withdraw: false,
-    
   });
 
   const [masterkey, setmasterkey] = useState<string | any>("");
@@ -60,30 +58,33 @@ const Transactions = (props: Props) => {
         <button
           onClick={handleTransferClick}
           className={`text-left sm:px-6 py-1 border-b-2 border-black
-        ${buttonStatus.transfer
-              ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700"
-              : "text-gray-400"
-            }`}
+        ${
+          buttonStatus.transfer
+            ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700"
+            : "text-gray-400"
+        }`}
         >
           Transfer
         </button>
         <button
           onClick={handleReceiveClick}
           className={`px-6 py-1 border-b-2 border-black
-          ${buttonStatus.Receive
+          ${
+            buttonStatus.Receive
               ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700"
               : "text-gray-400"
-            }`}
+          }`}
         >
           Receive
         </button>
         <button
           onClick={handleWithdrawClick}
           className={`sm:px-6 py-1 border-b-2 border-black
-          ${buttonStatus.withdraw
+          ${
+            buttonStatus.withdraw
               ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700"
               : "text-gray-400"
-            }`}
+          }`}
         >
           Withdraw
         </button>

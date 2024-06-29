@@ -13,7 +13,7 @@ import "./SafeMath.sol";
 
 /**
  * @title Logs
- * @dev The Logs contract allows users to publish their public keys on  blockchain,
+ * @dev The Logs contract allows users to publish their public keys onchain,
  * consisting of the parameters x_cor, y_cor, and sharedSecret.
  * These keys allow the receiver to generate the private key associated with his stealth address.
  * Users publish their public keys by invoking the appropriate functions in the contract.
