@@ -183,9 +183,9 @@ const NavBar = (props: Props) => {
                 // onClick={copyAddress}
                 className={`sm:text-[1rem] md:text-[0.9rem] montserrat-small text-cyan-500  font-semibold text-[0.8rem]`}
               >
-                {sessionStorage.getItem("address") !== null || false
-                  ? connect.userBalance
-                  : ""}
+               
+                   {sessionStorage.getItem("balance")}
+                  
               </p>
               <p
                 onMouseEnter={handleMouseEnter}

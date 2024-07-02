@@ -10,9 +10,9 @@ import { ethers } from "ethers";
 import { chainOptions } from "../helpers/ChainOptions";
 import HeaderRibbon from "../components/HeaderRibbon";
 import { ValidateChainData } from "../checkers/ValidateChainData";
-import { SwitchChain } from "../helpers/SwitchChain"
+import { SwitchChain } from "../helpers/SwitchChain";
 import { isDetected } from "../checkers/isDetected";
-import CopyRight from "./CopyRight"
+import CopyRight from "./CopyRight";
 
 type Props = {};
 
@@ -21,7 +21,7 @@ interface ContextValue {
   setShow: React.Dispatch<React.SetStateAction<string | any>>;
   connectWallet(): void;
   userBalance: string;
-  accountChecker(): void
+  accountChecker(): void;
   selectedChain: string;
   totalfunds: string | any;
   settotalfunds: React.Dispatch<React.SetStateAction<string | any>>;
@@ -30,7 +30,6 @@ interface ContextValue {
   chainOptions: [] | any;
   handleChainChange(chainId: any): void | any;
 }
-
 
 export const AppContext = createContext<ContextValue | any>(null);
 
@@ -44,27 +43,15 @@ const Container = (props: Props) => {
 
   const selectedChain: string | any = sessionStorage.getItem("chain");
 
-
-
   const ethereum = useMemo(() => {
-
     const { ethereum }: any = window;
-    if (typeof ethereum !== 'undefined') {
-
+    if (typeof ethereum !== "undefined") {
       return ethereum;
-
     } else {
       // Handle the case where Ethereum is not available
       return null; // or some other default value
     }
   }, []);
-
-
-
-
-
-
-
 
   const handleChainChange = async (chainId: any) => {
     chainOptions.map((chain) => {
@@ -89,8 +76,6 @@ const Container = (props: Props) => {
     });
   };
 
-
-
   useEffect(() => {
     const fetchCurrentChainData = async () => {
       try {
@@ -99,7 +84,11 @@ const Container = (props: Props) => {
 
         if (chain) {
           const provider = new ethers.providers.Web3Provider(ethereum);
-          const theContract = new ethers.Contract(chain.contract, abi.abi, provider);
+          const theContract = new ethers.Contract(
+            chain.contract,
+            abi.abi,
+            provider
+          );
           const [totalAddresses, totalFunds] = await Promise.all([
             theContract.gettotalStealthAddresses(),
             theContract.getTotalVolume(),
@@ -113,8 +102,7 @@ const Container = (props: Props) => {
       }
     };
 
-    (ethereum) ? fetchCurrentChainData() : null;
-
+    ethereum ? fetchCurrentChainData() : null;
   }, [show, ethereum]);
 
   const [userBalance, setUserBalance] = useState<string>("");
@@ -122,26 +110,27 @@ const Container = (props: Props) => {
   const accountChecker = async () => {
     const accounts = await ethereum.request({ method: "eth_requestAccounts" });
     sessionStorage.setItem("address", accounts[0]);
+  
 
     try {
       const provider = new ethers.providers.Web3Provider(ethereum);
       const balance = await provider.getBalance(accounts[0]);
-      setUserBalance(ethers.utils.formatEther(balance).toString().slice(0, 5) + " " + sessionStorage.getItem("symbol")
-      );
+      sessionStorage.setItem("balance",ethers.utils.formatEther(balance).toString().slice(0, 5) + " " +sessionStorage.getItem("symbol"));
+
     } catch (e: any) {
       console.log(e);
-      notyf.error(e.message)
+      notyf.error(e.message);
     }
   };
 
-
-
   useEffect(() => {
-    ValidateChainData();
+
     accountChecker();
+    ValidateChainData();
+
   }, []);
 
-  useEffect(() => {
+  try {
     if (ethereum) {
       ethereum.on("accountsChanged", (address: any) => {
         accountChecker();
@@ -151,23 +140,22 @@ const Container = (props: Props) => {
 
       ethereum.on("chainChanged", (chId: any) => {
         window.location.reload();
+        accountChecker();
         ValidateChainData();
       });
     } else {
       notyf.error("Plz install metamask");
     }
-
-  }, [ethereum])
-
+  } catch (e: any) {
+    notyf.error(e.message);
+  }
 
   const connectWallet = async (): Promise<void> => {
-
-    isDetected()
+    isDetected();
 
     try {
       await accountChecker();
       ValidateChainData();
-
     } catch (e: any) {
       notyf.error(e);
     }
@@ -185,9 +173,8 @@ const Container = (props: Props) => {
     settotalAddress,
     handleChainChange,
     selectedChain,
-    accountChecker
+    accountChecker,
   };
-
 
   return (
     <AppContext.Provider value={ContextValue}>
@@ -206,8 +193,10 @@ const Container = (props: Props) => {
             py-8 p-4"
           >
             <div className="relative m-auto lg:w-[94%] xl:w-[96%] w-[100%] h-full">
-              <div className="border border-gray-500 shadow-gray-800 absolute top-0 right-0 w-full h-full rounded-md 
-            bg-gradient-to-tr from-blue-400 to-black/20"></div>
+              <div
+                className="border border-gray-500 shadow-gray-800 absolute top-0 right-0 w-full h-full rounded-md 
+            bg-gradient-to-tr from-blue-400 to-black/20"
+              ></div>
               <Foruskey />
             </div>
             <div
@@ -220,7 +209,6 @@ const Container = (props: Props) => {
           </div>
           <CopyRight />
         </div>
-
       </div>
     </AppContext.Provider>
   );

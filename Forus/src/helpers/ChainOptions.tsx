@@ -5,6 +5,7 @@ import dai from "../assets/dai.png"
 import eth from "../assets/eth.png"
 import arb from "../assets/chains/ARB.png"
 import blast from "../assets/blast.png"
+import frxeth from "../assets/frxeth.png"
 
 
 
@@ -46,6 +47,25 @@ export const chainOptions: chain[] = [
    
 
 
+        ]
+    },
+
+
+
+    {
+        name: "Fraxtal", contract: '', chainId: "0xfc", symbol: frxeth, currency: { symbol: "frxETH", decimals: 18 }, rpcs: ['https://rpc.frax.com'], url: "https://fraxscan.com", tokens: [
+
+            { name: "frxETH", address: "", symbol: frxeth },
+        
+        ]
+    },
+
+
+    {
+        name: "Fraxtal Testnet", contract: '0xee346C29CF59A505a33d22dCaE281C05F53c3Ed5', chainId: "0x9da", symbol: frxeth, currency: { symbol: "frxETH", decimals: 18 }, rpcs: ["https://rpc.testnet.frax.com"], url: "https://holesky.fraxscan.com", tokens: [
+
+            { name: "frxETH", address: "", symbol: frxeth },
+        
         ]
     },
 
