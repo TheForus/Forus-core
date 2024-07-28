@@ -19,7 +19,7 @@ const NavBar = (props: Props) => {
   const [show, setshow] = useState<boolean>(false);
   const [isAddrHovered, setIsAddrHovered] = useState<boolean>(false);
   const [addressCopied, setAddressCopied] = useState<boolean>(false);
-  console.log("connect : ", connect.userBalance);
+ 
 
   const changeChains = async (c: any) => {
     setshow(!show);
@@ -193,13 +193,7 @@ const NavBar = (props: Props) => {
                 onClick={copyAddress}
                 className={`sm:text-[1.3rem] md:text-[1rem] cursor-pointer montserrat-small text-white font-semibold text-[1rem]`}
               >
-                {sessionStorage.getItem("address") !== null || false
-                  ? `${sessionStorage
-                    .getItem("address")
-                    ?.slice(0, 9)}...${sessionStorage
-                      .getItem("address")
-                      ?.slice(-5)}`
-                  : ""}
+                    {connect.address ? `${connect.address.slice(0, 4)}...${connect.address.slice(-6)}` : ""}
               </p>
             </div>
             {addressCopied ? (
@@ -213,7 +207,9 @@ const NavBar = (props: Props) => {
               />
             )}
           </div>
-          {sessionStorage.getItem("address") === null || false ? (
+          {sessionStorage.getItem("address") === "false" ||
+              sessionStorage.getItem("address") === null ||
+              sessionStorage.getItem("address") === ""? (
             <button
               onClick={connect.connectWallet}
               className="flex space-x-1 justify-center w-[100%] mx-auto mb-4 my-2 py-1 montserrat-subtitle border-1  montserrat-subtitle  

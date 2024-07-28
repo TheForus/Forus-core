@@ -53,7 +53,7 @@ export const chainOptions: chain[] = [
 
 
     {
-        name: "Fraxtal", contract: '', chainId: "0xfc", symbol: frxeth, currency: { symbol: "frxETH", decimals: 18 }, rpcs: ['https://rpc.frax.com'], url: "https://fraxscan.com", tokens: [
+        name: "Fraxtal", contract: '0x9152D9eF04Bf00BE1A408C2b2FE78a87cD9CdcC7', chainId: "0xfc", symbol: frxeth, currency: { symbol: "frxETH", decimals: 18 }, rpcs: ['https://rpc.frax.com'], url: "https://fraxscan.com/tx/", tokens: [
 
             { name: "frxETH", address: "", symbol: frxeth },
         
@@ -62,7 +62,7 @@ export const chainOptions: chain[] = [
 
 
     {
-        name: "Fraxtal Testnet", contract: '0xee346C29CF59A505a33d22dCaE281C05F53c3Ed5', chainId: "0x9da", symbol: frxeth, currency: { symbol: "frxETH", decimals: 18 }, rpcs: ["https://rpc.testnet.frax.com"], url: "https://holesky.fraxscan.com", tokens: [
+        name: "Fraxtal Testnet", contract: '0xee346C29CF59A505a33d22dCaE281C05F53c3Ed5', chainId: "0x9da", symbol: frxeth, currency: { symbol: "frxETH", decimals: 18 }, rpcs: ["https://rpc.testnet.frax.com"], url: "https://holesky.fraxscan.com/tx/", tokens: [
 
             { name: "frxETH", address: "", symbol: frxeth },
         

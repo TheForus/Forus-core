@@ -29,6 +29,7 @@ interface ContextValue {
   settotalAddress: React.Dispatch<React.SetStateAction<string | any>>;
   chainOptions: [] | any;
   handleChainChange(chainId: any): void | any;
+  address : string
 }
 
 export const AppContext = createContext<ContextValue | any>(null);
@@ -40,6 +41,7 @@ const Container = (props: Props) => {
   const [show, setShow] = useState<string>("transfer");
   const [totalfunds, settotalfunds] = useState<string | any>("0");
   const [totalAddress, settotalAddress] = useState<string | any>("0");
+  const [address, setAddress] = useState<string | any>("");
 
   const selectedChain: string | any = sessionStorage.getItem("chain");
 
@@ -108,15 +110,33 @@ const Container = (props: Props) => {
   const [userBalance, setUserBalance] = useState<string>("");
 
   const accountChecker = async () => {
-    const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-    sessionStorage.setItem("address", accounts[0]);
-  
-
     try {
+      const accounts = await ethereum.request({
+        method: "eth_requestAccounts",
+      });
+
+      // Get the user's address
+
       const provider = new ethers.providers.Web3Provider(ethereum);
       const balance = await provider.getBalance(accounts[0]);
-      sessionStorage.setItem("balance",ethers.utils.formatEther(balance).toString().slice(0, 5) + " " +sessionStorage.getItem("symbol"));
+ 
 
+      // Get the signer (the account that is connected)
+      const signer = provider.getSigner();
+  
+      // Get the connected account address
+      const address = await signer.getAddress();
+ 
+      sessionStorage.setItem("address", address);
+      setAddress(address);
+     
+  
+      sessionStorage.setItem(
+        "balance",
+        ethers.utils.formatEther(balance).toString().slice(0, 5) +
+          " " +
+          sessionStorage.getItem("symbol")
+      );
     } catch (e: any) {
       console.log(e);
       notyf.error(e.message);
@@ -128,7 +148,7 @@ const Container = (props: Props) => {
     accountChecker();
     ValidateChainData();
 
-  }, []);
+  }, [ethereum]);
 
   try {
     if (ethereum) {
@@ -154,7 +174,7 @@ const Container = (props: Props) => {
     isDetected();
 
     try {
-      await accountChecker();
+      accountChecker();
       ValidateChainData();
     } catch (e: any) {
       notyf.error(e);
@@ -174,6 +194,7 @@ const Container = (props: Props) => {
     handleChainChange,
     selectedChain,
     accountChecker,
+    address
   };
 
   return (
