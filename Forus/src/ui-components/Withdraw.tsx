@@ -7,9 +7,13 @@ import ToolTip from "../helpers/ToopTip";
 import { MdOutlineDone } from "react-icons/md";
 import { TbTransferIn, TbSwitchVertical } from "react-icons/tb";
 
-import { GelatoRelay, CallWithSyncFeeERC2771Request } from "@gelatonetwork/relay-sdk";
-const relay = new GelatoRelay();
+//gelato setup
 
+import {
+  GelatoRelay,
+  CallWithSyncFeeERC2771Request,
+} from "@gelatonetwork/relay-sdk";
+const relay = new GelatoRelay();
 
 interface ChildProps {
   masterkey: string | any;
@@ -82,141 +86,199 @@ ChildProps) => {
   const { ethereum }: any = window;
 
   const sendTransaction = async () => {
-    setisSuccessfull("Withdrawing Amount...");
-
-  //   // target contract address
-  //   const counter = "";
-
-  //   // using a human-readable ABI for generating the payload
-  //   const abi = ["function transfer(address to, uint amount) public()"];
-
-  //   // address of the token used to pay fees
-  //   const feeToken = "0xda10009cbd5d07dd0cecc66161fc93d7c9000da1";
-
-  //   // connect to the blockchain via a front-end provider
-  //   const provider = new ethers.providers.Web3Provider(ethereum);
-  //   const signer = await provider.getSigner();
-  //   const user = await signer.getAddress();
-
-  //   // instantiate the target contract object
-  //   const contract = new ethers.Contract(counter, abi, signer);
-
-  //   // example calling the increment() method
-  //   const { data } = await contract.increment.populateTransaction();
-
-  //   // populate the relay SDK request body
-  //   const request: CallWithSyncFeeERC2771Request = {
-  //     chainId: (await provider.getNetwork()).chainId,
-  //     target: counter,
-  //     data: data,
-  //     user: user,
-  //     feeToken: feeToken,
-  //     isRelayContext: true,
-  //   };
-
-  //   // send relayRequest to Gelato Relay API
-  //   const relayResponse = await relay.callWithSyncFeeERC2771(request, provider);
-
-  //   // -----------------------------------------------------------------
-  //   // the following is an alternative example using Gelato Fee Oracle,
-  //   // setting maxFee, and calling the incrementFeeCapped(maxFee) method
-
-  //   // retrieve the estimate fee from Gelato Fee Oracle
-  //   const fee = await relay.getEstimatedFee(
-  //     (
-  //       await provider.getNetwork()
-  //     ).chainId,
-  //     feeToken,
-  //     gasLimit,
-  //     false
-  //   );
-
-  //   // you can use 2x or 3x to set your maxFee
-  //   const maxFee = fee * 2;
-
-  //   // example calling the incrementFeeCapped(maxFee) method
-  //   const { dataMaxFee } =
-  //     await contract.incrementFeeCapped.populateTransaction(maxFee);
-
-  //   // populate the relay SDK request body
-  //   const requestMaxFee: CallWithSyncFeeERC2771Request = {
-  //     chainId: (await provider.getNetwork()).chainId,
-  //     target: counter,
-  //     data: dataMaxFee,
-  //     user: user,
-  //     feeToken: feeToken,
-  //     isRelayContext: true,
-  //   };
-
-  //   // send relayRequest to Gelato Relay API
-  //   const relayResponseMAxFee = await relay.callWithSyncFeeERC2771(
-  //     requestMaxFee,
-  //     provider
-  //   );
+    let balance;
 
     try {
+      setisSuccessfull("Withdrawing Amount...");
+
+      // connect to the blockchain via a front-end provider
       const provider = new ethers.providers.Web3Provider(ethereum);
+      const signer = provider.getSigner();
+      const user = await signer.getAddress();
 
-      const wallet = new ethers.Wallet(masterkey, provider);
+      const etherBalance = await provider.getBalance(user);
 
-      // Get the Ethereum address associated with the private key
-      const address = wallet.address;
+      if (etherBalance.isZero()) {
+        // list of ERC-20 token addresses you want to check
+        const erc20TokenAddresses = [
+          "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1", // Replace with actual token addresses
+          "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", // USDT
+          "0x912CE59144191C1204E64559FE8253a0e49E6548", // ARB
+          // Add more token addresses as needed
+        ];
 
-      // Ensure balance is retrieved in Ether
-      const balance = await provider.getBalance(address);
+        let selectedTokenAddress = null;
 
-      // Get the gas price
-      const gasPrice: ethers.BigNumber = await provider.getGasPrice();
-      console.log(
-        `Gas Price (Gwei): ${ethers.utils.formatUnits(gasPrice, "gwei")}`
-      );
+        // ABI to check ERC-20 token balance
+        const balanceAbi = [
+          "function balanceOf(address owner) view returns (uint256)",
+        ];
 
-      const gasLimit: ethers.BigNumber = ethers.BigNumber.from(21000);
-      // console.log(`Gas Limit: ${gasLimit}`);
+        // loop through each token and check the balance
+        for (const tokenAddress of erc20TokenAddresses) {
+          const tokenContract = new ethers.Contract(
+            tokenAddress,
+            balanceAbi,
+            provider
+          );
+          balance = await tokenContract.balanceOf(user);
 
-      // Calculate the gas cost based on the gas limit and gas price
-      const gasCost: ethers.BigNumber = gasPrice.mul(gasLimit);
-      console.log(gasCost);
+          // if the balance is greater than 0, select this token and break the loop
+          if (balance.gt(0)) {
+            selectedTokenAddress = tokenAddress;
+            break;
+          }
+        }
 
-      // Calculate the amount to send
-      // const balance: ethers.BigNumber = await provider.getBalance('YOUR_ADDRESS');
+        const amountToSend: any = ethers.utils.formatUnits(balance);
 
-      const gasCostInEther: number = parseFloat(
-        ethers.utils.formatUnits(gasCost, "ether")
-      );
-      // console.log(gasCostInEther, ethers.utils.formatUnits(balance));
-      const amountToSend: any = ethers.utils.formatUnits(balance.sub(gasCost));
-      // console.log(amountToSend);
+        // Proceed only if a valid token with a balance > 0 is found
+        if (selectedTokenAddress) {
+          // ABI for the transfer function
+          const transferAbi = ["function transfer(address to, uint256 amount)"];
+          const contract = new ethers.Contract(
+            selectedTokenAddress,
+            transferAbi,
+            signer
+          );
 
-      if (amountToSend > gasCostInEther) {
-        const tx = {
-          to:
+          // specify the recipient address and amount to transfer
+          const recipient =
             isInput === false
               ? receipentAdd
-              : sessionStorage.getItem("address"),
-          value: ethers.utils.parseEther(amountToSend),
-          gasPrice: gasPrice,
-          gasLimit: gasLimit,
-        };
+              : sessionStorage.getItem("address");
+          const amount = ethers.parseUnits(amountToSend, 18);
 
-        console.log(tx);
+          // Prepare the transaction data for transfer
+          const txData = await contract.populateTransaction.transfer(
+            recipient,
+            amount
+          );
 
-        const gasEstimate = await wallet.estimateGas(tx);
-        console.log("Gas Estimate:", gasEstimate.toNumber());
+          // Populate the relay SDK request body
+          const request = {
+            chainId: (await provider.getNetwork()).chainId,
+            target: selectedTokenAddress,
+            data: txData.data,
+            user: user,
+            feeToken: selectedTokenAddress,
+            isRelayContext: true,
+          };
 
-        const txResponse = await wallet.sendTransaction(tx);
+          // Send relayRequest to Gelato Relay API
+          const relayResponse = await relay.callWithSyncFeeERC2771(
+            request,
+            provider
+          );
 
-        console.log("Transaction sent:", txResponse);
-        seterror("Successfully sent!");
+          // Get the estimated fee
+          const gasLimit = 21000; // Adjust as necessary
+          const fee = await relay.getEstimatedFee(
+            (
+              await provider.getNetwork()
+            ).chainId,
+            selectedTokenAddress,
+            gasLimit,
+            false
+          );
+
+          const maxFee = fee * 2;
+
+          // Example calling the incrementFeeCapped(maxFee) method
+          const dataMaxFee =
+            await contract.populateTransaction.incrementFeeCapped(maxFee);
+
+          // Populate the relay SDK request body for the fee
+          const requestMaxFee = {
+            chainId: (await provider.getNetwork()).chainId,
+            target: selectedTokenAddress,
+            data: dataMaxFee.data,
+            user: user,
+            feeToken: selectedTokenAddress,
+            isRelayContext: true,
+          };
+
+          // Send relayRequest to Gelato Relay API for the fee
+          const relayResponseMaxFee = await relay.callWithSyncFeeERC2771(
+            requestMaxFee,
+            provider
+          );
+        } else {
+          console.log(
+            "No ERC-20 tokens with a balance greater than 0 found for the signer."
+          );
+        }
       } else {
-        seterror("Insufficient funds to cover Gas fee !");
-      }
-    } catch (err: any) {
-      console.log(err.message);
-      seterror(err.message);
-    }
+        try {
+          const provider = new ethers.providers.Web3Provider(ethereum);
 
-    setisSuccessfull("Withdraw");
+          const wallet = new ethers.Wallet(masterkey, provider);
+
+          // Get the Ethereum address associated with the private key
+          const address = wallet.address;
+
+          // Ensure balance is retrieved in Ether
+          const balance = await provider.getBalance(address);
+
+          // Get the gas price
+          const gasPrice: ethers.BigNumber = await provider.getGasPrice();
+          console.log(
+            `Gas Price (Gwei): ${ethers.utils.formatUnits(gasPrice, "gwei")}`
+          );
+
+          const gasLimit: ethers.BigNumber = ethers.BigNumber.from(21000);
+          // console.log(`Gas Limit: ${gasLimit}`);
+
+          // Calculate the gas cost based on the gas limit and gas price
+          const gasCost: ethers.BigNumber = gasPrice.mul(gasLimit);
+          console.log(gasCost);
+
+          // Calculate the amount to send
+          // const balance: ethers.BigNumber = await provider.getBalance('YOUR_ADDRESS');
+
+          const gasCostInEther: number = parseFloat(
+            ethers.utils.formatUnits(gasCost, "ether")
+          );
+          // console.log(gasCostInEther, ethers.utils.formatUnits(balance));
+          const amountToSend: any = ethers.utils.formatUnits(
+            balance.sub(gasCost)
+          );
+          // console.log(amountToSend);
+
+          if (amountToSend > gasCostInEther) {
+            const tx = {
+              to:
+                isInput === false
+                  ? receipentAdd
+                  : sessionStorage.getItem("address"),
+              value: ethers.utils.parseEther(amountToSend),
+              gasPrice: gasPrice,
+              gasLimit: gasLimit,
+            };
+
+            console.log(tx);
+
+            const gasEstimate = await wallet.estimateGas(tx);
+            console.log("Gas Estimate:", gasEstimate.toNumber());
+
+            const txResponse = await wallet.sendTransaction(tx);
+
+            console.log("Transaction sent:", txResponse);
+            seterror("Successfully sent!");
+          } else {
+            seterror("Insufficient funds to cover Gas fee !");
+          }
+        } catch (err: any) {
+          console.log(err.message);
+          seterror(err.message);
+        }
+      }
+
+      setisSuccessfull("Withdraw");
+    } catch (error) {
+      console.error("An error occurred during the transaction:", error);
+      setisSuccessfull("Error occurred during withdrawal");
+    }
   };
 
   const toggle = () => {
