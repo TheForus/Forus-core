@@ -1,11 +1,10 @@
 
 
 import USDT from '../assets/usdt.png'
-// import dai from "../assets/dai.png"
-import eth from "../assets/eth.png"
 import arb from "../assets/chains/ARB.png"
 import hbar from "../assets/hbar.png"
 import frxeth from "../assets/frxeth.png"
+import eth from "../assets/chains/ETH.png"
 
 
 
@@ -38,6 +37,22 @@ interface chain {
 
 export const chainOptions: chain[] = [
 
+
+    {
+        name: "Arbitrum One", contract: '0xfc739432ba84371598d58f24982426ea66962dba', chainId: "0xa4b1", symbol: arb, currency: { symbol: "ETH", decimals: 18 }, rpcs: ['https://arb1.arbitrum.io/rpc'], url: "https://arbiscan.io/tx", tokens: [
+
+
+            { name: "ETH", address: "", symbol: eth },
+            { name: "ARB", address: "0x912CE59144191C1204E64559FE8253a0e49E6548", symbol: arb },
+            { name: "USDT", address: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", symbol: USDT },
+   
+
+
+        ]
+    },
+
+
+
     {
         name: "Arbitrum Sepolia Testnet", contract: '0xDC00EF1b8869412D57Ac87Cd7fA28209ACbd3EF3', chainId: "0x66eee", symbol: arb, currency: { symbol: "ETH", decimals: 18 }, rpcs: ['https://sepolia-rollup.arbitrum.io/rpc'], url: "https://sepolia-explorer.arbitrum.io/tx/", tokens: [
 
@@ -46,7 +61,7 @@ export const chainOptions: chain[] = [
             { name: "ARB", address: "0x912CE59144191C1204E64559FE8253a0e49E6548", symbol: arb },
             { name: "USDT", address: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", symbol: USDT },
    
-            // "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1", // Replace with actual token addresses
+            // "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1", //  with actual token addresses
             // "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
             // "0x912CE59144191C1204E64559FE8253a0e49E6548",
 

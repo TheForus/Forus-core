@@ -205,7 +205,7 @@ const Container = (props: Props) => {
          from-blue-400 to-blue-600 z-[-10]"
         ></div>
         <div className="bg-black/80 max-h-max min-h-[100vh] lg:overflow-hidden">
-          <HeaderRibbon />
+          {/* <HeaderRibbon /> */}
 
           <NavBar />
 
