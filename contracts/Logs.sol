@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.17;
+
+pragma solidity ^0.8.24;
+
 
 // Import the interfaces for IERC20 and IERC721 tokens
 
@@ -277,4 +279,6 @@ contract Logs {
 
         return Keys;
     }
+
 }
+

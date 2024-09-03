@@ -9,7 +9,8 @@ type Props = {};
 const Nav = (props: Props) => {
   return (
     <div
-      className="bg-[#e9e9f3] text-white xl:px-28 md:px-22 px-8 p-5 flex : ;
+      className="bg-[#e9e9f3] text-white xl:px-28 md:px-22 px-8 p-5 flex m-8 ;
+
         justify-between items-center"
     >
       {/* logo left */}
@@ -23,8 +24,9 @@ const Nav = (props: Props) => {
       <div className="flex space-x-1 items-center">
         <Link spy={true} smooth={true} to="howitworks">
           <p
-            className="text-gray-700 hover:text-gray-900 hover:border-highlight p-1 sm:px-4  
-            montserrat-subtitle cursor-pointer border-b border-black
+            className="text-gray-700 hover:text-gray-900  p-1 sm:px-4  
+            montserrat-subtitle cursor-pointer 
+
             sm:text-[1.3rem] text-[1.1rem] font-semibold"
           >
             Tutorial

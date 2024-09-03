@@ -1,11 +1,12 @@
 
 
 import USDT from '../assets/usdt.png'
-import dai from "../assets/dai.png"
-import eth from "../assets/eth.png"
+
 import arb from "../assets/chains/ARB.png"
-import blast from "../assets/blast.png"
+import hbar from "../assets/hbar.png"
 import frxeth from "../assets/frxeth.png"
+import eth from   "../assets/eth.png"
+
 
 
 
@@ -37,14 +38,32 @@ interface chain {
 
 
 export const chainOptions: chain[] = [
+
+
+
+    {
+        name: "Arbitrum One", contract: '0xfc739432ba84371598d58f24982426ea66962dba', chainId: "0xa4b1", symbol: arb, currency: { symbol: "ETH", decimals: 18 }, rpcs: ['https://arb1.arbitrum.io/rpc'], url: "https://arbiscan.io/tx", tokens: [
+
+
+            { name: "ETH", address: "", symbol: eth },
+            { name: "ARB", address: "0x912CE59144191C1204E64559FE8253a0e49E6548", symbol: arb },
+            { name: "USDT", address: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", symbol: USDT },
+   
+
+
+        ]
+    },
+
+
+
+
     {
         name: "Arbitrum Sepolia Testnet", contract: '0xDC00EF1b8869412D57Ac87Cd7fA28209ACbd3EF3', chainId: "0x66eee", symbol: arb, currency: { symbol: "ETH", decimals: 18 }, rpcs: ['https://sepolia-rollup.arbitrum.io/rpc'], url: "https://sepolia-explorer.arbitrum.io/tx/", tokens: [
 
 
             { name: "ETH", address: "", symbol: arb },
-            { name: "ARB", address: "0x9440c3bb6adb5f0d5b8a460d8a8c010690dac2e8", symbol: arb },
-            { name: "USDT", address: "0x211554151f2f00305f33530fdd3a5d0354927a65", symbol: USDT },
-   
+
+     
 
 
         ]
@@ -61,22 +80,15 @@ export const chainOptions: chain[] = [
     },
 
 
-    {
-        name: "Fraxtal Testnet", contract: '0xee346C29CF59A505a33d22dCaE281C05F53c3Ed5', chainId: "0x9da", symbol: frxeth, currency: { symbol: "frxETH", decimals: 18 }, rpcs: ["https://rpc.testnet.frax.com"], url: "https://holesky.fraxscan.com/tx/", tokens: [
-
-            { name: "frxETH", address: "", symbol: frxeth },
-        
-        ]
-    },
 
     {
-        name: "Blast Sepolia Testnet", contract: '0x074bB0B14C2e310c1ad5b94c390E7FC4Ac06b67d', chainId: "0xa0c71fd", symbol: blast, currency: { symbol: "ETH", decimals: 18 }, rpcs: ['https://sepolia.blast.io'], url: "https://testnet.blastscan.io/tx/", tokens: [
+        name: "Hedera Testnet", contract: '0x414490A449726682eF20EEdE1AA0415036E7606E', chainId: "0x128", symbol: hbar, currency: { symbol: "HBAR", decimals: 18 }, rpcs: ['https://testnet.hashio.io/api'], url: "https://hashscan.io/testnet/transaction/", tokens: [
 
-            { name: "ETH", address: "", symbol: eth },
-            { name: "DAI", address: "0x9440c3bb6adb5f0d5b8a460d8a8c010690dac2e8", symbol: dai },
+            { name: "HBAR", address: "", symbol: hbar },
+      
 
         ]
     }
-];
 
 
+]

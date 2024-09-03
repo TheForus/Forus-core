@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { base58, keccak256 } from "ethers/lib/utils.js";
+
+import { base58, keccak256 } from "ethers/lib/utils";
+
 import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
 import { useContext } from "react";
