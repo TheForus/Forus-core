@@ -86,199 +86,199 @@ ChildProps) => {
   const { ethereum }: any = window;
 
   const sendTransaction = async () => {
-    // let balance;
+    let balance;
 
-    // try {
-    //   setisSuccessfull("Withdrawing Amount...");
+    try {
+      setisSuccessfull("Withdrawing Amount...");
 
-    //   // connect to the blockchain via a front-end provider
-    //   const provider = new ethers.providers.Web3Provider(ethereum);
-    //   const signer = provider.getSigner();
-    //   const user = await signer.getAddress();
+      // connect to the blockchain via a front-end provider
+      const provider = new ethers.providers.Web3Provider(ethereum);
+      const signer = provider.getSigner();
+      const user = await signer.getAddress();
 
-    //   const etherBalance = await provider.getBalance(user);
+      const etherBalance = await provider.getBalance(user);
 
-    //   if (etherBalance.isZero()) {
-    //     // list of ERC-20 token addresses you want to check
-    //     const erc20TokenAddresses = [
-    //       "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1", // Replace with actual token addresses
-    //       "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", // USDT
-    //       "0x912CE59144191C1204E64559FE8253a0e49E6548", // ARB
-    //       // Add more token addresses as needed
-    //     ];
+      if (etherBalance.isZero()) {
+        // list of ERC-20 token addresses you want to check
+        const erc20TokenAddresses = [
+          "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1", // Replace with actual token addresses
+          "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", // USDT
+          "0x912CE59144191C1204E64559FE8253a0e49E6548", // ARB
+          // Add more token addresses as needed
+        ];
 
-    //     let selectedTokenAddress = null;
+        let selectedTokenAddress = null;
 
-    //     // ABI to check ERC-20 token balance
-    //     const balanceAbi = [
-    //       "function balanceOf(address owner) view returns (uint256)",
-    //     ];
+        // ABI to check ERC-20 token balance
+        const balanceAbi = [
+          "function balanceOf(address owner) view returns (uint256)",
+        ];
 
-    //     // loop through each token and check the balance
-    //     for (const tokenAddress of erc20TokenAddresses) {
-    //       const tokenContract = new ethers.Contract(
-    //         tokenAddress,
-    //         balanceAbi,
-    //         provider
-    //       );
-    //       balance = await tokenContract.balanceOf(user);
+        // loop through each token and check the balance
+        for (const tokenAddress of erc20TokenAddresses) {
+          const tokenContract = new ethers.Contract(
+            tokenAddress,
+            balanceAbi,
+            provider
+          );
+          balance = await tokenContract.balanceOf(user);
 
-    //       // if the balance is greater than 0, select this token and break the loop
-    //       if (balance.gt(0)) {
-    //         selectedTokenAddress = tokenAddress;
-    //         break;
-    //       }
-    //     }
+          // if the balance is greater than 0, select this token and break the loop
+          if (balance.gt(0)) {
+            selectedTokenAddress = tokenAddress;
+            break;
+          }
+        }
 
-    //     const amountToSend: any = ethers.utils.formatUnits(balance);
+        const amountToSend: any = ethers.utils.formatUnits(balance);
 
-    //     // Proceed only if a valid token with a balance > 0 is found
-    //     if (selectedTokenAddress) {
-    //       // ABI for the transfer function
-    //       const transferAbi = ["function transfer(address to, uint256 amount)"];
-    //       const contract = new ethers.Contract(
-    //         selectedTokenAddress,
-    //         transferAbi,
-    //         signer
-    //       );
+        // Proceed only if a valid token with a balance > 0 is found
+        if (selectedTokenAddress) {
+          // ABI for the transfer function
+          const transferAbi = ["function transfer(address to, uint256 amount)"];
+          const contract = new ethers.Contract(
+            selectedTokenAddress,
+            transferAbi,
+            signer
+          );
 
-    //       // specify the recipient address and amount to transfer
-    //       const recipient =
-    //         isInput === false
-    //           ? receipentAdd
-    //           : sessionStorage.getItem("address");
-    //       const amount = ethers.parseUnits(amountToSend, 18);
+          // specify the recipient address and amount to transfer
+          const recipient =
+            isInput === false
+              ? receipentAdd
+              : sessionStorage.getItem("address");
+          const amount = ethers.parseUnits(amountToSend, 18);
 
-    //       // Prepare the transaction data for transfer
-    //       const txData = await contract.populateTransaction.transfer(
-    //         recipient,
-    //         amount
-    //       );
+          // Prepare the transaction data for transfer
+          const txData = await contract.populateTransaction.transfer(
+            recipient,
+            amount
+          );
 
-    //       // Populate the relay SDK request body
-    //       const request = {
-    //         chainId: (await provider.getNetwork()).chainId,
-    //         target: selectedTokenAddress,
-    //         data: txData.data,
-    //         user: user,
-    //         feeToken: selectedTokenAddress,
-    //         isRelayContext: true,
-    //       };
+          // Populate the relay SDK request body
+          const request = {
+            chainId: (await provider.getNetwork()).chainId,
+            target: selectedTokenAddress,
+            data: txData.data,
+            user: user,
+            feeToken: selectedTokenAddress,
+            isRelayContext: true,
+          };
 
-    //       // Send relayRequest to Gelato Relay API
-    //       const relayResponse = await relay.callWithSyncFeeERC2771(
-    //         request,
-    //         provider
-    //       );
+          // Send relayRequest to Gelato Relay API
+          const relayResponse = await relay.callWithSyncFeeERC2771(
+            request,
+            provider
+          );
 
-    //       // Get the estimated fee
-    //       const gasLimit = 21000; // Adjust as necessary
-    //       const fee = await relay.getEstimatedFee(
-    //         (
-    //           await provider.getNetwork()
-    //         ).chainId,
-    //         selectedTokenAddress,
-    //         gasLimit,
-    //         false
-    //       );
+          // Get the estimated fee
+          const gasLimit = 21000; // Adjust as necessary
+          const fee = await relay.getEstimatedFee(
+            (
+              await provider.getNetwork()
+            ).chainId,
+            selectedTokenAddress,
+            gasLimit,
+            false
+          );
 
-    //       const maxFee = fee * 2;
+          const maxFee = fee * 2;
 
-    //       // Example calling the incrementFeeCapped(maxFee) method
-    //       const dataMaxFee =
-    //         await contract.populateTransaction.incrementFeeCapped(maxFee);
+          // Example calling the incrementFeeCapped(maxFee) method
+          const dataMaxFee =
+            await contract.populateTransaction.incrementFeeCapped(maxFee);
 
-    //       // Populate the relay SDK request body for the fee
-    //       const requestMaxFee = {
-    //         chainId: (await provider.getNetwork()).chainId,
-    //         target: selectedTokenAddress,
-    //         data: dataMaxFee.data,
-    //         user: user,
-    //         feeToken: selectedTokenAddress,
-    //         isRelayContext: true,
-    //       };
+          // Populate the relay SDK request body for the fee
+          const requestMaxFee = {
+            chainId: (await provider.getNetwork()).chainId,
+            target: selectedTokenAddress,
+            data: dataMaxFee.data,
+            user: user,
+            feeToken: selectedTokenAddress,
+            isRelayContext: true,
+          };
 
-    //       // Send relayRequest to Gelato Relay API for the fee
-    //       const relayResponseMaxFee = await relay.callWithSyncFeeERC2771(
-    //         requestMaxFee,
-    //         provider
-    //       );
-    //     } else {
-    //       console.log(
-    //         "No ERC-20 tokens with a balance greater than 0 found for the signer."
-    //       );
-    //     }
-    //   } else {
-    //     try {
-    //       const provider = new ethers.providers.Web3Provider(ethereum);
+          // Send relayRequest to Gelato Relay API for the fee
+          const relayResponseMaxFee = await relay.callWithSyncFeeERC2771(
+            requestMaxFee,
+            provider
+          );
+        } else {
+          console.log(
+            "No ERC-20 tokens with a balance greater than 0 found for the signer."
+          );
+        }
+      } else {
+        try {
+          const provider = new ethers.providers.Web3Provider(ethereum);
 
-    //       const wallet = new ethers.Wallet(masterkey, provider);
+          const wallet = new ethers.Wallet(masterkey, provider);
 
-    //       // Get the Ethereum address associated with the private key
-    //       const address = wallet.address;
+          // Get the Ethereum address associated with the private key
+          const address = wallet.address;
 
-    //       // Ensure balance is retrieved in Ether
-    //       const balance = await provider.getBalance(address);
+          // Ensure balance is retrieved in Ether
+          const balance = await provider.getBalance(address);
 
-    //       // Get the gas price
-    //       const gasPrice: ethers.BigNumber = await provider.getGasPrice();
-    //       console.log(
-    //         `Gas Price (Gwei): ${ethers.utils.formatUnits(gasPrice, "gwei")}`
-    //       );
+          // Get the gas price
+          const gasPrice: ethers.BigNumber = await provider.getGasPrice();
+          console.log(
+            `Gas Price (Gwei): ${ethers.utils.formatUnits(gasPrice, "gwei")}`
+          );
 
-    //       const gasLimit: ethers.BigNumber = ethers.BigNumber.from(21000);
-    //       // console.log(`Gas Limit: ${gasLimit}`);
+          const gasLimit: ethers.BigNumber = ethers.BigNumber.from(21000);
+          // console.log(`Gas Limit: ${gasLimit}`);
 
-    //       // Calculate the gas cost based on the gas limit and gas price
-    //       const gasCost: ethers.BigNumber = gasPrice.mul(gasLimit);
-    //       console.log(gasCost);
+          // Calculate the gas cost based on the gas limit and gas price
+          const gasCost: ethers.BigNumber = gasPrice.mul(gasLimit);
+          console.log(gasCost);
 
-    //       // Calculate the amount to send
-    //       // const balance: ethers.BigNumber = await provider.getBalance('YOUR_ADDRESS');
+          // Calculate the amount to send
+          // const balance: ethers.BigNumber = await provider.getBalance('YOUR_ADDRESS');
 
-    //       const gasCostInEther: number = parseFloat(
-    //         ethers.utils.formatUnits(gasCost, "ether")
-    //       );
-    //       // console.log(gasCostInEther, ethers.utils.formatUnits(balance));
-    //       const amountToSend: any = ethers.utils.formatUnits(
-    //         balance.sub(gasCost)
-    //       );
-    //       // console.log(amountToSend);
+          const gasCostInEther: number = parseFloat(
+            ethers.utils.formatUnits(gasCost, "ether")
+          );
+          // console.log(gasCostInEther, ethers.utils.formatUnits(balance));
+          const amountToSend: any = ethers.utils.formatUnits(
+            balance.sub(gasCost)
+          );
+          // console.log(amountToSend);
 
-    //       if (amountToSend > gasCostInEther) {
-    //         const tx = {
-    //           to:
-    //             isInput === false
-    //               ? receipentAdd
-    //               : sessionStorage.getItem("address"),
-    //           value: ethers.utils.parseEther(amountToSend),
-    //           gasPrice: gasPrice,
-    //           gasLimit: gasLimit,
-    //         };
+          if (amountToSend > gasCostInEther) {
+            const tx = {
+              to:
+                isInput === false
+                  ? receipentAdd
+                  : sessionStorage.getItem("address"),
+              value: ethers.utils.parseEther(amountToSend),
+              gasPrice: gasPrice,
+              gasLimit: gasLimit,
+            };
 
-    //         console.log(tx);
+            console.log(tx);
 
-    //         const gasEstimate = await wallet.estimateGas(tx);
-    //         console.log("Gas Estimate:", gasEstimate.toNumber());
+            const gasEstimate = await wallet.estimateGas(tx);
+            console.log("Gas Estimate:", gasEstimate.toNumber());
 
-    //         const txResponse = await wallet.sendTransaction(tx);
+            const txResponse = await wallet.sendTransaction(tx);
 
-    //         console.log("Transaction sent:", txResponse);
-    //         seterror("Successfully sent!");
-    //       } else {
-    //         seterror("Insufficient funds to cover Gas fee !");
-    //       }
-    //     } catch (err: any) {
-    //       console.log(err.message);
-    //       seterror(err.message);
-    //     }
-    //   }
+            console.log("Transaction sent:", txResponse);
+            seterror("Successfully sent!");
+          } else {
+            seterror("Insufficient funds to cover Gas fee !");
+          }
+        } catch (err: any) {
+          console.log(err.message);
+          seterror(err.message);
+        }
+      }
 
-    //   setisSuccessfull("Withdraw");
-    // } catch (error) {
-    //   console.error("An error occurred during the transaction:", error);
-    //   setisSuccessfull("Error occurred during withdrawal");
-    // }
+      setisSuccessfull("Withdraw");
+    } catch (error) {
+      console.error("An error occurred during the transaction:", error);
+      setisSuccessfull("Error occurred during withdrawal");
+    }
   };
 
   const toggle = () => {
