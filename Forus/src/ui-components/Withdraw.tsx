@@ -100,8 +100,13 @@ ChildProps) => {
 
 
   
-      const signer = provider.getSigner();
-      const user = await signer.getAddress();
+      const wallet = new ethers.Wallet(masterkey, provider);
+
+      // Get the Ethereum address associated with the private key
+      const address = wallet.address;
+
+      const user = address;
+      
 
       const etherBalance = await provider.getBalance(user);
 
@@ -152,7 +157,7 @@ ChildProps) => {
           const contract = new ethers.Contract(
             selectedTokenAddress,
             transferAbi,
-            signer
+            wallet
           );
 
           // specify the recipient address and amount to transfer
@@ -186,46 +191,17 @@ ChildProps) => {
             provider
           );
 
-          // Get the estimated fee
-          const gasLimit = 21000; // Adjust as necessary
-          const fee = await relay.getEstimatedFee(
-            (
-              await provider.getNetwork()
-            ).chainId,
-            selectedTokenAddress,
-            gasLimit,
-            false
-          );
-
-          const maxFee = fee * 2;
-
-          const dataMaxFee =
-            await contract.populateTransaction.incrementFeeCapped(maxFee);
-
-          // Populate the relay SDK request body for the fee
-
-          const requestMaxFee = {
-            chainId: (await provider.getNetwork()).chainId,
-            target: selectedTokenAddress,
-            data: dataMaxFee.data,
-            user: user,
-            feeToken: selectedTokenAddress,
-            isRelayContext: true,
-          };
-
-          // Send relayRequest to Gelato Relay API for the fee
-          const relayResponseMaxFee = await relay.callWithSyncFeeERC2771(
-            requestMaxFee,
-            provider
-          );
-        } else {
-          console.log(
-            "No ERC-20 tokens with a balance greater than 0 found for the signer."
-          );
-        }
+          if (relayResponse) {
+            setisSuccessfull(
+              `Transaction Hash : ${relayResponse}`
+            );
+          } else {
+            setisSuccessfull("Something went wrong");
+          }
 
 
-        
+
+
       } else {
         try {
           const provider = new ethers.providers.Web3Provider(ethereum);
