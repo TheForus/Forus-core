@@ -4,7 +4,7 @@ import USDT from '../assets/usdt.png'
 import arb from "../assets/chains/ARB.png"
 import hbar from "../assets/hbar.png"
 import frxeth from "../assets/frxeth.png"
-import eth from "../assets/chains/ETH.png"
+import eth from   "../assets/eth.png"
 
 
 
@@ -58,13 +58,7 @@ export const chainOptions: chain[] = [
 
 
             { name: "ETH", address: "", symbol: arb },
-            { name: "ARB", address: "0x912CE59144191C1204E64559FE8253a0e49E6548", symbol: arb },
-            { name: "USDT", address: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", symbol: USDT },
-   
-            // "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1", //  with actual token addresses
-            // "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
-            // "0x912CE59144191C1204E64559FE8253a0e49E6548",
-
+     
 
         ]
     },

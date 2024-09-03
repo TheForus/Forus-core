@@ -4,7 +4,7 @@ import Tutorial from "./Tutorial";
 import Features from "./Features";
 import Qna from "./Qna";
 import Footer from "./Footer";
-import HeaderRibbon from '../components/HeaderRibbon';
+// import HeaderRibbon from '../components/HeaderRibbon';
 
 type Props = {};
 
@@ -12,7 +12,7 @@ const Wrapper = (props: Props) => {
   // dark:bg-[#015235]
   return (
     <div className="bg-[#e9e9f3] ">
-      <HeaderRibbon />
+      {/* <HeaderRibbon /> */}
       <Nav />
       {/* <div className=" mt-[1px] dark:mt-0 "></div> */}
       <Header />
