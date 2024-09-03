@@ -11,7 +11,7 @@ type Props = {};
 const Wrapper = (props: Props) => {
   // dark:bg-[#015235]
   return (
-    <div className="bg-[#e9e9f3] ">
+    <div className=" ">
       {/* <HeaderRibbon /> */}
       <Nav />
       {/* <div className=" mt-[1px] dark:mt-0 "></div> */}

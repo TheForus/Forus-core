@@ -9,7 +9,7 @@ const Header = () => {
     <>
       <div
         className="bg-[#e9e9f3] xl:px-36 md:px-22 px-8 sm:py-27 py-16 flex mb-4
-          justify-between items-center md:flex-row flex-col space-y-1 text-gray-700"
+          justify-between  items-center md:flex-row flex-col m-8 text-gray-700"
       >
         {/* left side */}
         <div className="flex flex-col items-start space-y-4 ml-6  md:w-[100%]">

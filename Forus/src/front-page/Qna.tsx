@@ -47,9 +47,9 @@ const Qna = (props: Props) => {
         </h4>
         {showAnswers[0] && (
           <p className=" w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
-            Generate a forus key and store it with its corresponding signature . Now share only your forus key (or you can also share its "link" ) with sender and ask him to send you funds
-            through https://forus.live/forus . When he initates the the transaction using your forus key a new unknown address would be generated with the funds he sent, which only you are able to access by the help of your saved signature key.
-           
+           Generate a link and store its corresponding secret key. Share only your Forus key (or you can also share its link) with the sender and ask them to send
+            funds through the app. When they initiate the transaction using your Forus key, a new, unknown stealth address will be generated with the funds they
+             sent. You will be able to access these funds using the secret key you saved.
 
           </p>
         )}
@@ -89,7 +89,7 @@ transactions by anyone else. This ensures enhanced privacy and
         lg:text-lg cursor-pointer flex items-center
          montserrat-subheading py-4 text-gray-600 gap-16`}
         >
-          3: What is signature key in forus?
+          3: What is secret key in forus?
           <span>
             {showAnswers[2] ? (
               <IoAddSharp
@@ -106,9 +106,9 @@ transactions by anyone else. This ensures enhanced privacy and
         </h4>
         {showAnswers[2] && (
           <p className="dark:text-gray-300 w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
-            "Signature" is the 32 bytes random key works as a private key of your forus key
-            Its a key to unlock funds on the stealth address generated from your forus key . So when you share your forus key
-            with the sender always save its corresponding signature in a secure place.
+            "Secret" is the 32 bytes random key works as a private key of your forus key
+            Its a key to unlock funds on the stealth address generated from your forus key . So when you share your forus key or link
+            with the sender always save its corresponding  secret in a secure place.
           </p>
         )}
         <h4
@@ -136,7 +136,7 @@ transactions by anyone else. This ensures enhanced privacy and
         {showAnswers[3] && (
           <p className=" w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
             Simply click the "generate" button , and a unique Forus key will be
-            generated for you . Make sure to save the accompanying signature key
+            generated for you . Make sure to save the accompanying secret key
             in a secure location .
           </p>
         )}
@@ -164,8 +164,8 @@ transactions by anyone else. This ensures enhanced privacy and
         </h4>
         {showAnswers[4] && (
           <p className=" w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
-            You can retrieve the private key of stealth address by clicking on the "scan"
-            button and by pasting your signature key in the destinated input . This will allow
+            After the funds have been send by sender ,You can retrieve the private key of stealth address by clicking on the "scan"
+            button and by pasting your secret key in the destinated input . This will allow
             you to access the specific stealth address where the funds have been sent.
           </p>
         )}
@@ -194,7 +194,7 @@ transactions by anyone else. This ensures enhanced privacy and
         </h4>
         {showAnswers[5] && (
           <p className="dark:text-gray-300 w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
-            Absolutely! forus has been designed with a cheap .quick and user-friendly interface,
+            Absolutely! forus has been designed with a focus on quick and user-friendly interface,
             making it accessible and easy to use for individuals with different
             levels of technical knowledge. Our app provides a seamless and
             intuitive experience for all users.
@@ -207,7 +207,7 @@ transactions by anyone else. This ensures enhanced privacy and
         lg:text-lg cursor-pointer flex items-center
          montserrat-subheading py-4 text-gray-600 gap-16`}
         >
-          7: What if i lost my Signature key ?
+          7: What if i lost my secret key ?
           <span>
             {showAnswers[6] ? (
               <IoAddSharp
@@ -224,7 +224,7 @@ transactions by anyone else. This ensures enhanced privacy and
         </h4>
         {showAnswers[6] && (
           <p className=" w-[90%] px-4  pb-5  montserrat-subheading text-[#58707e] text-left">
-            Signature key works like private key of forus key if u lost it you could never retreive the funds sent with the help of your forus key . Well ! its crutial to always save the keys after generating.
+            Secret key works like private key of forus key (or Cryptographic link) if u lost it you could never retreive the funds sent to you . Well ! its crutial to always save the keys after generating.
           </p>
         )}
 
