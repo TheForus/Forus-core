@@ -42,7 +42,7 @@ export const chainOptions: chain[] = [
 
 
     {
-        name: "Arbitrum One", contract: '0xfc739432ba84371598d58f24982426ea66962dba', chainId: "0xa4b1", symbol: arb, currency: { symbol: "ETH", decimals: 18 }, rpcs: ['https://arb1.arbitrum.io/rpc'], url: "https://arbiscan.io/tx", tokens: [
+        name: "Arbitrum One", contract: '0xfc739432ba84371598d58f24982426ea66962dba', chainId: "0xa4b1", symbol: arb, currency: { symbol: "ETH", decimals: 18 }, rpcs: ['https://arb1.arbitrum.io/rpc'], url: "https://arbiscan.io/tx/", tokens: [
 
 
             { name: "ETH", address: "", symbol: eth },
