@@ -155,7 +155,6 @@ const Transfer = () => {
 
 
 
-
   //receipent public key (i.e forus key )
   let rec_fkey: EC.KeyPair | any;
 
@@ -355,6 +354,7 @@ const Transfer = () => {
       seterror(e.message);
     }
     setwaiting(false);
+    
   };
 
   async function approve() {

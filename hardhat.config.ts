@@ -10,6 +10,12 @@ const config: HardhatUserConfig = {
   solidity: "0.8.24",
   
   networks: {
+
+
+    arbitrum: {
+      url: process.env.ARBITRUM_MAIN_URL || "" ,
+      accounts: [process.env.PRIVATE_KEY!]
+    },
     
     hederatestnet: {
       url: process.env.HEDERA_TESTNET_URL || "",
@@ -17,13 +23,13 @@ const config: HardhatUserConfig = {
     }
 
    ,
-    arbitrumSepolia: {
-      url: process.env.ARBITRUM_SEPOLIA_URL || "" ,
+    metis: {
+      url: process.env.METIS_URL || "" ,
       accounts: [process.env.PRIVATE_KEY!]
     },
 
-    arbitrum: {
-      url: process.env.ARBITRUM_MAIN_URL || "" ,
+    fraxtal: {
+      url: process.env.FRAXTAL_MAIN_URL || "" ,
       accounts: [process.env.PRIVATE_KEY!]
     },
 
