@@ -1,5 +1,4 @@
-
-import { useState ,useMemo } from "react";
+import { useState, useMemo } from "react";
 
 import { BsBoxArrowInDown, BsDownload } from "react-icons/bs";
 import { Notyf } from "notyf";
@@ -9,12 +8,11 @@ import ToolTip from "../helpers/ToopTip";
 import { MdOutlineDone } from "react-icons/md";
 import { TbTransferIn, TbSwitchVertical } from "react-icons/tb";
 
-
 //gelato setup
 
 import {
   GelatoRelay,
-  CallWithSyncFeeERC2771Request,  
+  CallWithSyncFeeERC2771Request,
 } from "@gelatonetwork/relay-sdk";
 const relay = new GelatoRelay();
 
@@ -35,7 +33,7 @@ ChildProps) => {
   const [isSuccessfull, setisSuccessfull] = useState<string>("withdraw");
 
   // Function to handle file selection and reading its contents
-  
+
   const handleFileUpload = async () => {
     const fileInput = document.createElement("input");
 
@@ -89,16 +87,9 @@ ChildProps) => {
 
   const { ethereum }: any = window;
 
-
-
-
-
-  const provider = useMemo(() => {
-
+  const provider : any = useMemo(() => {
     return new ethers.providers.Web3Provider(ethereum);
-
-  }, [])
-
+  }, []);
 
   const sendTransaction = async () => {
     let balance;
@@ -106,26 +97,21 @@ ChildProps) => {
     try {
       setisSuccessfull("Withdrawing Amount...");
 
-
-  
       const wallet = new ethers.Wallet(masterkey, provider);
 
       // Get the Ethereum address associated with the private key
       const address = wallet.address;
 
       const user = address;
-      
 
       const etherBalance = await provider.getBalance(user);
 
       if (etherBalance.isZero()) {
-
-        // list of ERC-20 token addresses 
+        // list of ERC-20 token addresses
 
         const erc20TokenAddresses = [
           "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", // USDT
           "0x912CE59144191C1204E64559FE8253a0e49E6548", // ARB
-         
         ];
 
         let selectedTokenAddress = null;
@@ -158,7 +144,6 @@ ChildProps) => {
         // Proceed only if a valid token with a balance > 0 is found
 
         if (selectedTokenAddress) {
-
           // ABI for the transfer function
 
           const transferAbi = ["function transfer(address to, uint256 amount)"];
@@ -174,8 +159,7 @@ ChildProps) => {
               ? receipentAdd
               : sessionStorage.getItem("address");
 
-         const amount = ethers.utils.parseUnits(amountToSend, 18);
-
+          const amount = ethers.utils.parseUnits(amountToSend, 18);
 
           // Prepare the transaction data for transfer
           const txData = await contract.populateTransaction.transfer(
@@ -184,7 +168,7 @@ ChildProps) => {
           );
 
           // Populate the relay SDK request body
-          const request = {
+          const request : any = {
             chainId: (await provider.getNetwork()).chainId,
             target: selectedTokenAddress,
             data: txData.data,
@@ -194,97 +178,94 @@ ChildProps) => {
           };
 
           // Send relayRequest to Gelato Relay API
-          // const relayResponse = await relay.callWithSyncFeeERC2771(
-          //   request,
-          //   provider
-          // );
-
-          // if (relayResponse) {
-          //   setisSuccessfull(
-          //     `Transaction Hash : ${relayResponse}`
-          //   );
-          // } else {
-          //   setisSuccessfull("Something went wrong");
-          // }
-
-
-
-
-      } else {
-        try {
-          const provider = new ethers.providers.Web3Provider(ethereum);
-
-          const wallet = new ethers.Wallet(masterkey, provider);
-
-          // Get the Ethereum address associated with the private key
-          const address = wallet.address;
-
-          // Ensure balance is retrieved in Ether
-          const balance = await provider.getBalance(address);
-
-          // Get the gas price
-          const gasPrice: ethers.BigNumber = await provider.getGasPrice();
-          console.log(
-            `Gas Price (Gwei): ${ethers.utils.formatUnits(gasPrice, "gwei")}`
+          const relayResponse = await relay.callWithSyncFeeERC2771(
+            request,
+            provider
           );
 
-          const gasLimit: ethers.BigNumber = ethers.BigNumber.from(21000);
-          // console.log(`Gas Limit: ${gasLimit}`);
-
-          // Calculate the gas cost based on the gas limit and gas price
-          const gasCost: ethers.BigNumber = gasPrice.mul(gasLimit);
-          console.log(gasCost);
-
-          // Calculate the amount to send
-          // const balance: ethers.BigNumber = await provider.getBalance('YOUR_ADDRESS');
-
-          const gasCostInEther: number = parseFloat(
-            ethers.utils.formatUnits(gasCost, "ether")
-          );
-          // console.log(gasCostInEther, ethers.utils.formatUnits(balance));
-          const amountToSend: any = ethers.utils.formatUnits(
-            balance.sub(gasCost)
-          );
-          // console.log(amountToSend);
-
-          if (amountToSend > gasCostInEther) {
-            const tx = {
-              to:
-                isInput === false
-                  ? receipentAdd
-                  : sessionStorage.getItem("address"),
-              value: ethers.utils.parseEther(amountToSend),
-              gasPrice: gasPrice,
-              gasLimit: gasLimit,
-            };
-
-            console.log(tx);
-
-            const gasEstimate = await wallet.estimateGas(tx);
-            console.log("Gas Estimate:", gasEstimate.toNumber());
-
-            const txResponse = await wallet.sendTransaction(tx);
-
-            console.log("Transaction sent:", txResponse);
-            seterror("Successfully sent!");
+          if (relayResponse) {
+            setisSuccessfull(
+              `Transaction Hash : ${relayResponse}`
+            );
           } else {
-            seterror("Insufficient funds to cover Gas fee !");
+            setisSuccessfull("Something went wrong");
           }
-        } catch (err: any) {
-          console.log(err.message);
-          seterror(err.message);
+
+
+          //if the user has none erc20 token balance
+          
+        } else {
+          try {
+            const provider = new ethers.providers.Web3Provider(ethereum);
+
+            const wallet = new ethers.Wallet(masterkey, provider);
+
+            // Get the Ethereum address associated with the private key
+            const address = wallet.address;
+
+            // Ensure balance is retrieved in Ether
+            const balance = await provider.getBalance(address);
+
+            // Get the gas price
+            const gasPrice: ethers.BigNumber = await provider.getGasPrice();
+            console.log(
+              `Gas Price (Gwei): ${ethers.utils.formatUnits(gasPrice, "gwei")}`
+            );
+
+            const gasLimit: ethers.BigNumber = ethers.BigNumber.from(21000);
+            // console.log(`Gas Limit: ${gasLimit}`);
+
+            // Calculate the gas cost based on the gas limit and gas price
+            const gasCost: ethers.BigNumber = gasPrice.mul(gasLimit);
+            console.log(gasCost);
+
+            // Calculate the amount to send
+            // const balance: ethers.BigNumber = await provider.getBalance('YOUR_ADDRESS');
+
+            const gasCostInEther: number = parseFloat(
+              ethers.utils.formatUnits(gasCost, "ether")
+            );
+            // console.log(gasCostInEther, ethers.utils.formatUnits(balance));
+            const amountToSend: any = ethers.utils.formatUnits(
+              balance.sub(gasCost)
+            );
+            // console.log(amountToSend);
+
+            if (amountToSend > gasCostInEther) {
+              const tx = {
+                to:
+                  isInput === false
+                    ? receipentAdd
+                    : sessionStorage.getItem("address"),
+                value: ethers.utils.parseEther(amountToSend),
+                gasPrice: gasPrice,
+                gasLimit: gasLimit,
+              };
+
+              console.log(tx);
+
+              const gasEstimate = await wallet.estimateGas(tx);
+              console.log("Gas Estimate:", gasEstimate.toNumber());
+
+              const txResponse = await wallet.sendTransaction(tx);
+
+              console.log("Transaction sent:", txResponse);
+              seterror("Successfully sent!");
+            } else {
+              seterror("Insufficient funds to cover Gas fee !");
+            }
+          } catch (err: any) {
+            console.log(err.message);
+            seterror(err.message);
+          }
         }
       }
 
-    }
-
       setisSuccessfull("Withdraw");
-
     } catch (error) {
       console.error("An error occurred during the transaction:", error);
       setisSuccessfull("Error occurred during withdrawal");
     }
-
   };
 
   const toggle = () => {
