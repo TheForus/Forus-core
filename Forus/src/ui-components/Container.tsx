@@ -8,7 +8,6 @@ import "notyf/notyf.min.css";
 import abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { ethers } from "ethers";
 import { chainOptions } from "../helpers/ChainOptions";
-import HeaderRibbon from "../components/HeaderRibbon";
 import { ValidateChainData } from "../checkers/ValidateChainData";
 import { SwitchChain } from "../helpers/SwitchChain";
 import { isDetected } from "../checkers/isDetected";

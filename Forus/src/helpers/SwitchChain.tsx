@@ -1,6 +1,7 @@
 export const SwitchChain = async(customChain : any, chainId : string) => {
 
     const { ethereum }: any = window;
+    
     await ethereum.request({
         method: "wallet_addEthereumChain",
         params: [customChain],
