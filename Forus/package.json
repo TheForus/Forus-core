@@ -21,15 +21,14 @@
     "bs58": "^5.0.0",
     "buffer": "^6.0.3",
     "buffer-es6": "^4.9.3",
-    "caniuse-lite": "^1.0.30001561",
     "dotenv": "^16.0.3",
     "elliptic": "^6.5.4",
     "ethers": "^5.7.2",
     "keccak256": "^1.0.6",
     "notyf": "^3.10.0",
     "querystring": "^0.2.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-icons": "^4.8.0",
     "react-player": "^2.12.0",
     "react-router-dom": "^6.11.0",
@@ -57,9 +56,11 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@types/elliptic": "^6.4.14",
     "@types/firebase": "^3.2.1",
     "@types/react-scroll": "^1.8.7",
+    "postcss-nesting": "^13.0.1",
     "tailwind-scrollbar": "^3.0.1",
     "tailwindcss": "^3.3.2"
   }
