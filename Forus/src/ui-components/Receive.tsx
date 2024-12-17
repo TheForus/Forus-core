@@ -378,12 +378,12 @@ export const Receive: React.FC<ChildProps> = ({
                   setsavedSignaturekey(e.target.value);
                   verifySignature(e.target.value);
                 }}
-                placeholder="Paste your signature file..."
+                placeholder="Paste your secret file..."
               />
             )}
             {hide && (
               <p className="text-gray-400 p-1 py-2 font-semibold montserrat-small ">
-                Expand to enter the signature Key
+                Expand to enter the secret Key
               </p>
             )}
 

@@ -68,24 +68,14 @@ export const chainOptions: chain[] = [
 
 
 
-    // {
-    //     name: "Fraxtal", contract: '0x9152D9eF04Bf00BE1A408C2b2FE78a87cD9CdcC7', chainId: "0xfc", symbol: frxeth, currency: { symbol: "frxETH", decimals: 18 }, rpcs: ['https://rpc.frax.com'], url: "https://fraxscan.com/tx/", tokens: [
+    {
+        name: "Hedera Testnet", contract: '0x414490A449726682eF20EEdE1AA0415036E7606E', chainId: "0x128", symbol: hbar, currency: { symbol: "HBAR", decimals: 18 }, rpcs: ['https://testnet.hashio.io/api'], url: "https://hashscan.io/testnet/transaction/", tokens: [
 
-    //         { name: "frxETH", address: "", symbol: frxeth },
-        
-    //     ]
-    // },
-
-
-
-    // {
-    //     name: "Hedera Testnet", contract: '0x414490A449726682eF20EEdE1AA0415036E7606E', chainId: "0x128", symbol: hbar, currency: { symbol: "HBAR", decimals: 18 }, rpcs: ['https://testnet.hashio.io/api'], url: "https://hashscan.io/testnet/transaction/", tokens: [
-
-    //         { name: "HBAR", address: "", symbol: hbar },
+            { name: "HBAR", address: "", symbol: hbar },
       
 
-    //     ]
-    // }
+        ]
+    }
 
 
 ]

@@ -290,7 +290,7 @@ ChildProps) => {
               onChange={(e) => {
                 setreceipentAdd(e.target.value);
               }}
-              placeholder="Enter receipentAddipient Address"
+              placeholder="Enter receipent Address"
             />
           ) : (
             <h3 className="text-[0.95rem] text-gray-400 montserrat-subtitle font-semibold ">

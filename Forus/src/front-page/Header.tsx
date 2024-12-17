@@ -1,7 +1,6 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import screenshot from "../assets/ForusKey.png";
-import Info from "./Info";
+
 
 const Header = () => {
   const navigate = useNavigate();
@@ -35,7 +34,7 @@ const Header = () => {
             text-left text-[1.2rem] md:text-[1.5rem] xl:text-[2.4rem]"
           >
             {/* Receive Eth and tokens with forus confidentially !! */}
-            <span>Anonymous & Secure</span>
+            <span>Private & Secure</span>
             <span>transactions</span>
           </h2>
           <p
@@ -47,8 +46,8 @@ const Header = () => {
             Get funds privately without sharing wallet address !!
           </p>
           <button
-            className="border-1 montserrat-subtitle  
-            hover:scale-95 transition-all ease-linear p-1 px-10 rounded-full border-[#48494b] 
+            className="border-1 montserrat-heading  
+            hover:scale-95 transition-all ease-linear p-2 px-10 rounded-full border-[#48494b] 
              montserrat-subtitle font-bold  text-xl bg-[#292a2c] text-gray-300"
             onClick={() => navigate("/forus")}
           >
@@ -68,7 +67,7 @@ const Header = () => {
           />
         </div>
       </div>
-      <Info />
+      {/* <Info /> */}
     </>
   );
 };

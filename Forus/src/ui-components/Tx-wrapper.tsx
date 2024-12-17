@@ -64,7 +64,7 @@ const Transactions = (props: Props) => {
             : "text-gray-400"
         }`}
         >
-          Transfer
+          Send
         </button>
         <button
           onClick={handleReceiveClick}

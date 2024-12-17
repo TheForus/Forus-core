@@ -11,7 +11,7 @@ import Footer from "./Footer";
 type Props = {};
 
 const Wrapper = (props: Props) => {
-  // dark:bg-[#015235]
+ 
   return (
 
 
