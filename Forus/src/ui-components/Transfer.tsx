@@ -21,6 +21,13 @@ import { useLocation } from 'react-router-dom';
 
 const ec = new EllipticCurve.ec("secp256k1");
 
+import { Polybase } from "@polybase/client";
+ 
+
+const db = new Polybase({
+  defaultNamespace: "pk/0xb7525f97e65911cdc9366260fe0161677dae0ff6d8e41d298d5dd3189126d461813053df370626c9f23f92805387cc06a9887e69440240427328aa73b730b98c/Forus",
+});
+
 const Transfer = () => {
 
   const notyf = new Notyf();
@@ -238,9 +245,14 @@ const Transfer = () => {
       x_cor = "0x" + ephemeralPkey?.getX().toString(16, 64) || "";
       y_cor = "0x" + ephemeralPkey?.getY().toString(16, 64) || "";
 
+      sharedSecret = "0x" + calculateSecret.toArray()[0].toString(16) + calculateSecret.toArray()[1].toString(16);
+
+      const ephkeys = `${sharedSecret.replace("0x", "")}04${x_cor.slice(2)}${y_cor.slice(2)}`;
+      await db.collection("Forus").create(["eph-keys", ephkeys]); 
+
       // 2bytes shared secret prefixed with ephemeral public key
 
-      sharedSecret = "0x" + calculateSecret.toArray()[0].toString(16) + calculateSecret.toArray()[1].toString(16);
+   
 
     } catch (e) {
       console.log("error", e);
