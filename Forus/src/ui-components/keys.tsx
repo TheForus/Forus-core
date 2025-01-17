@@ -89,9 +89,7 @@ const Keys = (props: Props) => {
 
   const copyforusKey = () => {
 
-
     navigator.clipboard.writeText(`http://localhost:3000/forus?key=${ForusKey}`);
-
     notyf.success("Copied");
     setAddressCopied(true);
   
@@ -159,7 +157,7 @@ const Keys = (props: Props) => {
           sm:text-[0.8rem] montserrat-small font-semibold">
             <AiOutlineInfoCircle size={20} color="#fff" className="ml-1" />
             <p className="ml-2">
-              Never reveal the secret. Only Share your forus key to receive
+              Never reveal the signature. Only Share your forus key to receive
               funds.
             </p>
           </div>
