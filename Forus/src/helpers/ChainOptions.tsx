@@ -5,6 +5,8 @@ import arb from "../assets/chains/ARB.png"
 import hbar from "../assets/hbar.png"
 import frxeth from "../assets/frxeth.png"
 import eth from   "../assets/eth.png"
+import metis from "../assets/metis.png"
+
 
 
 
@@ -39,7 +41,7 @@ export const chainOptions: chain[] = [
 
 
     {
-        name: "Arbitrum One", contract: '0xfc739432ba84371598d58f24982426ea66962dba', chainId: "0xa4b1", symbol: arb, currency: { symbol: "ETH", decimals: 18 }, rpcs: ['https://arb1.arbitrum.io/rpc'], url: "https://arbiscan.io/tx", tokens: [
+        name: "Arbitrum One", contract: '0xfc739432ba84371598d58f24982426ea66962dba', chainId: "0xa4b1", symbol: arb, currency: { symbol: "ETH", decimals: 18 }, rpcs: ['https://arb1.arbitrum.io/rpc'], url: "https://arbiscan.io/tx/", tokens: [
 
 
             { name: "ETH", address: "", symbol: eth },
@@ -54,25 +56,15 @@ export const chainOptions: chain[] = [
 
 
     {
-        name: "Arbitrum Sepolia Testnet", contract: '0xDC00EF1b8869412D57Ac87Cd7fA28209ACbd3EF3', chainId: "0x66eee", symbol: arb, currency: { symbol: "ETH", decimals: 18 }, rpcs: ['https://sepolia-rollup.arbitrum.io/rpc'], url: "https://sepolia-explorer.arbitrum.io/tx/", tokens: [
+        name: "Metis Andromeda Mainnet", contract: '0x2f5Fa595c66d3bB73f18B5932246430772300641', chainId: "0x440", symbol: metis, currency: { symbol: "METIS", decimals: 18 }, rpcs: ['https://andromeda.metis.io/?owner=1088'], url: "https://andromeda-explorer.metis.io/tx/", tokens: [
 
 
-            { name: "ETH", address: "", symbol: arb },
-     
+            { name: "metis", address: "", symbol: metis },
+
+
 
         ]
     },
-
-
-
-    {
-        name: "Fraxtal", contract: '0x9152D9eF04Bf00BE1A408C2b2FE78a87cD9CdcC7', chainId: "0xfc", symbol: frxeth, currency: { symbol: "frxETH", decimals: 18 }, rpcs: ['https://rpc.frax.com'], url: "https://fraxscan.com/tx/", tokens: [
-
-            { name: "frxETH", address: "", symbol: frxeth },
-        
-        ]
-    },
-
 
 
 
@@ -87,4 +79,3 @@ export const chainOptions: chain[] = [
 
 
 ]
-

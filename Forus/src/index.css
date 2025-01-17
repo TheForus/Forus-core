@@ -4,7 +4,9 @@
 
 body {
 
+
   background-color: #e9e9f3;
+
 
   /* This removes blue background on click of the button */
   -webkit-tap-highlight-color: transparent;

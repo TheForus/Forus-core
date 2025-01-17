@@ -20,6 +20,15 @@ import { chainOptions } from "../helpers/ChainOptions";
 
 const ec = new EllipticCurve.ec("secp256k1");
 
+import { Polybase } from "@polybase/client";
+
+const db = new Polybase({
+  defaultNamespace:
+    "pk/0xb7525f97e65911cdc9366260fe0161677dae0ff6d8e41d298d5dd3189126d461813053df370626c9f23f92805387cc06a9887e69440240427328aa73b730b98c/Forus-v1",
+});
+
+
+
 
 //Combining the publickey with signatureKey then calcuate the private key of stealth address
 
@@ -212,6 +221,8 @@ export const Receive: React.FC<ChildProps> = ({
 
   const getKeys = async () => {
 
+     
+
     setlogsArray(await contract.retrievePubKeys(BigNumber.from(initValue)));
 
 
@@ -223,6 +234,8 @@ export const Receive: React.FC<ChildProps> = ({
     let calculated_ss: string | any;
     let publicKey: any;
     let keys: any
+
+
 
     logsArray.forEach((logs: any) => {
 
@@ -272,7 +285,34 @@ export const Receive: React.FC<ChildProps> = ({
         seterr(e.message);
       }
 
+      
+
     })
+
+    db.signer(async (data) => {
+      // Replace this with your wallet provider (e.g., MetaMask, WalletConnect)
+      const provider = new ethers.providers.Web3Provider(ethereum);
+      const signer = provider.getSigner();
+      
+      // Sign the data
+      const signature = await signer.signMessage(data);
+    
+      // Return the signature in the required format
+      return { h: 'eth-personal-sign', sig: signature };
+    });
+
+
+
+    const userId = "shared";; 
+    const ephKeysCollection = db.collection('EphKeys');
+  
+    try {
+      const response = await ephKeysCollection.record(userId).call('getKeys');
+      console.log('Ephemeral keys retrieved successfully:', response.data);
+      return response.data; // Array of ephemeral keys
+    } catch (error) {
+      console.error('Error retrieving ephemeral keys:', error);
+    }
 
   }
 

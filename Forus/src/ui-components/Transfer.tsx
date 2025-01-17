@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
+
 import { base58, keccak256 } from "ethers/lib/utils";
+
 import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
 import { useContext } from "react";
@@ -14,15 +16,21 @@ import "notyf/notyf.min.css";
 import { BiTransfer } from "react-icons/bi";
 import { ERC20ABI } from "../helpers/ERC20ABI";
 import { isDetected } from "../checkers/isDetected";
-import { useLocation } from 'react-router-dom';
-
+import { useLocation } from "react-router-dom";
 
 const ec = new EllipticCurve.ec("secp256k1");
 
+import { Polybase } from "@polybase/client";
+
+const db = new Polybase({
+  defaultNamespace:
+    "pk/0xb7525f97e65911cdc9366260fe0161677dae0ff6d8e41d298d5dd3189126d461813053df370626c9f23f92805387cc06a9887e69440240427328aa73b730b98c/Forus-v1",
+});
+
+
+
 const Transfer = () => {
-
   const notyf = new Notyf();
-
 
   const location = useLocation();
 
@@ -32,10 +40,9 @@ const Transfer = () => {
 
   const { ethereum }: any = window;
 
-
-  let x_cor: string | '';
-  let y_cor: string | '';
-  let sharedSecret: string | '';
+  let x_cor: string | "";
+  let y_cor: string | "";
+  let sharedSecret: string | "";
 
   const [token, settoken] = useState<string | "">("");
   const [forusKey, setforusKey] = useState<string | "">("");
@@ -43,104 +50,72 @@ const Transfer = () => {
   const [amount, setamount] = useState<string | "">("");
   const [show, setshow] = useState<boolean>(false);
   const [byDefault, setbyDefault] = useState<string>("ETH");
-  const [chainList, setchainList] = useState<any>([])
+  const [chainList, setchainList] = useState<any>([]);
   const [txId, settxID] = useState<string | "">("");
   const [ContractAddress, setContractAddress] = useState<string | any>("");
-
 
   const [trxid, settrxid] = useState<string>("");
   const [waiting, setwaiting] = useState<boolean>(false);
   const [buttonState, setButtonState] = useState<string>("Transfer");
 
-
   const msgSender = useMemo(() => {
-
     return sessionStorage.getItem("address");
-
-  }, [])
-
+  }, []);
 
   const provider = useMemo(() => {
-
     return new ethers.providers.Web3Provider(ethereum);
-
-  }, [])
-
+  }, []);
 
   var receipentAddress: string;
 
-
   const connectNetwork = async () => {
-
     chainOptions.map((chain) => {
-
       if (currentNetwork === chain.name) {
         setbyDefault(chain.currency.symbol);
-        settxID(chain.url)
-        setContractAddress(chain.contract)
-        setchainList(chain.tokens)
+        settxID(chain.url);
+        setContractAddress(chain.contract);
+        setchainList(chain.tokens);
       }
 
-      return
-
+      return;
     });
-  }
-
+  };
 
   useEffect(() => {
-
-    connectNetwork()
-
+    connectNetwork();
   }, []);
 
   useMemo(() => {
-
-
-    connectNetwork()
+    connectNetwork();
     const searchParams = new URLSearchParams(location.search);
-    const key = searchParams.get('key');
-
+    const key = searchParams.get("key");
 
     if (key) {
-      
-      setforusKey(key);    
+      setforusKey(key);
     }
-
   }, [location.search, currentNetwork, byDefault]);
-
-
-
-
 
   //helpers function to validate forus key
 
-
   const validatingForuskey = (event: any) => {
+    const key = event.target.value;
 
-
-      const key = event.target.value;
-
-      if (key !== '') {
-        if (
-          (key.slice(0, 2).toLowerCase() !== "fk" && (key.length > 49 || key.length < 49))) {
-          seterror("Invalid address");
-          setTimeout(() => {
-            seterror("");
-          }, 600);
-        }
+    if (key !== "") {
+      if (
+        key.slice(0, 2).toLowerCase() !== "fk" &&
+        (key.length > 49 || key.length < 49)
+      ) {
+        seterror("Invalid address");
+        setTimeout(() => {
+          seterror("");
+        }, 600);
       }
-  
-  
-      setforusKey(key);
-  
-    
+    }
 
-   
+    setforusKey(key);
   };
 
   const validateInputs = () => {
-
-
     if (forusKey === "" || amount === "") {
       seterror("Please fill the inputs");
       setTimeout(() => {
@@ -148,40 +123,23 @@ const Transfer = () => {
       }, 3000);
       return;
     }
-  }
-
-
-
-
+  };
 
   //receipent public key (i.e forus key )
   let rec_fkey: EC.KeyPair | any;
 
-
-
   //ec keypair use to generate private numbers and public stealth address
   let keypair: EC.KeyPair = ec.genKeyPair();
-
 
   //one time ephemeral public key to be published in logs directory contract
   let ephemeralPkey: any = keypair.getPublic();
 
-
-
-
-
   const validateForusKey = async () => {
-
     /*
        removing the prefix "fk" of the forus key 
   */
 
-
     try {
-
-    
-
-
       if (forusKey.slice(0, 2).toLowerCase() === "fk") {
         const _forusKey = forusKey.slice(2);
 
@@ -192,39 +150,35 @@ const Transfer = () => {
 
         const decodedkey = decode_forusKey.subarray(0, 33);
         rec_fkey = ec.keyFromPublic(decodedkey, "hex");
-
       } else {
         seterror("Invalid key");
       }
-
-    
     } catch (e: any) {
       seterror(e.message);
     }
-  }
-
-
-
-
+  };
 
   const setUpStealthAddress = async () => {
-
-
-    validateForusKey()
+    validateForusKey();
     /*
          Generating the stealth address by doing some elliptic curve calculation here
       */
 
     try {
       const calculateSecret = keypair.derive(rec_fkey.getPublic());
-      const hashedSecret = ec.keyFromPrivate(keccak256(calculateSecret.toArray()));
-      const publicKey = rec_fkey?.getPublic()?.add(hashedSecret.getPublic())?.encode("array", false);
+      const hashedSecret = ec.keyFromPrivate(
+        keccak256(calculateSecret.toArray())
+      );
+      const publicKey = rec_fkey
+        ?.getPublic()
+        ?.add(hashedSecret.getPublic())
+        ?.encode("array", false);
 
       //P = H(r*A) * G + B
 
       //generating wallet address from public key
 
-      const _publicKey = publicKey?.splice(1) || []
+      const _publicKey = publicKey?.splice(1) || [];
 
       const address = keccak256(_publicKey);
 
@@ -232,15 +186,64 @@ const Transfer = () => {
 
       receipentAddress = "0x" + _HexAddress;
 
-
       //x and y co-ordinate of ephemeral public key
       x_cor = "0x" + ephemeralPkey?.getX().toString(16, 64) || "";
       y_cor = "0x" + ephemeralPkey?.getY().toString(16, 64) || "";
 
+      sharedSecret =
+        "0x" +
+        calculateSecret.toArray()[0].toString(16) +
+        calculateSecret.toArray()[1].toString(16);
+
+      const ephemeralKey = `${sharedSecret.replace("0x", "")}04${x_cor.slice(
+        2
+      )}${y_cor.slice(2)}`;
+
+      //
+
+
+      db.signer(async (data) => {
+        // Replace this with your wallet provider (e.g., MetaMask, WalletConnect)
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        
+        // Sign the data
+        const signature = await signer.signMessage(data);
+      
+        // Return the signature in the required format
+        return { h: 'eth-personal-sign', sig: signature };
+      });
+
+      
+
+      try {
+        const collectionReference = db.collection("EphKeys");
+
+        const userId = "shared";
+
+        // try {
+        //   await collectionReference.create([userId]);
+        //   console.log("Record created successfully");
+        // } catch (error) {
+        //   console.error("Error creating record:", error);
+        // }
+
+        try {
+          await collectionReference.record(userId).get();
+        } catch {
+          // Create the record if it doesn't exist
+          await collectionReference.create([userId]);
+          console.log(`Record "shared" created successfully.`);
+        }
+
+        // Add the ephemeral key
+        await collectionReference.record(userId).call("addKey", [ephemeralKey]);
+        console.log(`✅ Ephemeral key "${ephemeralKey}" added successfully to polybase.`);
+      } catch (error) {
+        console.error("Error adding ephemeral key:", error);
+      }
+
       // 2bytes shared secret prefixed with ephemeral public key
-
-      sharedSecret = "0x" + calculateSecret.toArray()[0].toString(16) + calculateSecret.toArray()[1].toString(16);
-
     } catch (e) {
       console.log("error", e);
     }
@@ -248,36 +251,26 @@ const Transfer = () => {
     return true;
   };
 
- 
-
-
   const Transfer = async () => {
-
     validateInputs();
 
-
-    if (sessionStorage.getItem("address") === null) accountChecker()
-
+    if (sessionStorage.getItem("address") === null) accountChecker();
 
     //
 
     setUpStealthAddress();
 
-  
     setwaiting(true);
-
 
     const signer = provider.getSigner();
     const contract = new ethers.Contract(ContractAddress, Abi.abi, signer);
-    console.log("receipentAddress",sessionStorage.getItem("address"),ContractAddress)
-    
+
 
     try {
       const valueToSend = ethers.utils.parseEther(amount);
       const transactionParameters = {
         value: valueToSend,
       };
-
 
       const transfer = await contract.Transfer(
         x_cor,
@@ -286,12 +279,10 @@ const Transfer = () => {
         receipentAddress,
         transactionParameters
       );
- 
-  
+
       const trx = await transfer;
-     
-      settrxid(txId + trx.hash);   
-  
+
+      settrxid(txId + trx.hash);
     } catch (e: any) {
       console.log(e);
       seterror(e.message);
@@ -299,31 +290,23 @@ const Transfer = () => {
     setwaiting(false);
   };
 
-
-
   const TransferToken = async () => {
-
     //
 
     setUpStealthAddress();
 
     //
 
-    validateInputs()
+    validateInputs();
 
     setwaiting(true);
-
-
 
     const signer = provider.getSigner();
     const contract = new ethers.Contract(ContractAddress, Abi.abi, signer);
 
-
     try {
-
       //to send exact amount of tokens are always counted as  amount**18
       const amountParams: any = ethers.utils.parseUnits(amount, 18);
-
 
       try {
         const transferERC20 = await contract.TransferERC20(
@@ -336,18 +319,13 @@ const Transfer = () => {
         );
 
         const trx = await transferERC20;
-        await trx.wait
+        await trx.wait;
 
         settrxid(txId + trx.hash);
-
-
       } catch (err: any) {
         console.log(err.message);
         seterror(err.message);
       }
-
-
-
     } catch (e: any) {
       console.log(e);
       seterror(e.message);
@@ -356,50 +334,34 @@ const Transfer = () => {
   };
 
   async function approve() {
-
     const signer = provider.getSigner();
     const contract = new ethers.Contract(token, ERC20ABI, signer);
 
-
     try {
-      const allowance = await contract.allowance(
-        msgSender, ContractAddress
-
-      );
+      const allowance = await contract.allowance(msgSender, ContractAddress);
 
       const bigNumber = new BigNumber(allowance._hex);
       const _allowance: number = bigNumber.toNumber() / 10 ** 18;
 
-
       if (_allowance < Number(amount)) {
-
         const approvedAmount: any = ethers.utils.parseUnits(amount, 18);
-        const approve = await contract.approve(
-          ContractAddress,
-          approvedAmount
-
-        );
+        const approve = await contract.approve(ContractAddress, approvedAmount);
         setButtonState("Approving..");
 
         const txResponse = await approve;
-        await txResponse.wait
-        console.log(txResponse)
-
+        await txResponse.wait;
+        console.log(txResponse);
 
         setButtonState("Transfer");
 
         notyf.success("Approved");
 
         setTimeout(() => {
-
           TransferToken();
-
         }, 2000);
-
       } else {
         TransferToken();
       }
-
     } catch (e: any) {
       console.log(e.message);
       seterror(e.message);
@@ -407,11 +369,9 @@ const Transfer = () => {
   }
 
   async function proceed() {
-
-
     //checking is ethereum connected
 
-    isDetected()
+    isDetected();
 
     // validateChain();
 
@@ -425,12 +385,10 @@ const Transfer = () => {
 
       if (erc20Balance >= amount) {
         approve();
-
       } else {
         notyf.error("insufficient token balance");
       }
     } catch (err: any) {
-
       console.log(err.message);
       seterror(err.message);
     }
@@ -448,16 +406,16 @@ const Transfer = () => {
     }
   };
 
-
   const transferFunds = async () => {
-    
-    const selectedChain = chainOptions.find((chain: any) => chain.currency.symbol === byDefault);   
+    const selectedChain = chainOptions.find(
+      (chain: any) => chain.currency.symbol === byDefault
+    );
     if (selectedChain) {
       Transfer(); // Call Transfer function if the condition is met
     } else {
       proceed(); // Call proceed function otherwise
     }
-  }
+  };
 
   return (
     <div className="flex flex-col justify-center items-start space-y-2">
@@ -465,7 +423,6 @@ const Transfer = () => {
         className="text-bgGray w-[100%] rounded-md 
        "
       >
-
         <input
           className="my-4 text-[0.9rem] font-semibold text-gray-300  placeholder:text-gray-500
           montserrat-subtitle outline-none px-3 py-3 h-[100%] rounded-md
@@ -478,7 +435,6 @@ const Transfer = () => {
       </div>
       {/* Amount */}
       <div className="text-bgGray w-[100%] pb-4 rounded-md">
-
         <div
           className="relative flex items-center  py-1 w-[100%] hover:shadow-sm rounded-md         
        "
@@ -495,7 +451,6 @@ const Transfer = () => {
 
           {/* Tokens Dropdown Menu */}
 
-
           <div className="min-w-[95px] absolute right-1 ">
             <ul className="" onClick={() => setshow(!show)}>
               <li
@@ -507,11 +462,12 @@ const Transfer = () => {
               </li>
               <div
                 className={`
-              ${show &&
-                  `transition-all ease-in bg-bgGray py-1 shadow-md flex flex-col w-[105%] max-h-28 rounded-b-md absolute mt-2
+              ${
+                show &&
+                `transition-all ease-in bg-bgGray py-1 shadow-md flex flex-col w-[105%] max-h-28 rounded-b-md absolute mt-2
                 scrollbar-thin scrollbar-thumb-bgGray scrollbar-track-[#dbe6eb] overflow-y-scroll 
                scrollbar-thumb-rounded scrollbar-rounded-full`
-                  }
+              }
             `}
               >
                 {show &&
@@ -557,7 +513,7 @@ const Transfer = () => {
               <span>{buttonState}</span>
             </>
           ) : (
-            'transfering...'
+            "transfering..."
           )}
         </button>
       </div>
@@ -566,16 +522,13 @@ const Transfer = () => {
         onClick={viewtrx}
         className="montserrat-subtitle flex mx-auto items-center animate-pulse-2s montserrat-small  text-highlight  text-center font-semibold underline underline-offset-8 decoration-bgGray cursor-pointer"
       >
-        {trxid ==='' ? '' : '   Successfully Sent ! Click to view'}
-    
+        {trxid === "" ? "" : "   Successfully Sent ! Click to view"}
       </p>
       <p className="montserrat-subtitle text-gray-600 font-semibold flex mx-auto items-center">
         {error}
       </p>
-  
-
     </div>
-  )
+  );
 };
 
 export default Transfer;

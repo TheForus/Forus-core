@@ -4,13 +4,17 @@ import Tutorial from "./Tutorial";
 import Features from "./Features";
 import Qna from "./Qna";
 import Footer from "./Footer";
+
 // import HeaderRibbon from '../components/HeaderRibbon';
+
 
 type Props = {};
 
 const Wrapper = (props: Props) => {
-  // dark:bg-[#015235]
+ 
   return (
+
+
     <div className=" ">
       {/* <HeaderRibbon /> */}
       <Nav />

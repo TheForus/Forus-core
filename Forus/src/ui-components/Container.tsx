@@ -8,7 +8,6 @@ import "notyf/notyf.min.css";
 import abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { ethers } from "ethers";
 import { chainOptions } from "../helpers/ChainOptions";
-import HeaderRibbon from "../components/HeaderRibbon";
 import { ValidateChainData } from "../checkers/ValidateChainData";
 import { SwitchChain } from "../helpers/SwitchChain";
 import { isDetected } from "../checkers/isDetected";
@@ -205,7 +204,9 @@ const Container = (props: Props) => {
          from-blue-400 to-blue-600 z-[-10]"
         ></div>
         <div className="bg-black/80 max-h-max min-h-[100vh] lg:overflow-hidden">
+
           {/* <HeaderRibbon /> */}
+
 
           <NavBar />
 

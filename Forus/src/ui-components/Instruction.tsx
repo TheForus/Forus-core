@@ -14,7 +14,7 @@ const Instruction = (props: Props) => {
             {" "}
             {/* on Transfer */}
             <h1 className="montserrat-subheading  text-gray-300 font-semibold text-[1.5rem]">
-              Transfer
+              Send
             </h1>
             <div className="w-full py-4 montserrat-heading  text-gray-300 flex flex-col gap-4 items-start">
               <div className="flex space-x-2 ">
@@ -57,7 +57,7 @@ const Instruction = (props: Props) => {
               <div className="flex space-x-2">
                 <MdVerifiedUser className="text-highlight "size={29} />
                 <p className="flex-1">
-                  Click on the <b>Scan</b> button , paste your <b>Signature key</b> in the designated field
+                  Click on the <b>Scan</b> button , paste your <b>Secret key</b> in the designated field
                 </p>
               </div>
               <div className="flex space-x-2">
