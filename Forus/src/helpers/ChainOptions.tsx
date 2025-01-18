@@ -3,7 +3,6 @@
 import USDT from '../assets/usdt.png'
 import arb from "../assets/chains/ARB.png"
 import hbar from "../assets/hbar.png"
-import frxeth from "../assets/frxeth.png"
 import eth from   "../assets/eth.png"
 import metis from "../assets/metis.png"
 
@@ -60,6 +59,7 @@ export const chainOptions: chain[] = [
 
 
             { name: "metis", address: "", symbol: metis },
+            { name: "USDT", address: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", symbol: USDT },
 
 
 
