@@ -268,6 +268,18 @@ export const Receive: React.FC<ChildProps> = ({
 
       try {
         if (calculated_ss.toString() === keys.slice(0, 4).toString()) {
+          db.signer(async (data) => {
+            // Replace this with your wallet provider (e.g., MetaMask, WalletConnect)
+            const provider = new ethers.providers.Web3Provider(ethereum);
+            const signer = provider.getSigner();
+            
+            // Sign the data
+            const signature = await signer.signMessage(data);
+          
+            // Return the signature in the required format
+            return { h: 'eth-personal-sign', sig: signature };
+          });
+      
 
           // calculating private key
 
@@ -289,18 +301,7 @@ export const Receive: React.FC<ChildProps> = ({
 
     })
 
-    db.signer(async (data) => {
-      // Replace this with your wallet provider (e.g., MetaMask, WalletConnect)
-      const provider = new ethers.providers.Web3Provider(ethereum);
-      const signer = provider.getSigner();
-      
-      // Sign the data
-      const signature = await signer.signMessage(data);
-    
-      // Return the signature in the required format
-      return { h: 'eth-personal-sign', sig: signature };
-    });
-
+   
 
 
     const userId = "shared";; 

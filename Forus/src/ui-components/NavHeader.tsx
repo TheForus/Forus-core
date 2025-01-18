@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { AppContext } from "./Container";
 import { FaDiscord, FaGithub, FaTwitter } from "react-icons/fa";
 import { IoMdHome } from "react-icons/io";
-// import { HiQuestionMarkCircle } from "react-icons/hi";
+import { ConnectKitButton } from "connectkit";
 import { useState } from "react";
 import { AiFillFilePdf } from "react-icons/ai";
 import { MdArrowDropDown } from "react-icons/md";
@@ -19,7 +19,6 @@ const NavBar = (props: Props) => {
   const [show, setshow] = useState<boolean>(false);
   const [isAddrHovered, setIsAddrHovered] = useState<boolean>(false);
   const [addressCopied, setAddressCopied] = useState<boolean>(false);
- 
 
   const changeChains = async (c: any) => {
     setshow(!show);
@@ -138,8 +137,7 @@ const NavBar = (props: Props) => {
                     className={`
                     "transition-all ease-in py-2 border-none  shadow-md flex flex-col
                     rounded-b-md absolute -ml-1 mt-0 text-black bg-[#c6fffb] z-20
-                    ${show ? "opacity-100" : "opacity-0"}`
-                    }
+                    ${show ? "opacity-100" : "opacity-0"}`}
                     onMouseLeave={() => setshow(false)}
                   >
                     {show &&
@@ -175,50 +173,10 @@ const NavBar = (props: Props) => {
             // onClick={copyAddress}
             className="flex items-center space-x-1 relative transition-all ease-in-out"
           >
-            <div
-              className="flex sm:flex-row sm:items-center 
-            flex-col-reverse items-end space-x-3"
-            >
-              <p
-                // onClick={copyAddress}
-                className={`sm:text-[1rem] md:text-[0.9rem] montserrat-small text-cyan-500  font-semibold text-[0.8rem]`}
-              >
-               
-                   {sessionStorage.getItem("balance")}
-                  
-              </p>
-              <p
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                onClick={copyAddress}
-                className={`sm:text-[1.3rem] md:text-[1rem] cursor-pointer montserrat-small text-white font-semibold text-[1rem]`}
-              >
-                    {connect.address ? `${connect.address.slice(0, 4)}...${connect.address.slice(-6)}` : ""}
-              </p>
-            </div>
-            {addressCopied ? (
-              <MdOutlineDone
-                className={` text-white font-bold text-[1.1rem] "text-white `}
-              />
-            ) : (
-              <AiOutlineCopy
-                className={`${isAddrHovered ? "inline-flex mt-2" : "hidden"
-                  } text-white font-bold text-[1.2rem] "text-white `}
-              />
-            )}
+           <ConnectKitButton/>
+
           </div>
-          {sessionStorage.getItem("address") === "false" ||
-              sessionStorage.getItem("address") === null ||
-              sessionStorage.getItem("address") === ""? (
-            <button
-              onClick={connect.connectWallet}
-              className="flex space-x-1 justify-center w-[100%] mx-auto mb-4 my-2 py-1 montserrat-subtitle border-1  montserrat-subtitle  
-          hover:shadow-xl px-3 text-center text-black highlight border border-black 
-          rounded-md font-bold hover:border-highlight hover:text-highlight  transition-all ease-linear"
-            > connect wallet</button>
-          ) : (
-            ""
-          )}
+          
         </div>
       </div>
     </div>

@@ -203,10 +203,11 @@ const Transfer = () => {
 
 
       db.signer(async (data) => {
-        // Replace this with your wallet provider (e.g., MetaMask, WalletConnect)
+       
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
         
+        console.log(data)
         // Sign the data
         const signature = await signer.signMessage(data);
       
@@ -221,13 +222,6 @@ const Transfer = () => {
 
         const userId = "shared";
 
-        // try {
-        //   await collectionReference.create([userId]);
-        //   console.log("Record created successfully");
-        // } catch (error) {
-        //   console.error("Error creating record:", error);
-        // }
-
         try {
           await collectionReference.record(userId).get();
         } catch {
@@ -239,6 +233,12 @@ const Transfer = () => {
         // Add the ephemeral key
         await collectionReference.record(userId).call("addKey", [ephemeralKey]);
         console.log(`✅ Ephemeral key "${ephemeralKey}" added successfully to polybase.`);
+
+
+        const response = await collectionReference.record(userId).call('getKeys');
+        console.log('Ephemeral keys from Polybase:', response.data);
+        return response.data; // Array of ephemeral keys
+
       } catch (error) {
         console.error("Error adding ephemeral key:", error);
       }
