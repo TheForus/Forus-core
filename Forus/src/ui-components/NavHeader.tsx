@@ -111,7 +111,7 @@ const NavBar = (props: Props) => {
               </p>
             </div>
 
-            {sessionStorage.getItem("address") !== null && (
+            {/* {sessionStorage.getItem("address") !== null && (
               <div
                 className="sm:static absolute left-3 bottom-2 montserrat-subtitle border-1 
               sm:text-[1rem] text-[0.9rem] px-2 sm:px-4
@@ -166,7 +166,7 @@ const NavBar = (props: Props) => {
                   </div>
                 </ul>
               </div>
-            )}
+            )} */}
           </div>
           {/* Address Bar */}
           <div

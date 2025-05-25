@@ -202,46 +202,46 @@ const Transfer = () => {
       //
 
 
-      db.signer(async (data) => {
+      // db.signer(async (data) => {
        
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
+      //   const provider = new ethers.providers.Web3Provider(ethereum);
+      //   const signer = provider.getSigner();
         
-        console.log(data)
-        // Sign the data
-        const signature = await signer.signMessage(data);
+      //   console.log(data)
+      //   // Sign the data
+      //   const signature = await signer.signMessage(data);
       
-        // Return the signature in the required format
-        return { h: 'eth-personal-sign', sig: signature };
-      });
+      //   // Return the signature in the required format
+      //   return { h: 'eth-personal-sign', sig: signature };
+      // });
 
       
 
-      try {
-        const collectionReference = db.collection("EphKeys");
+      // try {
+      //   const collectionReference = db.collection("EphKeys");
 
-        const userId = "shared";
+      //   const userId = "shared";
 
-        try {
-          await collectionReference.record(userId).get();
-        } catch {
-          // Create the record if it doesn't exist
-          await collectionReference.create([userId]);
-          console.log(`Record "shared" created successfully.`);
-        }
+      //   try {
+      //     await collectionReference.record(userId).get();
+      //   } catch {
+      //     // Create the record if it doesn't exist
+      //     await collectionReference.create([userId]);
+      //     console.log(`Record "shared" created successfully.`);
+      //   }
 
-        // Add the ephemeral key
-        await collectionReference.record(userId).call("addKey", [ephemeralKey]);
-        console.log(`✅ Ephemeral key "${ephemeralKey}" added successfully to polybase.`);
+      //   // Add the ephemeral key
+      //   await collectionReference.record(userId).call("addKey", [ephemeralKey]);
+      //   console.log(`✅ Ephemeral key "${ephemeralKey}" added successfully to polybase.`);
 
 
-        const response = await collectionReference.record(userId).call('getKeys');
-        console.log('Ephemeral keys from Polybase:', response.data);
-        return response.data; // Array of ephemeral keys
+      //   const response = await collectionReference.record(userId).call('getKeys');
+      //   console.log('Ephemeral keys from Polybase:', response.data);
+      //   return response.data; // Array of ephemeral keys
 
-      } catch (error) {
-        console.error("Error adding ephemeral key:", error);
-      }
+      // } catch (error) {
+      //   console.error("Error adding ephemeral key:", error);
+      // }
 
       // 2bytes shared secret prefixed with ephemeral public key
     } catch (e) {

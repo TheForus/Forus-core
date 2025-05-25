@@ -17,7 +17,6 @@ import ToolTip from "../helpers/ToopTip";
 import { isDetected } from "../checkers/isDetected";
 import { chainOptions } from "../helpers/ChainOptions";
 
-
 const ec = new EllipticCurve.ec("secp256k1");
 
 import { Polybase } from "@polybase/client";
@@ -27,78 +26,50 @@ const db = new Polybase({
     "pk/0xb7525f97e65911cdc9366260fe0161677dae0ff6d8e41d298d5dd3189126d461813053df370626c9f23f92805387cc06a9887e69440240427328aa73b730b98c/Forus-v1",
 });
 
-
-
-
 //Combining the publickey with signatureKey then calcuate the private key of stealth address
 
 interface ChildProps {
-
   withdrawFunction: () => void;
   setmasterkey: React.Dispatch<React.SetStateAction<string | any>>;
   setamountTowithdraw: React.Dispatch<React.SetStateAction<string | any>>;
   amountTowithdraw: string | any;
-  show: string | any
-
+  show: string | any;
 }
 
 export const Receive: React.FC<ChildProps> = ({
   withdrawFunction,
   setmasterkey,
 }) => {
-
-
   var signaturekey: EC.KeyPair | any;
   const { ethereum }: any = window;
-
-
 
   const [savedSignaturekey, setsavedSignaturekey] = useState<string>("");
   const [hide, sethide] = useState<boolean>(true);
   const [err, seterr] = useState<any>(false);
   const [pkCopied, setPkCopied] = useState<boolean>(false);
 
-
-
   const [transactionTab, setTransactionTab] = useState(false);
   const [trxList, settrxList] = useState<any>([]);
   const [logsArray, setlogsArray] = useState<any>([]);
 
-
-
   let currentNetwork: string | any = sessionStorage.getItem("chain");
 
-
-
   const contractaddress: string | any = useMemo(() => {
-
-    const selectedChain = chainOptions.find((chain) => currentNetwork === chain.name);
+    const selectedChain = chainOptions.find(
+      (chain) => currentNetwork === chain.name
+    );
     return selectedChain ? selectedChain.contract : null;
-
-  }, [chainOptions, currentNetwork ,ethereum]);
-
-
-
+  }, [chainOptions, currentNetwork, ethereum]);
 
   const provider = useMemo(() => {
-
     return new ethers.providers.Web3Provider(ethereum);
-
-  }, [])
-
-
+  }, []);
 
   const contract = useMemo(() => {
-
     return new ethers.Contract(contractaddress, Abi.abi, provider);
-
-  }, [ethereum ,])
-
-
+  }, [ethereum]);
 
   const setwallet = async (key: string) => {
-
-
     let wallet = new ethers.Wallet(key);
 
     // Get the wallet address
@@ -107,93 +78,56 @@ export const Receive: React.FC<ChildProps> = ({
     const getbal = await provider.getBalance(add);
     const balance = ethers.utils.formatEther(getbal);
 
-
-
     const obj = {
-
       address: add?.slice(0, 6) + "..." + add?.slice(-4),
       balance: balance,
       key: key,
-
-    }
+    };
     const arr = trxList.find((e: any) => {
+      e.address === obj.address;
+    });
 
-      e.address === obj.address
-
-    })
-
-    if (!arr && Number(balance) > 0) settrxList((objs: any) => [...objs, obj] )
-
-
-
-
-
+    if (!arr && Number(balance) > 0) settrxList((objs: any) => [...objs, obj]);
   };
-
-
 
   //verify signature
 
-  const verifySignature = ((sign: any) => {
-
-    if (sign.startsWith('#forus-signatureKey-')) {
-
-      setsavedSignaturekey(sign.replace('#forus-signatureKey-', '').slice(0, 64));
-
-    }
-
-    else {
-      seterr('Invalid Signature File')
-    }
-
-  })
-
-
-
-  const [initValue, setInitValue] = useState<number>(0);
-
-
-
-  const fetch = async () => {
-
-    isDetected()
-
-    try {
-
-      const totalKeys = await contract.pubKeysLen();
-      setInitValue(totalKeys.toNumber());
-
-    } catch (error) {
-
-      console.error('Error fetching data:', error);
+  const verifySignature = (sign: any) => {
+    if (sign.startsWith("#forus-signatureKey-")) {
+      setsavedSignaturekey(
+        sign.replace("#forus-signatureKey-", "").slice(0, 64)
+      );
+    } else {
+      seterr("Invalid Signature File");
     }
   };
 
+  const [initValue, setInitValue] = useState<number>(0);
 
+  const fetch = async () => {
+    isDetected();
+
+    try {
+      const totalKeys = await contract.pubKeysLen();
+      setInitValue(totalKeys.toNumber());
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   useEffect(() => {
-
-    fetch()
-
-  }, [])
-
-
-
+    fetch();
+  }, []);
 
   const generateprivatekey = (): void => {
-
     if (savedSignaturekey === "") {
       signaturekey = ec.keyFromPrivate(signatureKey, "hex");
     } else {
       signaturekey = ec.keyFromPrivate(savedSignaturekey, "hex");
     }
-
-
   };
 
-
   useEffect(() => {
-    
     if (initValue > 0) {
       const timer = setTimeout(() => {
         if (initValue >= 10) {
@@ -203,130 +137,113 @@ export const Receive: React.FC<ChildProps> = ({
         }
       }, 950);
 
-
       return () => clearTimeout(timer); // Cleanup the timer
-
     } else {
-
       setInitValue(0);
-
     }
   }, [initValue]); // Trigger when initValue changes
 
-
-
-
   let signatureKey: string | any = sessionStorage.getItem("signature");
 
-
   const getKeys = async () => {
-
-     
-
-    setlogsArray(await contract.retrievePubKeys(BigNumber.from(initValue)));
-
-
-    //declaring variables type here
-
-    let keyPair: EC.KeyPair | any;
-    let calculateSecret;
-    let hashedSecret: any;
-    let calculated_ss: string | any;
-    let publicKey: any;
-    let keys: any
-
-
-
-    logsArray.forEach((logs: any) => {
-
-      generateprivatekey()
-
-      try {
-        keys = `${logs.sharedSecret.replace("0x", "")}04${logs.x_cor.slice(2)}${logs.y_cor.slice(2)}`;
-
-        if (keys === '00000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000')
-          return false;
-
-        else {
-
-          publicKey = keys.slice(4)
-          //
-          
-          keyPair = ec.keyFromPublic(publicKey, "hex");
-          calculateSecret = signaturekey.derive(keyPair.getPublic()); //
-          hashedSecret = ec.keyFromPrivate(keccak256(calculateSecret.toArray()));
-
-          calculated_ss = calculateSecret.toArray()[0].toString(16) + calculateSecret.toArray()[1].toString(16);
-
-
-        }
-      }
-      catch (e: any) {
-        seterr(e.message);
-        console.log(e.message)
-      }
-
-      try {
-        if (calculated_ss.toString() === keys.slice(0, 4).toString()) {
-          db.signer(async (data) => {
-            // Replace this with your wallet provider (e.g., MetaMask, WalletConnect)
-            const provider = new ethers.providers.Web3Provider(ethereum);
-            const signer = provider.getSigner();
-            
-            // Sign the data
-            const signature = await signer.signMessage(data);
-          
-            // Return the signature in the required format
-            return { h: 'eth-personal-sign', sig: signature };
-          });
-      
-
-          // calculating private key
-
-          const _key = signaturekey.getPrivate().add(hashedSecret.getPrivate());
-          const privateKey = _key.mod(ec.curve.n);
-
-          setwallet(privateKey.toString(16, 32));
-
-          setsavedSignaturekey('')
-        }
-
-        return;
-
-      } catch (e: any) {
-        seterr(e.message);
-      }
-
-      
-
-    })
-
-   
-
-
-    const userId = "shared";; 
-    const ephKeysCollection = db.collection('EphKeys');
-  
     try {
-      const response = await ephKeysCollection.record(userId).call('getKeys');
-      console.log('Ephemeral keys retrieved successfully:', response.data);
-      return response.data; // Array of ephemeral keys
-    } catch (error) {
-      console.error('Error retrieving ephemeral keys:', error);
+      // Retrieve and set logsArray
+      const retrievedLogs = await contract.retrievePubKeys(BigNumber.from(initValue));
+      setlogsArray(retrievedLogs);
+  
+      // Use retrievedLogs directly to ensure consistency
+      const logs = retrievedLogs;
+  
+      // Declare variables
+      let keyPair: EC.KeyPair | any;
+      let calculateSecret;
+      let hashedSecret: any;
+      let calculated_ss: string | any;
+      let publicKey: any;
+      let keys: any;
+  
+      let isSignerRegistered = false; // Flag to track if signer is already registered
+  
+      // Iterate over logs
+      logs.forEach((log: any) => {
+        generateprivatekey(); // Ensure this function works as expected
+  
+        try {
+          keys = `${log.sharedSecret.replace("0x", "")}04${log.x_cor.slice(2)}${log.y_cor.slice(2)}`;
+  
+          // Check for empty or invalid keys
+          if (
+            keys ===
+            "00000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+          )
+            return false;
+  
+          publicKey = keys.slice(4);
+  
+          keyPair = ec.keyFromPublic(publicKey, "hex");
+          calculateSecret = signaturekey.derive(keyPair.getPublic());
+          hashedSecret = ec.keyFromPrivate(keccak256(calculateSecret.toArray()));
+  
+          calculated_ss =
+            calculateSecret.toArray()[0].toString(16) +
+            calculateSecret.toArray()[1].toString(16);
+        } catch (e: any) {
+          seterr(e.message);
+          console.error(e.message);
+          return; // Exit the current iteration on error
+        }
+  
+        // Register db.signer only once
+        if (calculated_ss.toString() === keys.slice(0, 4).toString() && !isSignerRegistered) {
+          try {
+            const _key = signaturekey.getPrivate().add(hashedSecret.getPrivate());
+            const privateKey = _key.mod(ec.curve.n);
+  
+            setwallet(privateKey.toString(16, 32));
+            setsavedSignaturekey("");
+  
+            // db.signer(async (data) => {
+            //   const provider = new ethers.providers.Web3Provider(ethereum);
+            //   const signer = provider.getSigner();
+  
+            //   const signature = await signer.signMessage(data);
+  
+            //   return { h: "eth-personal-sign", sig: signature };
+            // });
+  
+            isSignerRegistered = true; // Mark signer as registered
+          } catch (e: any) {
+            seterr(e.message);
+            console.error(e.message);
+          }
+        }
+      });
+  
+      // Retrieve ephemeral keys
+      // const userId = "shared";
+      // const ephKeysCollection = db.collection("EphKeys");
+  
+      // try {
+      //   const response = await ephKeysCollection.record(userId).call("getKeys");
+      //   console.log("Ephemeral keys retrieved successfully:", response.data);
+      //   return response.data; // Array of ephemeral keys
+      // } catch (error) {
+      //   console.error("Error retrieving ephemeral keys:", error);
+      // }
+    } catch (error: any) {
+      seterr(error.message);
+      console.error("Error in getKeys function:", error.message);
     }
-
-  }
+  };
+  
 
   useEffect(() => {
-
     if (initValue >= 0) {
       getKeys();
     }
   }, [initValue]); // Trigger when initValue changes
 
-
-  const copykey = (pkey: string , index: number) => {
-
+  const copykey = (pkey: string, index: number) => {
     navigator.clipboard.writeText(pkey);
 
     setPkCopied(true);
@@ -340,11 +257,7 @@ export const Receive: React.FC<ChildProps> = ({
     downloadTxt("#walletprivateKey-" + pkey, "Forus-privatekey.txt");
 
     setmasterkey(pkey);
-
-
   };
-
-
 
   return (
     <>
@@ -364,7 +277,9 @@ export const Receive: React.FC<ChildProps> = ({
               <span>
                 <MdHistory className="text-[1.2rem] text-inherit" />
               </span>
-              <p className="montserrat-small font-semibold  " >View Transactions </p>
+              <p className="montserrat-small font-semibold  ">
+                View Transactions{" "}
+              </p>
             </div>
           </div>
         </div>
@@ -374,11 +289,15 @@ export const Receive: React.FC<ChildProps> = ({
           trxList.map((z: any, i: any) => (
             <div className="pt-4 flex justify-between px-6 text-highlight bg-gray-0">
               <div className="flex flex-col space-y-2">
-                <h2 className="text-left montserrat-small font-semibold">Address </h2>
+                <h2 className="text-left montserrat-small font-semibold">
+                  Address{" "}
+                </h2>
                 <p className="text-gray-400">{z.address}</p>
               </div>
               <div className="flex flex-col space-y-2">
-                <h2 className="text-left montserrat-small font-semibold">Balance </h2>
+                <h2 className="text-left montserrat-small font-semibold">
+                  Balance{" "}
+                </h2>
                 <p className="text-gray-400">{z.balance}</p>
               </div>
               <div className="flex flex-col montserrat-small font-semibold justify-center items-end space-y-2">
@@ -386,7 +305,7 @@ export const Receive: React.FC<ChildProps> = ({
                 {!pkCopied ? (
                   <ToolTip tooltip="Copy Private key">
                     <AiOutlineCopy
-                      onClick={() => copykey(z.key , i)}
+                      onClick={() => copykey(z.key, i)}
                       className={`text-gray-400 hover:text-green-400 font-bold cursor-pointer text-[1.2rem]`}
                     />
                   </ToolTip>
@@ -398,7 +317,6 @@ export const Receive: React.FC<ChildProps> = ({
                 )}
               </div>
             </div>
-
           ))
         ) : (
           <h1 className="mb-12 text-center relative top-5 text-xl montserrat-small font-semibold  text-red-400">
@@ -445,8 +363,6 @@ export const Receive: React.FC<ChildProps> = ({
               )}
             </div>
           </div>
-
-
 
           <div className="w-full flex justify-center pt-2 mr-4">
             <button
