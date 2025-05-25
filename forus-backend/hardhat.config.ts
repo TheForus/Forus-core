@@ -17,8 +17,8 @@ const config: HardhatUserConfig = {
       accounts: [process.env.PRIVATE_KEY!]
     },
     
-    hederatestnet: {
-      url: process.env.HEDERA_TESTNET_URL || "",
+    polygonAmoy: {
+      url: process.env.POLYGON_TESTNET_URL || "",
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     }
 
@@ -28,16 +28,10 @@ const config: HardhatUserConfig = {
       accounts: [process.env.PRIVATE_KEY!]
     },
 
-    fraxtal: {
-      url: process.env.FRAXTAL_MAIN_URL || "" ,
-      accounts: [process.env.PRIVATE_KEY!]
-    },
-
-
+   
 
   }
 };
 
 
 export default config;
-

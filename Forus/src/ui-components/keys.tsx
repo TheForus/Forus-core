@@ -89,7 +89,7 @@ const Keys = (props: Props) => {
 
   const copyforusKey = () => {
 
-    navigator.clipboard.writeText(`http://localhost:3000/forus?key=${ForusKey}`);
+    navigator.clipboard.writeText(`https://theforus-v2.netlify.app/forus?key=${ForusKey}`);
     notyf.success("Copied");
     setAddressCopied(true);
   

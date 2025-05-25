@@ -202,14 +202,14 @@ export const Receive: React.FC<ChildProps> = ({
             setwallet(privateKey.toString(16, 32));
             setsavedSignaturekey("");
   
-            db.signer(async (data) => {
-              const provider = new ethers.providers.Web3Provider(ethereum);
-              const signer = provider.getSigner();
+            // db.signer(async (data) => {
+            //   const provider = new ethers.providers.Web3Provider(ethereum);
+            //   const signer = provider.getSigner();
   
-              const signature = await signer.signMessage(data);
+            //   const signature = await signer.signMessage(data);
   
-              return { h: "eth-personal-sign", sig: signature };
-            });
+            //   return { h: "eth-personal-sign", sig: signature };
+            // });
   
             isSignerRegistered = true; // Mark signer as registered
           } catch (e: any) {
@@ -220,16 +220,16 @@ export const Receive: React.FC<ChildProps> = ({
       });
   
       // Retrieve ephemeral keys
-      const userId = "shared";
-      const ephKeysCollection = db.collection("EphKeys");
+      // const userId = "shared";
+      // const ephKeysCollection = db.collection("EphKeys");
   
-      try {
-        const response = await ephKeysCollection.record(userId).call("getKeys");
-        console.log("Ephemeral keys retrieved successfully:", response.data);
-        return response.data; // Array of ephemeral keys
-      } catch (error) {
-        console.error("Error retrieving ephemeral keys:", error);
-      }
+      // try {
+      //   const response = await ephKeysCollection.record(userId).call("getKeys");
+      //   console.log("Ephemeral keys retrieved successfully:", response.data);
+      //   return response.data; // Array of ephemeral keys
+      // } catch (error) {
+      //   console.error("Error retrieving ephemeral keys:", error);
+      // }
     } catch (error: any) {
       seterr(error.message);
       console.error("Error in getKeys function:", error.message);
