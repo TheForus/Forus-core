@@ -104,97 +104,97 @@ ChildProps) => {
 
       const user = address;
 
-      const etherBalance = await provider.getBalance(user);
+      // const etherBalance = await provider.getBalance(user);
 
-      if (etherBalance.isZero()) {
-        // list of ERC-20 token addresses
+      // if (etherBalance.isZero()) {
+      //   // list of ERC-20 token addresses
 
-        const erc20TokenAddresses = [
-          "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", // USDT
-          "0x912CE59144191C1204E64559FE8253a0e49E6548", // ARB
-        ];
+      //   const erc20TokenAddresses = [
+      //     "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", // USDT
+      //     "0x912CE59144191C1204E64559FE8253a0e49E6548", // ARB
+      //   ];
 
-        let selectedTokenAddress = null;
+      //   let selectedTokenAddress = null;
 
-        // ABI to check ERC-20 token balance
+      //   // ABI to check ERC-20 token balance
 
-        const balanceAbi = [
-          "function balanceOf(address owner) view returns (uint256)",
-        ];
+      //   const balanceAbi = [
+      //     "function balanceOf(address owner) view returns (uint256)",
+      //   ];
 
-        // loop through each token and check the balance
-        for (const tokenAddress of erc20TokenAddresses) {
-          const tokenContract = new ethers.Contract(
-            tokenAddress,
-            balanceAbi,
-            provider
-          );
-          balance = await tokenContract.balanceOf(user);
+      //   // loop through each token and check the balance
+      //   for (const tokenAddress of erc20TokenAddresses) {
+      //     const tokenContract = new ethers.Contract(
+      //       tokenAddress,
+      //       balanceAbi,
+      //       provider
+      //     );
+      //     balance = await tokenContract.balanceOf(user);
 
-          // if the balance is greater than 0, select this token and break the loop
+      //     // if the balance is greater than 0, select this token and break the loop
 
-          if (balance.gt(0)) {
-            selectedTokenAddress = tokenAddress;
-            break;
-          }
-        }
+      //     if (balance.gt(0)) {
+      //       selectedTokenAddress = tokenAddress;
+      //       break;
+      //     }
+      //   }
 
-        const amountToSend: any = ethers.utils.formatUnits(balance);
+      //   const amountToSend: any = ethers.utils.formatUnits(balance);
 
-        // Proceed only if a valid token with a balance > 0 is found
+      //   // Proceed only if a valid token with a balance > 0 is found
 
-        if (selectedTokenAddress) {
-          // ABI for the transfer function
+      //   if (selectedTokenAddress) {
+      //     // ABI for the transfer function
 
-          const transferAbi = ["function transfer(address to, uint256 amount)"];
-          const contract = new ethers.Contract(
-            selectedTokenAddress,
-            transferAbi,
-            wallet
-          );
+      //     const transferAbi = ["function transfer(address to, uint256 amount)"];
+      //     const contract = new ethers.Contract(
+      //       selectedTokenAddress,
+      //       transferAbi,
+      //       wallet
+      //     );
 
-          // specify the recipient address and amount to transfer
-          const recipient =
-            isInput === false
-              ? receipentAdd
-              : sessionStorage.getItem("address");
+      //     // specify the recipient address and amount to transfer
+      //     const recipient =
+      //       isInput === false
+      //         ? receipentAdd
+      //         : sessionStorage.getItem("address");
 
-          const amount = ethers.utils.parseUnits(amountToSend, 18);
+      //     const amount = ethers.utils.parseUnits(amountToSend, 18);
 
-          // Prepare the transaction data for transfer
-          const txData = await contract.populateTransaction.transfer(
-            recipient,
-            amount
-          );
+      //     // Prepare the transaction data for transfer
+      //     const txData = await contract.populateTransaction.transfer(
+      //       recipient,
+      //       amount
+      //     );
 
-          // Populate the relay SDK request body
-          const request : any = {
-            chainId: (await provider.getNetwork()).chainId,
-            target: selectedTokenAddress,
-            data: txData.data,
-            user: user,
-            feeToken: selectedTokenAddress,
-            isRelayContext: true,
-          };
+      //     // Populate the relay SDK request body
+      //     const request : any = {
+      //       chainId: (await provider.getNetwork()).chainId,
+      //       target: selectedTokenAddress,
+      //       data: txData.data,
+      //       user: user,
+      //       feeToken: selectedTokenAddress,
+      //       isRelayContext: true,
+      //     };
 
-          // Send relayRequest to Gelato Relay API
-          const relayResponse = await relay.callWithSyncFeeERC2771(
-            request,
-            provider
-          );
+      //     // Send relayRequest to Gelato Relay API
+      //     const relayResponse = await relay.callWithSyncFeeERC2771(
+      //       request,
+      //       provider
+      //     );
 
-          if (relayResponse) {
-            setisSuccessfull(
-              `Transaction Hash : ${relayResponse}`
-            );
-          } else {
-            setisSuccessfull("Something went wrong");
-          }
+      //     if (relayResponse) {
+      //       setisSuccessfull(
+      //         `Transaction Hash : ${relayResponse}`
+      //       );
+      //     } else {
+      //       setisSuccessfull("Something went wrong");
+      //     }
 
 
-          //if the user has none erc20 token balance
+      //     //if the user has none erc20 token balance
           
-        } else {
+      //   } else {
           try {
             const provider = new ethers.providers.Web3Provider(ethereum);
 
@@ -258,8 +258,8 @@ ChildProps) => {
             console.log(err.message);
             seterror(err.message);
           }
-        }
-      }
+        // }
+      // }
 
       setisSuccessfull("Withdraw");
     } catch (error) {

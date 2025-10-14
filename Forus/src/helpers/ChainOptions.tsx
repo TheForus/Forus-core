@@ -2,10 +2,9 @@
 
 import USDT from '../assets/usdt.png'
 import arb from "../assets/chains/ARB.png"
-import hbar from "../assets/hbar.png"
-import frxeth from "../assets/frxeth.png"
 import eth from   "../assets/eth.png"
 import metis from "../assets/metis.png"
+import matic from "../assets/matic.png"
 
 
 
@@ -60,22 +59,25 @@ export const chainOptions: chain[] = [
 
 
             { name: "metis", address: "", symbol: metis },
+            { name: "USDT", address: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", symbol: USDT },
 
 
 
         ]
     },
 
-
-
     {
-        name: "Hedera Testnet", contract: '0x414490A449726682eF20EEdE1AA0415036E7606E', chainId: "0x128", symbol: hbar, currency: { symbol: "HBAR", decimals: 18 }, rpcs: ['https://testnet.hashio.io/api'], url: "https://hashscan.io/testnet/transaction/", tokens: [
+        name: "Amoy", contract: '0x9152D9eF04Bf00BE1A408C2b2FE78a87cD9CdcC7', chainId: "0x13882", symbol: matic, currency: { symbol: "POL", decimals: 18 }, rpcs: ['wss://polygon-amoy-bor-rpc.publicnode.com'], url: "https://www.oklink.com/amoy‍", tokens: [
 
-            { name: "HBAR", address: "", symbol: hbar },
-      
 
+            { name: "MATIC", address: "", symbol: matic },
+   
         ]
-    }
+    },
+
+
+
+
 
 
 ]
