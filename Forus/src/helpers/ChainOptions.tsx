@@ -2,9 +2,10 @@
 
 import USDT from '../assets/usdt.png'
 import arb from "../assets/chains/ARB.png"
-import eth from   "../assets/eth.png"
+import eth from "../assets/eth.png"
 import metis from "../assets/metis.png"
-import matic from "../assets/matic.png"
+import base from "../assets/base.png"
+
 
 
 
@@ -46,12 +47,25 @@ export const chainOptions: chain[] = [
             { name: "ETH", address: "", symbol: eth },
             { name: "ARB", address: "0x912CE59144191C1204E64559FE8253a0e49E6548", symbol: arb },
             { name: "USDT", address: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", symbol: USDT },
-   
+
 
 
         ]
     },
 
+    {
+        name: "Horizen Base sepolia ", contract: '0x107fdE93838e3404934877935993782F977324BB', chainId: "0x14a34", symbol: arb, currency: { symbol: "ETH", decimals: 18 }, rpcs: ['https://sepolia.base.org'], url: "https://sepolia.basescan.org/", tokens: [
+
+
+            { name: "ETH", address: "", symbol: eth },
+            { name: "Zen", address: "0x107fdE93838e3404934877935993782F977324BB", symbol: "" },
+            { name: "Base", address: "0x107fdE93838e3404934877935993782F977324BB", symbol: base },
+
+
+
+
+        ]
+    },
 
 
     {
@@ -66,14 +80,7 @@ export const chainOptions: chain[] = [
         ]
     },
 
-    {
-        name: "Amoy", contract: '0x9152D9eF04Bf00BE1A408C2b2FE78a87cD9CdcC7', chainId: "0x13882", symbol: matic, currency: { symbol: "POL", decimals: 18 }, rpcs: ['wss://polygon-amoy-bor-rpc.publicnode.com'], url: "https://www.oklink.com/amoy‍", tokens: [
 
-
-            { name: "MATIC", address: "", symbol: matic },
-   
-        ]
-    },
 
 
 
