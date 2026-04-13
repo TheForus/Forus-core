@@ -121,7 +121,7 @@ npm start
 The development server runs at:
 
 ```text
-http://localhost:3000
+https://theforus.xyz
 ```
 
 ### Production build

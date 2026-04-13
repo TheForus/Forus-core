@@ -74,7 +74,7 @@ const Keys = (props: Props) => {
   }, []);
 
   const copyforusKey = () => {
-    const shareUrl = `${window.location.origin}/Forus?key=${ForusKey}`;
+    const shareUrl = `https://theforus.xyz/Forus?key=${ForusKey}`;
     navigator.clipboard.writeText(shareUrl);
     setAddressCopied(true);
     window.setTimeout(() => {
