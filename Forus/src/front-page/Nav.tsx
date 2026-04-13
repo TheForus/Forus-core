@@ -2,8 +2,6 @@ import React from "react";
 import logo from "../Logos/logo.png";
 import { Link } from "react-scroll";
 
-// from-white to-black text-transparent bg-clip-text
-
 type Props = {};
 
 const Nav = (props: Props) => {
@@ -13,14 +11,12 @@ const Nav = (props: Props) => {
 
         justify-between items-center"
     >
-      {/* logo left */}
       <div className="-ml-6 flex items-center">
         <img src={logo} alt="" className="w-[95px] h-[92px]" />
         <h1 className="-ml-2 montserrat-subheading sm:text-[1.8rem] font-extrabold text-[1.6rem] text-[#131619]">
           Forus
         </h1>
       </div>
-      {/* right side */}
       <div className="flex space-x-1 items-center">
         <Link spy={true} smooth={true} to="howitworks">
           <p
@@ -32,7 +28,6 @@ const Nav = (props: Props) => {
             Tutorial
           </p>
         </Link>
-        {/* theme button */}
       </div>
     </div>
   );

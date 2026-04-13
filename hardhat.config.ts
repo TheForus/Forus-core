@@ -17,21 +17,7 @@ const config: HardhatUserConfig = {
       accounts: [process.env.PRIVATE_KEY!]
     },
     
-    hederatestnet: {
-      url: process.env.HEDERA_TESTNET_URL || "",
-      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
-    }
-
-   ,
-    metis: {
-      url: process.env.METIS_URL || "" ,
-      accounts: [process.env.PRIVATE_KEY!]
-    },
-
-    fraxtal: {
-      url: process.env.FRAXTAL_MAIN_URL || "" ,
-      accounts: [process.env.PRIVATE_KEY!]
-    },
+    
 
 
 

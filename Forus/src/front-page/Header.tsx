@@ -1,20 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import screenshot from "../assets/ForusKey.png";
 
-
 const Header = () => {
   const navigate = useNavigate();
+
   return (
     <>
       <div
         className="bg-[#e9e9f3] xl:px-36 md:px-22 px-8 sm:py-27 py-16 flex mb-4
           justify-between  items-center md:flex-row flex-col m-8 text-gray-700"
       >
-        {/* left side */}
         <div className="flex flex-col items-start space-y-4 ml-6  md:w-[100%]">
-          {/* features  texts */}
           <div className="flex montserrat-heading font-semibold space-x-4 items-center">
-            {/* inner boxes */}
             <span
               className="p-1 px-8 border-2
              border-gray-600 rounded-full"
@@ -33,7 +30,6 @@ const Header = () => {
             className="flex text-gray-700 space-y-1 xl:-space-y-2 flex-col montserrat-heading font-extrabold
             text-left text-[1.2rem] md:text-[1.5rem] xl:text-[2.4rem]"
           >
-            {/* Receive Eth and tokens with forus confidentially !! */}
             <span>Private & Secure</span>
             <span>transactions</span>
           </h2>
@@ -41,8 +37,6 @@ const Header = () => {
             className="montserrat-heading font-semibold pb-1 text-gray-600
            text-left break-words  max-w-[700px] sm:text-[1.2rem] text-[1rem]"
           >
-            {/* Breaking the link between sender and receiver. Safeguard Your
-            Financial Interactions with Cutting-edge Cryptography. */}
             Get funds privately without sharing wallet address !!
           </p>
           <button
@@ -55,7 +49,6 @@ const Header = () => {
           </button>
         </div>
 
-        {/* right Banner */}
         <div className="flex justify-end items-center ">
           <img
             className="md:mt-0 mt-10 rounded-[1.5rem] object-center 
@@ -67,7 +60,6 @@ const Header = () => {
           />
         </div>
       </div>
-      {/* <Info /> */}
     </>
   );
 };

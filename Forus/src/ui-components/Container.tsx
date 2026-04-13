@@ -1,10 +1,7 @@
 import NavBar from "./NavHeader";
-import Foruskey from "./keys";
-import Instruction from "./Instruction";
 import Transactions from "./Tx-wrapper";
 import React, { createContext, useState, useEffect, useMemo } from "react";
 import { Notyf } from "notyf";
-import "notyf/notyf.min.css";
 import abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import { ethers } from "ethers";
 import { chainOptions } from "../helpers/ChainOptions";
@@ -12,6 +9,7 @@ import { ValidateChainData } from "../checkers/ValidateChainData";
 import { SwitchChain } from "../helpers/SwitchChain";
 import { isDetected } from "../checkers/isDetected";
 import CopyRight from "./CopyRight";
+import { useLocation } from "react-router-dom";
 
 type Props = {};
 
@@ -28,16 +26,16 @@ interface ContextValue {
   settotalAddress: React.Dispatch<React.SetStateAction<string | any>>;
   chainOptions: [] | any;
   handleChainChange(chainId: any): void | any;
-  address : string
+  address: string;
 }
 
 export const AppContext = createContext<ContextValue | any>(null);
 
 const Container = (props: Props) => {
-  //start
   const notyf = new Notyf();
+  const location = useLocation();
 
-  const [show, setShow] = useState<string>("transfer");
+  const [show, setShow] = useState<string>("keygen");
   const [totalfunds, settotalfunds] = useState<string | any>("0");
   const [totalAddress, settotalAddress] = useState<string | any>("0");
   const [address, setAddress] = useState<string | any>("");
@@ -49,8 +47,7 @@ const Container = (props: Props) => {
     if (typeof ethereum !== "undefined") {
       return ethereum;
     } else {
-      // Handle the case where Ethereum is not available
-      return null; // or some other default value
+      return null;
     }
   }, []);
 
@@ -70,12 +67,19 @@ const Container = (props: Props) => {
           rpcUrls: chain.rpcs,
         };
 
-        // Add the custom chain to MetaMask
-
         SwitchChain(customChain, chain.chainId);
       }
     });
   };
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const key = searchParams.get("key");
+
+    if (key) {
+      setShow("transfer");
+    }
+  }, [location.search]);
 
   useEffect(() => {
     const fetchCurrentChainData = async () => {
@@ -108,28 +112,27 @@ const Container = (props: Props) => {
 
   const [userBalance, setUserBalance] = useState<string>("");
 
-  const accountChecker = async () => {
+  const syncConnectedAccount = async () => {
     try {
+      if (!ethereum) return;
+
       const accounts = await ethereum.request({
-        method: "eth_requestAccounts",
+        method: "eth_accounts",
       });
 
-      // Get the user's address
+      if (!accounts || accounts.length === 0) {
+        sessionStorage.removeItem("address");
+        setAddress("");
+        return;
+      }
 
       const provider = new ethers.providers.Web3Provider(ethereum);
       const balance = await provider.getBalance(accounts[0]);
- 
-
-      // Get the signer (the account that is connected)
       const signer = provider.getSigner();
-  
-      // Get the connected account address
-      const address = await signer.getAddress();
- 
-      sessionStorage.setItem("address", address);
-      setAddress(address);
-     
-  
+      const nextAddress = await signer.getAddress();
+
+      sessionStorage.setItem("address", nextAddress);
+      setAddress(nextAddress);
       sessionStorage.setItem(
         "balance",
         ethers.utils.formatEther(balance).toString().slice(0, 5) +
@@ -137,16 +140,37 @@ const Container = (props: Props) => {
           sessionStorage.getItem("symbol")
       );
     } catch (e: any) {
-      console.log(e);
+    }
+  };
+
+  const accountChecker = async () => {
+    try {
+      const accounts = await ethereum.request({
+        method: "eth_requestAccounts",
+      });
+
+      const provider = new ethers.providers.Web3Provider(ethereum);
+      const balance = await provider.getBalance(accounts[0]);
+      const signer = provider.getSigner();
+      const address = await signer.getAddress();
+
+      sessionStorage.setItem("address", address);
+      setAddress(address);
+
+      sessionStorage.setItem(
+        "balance",
+        ethers.utils.formatEther(balance).toString().slice(0, 5) +
+          " " +
+          sessionStorage.getItem("symbol")
+      );
+    } catch (e: any) {
       notyf.error(e.message);
     }
   };
 
   useEffect(() => {
-
-    accountChecker();
+    syncConnectedAccount();
     ValidateChainData();
-
   }, [ethereum]);
 
   try {
@@ -193,43 +217,42 @@ const Container = (props: Props) => {
     handleChainChange,
     selectedChain,
     accountChecker,
-    address
+    address,
   };
 
   return (
     <AppContext.Provider value={ContextValue}>
-      <div className="overflow-hidden bg-gradient-to-tr from-black via-black/80 to-transparent relative w-full h-full">
+      <div className="relative min-h-screen w-full overflow-hidden bg-[radial-gradient(circle_at_top,#13385b_0%,#08111d_34%,#02050b_68%,#000000_100%)]">
         <div
-          className="absolute top-0 right-0 w-full h-full rounded-md bg-gradient-to-tr
-         from-blue-400 to-blue-600 z-[-10]"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,0.16),transparent_28%),radial-gradient(circle_at_top_left,rgba(59,130,246,0.14),transparent_24%)]"
         ></div>
-        <div className="bg-black/80 max-h-max min-h-[100vh] lg:overflow-hidden">
+        <div className="relative min-h-screen bg-black/35">
+          <div className="mx-auto w-full max-w-[1280px] px-4 pt-4 sm:px-5 sm:pt-8 lg:px-8">
+            <div className="mx-auto w-full max-w-5xl rounded-[32px] border border-slate-800/80 bg-[linear-gradient(180deg,rgba(12,24,40,0.92)_0%,rgba(7,13,23,0.9)_100%)] shadow-[0_30px_90px_rgba(0,0,0,0.42)] backdrop-blur-sm">
+              <NavBar />
 
-          {/* <HeaderRibbon /> */}
+              <div className="px-4 pb-8 sm:px-5 lg:px-8">
+                <div className="mx-auto w-full max-w-4xl text-center">
+                  <p className="montserrat-small text-sm font-semibold uppercase tracking-[0.35em] text-cyan-400/80">
+                    The Forus
+                  </p>
+                  <h1 className="mt-4 montserrat-subheading text-3xl font-bold text-slate-200 sm:text-4xl">
+                    Frictionless Shielded Transfers
+                  </h1>
+                  <p className="mx-auto mt-4 max-w-2xl montserrat-small text-sm text-slate-300 sm:text-base">
+                    A user-friendly privacy infrastructure , enabling non-interactive stealth address reception to protect your on-chain identity.
+                  </p>
+                </div>
 
-
-          <NavBar />
-
-          <div
-            className="md:w-[100%]  max-w-[1280px] mx-auto
-            py-8 p-4"
-          >
-            <div className="relative m-auto lg:w-[94%] xl:w-[96%] w-[100%] h-full">
-              <div
-                className="border border-gray-500 shadow-gray-800 absolute top-0 right-0 w-full h-full rounded-md 
-            bg-gradient-to-tr from-blue-400 to-black/20"
-              ></div>
-              <Foruskey />
-            </div>
-            <div
-              className="flex lg:flex-row lg:justify-between justify-between 
-          flex-col-reverse  pt-16 pb-6 "
-            >
-              <Instruction />
-              <Transactions />
+                <div className="pt-8">
+                  <Transactions />
+                </div>
+              </div>
             </div>
           </div>
-          <CopyRight />
+          <div className="px-4 pb-8 sm:px-5 lg:px-8">
+            <CopyRight />
+          </div>
         </div>
       </div>
     </AppContext.Provider>

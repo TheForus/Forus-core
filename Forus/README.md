@@ -1,46 +1,186 @@
-# Getting Started with Create React App
+# Forus
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Forus is a privacy-focused transfer application for shielded on-chain payments using stealth addresses. It lets a sender transfer funds to a receiver without exposing the receiver's primary wallet address in the public transaction flow.
 
-## Available Scripts
+The app generates a shareable Forus key, derives one-time stealth addresses for incoming payments, publishes the required ephemeral metadata on-chain, and lets the receiver later discover and withdraw funds using their secret file.
 
-In the project directory, you can run:
+## Core Features
 
-### `npm start`
+- Generate a public Forus key and matching secret key material
+- Share a receiver-friendly payment link instead of a wallet address
+- Send native ETH and supported ERC-20 assets privately through stealth address derivation
+- Scan recent published stealth payloads using the uploaded secret file
+- Detect matching stealth addresses and show current balances
+- Withdraw funds directly from a matched stealth wallet
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## How It Works
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### 1. Key Generation
 
-### `npm test`
+The receiver generates a Forus key pair inside the app:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- `Forus key`: safe to share
+- `secret key`: must be stored securely and never shared
 
-### `npm run build`
+The secret key is used later to scan for matching stealth payments and unlock the corresponding withdrawal wallet.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 2. Private Transfer
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+When a sender enters a receiver's Forus key:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- the app derives a one-time stealth address
+- generates an ephemeral public key pair
+- computes a shared secret prefix
+- submits the payload to the on-chain `Logs` contract
+- transfers ETH or supported ERC-20 tokens to the stealth address
 
-### `npm run eject`
+This keeps the receiver's main wallet out of the visible transfer path.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### 3. Receive Flow
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The receiver uploads the downloaded secret file in the `Receive` tab:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- the app scans recent published public key logs from the contract
+- derives candidate stealth wallets from the uploaded secret
+- checks balances for matching stealth addresses
+- displays funded and matched addresses in the UI
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### 4. Withdraw Flow
 
-## Learn More
+After a match is found:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- the user opens withdrawal from the matched stealth address
+- enters a recipient wallet
+- the app sends the withdrawable balance, minus required gas
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Supported Networks
+
+The project currently includes support for:
+
+- Arbitrum One
+- Arbitrum Sepolia
+
+Configured contract and chain metadata are stored in [src/helpers/ChainOptions.tsx](./src/helpers/ChainOptions.tsx).
+
+## Tech Stack
+
+- React
+- TypeScript
+- Ethers.js v5
+- Wagmi
+- ConnectKit
+- Elliptic
+- Notyf
+
+## Project Structure
+
+```text
+src/
+|- ui-components/
+|  |- Container.tsx
+|  |- NavHeader.tsx
+|  |- Tx-wrapper.tsx
+|  |- keys.tsx
+|  |- TransferPanel.tsx
+|  |- Receive.tsx
+|  |- Withdraw.tsx
+|  `- CopyRight.tsx
+|- helpers/
+|  |- ChainOptions.tsx
+|  |- ERC20ABI.tsx
+|  |- Crc.tsx
+|  `- downloadTxt.tsx
+|- checkers/
+|  |- isDetected.tsx
+|  `- ValidateChainData.tsx
+|- artifacts/
+|  `- contracts/Logs.sol/Logs.json
+`- front-page/
+```
+
+## Local Development
+
+### Prerequisites
+
+- Node.js 18+
+- npm
+- MetaMask or a compatible injected wallet
+
+### Install
+
+```bash
+npm install
+```
+
+### Start the app
+
+```bash
+npm start
+```
+
+The development server runs at:
+
+```text
+http://localhost:3000
+```
+
+### Production build
+
+```bash
+npm run build
+```
+
+## User Flow
+
+### Generate keys
+
+1. Open the `Key Generation` tab
+2. Click `Generate`
+3. Copy the shareable Forus link
+4. Download and store the secret key file securely
+
+### Send funds
+
+1. Open the app with a connected wallet
+2. Paste the receiver's Forus key
+3. Enter the amount
+4. Confirm the transfer transaction
+
+### Receive funds
+
+1. Open the `Receive` tab
+2. Upload the secret file
+3. Review matched stealth addresses and balances
+4. Select a funded address for withdrawal
+
+### Withdraw funds
+
+1. Open the `Withdraw` tab from a matched receive result
+2. Enter the destination wallet address
+3. Confirm the withdrawal transaction
+4. Open the block explorer link after success
+
+## Important Security Notes
+
+- Never share the secret key file
+- The secret key controls discovery and withdrawal from stealth wallets
+- Always verify the connected chain before sending or withdrawing
+- Keep backups of secret keys in a secure location
+
+## Recent Improvements
+
+- Stable key generation across in-app navigation
+- More reliable receive scanning for recent stealth transactions
+- Improved withdrawal gas handling and clearer error messages
+- Fixed odd-length stealth payload encoding in transfer flow
+- Cleaner notification styling through proper Notyf CSS loading
+
+## Scripts
+
+- `npm start`: run development server
+- `npm test`: run tests
+- `npm run build`: build production bundle
+
+## License
+
+This project is provided as-is for development and demonstration purposes.

@@ -1,188 +1,219 @@
 import { Crc } from "../helpers/Crc";
 import base58 from "bs58";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
 import { AiOutlineCopy } from "react-icons/ai";
-import { Notyf } from "notyf";
-import "notyf/notyf.min.css";
 import { downloadTxt } from "../helpers/downloadTxt";
-import { AiOutlineInfoCircle } from "react-icons/ai";
 import ToolTip from "../helpers/ToopTip";
 import { IoCreateSharp, IoDownloadOutline } from "react-icons/io5";
 import { MdOutlineDone } from "react-icons/md";
 
-
-
-
 const ec = new EllipticCurve.ec("secp256k1");
+const PAGE_LOAD_SESSION_KEY = "forus-page-load-id";
+const CURRENT_PAGE_LOAD_ID = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
 type Props = {};
 
 const Keys = (props: Props) => {
-
-
-
-  const notyf = new Notyf();
-
-  const [ForusKey, setForusKey] = useState<string | any>("");
+  const [ForusKey, setForusKey] = useState<string>("");
   const [addressCopied, setAddressCopied] = useState<boolean>(false);
+  const [showDownloadPrompt, setShowDownloadPrompt] = useState<boolean>(false);
+  const [confirmedDownloadRisk, setConfirmedDownloadRisk] =
+    useState<boolean>(false);
 
+  const buildForusKeys = () => {
+    const key: EC.KeyPair = ec.genKeyPair();
+    const privateKey: string = key.getPrivate().toString("hex");
+    const publicKey = key.getPublic();
+    const uint8publicKey = Uint8Array.from(publicKey.encodeCompressed("array"));
+    const checkSum = Crc(uint8publicKey);
+    const uint8PubKey: Uint8Array = new Uint8Array(uint8publicKey.length + 2);
 
-  //generating keys
+    uint8PubKey.set(uint8publicKey);
+    uint8PubKey.set(checkSum, uint8publicKey.length);
 
-  const generateKeys = () => {
+    const nextForusKey = "Fk" + base58.encode(uint8PubKey);
 
+    sessionStorage.setItem("signature", privateKey);
+    sessionStorage.setItem("foruskey", nextForusKey);
+    sessionStorage.setItem(PAGE_LOAD_SESSION_KEY, CURRENT_PAGE_LOAD_ID);
+
+    setForusKey(nextForusKey);
+  };
+
+  const hydrateOrGenerateKeys = () => {
     try {
+      const storedForusKey = sessionStorage.getItem("foruskey");
+      const storedSignature = sessionStorage.getItem("signature");
+      const storedPageLoadId = sessionStorage.getItem(PAGE_LOAD_SESSION_KEY);
 
-      //generating a elliptic curve keypair
+      const isSamePageLoad = storedPageLoadId === CURRENT_PAGE_LOAD_ID;
 
-      let key: EC.KeyPair = ec.genKeyPair();
+      if (isSamePageLoad && storedForusKey && storedSignature) {
+        setForusKey(storedForusKey);
+        return;
+      }
 
-      //calculating privatekey from elliptic key pair
-
-      const privateKey: string = key.getPrivate().toString('hex');
-
-      sessionStorage.setItem("signature", privateKey);
-
-
-
-
-      //calculating public key from elliptic key pair
-
-      const publicKey: any = key.getPublic()
-
-      //converting public key into uint8 array 
-
-      const uint8publicKey = Uint8Array.from(publicKey.encodeCompressed("array")
-      );
-
-      //adding 1 byte checkpoint to the public key
-
-      const checkSum = Crc(uint8publicKey);
-      const uint8PubKey: Uint8Array = new Uint8Array(uint8publicKey.length + 2);
-
-      uint8PubKey.set(uint8publicKey);
-      uint8PubKey.set(checkSum, uint8publicKey.length);
-
-      //adding a single byte prefix "fk" to the public key (i.e forus key)
-
-      const _foruskey: string = "Fk" + base58.encode(uint8PubKey);
-      sessionStorage.setItem("foruskey", _foruskey);
-
-      setForusKey(_foruskey);
-
-
-    } catch (e) {
-      console.error(e);
+      buildForusKeys();
+    } catch (error) {
+      console.error(error);
     }
   };
 
-
+  const generateKeys = () => {
+    try {
+      buildForusKeys();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-
-    generateKeys();
-
+    hydrateOrGenerateKeys();
   }, []);
 
-
   const copyforusKey = () => {
-
-    navigator.clipboard.writeText(`https://theforus-v2.netlify.app/forus?key=${ForusKey}`);
-    notyf.success("Copied");
+    const shareUrl = `${window.location.origin}/Forus?key=${ForusKey}`;
+    navigator.clipboard.writeText(shareUrl);
     setAddressCopied(true);
-  
-
+    window.setTimeout(() => {
+      setAddressCopied(false);
+    }, 2000);
   };
 
+  const openDownloadPrompt = () => {
+    setConfirmedDownloadRisk(false);
+    setShowDownloadPrompt(true);
+  };
 
+  const closeDownloadPrompt = () => {
+    setShowDownloadPrompt(false);
+    setConfirmedDownloadRisk(false);
+  };
 
   const downloadKeys = () => {
-    let signature =  sessionStorage.getItem('signature');
-    let forusKey  =  sessionStorage.getItem('foruskey');
-    const content = `#forus-signatureKey-${signature}\nforusKey-${forusKey}`;
-    downloadTxt(content, 'forus-keys.txt');
+    const signature = sessionStorage.getItem("signature");
+    const forusKey = sessionStorage.getItem("foruskey");
+    const content = `#forus-secretKey-${signature}\nforusKey-${forusKey}`;
+    downloadTxt(content, "forus-secret-keys.txt");
+    closeDownloadPrompt();
   };
 
-
-
   return (
-    <main className="shadow-2xl  mt-20 shadow-[#1f2a3af3]">
-      <div className="relative w-full xl:justify-between h-full rounded-md bg-no-repeat 
-        flex flex-col lg:flex-row items-start gap-3 lg:gap-6 justify-start py-4 px-3 md:px-6 rounded-t-md z-10
-        bg-gradient-to-tr from-black via-black/80 border-gray-700 border"
+    <main>
+      <div
+        className="relative mx-auto flex h-full w-full max-w-3xl flex-col items-start justify-start gap-6 rounded-[26px] border border-slate-700 bg-slate-800/45 bg-no-repeat px-5 py-6 md:px-6 xl:justify-between"
       >
-        <div className="z-10  pb-6 flex flex-col space-y-1 xl:items-start items-start xl:w-max w-full">
-          <h1
-            className="montserrat-heading text-transparent  hightlightText  ml-2 font-[1000] sm:text-[1.4rem] xl:text-[1.6rem]
-           bg-clip-text  text-xl  bg-gradient-to-r from-highlight to-cyan-600"
-          >
-            Forus Key
-            <span
-              className=" mx-2  sm:text-[1.4rem] xl:text-[1.6rem]
-             text-gray-400"
-            >
-              (Share It to Receive Funds)
-            </span>
-
-          </h1>
-          {/* Forus */}
-          <div className="flex space-x-2 pt-2">
-            <div className="my-2 flex sm:gap-4 items-center p-2 sm:px-3
-             sm:mx-0 mx-3 bg-gray-600 rounded-md hover:shadow-sm shadow-gray-400 px-2">
-              <p className="sm:text-[.9rem] text-[0.8rem] md:text-[1.1rem] montserrat-small
-               font-extrabold text-white">
-                #Foruskey-{ForusKey}
-              </p>
-            </div>
-            <div className="flex items-center text-white md:space-x-3">
-              <ToolTip tooltip="Copy Link">
-                   {addressCopied ? (
-              <MdOutlineDone
-                className={` text-white font-bold text-[1.1rem] "text-white `}
-              />
-            ) : (
-              <AiOutlineCopy
-                className={`" cursor-pointer flex-bold inline-flex mt-2" : "hidden"
-                        } text-white font-bold text-[1.2rem] "text-white `}
-                  onClick={copyforusKey}
-                      
-              />
-            )}
-              </ToolTip>
-            </div>
-          </div>
-          <div className="text-gray-400  flex justify-around items-center text-[0.7rem] 
-          sm:text-[0.8rem] montserrat-small font-semibold">
-            <AiOutlineInfoCircle size={20} color="#fff" className="ml-1" />
-            <p className="ml-2">
-              Never reveal the secret. Only Share your forus key to receive
-              funds.
+        <div className="z-10 flex w-full flex-col items-start space-y-4 text-left">
+          <div className="flex flex-col gap-1">
+            <p className="montserrat-small text-xs font-semibold uppercase tracking-[0.24em] text-cyan-400/75">
+              Key Generation
+            </p>
+            <p className="montserrat-small text-sm text-slate-400">
+              Copy and share the link to receive funds. Save the secret keys for withdrawal.
             </p>
           </div>
-        </div>
-        <div className="flex lg:flex-col gap-2 lg:mt-10 mr-6 justify-start z-20">
-          <div
-            className="flex cursor-pointer space-x-2 my-1 montserrat-subtitle p-1
-            montserrat-subtitle px-6 text-center text-gray-300 rounded-md font-semibold
-             bg-gray-700 border hover:bg-black hover:border-highlight border-[#152F59] min-w-max"
-            onClick={generateKeys}
-          >
-            <IoCreateSharp className="text-[#06B3D2] font-bold text-xl" />
-            <ToolTip tooltip="Generate Fresh Forus Key">Generate</ToolTip>
+
+          <div className="flex w-full flex-col">
+            <div className="grid w-full lg:items-center">
+              <div
+                className="flex min-h-[68px] w-full items-center overflow-visible rounded-2xl border border-slate-800/80 bg-slate-800/80 px-3 py-3"
+              >
+                <div className="w-full overflow-hidden pr-8">
+                  <p
+                    title={`#Foruskey-${ForusKey}`}
+                    className="montserrat-subtitle overflow-hidden text-ellipsis whitespace-nowrap text-left text-[0.84rem] font-semibold text-slate-400 sm:text-[0.9rem] md:text-[0.95rem]"
+                  >
+                    #Foruskey-{ForusKey}
+                  </p>
+                </div>
+
+                <ToolTip tooltip="Copy Link">
+                  {addressCopied ? (
+                    <MdOutlineDone className="inline-flex text-[1.05rem] font-bold text-cyan-300" />
+                  ) : (
+                    <AiOutlineCopy
+                      className="inline-flex cursor-pointer text-[1rem] font-bold text-slate-400"
+                      onClick={copyforusKey}
+                    />
+                  )}
+                </ToolTip>
+
+                <div className="ml-3 flex shrink-0 items-center justify-end text-white">
+                  <ToolTip tooltip="Download the secret keys.">
+                    <IoDownloadOutline
+                      className="inline-flex h-[22px] w-full cursor-pointer text-[1rem] font-bold text-[#06B3D2]"
+                      onClick={openDownloadPrompt}
+                    />
+                  </ToolTip>
+                </div>
+              </div>
+            </div>
           </div>
-          <div
-            onClick={downloadKeys}
-            className="flex cursor-pointer space-x-2 my-1 montserrat-subtitle p-1
-             montserrat-subtitle px-6 text-center text-gray-300 rounded-md font-semibold
-              bg-gray-700 hover:bg-black hover:border-highlight border border-gray-600 min-w-max"
-          >
-            <IoDownloadOutline className="font-bold text-[#06B3D2] text-xl" />
-            <ToolTip tooltip="Save Signature Key">Save Keys</ToolTip>
-          </div>
         </div>
+
+        <button
+          className="montserrat-subtitle flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 px-6 py-[16px] text-center text-[1rem] font-bold text-black transition-all duration-200 hover:shadow-[0_14px_40px_rgba(45,212,191,0.25)]"
+          onClick={generateKeys}
+        >
+          <IoCreateSharp className="text-xl font-bold text-inherit" />
+          <span>Generate</span>
+        </button>
       </div>
+
+      {showDownloadPrompt && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="w-full max-w-md rounded-[24px] border border-slate-700 bg-[linear-gradient(180deg,rgba(18,30,47,0.98)_0%,rgba(10,18,30,0.98)_100%)] p-6 shadow-[0_30px_80px_rgba(0,0,0,0.45)]">
+            <p className="montserrat-small text-xs font-semibold uppercase tracking-[0.24em] text-cyan-400/75">
+              Secret Key Warning
+            </p>
+            <h3 className="montserrat-subheading mt-3 text-2xl font-bold text-slate-100">
+              Save keys securely
+            </h3>
+            <p className="montserrat-small mt-3 text-sm leading-7 text-slate-300">
+              Never share secret keys with anyone. This file contains the secret
+              key that can give access to your private funds. Store it only in a
+              secure and private place.
+            </p>
+
+            <label className="mt-5 flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-700 bg-slate-800/55 px-4 py-4 text-left">
+              <input
+                type="checkbox"
+                checked={confirmedDownloadRisk}
+                onChange={(event) => setConfirmedDownloadRisk(event.target.checked)}
+                className="mt-1 h-4 w-4 accent-cyan-400"
+              />
+              <span className="montserrat-small text-sm font-semibold text-slate-200">
+                I understand that secret keys must never be shared and I will
+                store this file safely.
+              </span>
+            </label>
+
+            <div className="mt-6 flex gap-3">
+              <button
+                type="button"
+                onClick={closeDownloadPrompt}
+                className="montserrat-subtitle flex-1 rounded-2xl border border-slate-600 bg-slate-800/75 px-4 py-3 text-sm font-semibold text-slate-200 transition-all duration-200 hover:bg-slate-700"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={downloadKeys}
+                disabled={!confirmedDownloadRisk}
+                className={`montserrat-subtitle flex-1 rounded-2xl px-4 py-3 text-sm font-bold transition-all duration-200 ${
+                  confirmedDownloadRisk
+                    ? "bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 text-black hover:shadow-[0_14px_40px_rgba(45,212,191,0.25)]"
+                    : "cursor-not-allowed bg-slate-700 text-slate-400"
+                }`}
+              >
+                Download Keys
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 };

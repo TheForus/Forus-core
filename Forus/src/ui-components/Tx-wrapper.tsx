@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Transfer from "./Transfer";
 import { Receive } from "./Receive";
+import Keys from "./keys";
 
 import { useContext } from "react";
 import { AppContext } from "./Container";
@@ -11,7 +12,8 @@ type Props = {};
 const Transactions = (props: Props) => {
   const { setShow, show } = useContext(AppContext);
   const [buttonStatus, setButtonStatus] = useState({
-    transfer: true,
+    keygen: true,
+    transfer: false,
     Receive: false,
     withdraw: false,
   });
@@ -19,8 +21,28 @@ const Transactions = (props: Props) => {
   const [masterkey, setmasterkey] = useState<string | any>("");
   const [amountTowithdraw, setamountTowithdraw] = useState<string | any>("");
 
+  useEffect(() => {
+    setButtonStatus({
+      keygen: show === "keygen",
+      transfer: show === "transfer",
+      Receive: show === "receive",
+      withdraw: show === "withdraw",
+    });
+  }, [show]);
+
+  const handleKeyGenerationClick = () => {
+    setButtonStatus({
+      keygen: true,
+      Receive: false,
+      withdraw: false,
+      transfer: false,
+    });
+    setShow("keygen");
+  };
+
   const handleTransferClick = () => {
     setButtonStatus({
+      keygen: false,
       Receive: false,
       withdraw: false,
       transfer: true,
@@ -30,6 +52,7 @@ const Transactions = (props: Props) => {
 
   const handleReceiveClick = () => {
     setButtonStatus({
+      keygen: false,
       Receive: true,
       withdraw: false,
       transfer: false,
@@ -39,6 +62,7 @@ const Transactions = (props: Props) => {
 
   const handleWithdrawClick = () => {
     setButtonStatus({
+      keygen: false,
       withdraw: true,
       Receive: false,
       transfer: false,
@@ -47,51 +71,43 @@ const Transactions = (props: Props) => {
   };
 
   return (
-    <div
-      className="flex flex-col  backdrop-blur-[50px]
-      hover:backdrop-blur-lg"
-    >
-      <div
-        className="max-w-[500px] mx-auto flex montserrat-subheading
-        text-[1.4rem] pb-2 border-bgGray font-extrabold"
-      >
+    <div className="mx-auto flex w-full max-w-3xl flex-col">
+      <div className="mx-auto grid w-full max-w-2xl grid-cols-3 gap-3">
+        <button
+          onClick={handleKeyGenerationClick}
+          className={`rounded-2xl border px-4 py-4 text-center montserrat-subheading text-[1rem] font-bold transition-all duration-200 ${
+            buttonStatus.keygen
+              ? "border-cyan-400 bg-cyan-400/10 text-cyan-300 shadow-[0_0_30px_rgba(34,211,238,0.18)]"
+              : "border-slate-700 bg-slate-950/60 text-slate-300 hover:border-slate-500 hover:text-white"
+          }`}
+        >
+          Key Generation
+        </button>
         <button
           onClick={handleTransferClick}
-          className={`text-left sm:px-6 py-1 border-b-2 border-black
-        ${
-          buttonStatus.transfer
-            ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700"
-            : "text-gray-400"
-        }`}
+          className={`rounded-2xl border px-4 py-4 text-center montserrat-subheading text-[1rem] font-bold transition-all duration-200 ${
+            buttonStatus.transfer
+              ? "border-cyan-400 bg-cyan-400/10 text-cyan-300 shadow-[0_0_30px_rgba(34,211,238,0.18)]"
+              : "border-slate-700 bg-slate-950/60 text-slate-300 hover:border-slate-500 hover:text-white"
+          }`}
         >
           Transfer
         </button>
         <button
           onClick={handleReceiveClick}
-          className={`px-6 py-1 border-b-2 border-black
-          ${
+          className={`rounded-2xl border px-4 py-4 text-center montserrat-subheading text-[1rem] font-bold transition-all duration-200 ${
             buttonStatus.Receive
-              ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700"
-              : "text-gray-400"
+              ? "border-cyan-400 bg-cyan-400/10 text-cyan-300 shadow-[0_0_30px_rgba(34,211,238,0.18)]"
+              : "border-slate-700 bg-slate-950/60 text-slate-300 hover:border-slate-500 hover:text-white"
           }`}
         >
           Receive
         </button>
-        <button
-          onClick={handleWithdrawClick}
-          className={`sm:px-6 py-1 border-b-2 border-black
-          ${
-            buttonStatus.withdraw
-              ? "shadow-2xl border-b-2 border-cyan-800 text-transparent bg-clip-text bg-gradient-to-r from-highlight to-cyan-600 shadow-cyan-700"
-              : "text-gray-400"
-          }`}
-        >
-          Withdraw
-        </button>
       </div>
-      {/* below buttons */}
-      <div className="py-1 xl:w-[400px] md:w-[80%] mx-auto w-[87%]">
-        {buttonStatus.transfer ? (
+      <div className="mt-8 w-full px-0 py-0">
+        {buttonStatus.keygen ? (
+          <Keys />
+        ) : buttonStatus.transfer ? (
           <Transfer />
         ) : buttonStatus.Receive ? (
           <Receive

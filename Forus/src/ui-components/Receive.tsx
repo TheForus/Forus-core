@@ -1,32 +1,23 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { keccak256 } from "ethers/lib.esm/utils";
 import Abi from "../artifacts/contracts/Logs.sol/Logs.json";
 import EllipticCurve from "elliptic";
 import { ec as EC } from "elliptic";
+import { AiOutlineUpload } from "react-icons/ai";
+import { BigNumber, ethers } from "ethers";
 import {
-  AiOutlineArrowsAlt,
-  AiOutlineCopy,
-  AiOutlineScan,
-  AiOutlineShrink,
-} from "react-icons/ai";
-import "notyf/notyf.min.css";
-import { downloadTxt } from "../helpers/downloadTxt";
-import { ethers, BigNumber } from "ethers";
-import { MdHistory, MdOutlineDone } from "react-icons/md";
+  MdHistory,
+  MdOutlineDone,
+  MdOutlineRefresh,
+} from "react-icons/md";
 import ToolTip from "../helpers/ToopTip";
 import { isDetected } from "../checkers/isDetected";
 import { chainOptions } from "../helpers/ChainOptions";
+import eth from "../assets/eth.png";
+import { TbTransferIn, TbShieldCheck } from "react-icons/tb";
 
 const ec = new EllipticCurve.ec("secp256k1");
-
-import { Polybase } from "@polybase/client";
-
-const db = new Polybase({
-  defaultNamespace:
-    "pk/0xb7525f97e65911cdc9366260fe0161677dae0ff6d8e41d298d5dd3189126d461813053df370626c9f23f92805387cc06a9887e69440240427328aa73b730b98c/Forus-v1",
-});
-
-//Combining the publickey with signatureKey then calcuate the private key of stealth address
+const PAGE_SIZE = 10;
 
 interface ChildProps {
   withdrawFunction: () => void;
@@ -36,353 +27,574 @@ interface ChildProps {
   show: string | any;
 }
 
+interface PublishedKeyLog {
+  x_cor: string;
+  y_cor: string;
+  sharedSecret: string;
+}
+
+interface StealthTransactionItem {
+  address: string;
+  fullAddress: string;
+  balance: string;
+  balanceValue: number;
+  key: string;
+  hasBalance: boolean;
+  matchIndex: number;
+}
+
+const EMPTY_PUBLISHED_KEY =
+  "00000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+
+function isHexKey(value: string) {
+  return /^[0-9a-fA-F]{64}$/.test(value);
+}
+
+function normalizeSecretKey(rawValue: string) {
+  const trimmed = rawValue.trim();
+  const match = trimmed.match(
+    /#?forus-(?:secretKey|signatureKey)-([0-9a-fA-F]{64})/i
+  );
+
+  if (match?.[1]) {
+    return match[1];
+  }
+
+  const withoutPrefix = trimmed.startsWith("0x") ? trimmed.slice(2) : trimmed;
+  if (isHexKey(withoutPrefix)) {
+    return withoutPrefix;
+  }
+
+  throw new Error("Invalid Secret File");
+}
+
+function isEmptyLog(log: PublishedKeyLog) {
+  const keyString = `${log.sharedSecret.replace("0x", "")}04${log.x_cor.slice(
+    2
+  )}${log.y_cor.slice(2)}`;
+
+  return keyString === EMPTY_PUBLISHED_KEY;
+}
+
+function deriveStealthPrivateKey(log: PublishedKeyLog, secretKey: string) {
+  const receiverKeyPair = ec.keyFromPrivate(secretKey, "hex");
+  const combinedKey = `${log.sharedSecret.replace("0x", "")}04${log.x_cor.slice(
+    2
+  )}${log.y_cor.slice(2)}`;
+
+  if (combinedKey === EMPTY_PUBLISHED_KEY) {
+    return null;
+  }
+
+  const publicKey = combinedKey.slice(4);
+  const ephemeralKeyPair = ec.keyFromPublic(publicKey, "hex");
+  const calculatedSecret = receiverKeyPair.derive(ephemeralKeyPair.getPublic());
+  const calculatedSecretBytes = calculatedSecret.toArray();
+
+  if (calculatedSecretBytes.length < 2) {
+    return null;
+  }
+
+  const calculatedPrefix =
+    calculatedSecretBytes[0].toString(16).padStart(2, "0") +
+    calculatedSecretBytes[1].toString(16).padStart(2, "0");
+
+  if (calculatedPrefix.toLowerCase() !== combinedKey.slice(0, 4).toLowerCase()) {
+    return null;
+  }
+
+  const hashedSecret = ec.keyFromPrivate(keccak256(calculatedSecretBytes));
+  const stealthPrivateKey = receiverKeyPair
+    .getPrivate()
+    .add(hashedSecret.getPrivate())
+    .mod(ec.curve.n)
+    .toString(16, 32);
+
+  const wallet = new ethers.Wallet(stealthPrivateKey);
+
+  return {
+    privateKey: stealthPrivateKey,
+    fullAddress: wallet.address,
+  };
+}
+
 export const Receive: React.FC<ChildProps> = ({
   withdrawFunction,
   setmasterkey,
 }) => {
-  var signaturekey: EC.KeyPair | any;
   const { ethereum }: any = window;
 
   const [savedSignaturekey, setsavedSignaturekey] = useState<string>("");
-  const [hide, sethide] = useState<boolean>(true);
-  const [err, seterr] = useState<any>(false);
-  const [pkCopied, setPkCopied] = useState<boolean>(false);
+  const [err, seterr] = useState<string>("");
+  const [pkCopiedIndex, setPkCopiedIndex] = useState<number | null>(null);
+  const [trxList, settrxList] = useState<StealthTransactionItem[]>([]);
+  const [isScanning, setIsScanning] = useState<boolean>(false);
+  const [totalPublishedKeys, setTotalPublishedKeys] = useState<number>(0);
+  const [lastScanAt, setLastScanAt] = useState<string>("");
+  const [matchedCount, setMatchedCount] = useState<number>(0);
+  const scanRunRef = useRef(0);
 
-  const [transactionTab, setTransactionTab] = useState(false);
-  const [trxList, settrxList] = useState<any>([]);
-  const [logsArray, setlogsArray] = useState<any>([]);
+  const currentNetwork: string | null = sessionStorage.getItem("chain");
+  const sessionSignatureKey =
+    sessionStorage.getItem("signature") ||
+    localStorage.getItem("signature") ||
+    "";
 
-  let currentNetwork: string | any = sessionStorage.getItem("chain");
-
-  const contractaddress: string | any = useMemo(() => {
-    const selectedChain = chainOptions.find(
+  const contractaddress: string | null = useMemo(() => {
+    const chainId = ethereum?.chainId || "";
+    const selectedById = chainOptions.find(
+      (chain) => chain.chainId.toLowerCase() === String(chainId).toLowerCase()
+    );
+    const selectedByName = chainOptions.find(
       (chain) => currentNetwork === chain.name
     );
+    const selectedChain = selectedById || selectedByName;
     return selectedChain ? selectedChain.contract : null;
-  }, [chainOptions, currentNetwork, ethereum]);
+  }, [currentNetwork, ethereum]);
 
   const provider = useMemo(() => {
-    return new ethers.providers.Web3Provider(ethereum);
-  }, []);
+    if (!ethereum) {
+      return null;
+    }
 
-  const contract = useMemo(() => {
-    return new ethers.Contract(contractaddress, Abi.abi, provider);
+    return new ethers.providers.Web3Provider(ethereum);
   }, [ethereum]);
 
-  const setwallet = async (key: string) => {
-    let wallet = new ethers.Wallet(key);
-
-    // Get the wallet address
-    let add = wallet.address;
-
-    const getbal = await provider.getBalance(add);
-    const balance = ethers.utils.formatEther(getbal);
-
-    const obj = {
-      address: add?.slice(0, 6) + "..." + add?.slice(-4),
-      balance: balance,
-      key: key,
-    };
-    const arr = trxList.find((e: any) => {
-      e.address === obj.address;
-    });
-
-    if (!arr && Number(balance) > 0) settrxList((objs: any) => [...objs, obj]);
-  };
-
-  //verify signature
-
-  const verifySignature = (sign: any) => {
-    if (sign.startsWith("#forus-signatureKey-")) {
-      setsavedSignaturekey(
-        sign.replace("#forus-signatureKey-", "").slice(0, 64)
-      );
-    } else {
-      seterr("Invalid Signature File");
+  const contract = useMemo(() => {
+    if (!contractaddress || !provider) {
+      return null;
     }
-  };
 
-  const [initValue, setInitValue] = useState<number>(0);
+    return new ethers.Contract(contractaddress, Abi.abi, provider);
+  }, [contractaddress, provider]);
 
-  const fetch = async () => {
+  const refreshMetadata = async () => {
     isDetected();
 
+    if (!contract) {
+      return 0;
+    }
+
+    const totalKeys = await contract.pubKeysLen();
+    const parsedTotal = totalKeys.toNumber();
+    setTotalPublishedKeys(parsedTotal);
+    return parsedTotal;
+  };
+
+  const readSignatureFile = (file: File) => {
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = (event) => {
+        resolve((event.target?.result as string) || "");
+      };
+
+      reader.onerror = (event) => {
+        reject(event.target?.error);
+      };
+
+      reader.readAsText(file);
+    });
+  };
+
+  const scanForTransactions = async (secretKeyInput?: string) => {
+    if (!provider || !contract) {
+      if (!ethereum) {
+        seterr("Wallet provider is not available.");
+      }
+      return;
+    }
+
+    const activeSecretKey = secretKeyInput || savedSignaturekey || sessionSignatureKey;
+
+    if (!activeSecretKey) {
+      seterr("Upload your secret file to scan recent transactions.");
+      return;
+    }
+
+    let normalizedSecretKey = "";
+
     try {
-      const totalKeys = await contract.pubKeysLen();
-      setInitValue(totalKeys.toNumber());
-    } catch (error) {
-      console.error("Error fetching data:", error);
+      normalizedSecretKey = normalizeSecretKey(activeSecretKey);
+    } catch (error: any) {
+      if (secretKeyInput) {
+        seterr(error?.message || "Invalid Secret File");
+      } else {
+        seterr("Upload your secret file to scan recent transactions.");
+        setsavedSignaturekey("");
+        sessionStorage.removeItem("signature");
+        localStorage.removeItem("signature");
+      }
+      return;
     }
-  };
 
-  useEffect(() => {
-    fetch();
-  }, []);
+    const currentRun = scanRunRef.current + 1;
+    scanRunRef.current = currentRun;
 
-  const generateprivatekey = (): void => {
-    if (savedSignaturekey === "") {
-      signaturekey = ec.keyFromPrivate(signatureKey, "hex");
-    } else {
-      signaturekey = ec.keyFromPrivate(savedSignaturekey, "hex");
-    }
-  };
+    setIsScanning(true);
+    setPkCopiedIndex(null);
+    seterr("");
+    setsavedSignaturekey(normalizedSecretKey);
+    sessionStorage.setItem("signature", normalizedSecretKey);
+    localStorage.setItem("signature", normalizedSecretKey);
 
-  useEffect(() => {
-    if (initValue > 0) {
-      const timer = setTimeout(() => {
-        if (initValue >= 10) {
-          setInitValue(initValue - 10); // Update initValue using state
-        } else {
-          setInitValue(0); // Ensure initValue doesn't go below zero
+    try {
+      const totalKeys = await refreshMetadata();
+
+      if (currentRun !== scanRunRef.current) {
+        return;
+      }
+
+      if (totalKeys <= 0) {
+        setMatchedCount(0);
+        settrxList([]);
+        setLastScanAt(new Date().toLocaleTimeString());
+        return;
+      }
+
+      const startingPoints = Array.from(
+        { length: Math.ceil(totalKeys / PAGE_SIZE) },
+        (_, index) => totalKeys - index * PAGE_SIZE
+      ).filter((value) => value > 0);
+
+      const pages = await Promise.all(
+        startingPoints.map((start) =>
+          contract.retrievePubKeys(BigNumber.from(start))
+        )
+      );
+
+      if (currentRun !== scanRunRef.current) {
+        return;
+      }
+
+      const publishedLogs = pages
+        .flat() as PublishedKeyLog[];
+
+      const uniqueMatches = new Map<
+        string,
+        {
+          privateKey: string;
+          fullAddress: string;
+          matchIndex: number;
         }
-      }, 950);
+      >();
 
-      return () => clearTimeout(timer); // Cleanup the timer
-    } else {
-      setInitValue(0);
-    }
-  }, [initValue]); // Trigger when initValue changes
+      publishedLogs.forEach((log, index) => {
+        if (!log || isEmptyLog(log)) {
+          return;
+        }
 
-  let signatureKey: string | any = sessionStorage.getItem("signature");
-
-  const getKeys = async () => {
-    try {
-      // Retrieve and set logsArray
-      const retrievedLogs = await contract.retrievePubKeys(BigNumber.from(initValue));
-      setlogsArray(retrievedLogs);
-  
-      // Use retrievedLogs directly to ensure consistency
-      const logs = retrievedLogs;
-  
-      // Declare variables
-      let keyPair: EC.KeyPair | any;
-      let calculateSecret;
-      let hashedSecret: any;
-      let calculated_ss: string | any;
-      let publicKey: any;
-      let keys: any;
-  
-      let isSignerRegistered = false; // Flag to track if signer is already registered
-  
-      // Iterate over logs
-      logs.forEach((log: any) => {
-        generateprivatekey(); // Ensure this function works as expected
-  
         try {
-          keys = `${log.sharedSecret.replace("0x", "")}04${log.x_cor.slice(2)}${log.y_cor.slice(2)}`;
-  
-          // Check for empty or invalid keys
-          if (
-            keys ===
-            "00000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-          )
-            return false;
-  
-          publicKey = keys.slice(4);
-  
-          keyPair = ec.keyFromPublic(publicKey, "hex");
-          calculateSecret = signaturekey.derive(keyPair.getPublic());
-          hashedSecret = ec.keyFromPrivate(keccak256(calculateSecret.toArray()));
-  
-          calculated_ss =
-            calculateSecret.toArray()[0].toString(16) +
-            calculateSecret.toArray()[1].toString(16);
-        } catch (e: any) {
-          seterr(e.message);
-          console.error(e.message);
-          return; // Exit the current iteration on error
-        }
-  
-        // Register db.signer only once
-        if (calculated_ss.toString() === keys.slice(0, 4).toString() && !isSignerRegistered) {
-          try {
-            const _key = signaturekey.getPrivate().add(hashedSecret.getPrivate());
-            const privateKey = _key.mod(ec.curve.n);
-  
-            setwallet(privateKey.toString(16, 32));
-            setsavedSignaturekey("");
-  
-            // db.signer(async (data) => {
-            //   const provider = new ethers.providers.Web3Provider(ethereum);
-            //   const signer = provider.getSigner();
-  
-            //   const signature = await signer.signMessage(data);
-  
-            //   return { h: "eth-personal-sign", sig: signature };
-            // });
-  
-            isSignerRegistered = true; // Mark signer as registered
-          } catch (e: any) {
-            seterr(e.message);
-            console.error(e.message);
+          const derived = deriveStealthPrivateKey(log, normalizedSecretKey);
+
+          if (!derived) {
+            return;
           }
+
+          if (!uniqueMatches.has(derived.fullAddress)) {
+            uniqueMatches.set(derived.fullAddress, {
+              privateKey: derived.privateKey,
+              fullAddress: derived.fullAddress,
+              matchIndex: index,
+            });
+          }
+        } catch (error) {
+          console.error("Skipping invalid published key", error);
         }
       });
-  
-      // Retrieve ephemeral keys
-      // const userId = "shared";
-      // const ephKeysCollection = db.collection("EphKeys");
-  
-      // try {
-      //   const response = await ephKeysCollection.record(userId).call("getKeys");
-      //   console.log("Ephemeral keys retrieved successfully:", response.data);
-      //   return response.data; // Array of ephemeral keys
-      // } catch (error) {
-      //   console.error("Error retrieving ephemeral keys:", error);
-      // }
+
+      const matchedWallets = Array.from(uniqueMatches.values());
+
+      const walletBalances = await Promise.all(
+        matchedWallets.map(async (wallet) => {
+          const rawBalance = await provider.getBalance(wallet.fullAddress);
+          const balanceValue = Number(ethers.utils.formatEther(rawBalance));
+          const hasBalance = balanceValue > 0.000001;
+
+          return {
+            address:
+              wallet.fullAddress.slice(0, 6) +
+              "..." +
+              wallet.fullAddress.slice(-4),
+            fullAddress: wallet.fullAddress,
+            balance: balanceValue.toFixed(6),
+            balanceValue,
+            key: wallet.privateKey,
+            hasBalance,
+            matchIndex: wallet.matchIndex,
+          };
+        })
+      );
+
+      if (currentRun !== scanRunRef.current) {
+        return;
+      }
+
+      const sortedWallets = walletBalances
+        .filter((item) => item.hasBalance)
+        .sort((left, right) => {
+        if (left.hasBalance !== right.hasBalance) {
+          return Number(right.hasBalance) - Number(left.hasBalance);
+        }
+
+        return left.matchIndex - right.matchIndex;
+      });
+
+      setMatchedCount(sortedWallets.length);
+      settrxList(sortedWallets);
+      setLastScanAt(new Date().toLocaleTimeString());
     } catch (error: any) {
-      seterr(error.message);
-      console.error("Error in getKeys function:", error.message);
+      if (currentRun !== scanRunRef.current) {
+        return;
+      }
+
+      settrxList([]);
+      setMatchedCount(0);
+      seterr(error?.message || "Unable to scan recent transactions");
+    } finally {
+      if (currentRun === scanRunRef.current) {
+        setIsScanning(false);
+      }
     }
   };
-  
 
   useEffect(() => {
-    if (initValue >= 0) {
-      getKeys();
+    refreshMetadata().catch((error) => {
+      console.error("Failed to load receive metadata", error);
+    });
+  }, [contract]);
+
+  useEffect(() => {
+    if (!contract || !provider || !sessionSignatureKey) {
+      return;
     }
-  }, [initValue]); // Trigger when initValue changes
+
+    scanForTransactions(sessionSignatureKey).catch((error) => {
+      console.error("Initial transaction scan failed", error);
+    });
+  }, [contract, provider]);
+
+  const verifySignature = (signatureContents: string) => {
+    try {
+      const normalizedSecret = normalizeSecretKey(signatureContents);
+      setsavedSignaturekey(normalizedSecret);
+      sessionStorage.setItem("signature", normalizedSecret);
+      localStorage.setItem("signature", normalizedSecret);
+      seterr("");
+      return normalizedSecret;
+    } catch (error: any) {
+      seterr(error?.message || "Invalid Secret File");
+      return null;
+    }
+  };
 
   const copykey = (pkey: string, index: number) => {
     navigator.clipboard.writeText(pkey);
 
-    setPkCopied(true);
+    setPkCopiedIndex(index);
+    window.setTimeout(() => {
+      setPkCopiedIndex(null);
+    }, 2000);
 
     try {
       withdrawFunction();
-    } catch (e: any) {
-      console.error(e);
+    } catch (error) {
+      console.error(error);
     }
-
-    downloadTxt("#walletprivateKey-" + pkey, "Forus-privatekey.txt");
 
     setmasterkey(pkey);
   };
 
+  const handleSignatureUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      const contents = await readSignatureFile(file);
+      const normalizedSecret = verifySignature(contents);
+
+      if (!normalizedSecret) {
+        settrxList([]);
+        setMatchedCount(0);
+        return;
+      }
+
+      settrxList([]);
+      setMatchedCount(0);
+      await scanForTransactions(normalizedSecret);
+    } catch (error: any) {
+      seterr(error?.message || "Unable to read signature file");
+    } finally {
+      event.target.value = "";
+    }
+  };
+
+  const fundedTransactions = trxList.filter((transaction) => transaction.hasBalance);
+
   return (
     <>
-      <div className="flex mx-auto pt-4 justify-center items-center">
-        <div className="flex justify-end w-full">
-          <div className="py-2 flex justify-between space-x-1 items-center w-full">
-            {trxList && trxList.length > 0 && (
-              <h1 className="animate-pulse-2s montserrat-small font-semibold  text-highlight  text-[1rem]">
-                <span>{trxList.length}</span> Transaction Found !{" "}
-              </h1>
-            )}
-            <div
-              className="flex items-center space-x-1 cursor-pointer 
-             text-gray-400 border-b border-dashed border-gray-400 text-[1rem] text-left"
-              onClick={() => setTransactionTab(!transactionTab)}
-            >
-              <span>
-                <MdHistory className="text-[1.2rem] text-inherit" />
-              </span>
-              <p className="montserrat-small font-semibold  ">
-                View Transactions{" "}
-              </p>
+      <div className="mx-auto mt-0 flex w-full max-w-3xl flex-col gap-4 text-left">
+        <div className="rounded-[26px] border border-slate-700 bg-slate-800/45 p-4 sm:p-5">
+          <div className="space-y-6 text-left">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="montserrat-small text-xs font-semibold uppercase tracking-[0.24em] text-cyan-400/75">
+                  Receive the Funds
+                </p>
+                <div className="mt-1 flex items-center gap-2 text-slate-400">
+                  <TbShieldCheck className="text-[1rem] text-cyan-300" />
+                  <p className="montserrat-small text-sm">
+                    Upload your secret file to scan the newest stealth addresses and reveal any funds sent to you.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col items-end gap-1 text-right">
+                <p className="montserrat-small whitespace-nowrap text-sm font-semibold text-cyan-400">
+                  {fundedTransactions.length} funded / {matchedCount} matched
+                </p>
+                <p className="montserrat-small text-xs text-slate-400">
+                  {totalPublishedKeys} published keys on this network
+                </p>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
-      {transactionTab ? (
-        trxList && trxList.length > 0 ? (
-          trxList.map((z: any, i: any) => (
-            <div className="pt-4 flex justify-between px-6 text-highlight bg-gray-0">
-              <div className="flex flex-col space-y-2">
-                <h2 className="text-left montserrat-small font-semibold">
-                  Address{" "}
-                </h2>
-                <p className="text-gray-400">{z.address}</p>
-              </div>
-              <div className="flex flex-col space-y-2">
-                <h2 className="text-left montserrat-small font-semibold">
-                  Balance{" "}
-                </h2>
-                <p className="text-gray-400">{z.balance}</p>
-              </div>
-              <div className="flex flex-col montserrat-small font-semibold justify-center items-end space-y-2">
-                <h2 className="text-left">Private key </h2>
-                {!pkCopied ? (
-                  <ToolTip tooltip="Copy Private key">
-                    <AiOutlineCopy
-                      onClick={() => copykey(z.key, i)}
-                      className={`text-gray-400 hover:text-green-400 font-bold cursor-pointer text-[1.2rem]`}
+
+            <div className="rounded-2xl border border-slate-900 bg-slate-800/60 px-4 py-3">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-2 text-slate-200">
+                  <MdHistory className="text-[1.15rem] text-cyan-300" />
+                  <span className="montserrat-subtitle text-[0.95rem] font-semibold">
+                    Recent Transactions
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  {lastScanAt && (
+                    <span className="montserrat-small text-xs text-slate-400">
+                      Last synced at {lastScanAt}
+                    </span>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      scanForTransactions().catch((error) => {
+                        console.error("Manual refresh failed", error);
+                      });
+                    }}
+                    disabled={isScanning || (!savedSignaturekey && !sessionSignatureKey)}
+                    className="flex items-center gap-1 rounded-xl border border-slate-600 px-3 py-2 text-xs font-semibold text-cyan-300 transition hover:border-cyan-400 hover:text-cyan-200 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <MdOutlineRefresh
+                      className={`text-base ${isScanning ? "animate-spin" : ""}`}
                     />
-                  </ToolTip>
+                    Refresh
+                  </button>
+                </div>
+              </div>
+
+              <div className="mt-4 space-y-3 border-t border-slate-700 pt-4">
+                {isScanning ? (
+                  <h1 className="text-left text-sm montserrat-small text-slate-300">
+                    Scanning the latest published keys and checking wallet balances...
+                  </h1>
+                ) : trxList.length > 0 ? (
+                  trxList.map((transaction, index) => (
+                    <div
+                      key={`${transaction.fullAddress}-${index}`}
+                      className="flex flex-col gap-4 rounded-2xl border border-slate-700 bg-slate-900/35 px-4 py-4 text-cyan-400 sm:flex-row sm:items-center sm:justify-between"
+                    >
+                      <div className="flex flex-col space-y-2">
+                        <h2 className="montserrat-small text-left font-semibold text-slate-400">
+                          Address
+                        </h2>
+                        <p className="text-slate-200">{transaction.address}</p>
+                        <p className="montserrat-small text-xs text-slate-500">
+                          Match #{transaction.matchIndex + 1}
+                        </p>
+                      </div>
+
+                      <div className="flex flex-col space-y-2">
+                        <h2 className="montserrat-small text-left font-semibold text-slate-400">
+                          Balance
+                        </h2>
+                        <div className="flex items-center gap-2 text-slate-200">
+                          <img
+                            src={eth}
+                            alt="ETH"
+                            className="h-[18px] w-[18px] rounded-full"
+                          />
+                          <span>{transaction.balance}</span>
+                          <span className="montserrat-small text-xs text-slate-400">
+                            ETH
+                          </span>
+                        </div>
+                        <p className="montserrat-small text-xs text-slate-500">
+                          {transaction.hasBalance
+                            ? "Ready to withdraw"
+                            : "No current balance on this stealth address"}
+                        </p>
+                      </div>
+
+                      <div className="flex flex-col items-start justify-center space-y-2 font-semibold sm:items-end">
+                        <h2 className="montserrat-small text-left text-slate-400">
+                          Withdraw
+                        </h2>
+
+                        {!transaction.hasBalance ? (
+                          <span className="montserrat-small text-xs text-slate-500">
+                            Unavailable
+                          </span>
+                        ) : pkCopiedIndex !== index ? (
+                          <ToolTip tooltip="Withdraw directly from your stealth address.">
+                            <TbTransferIn
+                              onClick={() => copykey(transaction.key, index)}
+                              className="cursor-pointer text-[1.2rem] font-bold text-cyan-300 hover:text-slate-300"
+                            />
+                          </ToolTip>
+                        ) : (
+                          <MdOutlineDone className="text-[1.2rem] font-bold text-cyan-300" />
+                        )}
+                      </div>
+                    </div>
+                  ))
                 ) : (
-                  <MdOutlineDone
-                    // onClick={() => copykey(z.key)}
-                    className={`text-green-500 font-bold text-[1.2rem] text-highlight`}
-                  />
+                  <h1 className="text-left text-sm montserrat-small text-slate-400">
+                    No matching stealth transactions found yet. Upload your latest secret file and refresh after a new payment lands.
+                  </h1>
                 )}
               </div>
             </div>
-          ))
-        ) : (
-          <h1 className="mb-12 text-center relative top-5 text-xl montserrat-small font-semibold  text-red-400">
-            No Transactions Recorded !
-          </h1>
-        )
-      ) : (
-        <div>
-          <div className="py-2 flex space-x-1 justify-between">
-            {hide !== true && (
-              <input
-                type="text"
-                className="text-[0.9rem] font-semibold text-gray-300  placeholder:text-gray-500
-            montserrat-subtitle outline-none px-3 py-3 h-[100%] rounded-md
-            hover:border-cyan-900 w-[100%] bg-black/10 border-2 border-gray-600"
-                value={savedSignaturekey}
-                onChange={(e) => {
-                  setsavedSignaturekey(e.target.value);
-                  verifySignature(e.target.value);
-                }}
-                placeholder="Paste your signature file..."
-              />
-            )}
-            {hide && (
-              <p className="text-gray-400 p-1 py-2 font-semibold montserrat-small ">
-                Expand to enter the signature Key
-              </p>
-            )}
 
-            {/* expand icon (toggle of input button) */}
-            <div className="flex items-center">
-              {hide ? (
-                <AiOutlineArrowsAlt
-                  className=" cursor-pointer  text-[#a7acb3]"
-                  size={25}
-                  onClick={() => sethide(!hide)}
-                />
-              ) : (
-                <AiOutlineShrink
-                  className="cursor-pointer  text-[#a7acb3]"
-                  size={29}
-                  onClick={() => sethide(!hide)}
-                />
-              )}
-            </div>
-          </div>
-
-          <div className="w-full flex justify-center pt-2 mr-4">
-            <button
-              onClick={fetch}
-              className="flex space-x-2 justify-center w-[100%] mx-auto mb-4 my-2 montserrat-subtitle  py-2 
-          hover:shadow-xl px-6 text-center text-black highlight 
-          rounded-md font-bold  transition-all ease-linear"
+            <label
+              className={`flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 px-6 py-[16px] text-center text-[1rem] font-bold text-black transition-all duration-200 montserrat-subtitle ${
+                isScanning
+                  ? "cursor-not-allowed opacity-70"
+                  : "cursor-pointer hover:shadow-[0_14px_40px_rgba(45,212,191,0.25)]"
+              }`}
             >
-              <AiOutlineScan className="text-[1.3rem] text-inherit" />
-              <span>Scan</span>
-            </button>
+              <AiOutlineUpload className="text-[1.2rem] text-inherit" />
+              <span>{isScanning ? "Scanning..." : "Upload Secret File"}</span>
+              <input
+                type="file"
+                accept=".txt"
+                className="hidden"
+                disabled={isScanning}
+                onChange={handleSignatureUpload}
+              />
+            </label>
           </div>
-
-          <p className={`text-[1rem] font-bold montserrat-small text-red-500`}>
-            {err}
-          </p>
         </div>
-      )}
+
+        <p className="montserrat-small min-h-[24px] text-[1rem] font-bold text-red-500">
+          {err}
+        </p>
+      </div>
     </>
   );
 };
-
-// export default Receive;

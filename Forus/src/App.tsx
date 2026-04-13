@@ -8,16 +8,16 @@ import { WagmiProvider } from "wagmi";
 import { http, createConfig } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectKitProvider } from "connectkit";
-import { arbitrum, metis ,polygonAmoy } from "wagmi/chains";
+import { arbitrum, arbitrumSepolia, mainnet } from "wagmi/chains";
 
 
 // @ts-ignore
 const config = createConfig({
-  chains: [arbitrum, metis , polygonAmoy],
+  chains: [mainnet, arbitrum, arbitrumSepolia],
   transports: {
-    [polygonAmoy.id]: http(""),
-    [arbitrum.id]: http(""),
-    [metis.id]: http(""),
+    [mainnet.id]: http("https://ethereum-rpc.publicnode.com"),
+    [arbitrum.id]: http("https://arb1.arbitrum.io/rpc"),
+    [arbitrumSepolia.id]: http("https://sepolia-rollup.arbitrum.io/rpc"),
   },
 });
 
@@ -33,6 +33,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Wrapper />} />
                 <Route path="/Forus" element={<Forus />} />
+                <Route path="/forus" element={<Forus />} />
               </Routes>
             </Router>
           </ConnectKitProvider>

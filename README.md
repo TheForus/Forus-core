@@ -1,82 +1,186 @@
-Forus lets you receive ETH and ERC20 tokens privately without exposing your wallet address.
-Built on Arbitrum, Forus combines stealth address technology with TEE-based key protection — giving users true end-to-end privacy and enterprise-grade security.
+# Forus
 
-🔗 Live App: https://theforus.netlify.app/forus
+Forus is a privacy-focused transfer application for shielded on-chain payments using stealth addresses. It lets a sender transfer funds to a receiver without exposing the receiver's primary wallet address in the public transaction flow.
 
-💬 Twitter: @the_forus
+The app generates a shareable Forus key, derives one-time stealth addresses for incoming payments, publishes the required ephemeral metadata on-chain, and lets the receiver later discover and withdraw funds using their secret file.
 
-🌐 Vision
+## Core Features
 
-Blockchain transparency exposes user identities and financial activity.
-Forus solves this by enabling untraceable, one-time stealth addresses, powered by TEE-secured key management.
-Your keys stays isolated within hardware-protected enclaves — never leaving the secure boundary.
+- Generate a public Forus key and matching secret key material
+- Share a receiver-friendly payment link instead of a wallet address
+- Send native ETH and supported ERC-20 assets privately through stealth address derivation
+- Scan recent published stealth payloads using the uploaded secret file
+- Detect matching stealth addresses and show current balances
+- Withdraw funds directly from a matched stealth wallet
 
-Privacy shouldn’t be complicated — and with Forus, it isn’t.
+## How It Works
 
-⚙️ How It Works
+### 1. Key Generation
 
-🔑 Receiver Setup
+The receiver generates a Forus key pair inside the app:
 
-Generate your Forus key pair (public & private).
+- `Forus key`: safe to share
+- `secret key`: must be stored securely and never shared
 
-The secret key is sent to and stored inside a TEE enclave, ensuring it never leaves secure hardware.
+The secret key is used later to scan for matching stealth payments and unlock the corresponding withdrawal wallet.
 
-Share only your public link (meta-address) — no blockchain data is exposed.
+### 2. Private Transfer
 
-📤 Sender Creates Stealth Address
+When a sender enters a receiver's Forus key:
 
-The sender uses your public link to generate a unique one-time stealth address.
+- the app derives a one-time stealth address
+- generates an ephemeral public key pair
+- computes a shared secret prefix
+- submits the payload to the on-chain `Logs` contract
+- transfers ETH or supported ERC-20 tokens to the stealth address
 
-Funds are sent to this untraceable address.
+This keeps the receiver's main wallet out of the visible transfer path.
 
-Each transaction is fresh and unlinkable on-chain.
+### 3. Receive Flow
 
-🧠 TEE Detection & Notification
+The receiver uploads the downloaded secret file in the `Receive` tab:
 
-The TEE runs 24/7, scanning the blockchain for transactions linked to your public key.
+- the app scans recent published public key logs from the contract
+- derives candidate stealth wallets from the uploaded secret
+- checks balances for matching stealth addresses
+- displays funded and matched addresses in the UI
 
-When it detects a payment, it notifies you instantly, without exposing your private key.
+### 4. Withdraw Flow
 
-🏦 Secure Withdrawal
+After a match is found:
 
-When you withdraw, the TEE enclave signs the transaction internally using your stored key.
+- the user opens withdrawal from the matched stealth address
+- enters a recipient wallet
+- the app sends the withdrawable balance, minus required gas
 
-The signed transaction is broadcast to the blockchain — your key never leaves the enclave.
+## Supported Networks
 
-🔒 Key Features
-Feature	Description
-🕵️ True Privacy	Stealth addresses unlink sender and receiver
-🧠 TEE Protection	Private keys secured in hardware-enforced enclaves
-⚡ Fast & Low Cost	Built on Arbitrum’s high-speed L2
-🔑 Full Control	User-owned keys, verifiable enclave signing
-🧰 Developer Ready	Open API for integrating private payments
-🔔 Auto Detection	TEE continuously scans and detects private payments
-🧩 Tech Stack
+The project currently includes support for:
 
-Frontend: React.js, TailwindCSS
+- Arbitrum One
+- Arbitrum Sepolia
 
-Smart Contracts: Solidity, OpenZeppelin
+Configured contract and chain metadata are stored in [src/helpers/ChainOptions.tsx](./src/helpers/ChainOptions.tsx).
 
-Network: Arbitrum , horizen , metis
+## Tech Stack
 
-Wallet Integration: MetaMask / WalletConnect
+- React
+- TypeScript
+- Ethers.js v5
+- Wagmi
+- ConnectKit
+- Elliptic
+- Notyf
 
-Security Layer: Intel SGX / TEE (Trusted Execution Environment)
+## Project Structure
 
-🧱 Why It Matters
+```text
+src/
+|- ui-components/
+|  |- Container.tsx
+|  |- NavHeader.tsx
+|  |- Tx-wrapper.tsx
+|  |- keys.tsx
+|  |- TransferPanel.tsx
+|  |- Receive.tsx
+|  |- Withdraw.tsx
+|  `- CopyRight.tsx
+|- helpers/
+|  |- ChainOptions.tsx
+|  |- ERC20ABI.tsx
+|  |- Crc.tsx
+|  `- downloadTxt.tsx
+|- checkers/
+|  |- isDetected.tsx
+|  `- ValidateChainData.tsx
+|- artifacts/
+|  `- contracts/Logs.sol/Logs.json
+`- front-page/
+```
 
-Ethereum’s transparency is powerful — but privacy is essential.
-Forus introduces TEE-powered stealth transactions, protecting users and developers from unwanted visibility while maintaining decentralization and compliance.
-It bridges the gap between confidential finance and user-friendly Web3.
+## Local Development
 
-💬 Get Involved
+### Prerequisites
 
-Forus is an open public good — contributions and community feedback are welcome!
+- Node.js 18+
+- npm
+- MetaMask or a compatible injected wallet
 
-🐛 Report bugs or suggest features via GitHub Issues
+### Install
 
-🤝 Contribute improvements with Pull Requests
+```bash
+npm install
+```
 
-🪙 License
+### Start the app
 
-MIT License — free to use, modify, and build upon.
+```bash
+npm start
+```
+
+The development server runs at:
+
+```text
+http://localhost:3000
+```
+
+### Production build
+
+```bash
+npm run build
+```
+
+## User Flow
+
+### Generate keys
+
+1. Open the `Key Generation` tab
+2. Click `Generate`
+3. Copy the shareable Forus link
+4. Download and store the secret key file securely
+
+### Send funds
+
+1. Open the app with a connected wallet
+2. Paste the receiver's Forus key
+3. Enter the amount
+4. Confirm the transfer transaction
+
+### Receive funds
+
+1. Open the `Receive` tab
+2. Upload the secret file
+3. Review matched stealth addresses and balances
+4. Select a funded address for withdrawal
+
+### Withdraw funds
+
+1. Open the `Withdraw` tab from a matched receive result
+2. Enter the destination wallet address
+3. Confirm the withdrawal transaction
+4. Open the block explorer link after success
+
+## Important Security Notes
+
+- Never share the secret key file
+- The secret key controls discovery and withdrawal from stealth wallets
+- Always verify the connected chain before sending or withdrawing
+- Keep backups of secret keys in a secure location
+
+## Recent Improvements
+
+- Stable key generation across in-app navigation
+- More reliable receive scanning for recent stealth transactions
+- Improved withdrawal gas handling and clearer error messages
+- Fixed odd-length stealth payload encoding in transfer flow
+- Cleaner notification styling through proper Notyf CSS loading
+
+## Scripts
+
+- `npm start`: run development server
+- `npm test`: run tests
+- `npm run build`: build production bundle
+
+## License
+
+This project is provided as-is for development and demonstration purposes.

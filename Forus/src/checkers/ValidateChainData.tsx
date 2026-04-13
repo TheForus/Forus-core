@@ -2,13 +2,11 @@
 import { chainOptions } from "../helpers/ChainOptions";
 
 export const ValidateChainData = async () => {
-
-
   const { ethereum }: any = window;
   try {
     const chainId = await ethereum.request({ method: "eth_chainId" });
     const matchingChain = chainOptions.find(
-      (chain) => chain.chainId === chainId
+      (chain) => chain.chainId.toLowerCase() === String(chainId).toLowerCase()
     );
 
     sessionStorage.setItem(

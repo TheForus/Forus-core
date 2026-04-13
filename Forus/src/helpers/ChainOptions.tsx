@@ -3,8 +3,6 @@
 import USDT from '../assets/usdt.png'
 import arb from "../assets/chains/ARB.png"
 import eth from "../assets/eth.png"
-import metis from "../assets/metis.png"
-import base from "../assets/base.png"
 
 
 
@@ -53,33 +51,23 @@ export const chainOptions: chain[] = [
         ]
     },
 
-    {
-        name: "Horizen Base sepolia ", contract: '0x107fdE93838e3404934877935993782F977324BB', chainId: "0x14a34", symbol: arb, currency: { symbol: "ETH", decimals: 18 }, rpcs: ['https://sepolia.base.org'], url: "https://sepolia.basescan.org/", tokens: [
+
+     {
+        name: "Arbitrum Sepolia", contract: '0x88509C194af396936aBBf92E3EE11be106b91A4a', chainId: "0x66eee", symbol: arb, currency: { symbol: "ETH", decimals: 18 }, rpcs: ['https://sepolia-rollup.arbitrum.io/rpc'], url: "https://sepolia.arbiscan.io/tx/", tokens: [
 
 
             { name: "ETH", address: "", symbol: eth },
-            { name: "Zen", address: "0x107fdE93838e3404934877935993782F977324BB", symbol: "" },
-            { name: "Base", address: "0x107fdE93838e3404934877935993782F977324BB", symbol: base },
-
-
-
-
-        ]
-    },
-
-
-    {
-        name: "Metis Andromeda Mainnet", contract: '0x2f5Fa595c66d3bB73f18B5932246430772300641', chainId: "0x440", symbol: metis, currency: { symbol: "METIS", decimals: 18 }, rpcs: ['https://andromeda.metis.io/?owner=1088'], url: "https://andromeda-explorer.metis.io/tx/", tokens: [
-
-
-            { name: "metis", address: "", symbol: metis },
-            { name: "USDT", address: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", symbol: USDT },
+           
 
 
 
         ]
     },
+  //0x88509C194af396936aBBf92E3EE11be106b91A4a
 
+        
+   
+    
 
 
 

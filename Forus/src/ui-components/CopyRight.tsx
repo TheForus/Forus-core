@@ -1,10 +1,9 @@
-
-
 const CopyRight = () => {
   return (
-    <div className="montserrat-heading mb-4 w-full border-t border-gray-900 
-    absolute bottom-2 text-center  text-[1rem] font-semibold text-[#9e9e9e] pt-4 ">
-      © 2023 Forus. All rights reserved.
+    <div className="mx-auto flex w-full max-w-5xl items-center justify-center border-t border-slate-800 pt-5 text-center text-sm text-slate-500">
+      <p className="montserrat-small">
+        Forus privacy layer for shielded transfers
+      </p>
     </div>
   );
 };

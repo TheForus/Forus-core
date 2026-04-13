@@ -150,12 +150,7 @@
 
 .highlight {
   background: linear-gradient(to right, #0cebeb, #20e3b2, #29ffc6);
-  /* background: linear-gradient(to right, #C180F7, #CD56BB, #D83084); */
 }
-
-/* .highlight:hover {
-  background: transparent;
-} */
 
 .hightlightText {
   color: linear-gradient(to right, #0cebeb, #20e3b2, #29ffc6);
@@ -174,4 +169,33 @@
 
 .ribbon-animation {
   animation: gradient-animation 15s ease infinite;
+}
+
+/* Notyf styling to match Forus theme */
+.notyf__toast.forus-toast {
+  font-family: MontserratSmall, Montserrat, sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.notyf__toast--success.forus-toast .notyf__message {
+  color: #e2e8f0;
+}
+
+.notyf__toast--error.forus-toast .notyf__message {
+  color: #ffffff;
+}
+
+.notyf__toast.forus-toast a {
+  color: #e2e8f0;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.notyf__toast--error.forus-toast a {
+  color: #ffffff;
+}
+
+.notyf__toast--success.forus-toast {
+  background: #0b1220;
 }
