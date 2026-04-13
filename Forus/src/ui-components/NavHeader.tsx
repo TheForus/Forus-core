@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { ConnectKitButton } from "connectkit";
 import { FaGithub, FaTwitter } from "react-icons/fa";
+import logo from "../assets/logo-f.png";
 
 import { AppContext } from "./Container";
 
@@ -14,11 +15,7 @@ const NavBar = (props: Props) => {
       <div className="flex items-center justify-between">
         <div className="flex cursor-pointer items-center">
           <div className="flex items-center">
-            <div className="flex h-[52px] w-[52px] items-center justify-center rounded-2xl border border-cyan-400/40 bg-[linear-gradient(135deg,rgba(20,36,58,0.95)_0%,rgba(10,20,34,0.98)_100%)] shadow-[0_10px_30px_rgba(34,211,238,0.12)]">
-              <span className="montserrat-subheading bg-gradient-to-br from-cyan-300 via-cyan-400 to-emerald-300 bg-clip-text text-[1.75rem] font-bold italic text-transparent">
-                F
-              </span>
-            </div>
+            <img src={logo} alt="Forus logo" className="h-[52px] w-[52px] rounded-full" />
           </div>
         </div>
 

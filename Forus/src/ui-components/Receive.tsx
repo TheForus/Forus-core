@@ -447,16 +447,15 @@ export const Receive: React.FC<ChildProps> = ({
                   Receive the Funds
                 </p>
                 <div className="mt-1 flex items-center gap-2 text-slate-400">
-                  <TbShieldCheck className="text-[1rem] text-cyan-300" />
                   <p className="montserrat-small text-sm">
-                    Upload your secret file to scan the newest stealth addresses and reveal any funds sent to you.
+                    Upload your secret file to access the related stealth addresses.
                   </p>
                 </div>
               </div>
 
               <div className="flex flex-col items-end gap-1 text-right">
                 <p className="montserrat-small whitespace-nowrap text-sm font-semibold text-cyan-400">
-                  {fundedTransactions.length} funded / {matchedCount} matched
+                  {fundedTransactions.length} funded transactions
                 </p>
                 <p className="montserrat-small text-xs text-slate-400">
                   {totalPublishedKeys} published keys on this network
