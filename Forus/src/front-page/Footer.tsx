@@ -3,14 +3,15 @@ import { FaGithub, FaTwitter } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <div className="flex w-full bg-[#e9e9f3] p-10">
-      <ul className="m-auto flex items-center space-x-8">
-        <li className="text-[#131619] hover:text-gray-700">
+    <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 pb-10 pt-4 text-slate-400 sm:px-8">
+      <p className="text-sm">Forus · Private transfers for everyday crypto</p>
+      <ul className="flex items-center space-x-6">
+        <li className="text-slate-400 hover:text-slate-200">
           <a href="https://github.com/TheForus">
             <FaGithub size={24} />
           </a>
         </li>
-        <li className="text-[#131619] hover:text-gray-700">
+        <li className="text-slate-400 hover:text-slate-200">
           <a href="https://twitter.com/The_Forus">
             <FaTwitter size={24} />
           </a>

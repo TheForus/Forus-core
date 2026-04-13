@@ -1,20 +1,16 @@
 import Nav from "./Nav";
 import Header from "./Header";
-import Tutorial from "./Tutorial";
 import Features from "./Features";
-import Qna from "./Qna";
 import Footer from "./Footer";
 
 type Props = {};
 
 const Wrapper = (props: Props) => {
   return (
-    <div className=" ">
+    <div className="min-h-screen bg-[#0b1220] text-slate-100">
       <Nav />
       <Header />
       <Features />
-      <Tutorial />
-      <Qna />
       <Footer />
     </div>
   );

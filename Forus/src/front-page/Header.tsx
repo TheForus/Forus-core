@@ -1,63 +1,36 @@
 import { useNavigate } from "react-router-dom";
-import screenshot from "../assets/ForusKey.png";
 
 const Header = () => {
   const navigate = useNavigate();
 
   return (
     <>
-      <div
-        className="bg-[#e9e9f3] xl:px-36 md:px-22 px-8 sm:py-27 py-16 flex mb-4
-          justify-between  items-center md:flex-row flex-col m-8 text-gray-700"
-      >
-        <div className="flex flex-col items-start space-y-4 ml-6  md:w-[100%]">
-          <div className="flex montserrat-heading font-semibold space-x-4 items-center">
-            <span
-              className="p-1 px-8 border-2
-             border-gray-600 rounded-full"
-            >
-              Easy to Use
-            </span>
-            <span
-              className="p-1 px-8 border-2
-             border-gray-600 rounded-full"
-            >
-              Secure
-            </span>
-          </div>
-
-          <h2
-            className="flex text-gray-700 space-y-1 xl:-space-y-2 flex-col montserrat-heading font-extrabold
-            text-left text-[1.2rem] md:text-[1.5rem] xl:text-[2.4rem]"
-          >
-            <span>Private & Secure</span>
-            <span>transactions</span>
+      <div className="mx-auto flex w-full max-w-6xl flex-col items-start gap-8 px-6 pb-10 pt-10 sm:px-8">
+        <div className="space-y-5">
+          <h2 className="montserrat-heading text-left text-3xl font-semibold leading-tight text-slate-100 sm:text-4xl lg:text-5xl">
+            Send and receive crypto without revealing your wallet address.
           </h2>
-          <p
-            className="montserrat-heading font-semibold pb-1 text-gray-600
-           text-left break-words  max-w-[700px] sm:text-[1.2rem] text-[1rem]"
-          >
-            Get funds privately without sharing wallet address !!
+          <p className="montserrat-subtitle max-w-xl text-left text-base text-slate-300 sm:text-lg">
+            Forus uses stealth addresses and one-time keys so every transfer stays unlinkable,
+            while your flow remains familiar.
           </p>
+        </div>
+
+        <div className="flex flex-wrap gap-3">
           <button
-            className="border-1 montserrat-heading  
-            hover:scale-95 transition-all ease-linear p-2 px-10 rounded-full border-[#48494b] 
-             montserrat-subtitle font-bold  text-xl bg-[#292a2c] text-gray-300"
+            className="montserrat-subtitle rounded-full bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-300 px-6 py-3 text-sm font-bold text-black transition hover:shadow-[0_12px_32px_rgba(45,212,191,0.25)]"
             onClick={() => navigate("/forus")}
           >
             Launch App
           </button>
-        </div>
-
-        <div className="flex justify-end items-center ">
-          <img
-            className="md:mt-0 mt-10 rounded-[1.5rem] object-center 
-            shadow-xl shadow-[#757575]"
-            src={screenshot}
-            height={1200}
-            width={1000}
-            alt=""
-          />
+          <a
+            className="montserrat-subtitle rounded-full border border-slate-600/70 bg-slate-900/70 px-6 py-3 text-sm font-bold text-slate-200 transition hover:border-cyan-300/60 hover:text-cyan-100"
+            href="https://github.com/TheForus/Forus-core"
+            target="_blank"
+            rel="noreferrer"
+          >
+            View on GitHub
+          </a>
         </div>
       </div>
     </>

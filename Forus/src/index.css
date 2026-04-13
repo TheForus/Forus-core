@@ -3,11 +3,7 @@
 @tailwind utilities;
 
 body {
-
-
-  background-color: #e9e9f3;
-
-
+  background-color: #0b1220;
   /* This removes blue background on click of the button */
   -webkit-tap-highlight-color: transparent;
 }
@@ -17,6 +13,5 @@ code {
     monospace;
 }
 *::selection {
-  /* Set the background color to red */
-  background-color: #b3b9c0;
+  background-color: #1f2937;
 }
