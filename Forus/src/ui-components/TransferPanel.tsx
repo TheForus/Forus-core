@@ -34,7 +34,7 @@ const TransferPanel = () => {
       x: "right",
       y: "bottom",
     },
-    duration: 0,
+    duration: 5000,
     dismissible: true,
     types: [
       {

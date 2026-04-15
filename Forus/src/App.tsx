@@ -8,14 +8,14 @@ import { WagmiProvider } from "wagmi";
 import { http, createConfig } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectKitProvider } from "connectkit";
-import { arbitrum, arbitrumSepolia, mainnet } from "wagmi/chains";
+import { arbitrum, arbitrumSepolia } from "wagmi/chains";
 
 
 // @ts-ignore
 const config = createConfig({
-  chains: [mainnet, arbitrum, arbitrumSepolia],
+  chains: [arbitrum, arbitrumSepolia],
   transports: {
-    [mainnet.id]: http("https://ethereum-rpc.publicnode.com"),
+    // [mainnet.id]: http("https://ethereum-rpc.publicnode.com"),
     [arbitrum.id]: http("https://arb1.arbitrum.io/rpc"),
     [arbitrumSepolia.id]: http("https://sepolia-rollup.arbitrum.io/rpc"),
   },

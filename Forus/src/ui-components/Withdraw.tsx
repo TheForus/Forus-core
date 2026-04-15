@@ -55,7 +55,7 @@ const Withdraw = ({ masterkey }: ChildProps) => {
       x: "right",
       y: "bottom",
     },
-    duration: 0,
+    duration: 5000,
     dismissible: true,
     types: [
       {

@@ -32,7 +32,7 @@ interface ContextValue {
 export const AppContext = createContext<ContextValue | any>(null);
 
 const Container = (props: Props) => {
-  const notyf = new Notyf();
+  const notyf = new Notyf({ duration: 5000 });
   const location = useLocation();
 
   const [show, setShow] = useState<string>("keygen");
