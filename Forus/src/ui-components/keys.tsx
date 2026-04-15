@@ -115,35 +115,35 @@ const Keys = (props: Props) => {
             </p>
           </div>
 
-          <div className="flex w-full flex-col">
-            <div className="grid w-full lg:items-center">
+          <div className="flex w-full min-w-0 flex-col">
+            <div className="grid w-full min-w-0 lg:items-center">
               <div
-                className="flex min-h-[68px] w-full items-center overflow-visible rounded-2xl border border-slate-800/80 bg-slate-800/80 px-3 py-3"
+                className="grid min-h-[68px] w-full min-w-0 grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-3 rounded-2xl border border-slate-800/80 bg-slate-800/80 px-3 py-3"
               >
-                <div className="w-full overflow-hidden pr-8">
+                <div className="min-w-0 overflow-hidden">
                   <p
                     title={`#Foruskey-${ForusKey}`}
-                    className="montserrat-subtitle overflow-hidden text-ellipsis whitespace-nowrap text-left text-[0.84rem] font-semibold text-slate-400 sm:text-[0.9rem] md:text-[0.95rem]"
+                    className="montserrat-subtitle block overflow-hidden text-ellipsis whitespace-nowrap text-left text-[0.78rem] font-semibold text-slate-400 sm:text-[0.9rem] md:text-[0.95rem]"
                   >
-                    #Foruskey-{ForusKey}
+                    {`#Foruskey-${ForusKey}`}
                   </p>
                 </div>
 
                 <ToolTip tooltip="Copy Link">
                   {addressCopied ? (
-                    <MdOutlineDone className="inline-flex text-[1.05rem] font-bold text-cyan-300" />
+                    <MdOutlineDone className="inline-flex shrink-0 text-[1.05rem] font-bold text-cyan-300" />
                   ) : (
                     <AiOutlineCopy
-                      className="inline-flex cursor-pointer text-[1rem] font-bold text-slate-400"
+                      className="inline-flex shrink-0 cursor-pointer text-[1rem] font-bold text-slate-400"
                       onClick={copyforusKey}
                     />
                   )}
                 </ToolTip>
 
-                <div className="ml-3 flex shrink-0 items-center justify-end text-white">
+                <div className="flex shrink-0 items-center justify-end text-white">
                   <ToolTip tooltip="Download the secret keys.">
                     <IoDownloadOutline
-                      className="inline-flex h-[22px] w-full cursor-pointer text-[1rem] font-bold text-[#06B3D2]"
+                      className="inline-flex h-[22px] w-[22px] cursor-pointer text-[1rem] font-bold text-[#06B3D2]"
                       onClick={openDownloadPrompt}
                     />
                   </ToolTip>

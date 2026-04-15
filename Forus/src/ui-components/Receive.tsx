@@ -441,7 +441,7 @@ export const Receive: React.FC<ChildProps> = ({
       <div className="mx-auto mt-0 flex w-full max-w-3xl flex-col gap-4 text-left">
         <div className="rounded-[26px] border border-slate-700 bg-slate-800/45 p-4 sm:p-5">
           <div className="space-y-6 text-left">
-            <div className="flex items-start justify-between gap-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <p className="montserrat-small text-xs font-semibold uppercase tracking-[0.24em] text-cyan-400/75">
                   Receive the Funds
@@ -453,8 +453,8 @@ export const Receive: React.FC<ChildProps> = ({
                 </div>
               </div>
 
-              <div className="flex flex-col items-end gap-1 text-right">
-                <p className="montserrat-small whitespace-nowrap text-sm font-semibold text-cyan-400">
+              <div className="flex flex-col gap-1 text-left sm:items-end sm:text-right">
+                <p className="montserrat-small text-sm font-semibold text-cyan-400">
                   {fundedTransactions.length} funded transactions
                 </p>
                 <p className="montserrat-small text-xs text-slate-400">
@@ -464,7 +464,7 @@ export const Receive: React.FC<ChildProps> = ({
             </div>
 
             <div className="rounded-2xl border border-slate-900 bg-slate-800/60 px-4 py-3">
-              <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-2 text-slate-200">
                   <MdHistory className="text-[1.15rem] text-cyan-300" />
                   <span className="montserrat-subtitle text-[0.95rem] font-semibold">
@@ -472,9 +472,9 @@ export const Receive: React.FC<ChildProps> = ({
                   </span>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
                   {lastScanAt && (
-                    <span className="montserrat-small text-xs text-slate-400">
+                    <span className="montserrat-small text-xs text-slate-400 sm:text-right">
                       Last synced at {lastScanAt}
                     </span>
                   )}

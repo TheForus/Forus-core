@@ -75,6 +75,39 @@ const TransferPanel = () => {
     return new ethers.providers.Web3Provider(ethereum);
   }, [ethereum]);
 
+  const openTransactionToast = (txUrl: string) => {
+    clearNotifications();
+    notyf.open({
+      type: "success",
+      message: `<a href="${txUrl}" target="_blank" rel="noreferrer">View transaction</a>`,
+    });
+
+    // Notyf renders raw HTML, so we attach the dismiss behavior after mount.
+    setTimeout(() => {
+      const transactionLink = document.querySelector(
+        `.notyf__toast.forus-toast a[href="${txUrl}"]`
+      );
+
+      if (transactionLink instanceof HTMLAnchorElement) {
+        transactionLink.addEventListener(
+          "click",
+          () => {
+            clearNotifications();
+          },
+          { once: true }
+        );
+      }
+    }, 0);
+  };
+
+  const clearNotifications = () => {
+    try {
+      (notyf as any).dismissAll?.();
+    } catch (error) {
+      console.error("Unable to dismiss existing notifications", error);
+    }
+  };
+
   let receipentAddress: string;
 
   const getFeeOverrides = async (value?: ethers.BigNumber) => {
@@ -347,11 +380,8 @@ const TransferPanel = () => {
 
       setforusKey("");
       setamount("");
-      const txUrl = `${txId}${transfer.hash}`;
-      notyf.open({
-        type: "success",
-        message: `Transfer sent. <a href="${txUrl}" target="_blank" rel="noreferrer">Click to view transaction</a>`,
-      });
+      const txUrl = `${resolvedChain.url}${transfer.hash}`;
+      openTransactionToast(txUrl);
     } catch (e: any) {
       notyf.error(e.message);
     } finally {
@@ -397,11 +427,8 @@ const TransferPanel = () => {
       await transferERC20.wait();
       setforusKey("");
       setamount("");
-      const txUrl = `${txId}${transferERC20.hash}`;
-      notyf.open({
-        type: "success",
-        message: `Transfer sent. <a href="${txUrl}" target="_blank" rel="noreferrer">Click to view transaction</a>`,
-      });
+      const txUrl = `${resolvedChain.url}${transferERC20.hash}`;
+      openTransactionToast(txUrl);
     } catch (e: any) {
       notyf.error(e.message);
     } finally {

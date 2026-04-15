@@ -227,16 +227,16 @@ const Container = (props: Props) => {
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,0.16),transparent_28%),radial-gradient(circle_at_top_left,rgba(59,130,246,0.14),transparent_24%)]"
         ></div>
         <div className="relative min-h-screen bg-black/35">
-          <div className="mx-auto w-full max-w-[1280px] px-4 pt-4 sm:px-5 sm:pt-8 lg:px-8">
+          <div className="mx-auto w-full max-w-[1280px] px-3 pt-3 sm:px-5 sm:pt-8 lg:px-8">
             <div className="mx-auto w-full max-w-5xl rounded-[32px] border border-slate-800/80 bg-[linear-gradient(180deg,rgba(12,24,40,0.92)_0%,rgba(7,13,23,0.9)_100%)] shadow-[0_30px_90px_rgba(0,0,0,0.42)] backdrop-blur-sm">
               <NavBar />
 
-              <div className="px-4 pb-8 sm:px-5 lg:px-8">
+              <div className="px-3 pb-8 sm:px-5 lg:px-8">
                 <div className="mx-auto w-full max-w-4xl text-center">
                   <p className="montserrat-small text-sm font-semibold uppercase tracking-[0.35em] text-cyan-400/80">
                     The Forus
                   </p>
-                  <h1 className="mt-4 montserrat-subheading text-3xl font-bold text-slate-200 sm:text-4xl">
+                  <h1 className="mt-4 montserrat-subheading text-2xl font-bold text-slate-200 sm:text-4xl">
                     Frictionless Shielded Transfers
                   </h1>
                   <p className="mx-auto mt-4 max-w-2xl montserrat-small text-sm text-slate-300 sm:text-base">

@@ -91,7 +91,17 @@ const Withdraw = ({ masterkey }: ChildProps) => {
     return new ethers.providers.Web3Provider(ethereum);
   }, [ethereum]);
 
-  const getExplorerBaseUrl = () => {
+  const getExplorerBaseUrl = (chainId?: number) => {
+    if (typeof chainId === "number") {
+      const matchedChain = chainOptions.find(
+        (chain) => Number(chain.chainId) === chainId
+      );
+
+      if (matchedChain?.url) {
+        return matchedChain.url;
+      }
+    }
+
     return selectedChain?.url || sessionStorage.getItem("blockExplorer") || "";
   };
 
@@ -101,6 +111,30 @@ const Withdraw = ({ masterkey }: ChildProps) => {
     } catch (error) {
       console.error("Unable to dismiss existing notifications", error);
     }
+  };
+
+  const openTransactionToast = (txUrl: string) => {
+    clearNotifications();
+    notyf.open({
+      type: "success",
+      message: `<a href="${txUrl}" target="_blank" rel="noreferrer">View transaction</a>`,
+    });
+
+    setTimeout(() => {
+      const transactionLink = document.querySelector(
+        `.notyf__toast.forus-toast a[href="${txUrl}"]`
+      );
+
+      if (transactionLink instanceof HTMLAnchorElement) {
+        transactionLink.addEventListener(
+          "click",
+          () => {
+            clearNotifications();
+          },
+          { once: true }
+        );
+      }
+    }, 0);
   };
 
   const sendTransaction = async () => {
@@ -238,11 +272,8 @@ const Withdraw = ({ masterkey }: ChildProps) => {
 
       setreceipentAdd("");
       clearNotifications();
-      const txUrl = `${getExplorerBaseUrl()}${txResponse.hash}`;
-      notyf.open({
-        type: "success",
-        message: `Withdraw successful. <a href="${txUrl}" target="_blank" rel="noreferrer">Click to view transaction</a>`,
-      });
+      const txUrl = `${getExplorerBaseUrl(connectedNetwork.chainId)}${txResponse.hash}`;
+      openTransactionToast(txUrl);
     } catch (error: any) {
       console.error("Withdrawal failed:", error);
       clearNotifications();

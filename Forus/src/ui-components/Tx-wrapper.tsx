@@ -72,10 +72,10 @@ const Transactions = (props: Props) => {
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col">
-      <div className="mx-auto grid w-full max-w-2xl grid-cols-3 gap-3">
+      <div className="mx-auto grid w-full max-w-2xl grid-cols-1 gap-3 sm:grid-cols-3">
         <button
           onClick={handleKeyGenerationClick}
-          className={`rounded-2xl border px-4 py-4 text-center montserrat-subheading text-[1rem] font-bold transition-all duration-200 ${
+          className={`rounded-2xl border px-4 py-4 text-center montserrat-subheading text-[0.95rem] font-bold transition-all duration-200 sm:text-[1rem] ${
             buttonStatus.keygen
               ? "border-cyan-400 bg-cyan-400/10 text-cyan-300 shadow-[0_0_30px_rgba(34,211,238,0.18)]"
               : "border-slate-700 bg-slate-950/60 text-slate-300 hover:border-slate-500 hover:text-white"
@@ -85,7 +85,7 @@ const Transactions = (props: Props) => {
         </button>
         <button
           onClick={handleTransferClick}
-          className={`rounded-2xl border px-4 py-4 text-center montserrat-subheading text-[1rem] font-bold transition-all duration-200 ${
+          className={`rounded-2xl border px-4 py-4 text-center montserrat-subheading text-[0.95rem] font-bold transition-all duration-200 sm:text-[1rem] ${
             buttonStatus.transfer
               ? "border-cyan-400 bg-cyan-400/10 text-cyan-300 shadow-[0_0_30px_rgba(34,211,238,0.18)]"
               : "border-slate-700 bg-slate-950/60 text-slate-300 hover:border-slate-500 hover:text-white"
@@ -95,7 +95,7 @@ const Transactions = (props: Props) => {
         </button>
         <button
           onClick={handleReceiveClick}
-          className={`rounded-2xl border px-4 py-4 text-center montserrat-subheading text-[1rem] font-bold transition-all duration-200 ${
+          className={`rounded-2xl border px-4 py-4 text-center montserrat-subheading text-[0.95rem] font-bold transition-all duration-200 sm:text-[1rem] ${
             buttonStatus.Receive
               ? "border-cyan-400 bg-cyan-400/10 text-cyan-300 shadow-[0_0_30px_rgba(34,211,238,0.18)]"
               : "border-slate-700 bg-slate-950/60 text-slate-300 hover:border-slate-500 hover:text-white"
